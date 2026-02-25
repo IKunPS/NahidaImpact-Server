@@ -1,0 +1,7 @@
+﻿syntax = "proto3";
+
+message MapLayerInfo {
+  repeated uint32 unlocked_map_layer_id_list = 2;
+  repeated uint32 unlocked_map_layer_floor_id_list = 14;
+  repeated uint32 unlocked_map_layer_group_id_list = 13;
+}

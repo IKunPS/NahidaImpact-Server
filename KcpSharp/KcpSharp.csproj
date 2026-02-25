@@ -1,0 +1,22 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <CETCompat>false</CETCompat>
+    <AssemblyName>KcpSharp</AssemblyName>
+    <RootNamespace>NahidaImpact.KcpSharp</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Google.Protobuf" Version="3.29.2" />
+    <PackageReference Include="System.IO.Hashing" Version="9.0.10" />
+    <PackageReference Include="System.IO.Pipelines" Version="9.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Common\Common.csproj" />
+  </ItemGroup>
+
+</Project>

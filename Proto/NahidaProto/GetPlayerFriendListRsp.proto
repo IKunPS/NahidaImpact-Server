@@ -1,0 +1,10 @@
+﻿syntax = "proto3";
+
+import "FriendBrief.proto";
+
+// CmdID: 21879
+message GetPlayerFriendListRsp {
+  repeated FriendBrief friend_list = 5;
+  repeated FriendBrief ask_friend_list = 10;
+  int32 retcode = 8;
+}

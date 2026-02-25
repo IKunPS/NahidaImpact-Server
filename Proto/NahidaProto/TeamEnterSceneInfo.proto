@@ -1,0 +1,13 @@
+﻿syntax = "proto3";
+
+import "AbilitySyncStateInfo.proto";
+import "AbilityControlBlock.proto";
+
+message TeamEnterSceneInfo {
+  // repeated LPPEGBFMPLC EBMLJGJINBM = 4;
+  // EJIDBLOFEOC KFFICCLPMIF = 6;
+  AbilitySyncStateInfo team_ability_info = 15;
+  AbilityControlBlock ability_control_block = 9;
+  float KPFPOIFNJHO = 7;
+  uint32 team_entity_id = 3;
+}

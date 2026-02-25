@@ -1,0 +1,17 @@
+syntax = "proto3";
+ 
+import "FilmfestBallGameAction.proto";
+import "FilmfestBallGameSyncCreateConnect.proto";
+
+message FilmfestBallGameSnapShot {
+	uint64 client_game_time = 1;
+	uint64 server_game_time = 2;
+	int32 GIDIIAFEGMP = 11;
+	int32 HPOFPJAMELO = 12;
+	int32 raw_client_game_time = 7;
+	int32 wave_index = 9;
+	bool is_finish = 5;
+	FilmfestBallGameSyncCreateConnect OAPOBGHOAGC = 10;
+	repeated uint32 id_index_list = 6;
+	repeated FilmfestBallGameAction action_list = 4;
+}

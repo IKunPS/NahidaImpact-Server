@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Library</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <CETCompat>false</CETCompat>
+    <RootNamespace>NahidaImpact.GameServer</RootNamespace>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <AssemblyName>NahidaGameServer</AssemblyName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Common\Common.csproj" />
+    <ProjectReference Include="..\KcpSharp\KcpSharp.csproj" />
+    <ProjectReference Include="..\Proto\Proto.csproj" />
+    <PackageReference Include="System.IO.Pipelines" Version="9.0.0" />
+  </ItemGroup>
+
+</Project>

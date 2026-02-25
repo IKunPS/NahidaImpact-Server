@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <CETCompat>false</CETCompat>
+    <RootNamespace>NahidaImpact.NahidaImpact</RootNamespace>
+    <ApplicationIcon>Source\ic_launcher.ico</ApplicationIcon>
+	<SatelliteResourceLanguages>false</SatelliteResourceLanguages>
+	<PackageId>NahidaImpact</PackageId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Common\Common.csproj" />
+    <ProjectReference Include="..\GameServer\GameServer.csproj" />
+    <ProjectReference Include="..\SdkServer\SdkServer.csproj" />
+  </ItemGroup>
+
+</Project>

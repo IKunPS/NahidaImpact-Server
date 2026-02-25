@@ -1,0 +1,5 @@
+syntax = "proto3";
+
+message UgcTowerLevelUpGadgetInfo {
+	uint32 LOALMJFAFPG = 1;
+}

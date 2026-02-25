@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+import "AnimatorParameterValueInfoPair.proto";
+import "Vector.proto";
+import "SceneEntityAiInfo.proto";
+import "EntityClientExtraInfo.proto";
+import "AbilitySyncStateInfo.proto";
+import "EntityRendererChangedInfo.proto";
+
+message EntityAuthorityInfo {
+	EntityClientExtraInfo client_extra_info = 6;
+	Vector born_pos = 4;
+	EntityRendererChangedInfo renderer_changed_info = 2;
+	SceneEntityAiInfo ai_info = 3;
+	AbilitySyncStateInfo ability_info = 1;
+	repeated AnimatorParameterValueInfoPair pose_para_list = 5;
+}

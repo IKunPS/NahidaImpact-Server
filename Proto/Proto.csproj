@@ -1,0 +1,25 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <CETCompat>false</CETCompat>
+    <AssemblyName>NahidaProto</AssemblyName>
+    <RootNamespace>NahidaImpact.Proto</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Google.Protobuf" Version="3.29.2" />
+    <PackageReference Include="Google.Protobuf.Tools" Version="3.29.2" />
+    <PackageReference Include="Grpc.Tools" Version="2.68.1">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+	<Protobuf Include="./NahidaProto/*.proto" ProtoRoot="./NahidaProto" GrpcServices="None" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,19 @@
+﻿syntax = "proto3";
+
+import "Vector.proto";
+import "MotionState.proto";
+
+message MotionInfo {
+  repeated int32 NFLAFNBEKJD = 100;
+  Vector speed = 3;
+  repeated Vector params = 5;
+  Vector rot = 2;
+  Vector ref_pos = 6;
+  Vector pos = 1;
+  uint64 interval_velocity = 9;
+  uint32 ref_id = 7;
+  uint32 EHKHKAGBMLD = 11;
+  uint32 CLPKNOHMKKD = 10;
+  uint32 scene_time = 8;
+  MotionState state = 4;
+}

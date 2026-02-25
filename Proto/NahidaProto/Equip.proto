@@ -1,0 +1,12 @@
+﻿syntax = "proto3";
+
+import "Weapon.proto";
+import "Reliquary.proto";
+
+message Equip {
+  bool is_locked = 3;
+  oneof detail {
+    Weapon weapon = 2;
+    Reliquary reliquary = 1;
+  }
+}

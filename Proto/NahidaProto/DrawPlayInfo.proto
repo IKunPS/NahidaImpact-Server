@@ -1,0 +1,6 @@
+syntax = "proto3";
+
+message DrawPlayInfo {
+	repeated uint32 OLABOADLOCC = 1;
+	repeated uint32 POHPCBHELHA = 2;
+}

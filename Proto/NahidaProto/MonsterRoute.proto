@@ -1,0 +1,15 @@
+syntax = "proto3";
+ 
+import "RoutePoint.proto";
+
+message MonsterRoute {
+	float arrive_range = 4;
+	int32 route_id = 8;
+	bool ELLMMHOKLBE = 7;
+	bool HNIGIKMLOHJ = 5;
+	bool EHGCBNCPDDO = 6;
+	bool MOLCEFOMCBA = 9;
+	uint32 route_type = 3;
+	uint32 speed_level = 2;
+	repeated RoutePoint BICJKMEHKNA = 1;
+}

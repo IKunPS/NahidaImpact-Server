@@ -1,0 +1,53 @@
+﻿syntax = "proto3";
+
+import "ResVersionConfig.proto";
+import "BlockInfo.proto";
+import "ShortAbilityHashPair.proto";
+import "FeatureBlockInfo.proto";
+import "StopServerInfo.proto";
+
+message PlayerLoginRsp {
+  map<string, int32> ability_hash_map = 10;
+  string msg = 1570;
+  string next_resource_url = 1820;
+  bytes HFFMMIOCNBE = 1126;
+  string client_silence_version_suffix = 380;
+  string game_biz = 12;
+  ResVersionConfig res_version_config = 1075;
+  string register_cps = 917;
+  string birthday = 1694;
+  map<uint32, BlockInfo> block_info_map = 1834;
+  string country_code = 1559;
+  repeated ShortAbilityHashPair short_ability_hash_map = 275;
+  // map<uint64, FFIJLAEPPFI> MBMIMJCMIEP = 1656;
+  string client_md5 = 1134;
+  // JCAKMHDKCPJ IINLPCBDNLA = 1009;
+  bytes EFELLAEJELF = 2;
+  repeated FeatureBlockInfo feature_block_info_list = 596;
+  // JFOAOLEGFBC KCGMBLNCKHB = 1753;
+  ResVersionConfig next_res_version_config = 941;
+  string client_version_suffix = 506;
+  StopServerInfo EKNJHCKJCOJ = 2019;
+  string client_silence_md5 = 691;
+  uint32 FKEFNJFNFKP = 1287;
+  uint32 client_silence_data_version = 15;
+  uint64 login_rand = 9;
+  int32 retcode = 3;
+  bool is_relogin = 11;
+  bool is_use_ability_hash = 947;
+  bool is_audit = 151;
+  bool AAOLOFCHLCB = 1283;
+  uint32 target_uid = 7;
+  int32 ability_hash_code = 14;
+  uint32 IMPCOMGEKNJ = 13;
+  bool is_sc_open = 6;
+  bool is_data_need_relogin = 222;
+  bool CPOGDIIKLHN = 543;
+  bool JJCPMGLNCBM = 4;
+  uint32 client_data_version = 1;
+  bool IGLDNCMIPII = 1490;
+  bool MFCJLMEKGEL = 1434;
+  double total_tick_time = 1672;
+  uint32 CAIADBFPGLL = 978;
+  uint32 platform_type = 1578;
+}

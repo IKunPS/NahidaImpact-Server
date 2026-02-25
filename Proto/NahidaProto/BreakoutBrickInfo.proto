@@ -1,0 +1,7 @@
+syntax = "proto3";
+
+message BreakoutBrickInfo {
+	uint32 PPKMNIPHMNJ = 3;
+	uint32 hp = 1;
+	uint32 element_type = 2;
+}

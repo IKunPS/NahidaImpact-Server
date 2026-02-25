@@ -1,0 +1,32 @@
+﻿syntax = "proto3";
+
+message GetPlayerTokenReq {
+  string client_rand_key = 1534;
+  string HECKFBIEPOB = 353;
+  string birthday = 699;
+  string CNIBPCHJGCP = 1869;
+  string country_code = 2;
+  string online_id = 5;
+  string auth_appid = 1027;
+  string psn_id = 15;
+  string GLCPNPLLMKI = 10;
+  string BLEAOAOMPJI = 1400;
+  string LIPPJNCHHHI = 381;
+  string client_ip_str = 1;
+  string gate_ticket = 11;
+  string xbox_id = 453;
+  string account_uid = 3;
+  string account_token = 12;
+  uint32 MKNFHIBJMOC = 8;
+  uint32 lang = 2003;
+  uint32 platform_type = 6;
+  uint32 account_type = 7;
+  uint32 uid = 4;
+  uint32 sign_type = 991;
+  uint32 channel_id = 13;
+  uint32 cloud_client_ip = 14;
+  uint32 authkey_ver = 2015;
+  uint32 minors_reg_min_age = 1550;
+  bool is_guest = 9;
+  uint32 key_id = 1692;
+}

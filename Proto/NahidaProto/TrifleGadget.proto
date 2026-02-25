@@ -1,0 +1,8 @@
+syntax = "proto3";
+ 
+import "Item.proto";
+
+message TrifleGadget {
+	uint32 PFCMOHDPOPA = 2;
+	Item item = 1;
+}

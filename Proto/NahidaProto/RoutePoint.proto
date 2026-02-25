@@ -1,0 +1,24 @@
+syntax = "proto3";
+ 
+import "MathQuaternion.proto";
+import "Vector.proto";
+
+message RoutePoint {
+	float arrive_range = 2;
+	int32 speed_level = 4;
+	bool has_reach_event = 3;
+	bool DPFEKPIJOBI = 29;
+	bool GKLLPCNCKIE = 28;
+	bool JABNCCFFFHM = 26;
+	uint32 BECIFFKIMCF = 27;
+	Vector position = 1;
+	oneof CDJMBMGGCCC {
+		float time = 12;
+		float velocity = 11;
+	}
+	oneof OOFJLJHDDCI {
+		Vector rotation = 21;
+		MathQuaternion axis_speed = 23;
+		MathQuaternion rotation_speed = 22;
+	}
+}

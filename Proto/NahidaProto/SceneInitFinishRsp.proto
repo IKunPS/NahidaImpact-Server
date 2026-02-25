@@ -1,0 +1,6 @@
+﻿syntax = "proto3";
+
+message SceneInitFinishRsp {
+  uint32 enter_scene_token = 10; // [(ys_custom).is_masked = true, (ys_custom).value_mask = "(val - 18277) - 51147", (ys_custom).value_unmask = "(val + 51147) + 18277"];
+  int32 retcode = 2; // [(ys_custom).is_masked = true, (ys_custom).value_mask = "(val - 42120) - 30000", (ys_custom).value_unmask = "(val + 30000) + 42120"];
+}

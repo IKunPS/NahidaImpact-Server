@@ -1,0 +1,7 @@
+﻿syntax = "proto3";
+
+message PingRsp {
+  uint32 client_time = 7;
+  uint32 seq = 12;
+  int32 retcode = 14;
+}

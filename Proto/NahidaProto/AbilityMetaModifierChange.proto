@@ -1,0 +1,22 @@
+﻿syntax = "proto3";
+
+import "AbilityAttachedModifier.proto";
+import "AbilityString.proto";
+import "ModifierProperty.proto";
+import "ModifierAction.proto";
+
+message AbilityMetaModifierChange {
+  AbilityAttachedModifier attached_instanced_modifier = 11;
+  AbilityString parent_ability_override = 5;
+  repeated ModifierProperty properties = 15;
+  AbilityString parent_ability_name = 9;
+  ModifierAction action = 6;
+  uint32 apply_entity_id = 14;
+  int32 modifier_local_id = 2;
+  uint32 server_buff_uid = 3;
+  uint64 ELMPMBCEOPF = 4;
+  float MMIELCNPDMP = 8;
+  bool KFDCGOJBDII = 7;
+  bool is_attached_parent_ability = 10;
+  bool PANEAAOFDCA = 12;
+}

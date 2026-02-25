@@ -1,0 +1,48 @@
+﻿syntax = "proto3";
+
+import "PropValue.proto";
+import "AvatarExcelInfo.proto";
+import "MirrorAvatarInfo.proto";
+import "AvatarEquipAffixInfo.proto";
+import "TrialAvatarInfo.proto";
+import "AvatarSkillInfo.proto";
+import "AvatarFetterInfo.proto";
+import "AvatarExpeditionState.proto";
+
+message AvatarInfo {
+  map<uint32, uint32> skill_level_map = 15;
+  repeated uint32 inherent_proud_skill_list = 14;
+  map<uint32, uint32> proud_skill_extra_level_map = 17;
+  repeated uint32 pending_promote_reward_list = 24;
+  repeated uint32 talent_id_list = 6;
+  repeated uint32 OIFBHCKKMGA = 35;
+  map<uint32, PropValue> prop_map = 3;
+  AvatarExcelInfo excel_info = 26;
+  MirrorAvatarInfo mirror_avatar_info = 28;
+  repeated uint32 team_resonance_list = 20;
+  map<uint32, float> fight_prop_map = 7;
+  repeated AvatarEquipAffixInfo equip_affix_list = 22;
+  // BeyondCosmeticPlan cur_cosmetic_plan = 33;
+  repeated uint64 equip_guid_list = 5;
+  TrialAvatarInfo trial_avatar_info = 9;
+  map<uint32, AvatarSkillInfo> skill_map = 10;
+  AvatarFetterInfo fetter_info = 12;
+  repeated uint32 BHDEJBLBEPD = 36;
+  uint32 KLFOJLIHFAG = 34;
+  uint32 core_proud_skill_level = 13;
+  uint32 anim_hash = 27;
+  AvatarExpeditionState expedition_state = 16;
+  uint32 GJLOBGAPMMK = 30;
+  uint32 costume_id = 25;
+  uint32 wearing_flycloak_id = 21;
+  uint32 avatar_type = 19;
+  uint32 avatar_id = 1;
+  uint32 trace_effect_id = 31;
+  uint32 skill_depot_id = 11;
+  uint32 life_state = 4;
+  uint32 born_time = 23;
+  bool is_focus = 18;
+  uint64 guid = 2;
+  uint32 GCACOMGEAOE = 29;
+  uint32 weapon_skin_id = 32;
+}

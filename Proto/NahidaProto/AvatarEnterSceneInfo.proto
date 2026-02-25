@@ -1,0 +1,15 @@
+﻿syntax = "proto3";
+
+import "ServerBuff.proto";
+import "AbilitySyncStateInfo.proto";
+
+message AvatarEnterSceneInfo {
+  repeated ServerBuff server_buff_list = 2;
+  repeated uint32 buff_id_list = 13;
+  AbilitySyncStateInfo weapon_ability_info = 7;
+  AbilitySyncStateInfo avatar_ability_info = 1;
+  uint64 avatar_guid = 9;
+  uint32 avatar_entity_id = 4;
+  uint32 weapon_entity_id = 5;
+  uint64 weapon_guid = 12;
+}
