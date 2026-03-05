@@ -1,76 +1,52 @@
-﻿using NahidaImpact.KcpSharp;
+﻿using System.Linq;
+using NahidaImpact.Data;
+using NahidaImpact.GameServer.Game.Player;
+using NahidaImpact.KcpSharp;
 using NahidaImpact.Proto;
+using NahidaImpact.Util;
 
 namespace NahidaImpact.GameServer.Server.Packet.Send.State;
 
 public class PacketOpenStateUpdateNotify : BasePacket
 {
-    public PacketOpenStateUpdateNotify() : base(CmdIds.OpenStateUpdateNotify)
+    public PacketOpenStateUpdateNotify(PlayerInstance player) : base(CmdIds.OpenStateUpdateNotify)
     {
-        var proto = new OpenStateUpdateNotify()
+        var proto = new OpenStateUpdateNotify();
+
+        foreach (var state in GameData.OpenStateData.Values)
         {
-            OpenStateMap =
+            uint id = state.Id;
+            uint value = 0;
+
+            if (ConfigManager.Config.GameOptions.enabledOpenStateAllMap)
             {
-                {1, 1},
-                {2, 1},
-                {3, 1},
-                {4, 1},
-                {5, 1},
-                {6, 1},
-                {7, 0},
-                {8, 1},
-                {10, 1},
-                {11, 1},
-                {12, 1},
-                {13, 1},
-                {14, 1},
-                {15, 1},
-                {27, 1},
-                {28, 1},
-                {29, 1},
-                {30, 1},
-                {31, 1},
-                {32, 1},
-                {33, 1},
-                {37, 1},
-                {38, 1},
-                {45, 1},
-                {47, 1},
-                {53, 1},
-                {54, 1},
-                {55, 1},
-                {59, 1},
-                {62, 1},
-                {65, 1},
-                {900, 1},
-                {901, 1},
-                {902, 1},
-                {903, 1},
-                {1001, 1},
-                {1002, 1},
-                {1003, 1},
-                {1004, 1},
-                {1005, 1},
-                {1007, 1},
-                {1008, 1},
-                {1009, 1},
-                {1010, 1},
-                {1100, 1},
-                {1103, 1},
-                {1300, 1},
-                {1401, 1},
-                {1403, 1},
-                {1700, 1},
-                {2100, 1},
-                {2101, 1},
-                {2103, 1},
-                {2400, 1},
-                {3701, 1},
-                {3702, 1},
-                {4100, 1 } 
+                // 将所有OpenState的状态改为1 也就是全部打开 与/unlockall效果相同
+                value = 1;
+                proto.OpenStateMap[id] = value;
+                proto.OpenStateMap[48] = 1; // 把地图大边界状态改为1
             }
-        };
-        
+            
+            if (id == 45 && !ConfigManager.Config.GameOptions.resinUsage)
+            {
+                // Remove resin from map
+                proto.OpenStateMap[id] = 0;
+                continue;
+            }
+
+            // If the player has an open state stored in their map, then it would always override any default value
+            if (player.ProgressManager.OpenStates.TryGetValue((int)id, out int playerValue))
+            {
+                value = (uint)playerValue;
+                proto.OpenStateMap[id] = value;
+            }
+            // Otherwise, add the state if it is contained in the set of default open states.
+            else if (ProgressManager.DefaultOpenStates.Contains((int)id))
+            {
+                value = 1;
+                proto.OpenStateMap[id] = value;
+            }
+        }
+
         SetData(proto);
     }
 }

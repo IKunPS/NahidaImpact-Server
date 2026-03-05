@@ -1,4 +1,4 @@
-﻿using NahidaImpact.Data;
+using NahidaImpact.Data;
 using NahidaImpact.Data.Excel;
 using NahidaImpact.Database;
 using NahidaImpact.Database.Avatar;
@@ -13,9 +13,7 @@ namespace NahidaImpact.GameServer.Game.Avatar;
 public class AvatarManager(PlayerInstance player) : BasePlayerManager(player)
 {
     public AvatarData AvatarData { get; } = DatabaseHelper.GetInstanceOrCreateNew<AvatarData>(player.Uid);
-    public List<GameAvatarTeam> AvatarTeams { get; } = new();
-    public uint CurTeamIndex { get; private set; }
-    public async ValueTask<AvatarDataExcel?> AddAvatar(int avatarId, int level = 90)
+    public async ValueTask<AvatarDataExcel?> AddAvatar(int avatarId)
     {
         if (AvatarData.Avatars.Any(a => a.AvatarId == avatarId)) return null;
         GameData.AvatarData.TryGetValue(avatarId, out var avatarExcel);
@@ -24,7 +22,6 @@ public class AvatarManager(PlayerInstance player) : BasePlayerManager(player)
         uint currentTimestamp = (uint)DateTimeOffset.Now.ToUnixTimeSeconds();
         var avatar = new AvatarDataInfo
         {
-            Level = (uint)level,
             SkillDepotId = avatarExcel.SkillDepotId,
             AvatarId = avatarExcel.Id,
             Guid = NextGuid(),
@@ -33,46 +30,40 @@ public class AvatarManager(PlayerInstance player) : BasePlayerManager(player)
             WearingFlycloakId = 340005
         };
         
-        if (AvatarTeams.Count == 0)
-        {
-            AvatarTeams.Add(new GameAvatarTeam
-            {
-                AvatarGuidList = new() { avatar.Guid },
-                Index = 1
-            });
-            CurTeamIndex = 1;
-        }
-        else
-        {
-            AvatarTeams[0].AvatarGuidList.Add(avatar.Guid);
-        }
-        
         avatar.InitDefaultProps(avatarExcel);
         AvatarData.Avatars.Add(avatar);
+        
+        // Add avatar to the current team via TeamManager
+        if (Player.TeamManager != null)
+        {
+            Player.TeamManager.AddAvatarToCurrentTeam(avatar.Guid);
+        }
 
         return avatarExcel;
     }
     
-    public GameAvatarTeam GetCurrentTeam()
+    public const int DEFAULT_AVATAR_FEMALE = 10000007;
+    public const int DEFAULT_AVATAR_MALE = 10000005;
+    
+    public async ValueTask<bool> InitializeDefaultAvatar()
     {
-        var team = AvatarTeams.FirstOrDefault(team => team.Index == CurTeamIndex);
-        if (team != null) return team;
-
-        if (AvatarTeams.Count == 0)
-        {
-            var fallback = new GameAvatarTeam { Index = 1 };
-            AvatarTeams.Add(fallback);
-            CurTeamIndex = fallback.Index;
-            return fallback;
-        }
-
-        CurTeamIndex = AvatarTeams[0].Index;
-        return AvatarTeams[0];
+        // Check if player already has avatars
+        if (AvatarData.Avatars.Count > 0)
+            return false;
+        
+        // Add default female avatar (or based on player's choice)
+        var avatarExcel = await AddAvatar(DEFAULT_AVATAR_FEMALE);
+        return avatarExcel != null;
     }
     
-    public EntityAvatar CreateAvatar(PlayerInstance player, AvatarDataInfo avatarInfo)
+    public GameAvatarTeam GetCurrentTeam()
     {
-        return new(player, avatarInfo, ++player.EntityIdSeed);
+        if (Player.TeamManager != null)
+        {
+            return Player.TeamManager.GetCurrentTeamInfo();
+        }
+        // Fallback: create a default team (should not happen)
+        return new GameAvatarTeam { Index = 1 };
     }
 
     public ulong NextGuid()
@@ -83,5 +74,10 @@ public class AvatarManager(PlayerInstance player) : BasePlayerManager(player)
     public AvatarDataInfo? GetAvatar(int avatarId)
     {
         return AvatarData.Avatars.Find(avatar => avatar.AvatarId == avatarId);
+    }
+
+    public AvatarDataInfo? GetAvatarByGuid(ulong guid)
+    {
+        return AvatarData.Avatars.Find(avatar => avatar.Guid == guid);
     }
 }

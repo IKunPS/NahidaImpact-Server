@@ -9,9 +9,10 @@ public class HandlerSceneInitFinishReq : Handler
 {
     public override async Task OnHandle(Connection connection, byte[] header, byte[] data)
     {
-        await connection.Player!.SceneManager!.OnSceneInitFinished();
+        await connection.SendPacket(new PacketPlayerEnterSceneInfoNotify(connection.Player!));
+        await connection.SendPacket(new PacketSceneTeamUpdateNotify(connection.Player!));
+        
         await connection.SendPacket(new PacketSceneInitFinishRsp(connection.Player!));
-       
     }
     
 }

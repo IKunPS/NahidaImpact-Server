@@ -38,8 +38,7 @@ public class HandlerGetPlayerTokenReq : Handler
 
         connection.DebugFile = Path.Combine(ConfigManager.Config.Path.LogPath, "Debug/", $"{req.AccountUid}/",
             $"Debug-{DateTime.Now:yyyy-MM-dd HH-mm-ss}.log");
-
-        await connection.Player.OnGetToken();
+        
         connection.Player.Connection = connection;
         connection.Account = AccountData.GetAccountByUid(int.Parse(req.AccountUid));
 

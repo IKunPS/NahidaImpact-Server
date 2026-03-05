@@ -1,0 +1,10 @@
+﻿syntax = "proto3";
+
+import "VisionType.proto";
+
+// CmdID: 24203
+message SceneEntityDisappearNotify {
+  repeated uint32 entity_list = 4;
+  uint32 param = 12;
+  VisionType disappear_type = 3;
+}

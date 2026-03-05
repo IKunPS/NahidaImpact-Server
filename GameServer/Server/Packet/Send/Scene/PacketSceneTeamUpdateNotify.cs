@@ -1,4 +1,5 @@
-﻿using NahidaImpact.GameServer.Game.Player;
+using System;
+using NahidaImpact.GameServer.Game.Player;
 using NahidaImpact.KcpSharp;
 using NahidaImpact.Proto;
 
@@ -8,20 +9,34 @@ public class PacketSceneTeamUpdateNotify : BasePacket
 {
     public PacketSceneTeamUpdateNotify(PlayerInstance player) : base(CmdIds.SceneTeamUpdateNotify)
     {
-        var proto = new SceneTeamUpdateNotify();
-        
-        proto.SceneTeamAvatarList.Add(new SceneTeamAvatar
+        var proto = new SceneTeamUpdateNotify
         {
-            SceneEntityInfo = player.EntityAvatar!.ToProto(),
+            IsInMp = player.IsInMultiplayer()
+        };
+        
+        var currentAvatarEntity = player.EntityAvatar;
+        
+        var sceneTeamAvatar = new SceneTeamAvatar
+        {
+            SceneEntityInfo = currentAvatarEntity.ToProto(),
             WeaponEntityId = player.WeaponEntityId,
             PlayerUid = (uint)player.Uid,
-            WeaponGuid = player.EntityAvatar.AvatarInfo.WeaponGuid,
-            EntityId = player.EntityAvatar.EntityId,
-            AvatarGuid = player.EntityAvatar.AvatarInfo.Guid,
-            AbilityControlBlock = player.EntityAvatar.BuildAbilityControlBlock(),
-            SceneId = player.SceneId
-        });
+            WeaponGuid = currentAvatarEntity.AvatarInfo.WeaponGuid,
+            EntityId = currentAvatarEntity.Id,
+            AvatarGuid = currentAvatarEntity.AvatarInfo.Guid,
+            AbilityControlBlock = currentAvatarEntity.GetAbilityControlBlock(),
+            SceneId = player.SceneId,
+        };
         
+        // For multiplayer, set additional fields like Java version
+        if (player.IsInMultiplayer())
+        {
+            sceneTeamAvatar.AvatarInfo = currentAvatarEntity.GetAvatarInfo();
+            sceneTeamAvatar.SceneAvatarInfo = currentAvatarEntity.GetSceneAvatarInfo();
+        }
+        
+        proto.SceneTeamAvatarList.Add(sceneTeamAvatar);
+
         SetData(proto);
     }
 }

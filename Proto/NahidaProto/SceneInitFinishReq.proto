@@ -1,0 +1,6 @@
+﻿syntax = "proto3";
+
+// CmdID: 29293
+message SceneInitFinishReq {
+  uint32 enter_scene_token = 11;
+}

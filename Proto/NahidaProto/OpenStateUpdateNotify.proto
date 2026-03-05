@@ -1,5 +1,6 @@
 ﻿syntax = "proto3";
 
+// CmdID: 22147
 message OpenStateUpdateNotify {
-  map<uint32, uint32> open_state_map = 10;
+  map<uint32, uint32> open_state_map = 3;
 }

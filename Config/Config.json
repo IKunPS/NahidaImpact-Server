@@ -2,7 +2,7 @@
   "HttpServer": {
     "BindAddress": "0.0.0.0",
     "PublicAddress": "127.0.0.1",
-    "Port": 2712
+    "Port": 1145
   },
   "GameServer": {
     "BindAddress": "0.0.0.0",
@@ -13,6 +13,11 @@
     "GameServer": "NahidaImpact",
     "GameServerName": "NahidaImpact"
   },
+  "GameOptions": {
+    "enabledOpenStateAllMap": false,
+    "defaultUnlockAllMap": false,
+    "resinUsage": false
+  },
   "Path": {
     "ResourcePath": "Resources",
     "ConfigPath": "Config",
@@ -21,23 +26,11 @@
     "LogPath": "Config/Logs",
     "DataPath": "Config/Data"
   },
-  "Region": {
-    "Name": "os_usa",
-    "Title": "NahidaImpact",
-    "Ip": "127.0.0.1",
-    "Port": 22102
-  },
   "ServerOption": {
     "Language": "CHS",
     "DefaultPermissions": [
       "Admin"
     ],
-    "ServerProfile": {
-      "Name": "Ai-chan",
-      "Uid": 511694508,
-      "AvatarId": 1,
-      "DressId": 1
-    },
     "AutoCreateUser": true,
     "SavePersonalDebugFile": false,
     "EnableDebug": true,
@@ -46,5 +39,20 @@
     "DebugNoHandlerPacket": true,
     "IsServerStop": false,
     "UseXorEncryption": true
+  },
+  "Region": {
+    "Name": "os_usa",
+    "Title": "NahidaImpact",
+    "Ip": "127.0.0.1",
+    "Port": 22102
+  },
+  "ServerProfile": {
+    "NickName": "Nahida",
+    "Signature": "Welcome to NahidaServer!",
+    "Uid": 511694508,
+    "AvatarId": 10000007,
+    "NameCardId": 210001,
+    "AdventureRank": 1,
+    "WorldLevel": 9
   }
 }

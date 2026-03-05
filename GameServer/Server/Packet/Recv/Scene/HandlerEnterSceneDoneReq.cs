@@ -8,8 +8,10 @@ public class HandlerEnterSceneDoneReq : Handler
 {
     public override async Task OnHandle(Connection connection, byte[] header, byte[] data)
     {
-        await connection.Player!.EntityManager!.AddEntityAsync(connection.Player!.EntityAvatar!, VisionType.VisionBorn);
-        await connection.SendPacket(new PacketEnterSceneDoneRsp(connection.Player!));
+        // Spawn player in world
+        connection.Player.Scene.SpawnPlayer(connection.Player);
+        
+        await connection.SendPacket(new PacketEnterSceneDoneRsp(connection.Player));
     }
 
 }

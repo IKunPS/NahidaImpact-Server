@@ -11,9 +11,9 @@ public class PacketEnterScenePeerNotify : BasePacket
         var proto = new EnterScenePeerNotify()
         {
             DestSceneId = player.SceneId,
-            HostPeerId = 1, // TODO: Scene peers
-            PeerId = 1,
-            EnterSceneToken = player.SceneManager.EnterToken
+            HostPeerId = (uint)player.PeerId,
+            PeerId = (uint)player.PeerId,
+            EnterSceneToken = player.EnterToken
         };
         
         SetData(proto);

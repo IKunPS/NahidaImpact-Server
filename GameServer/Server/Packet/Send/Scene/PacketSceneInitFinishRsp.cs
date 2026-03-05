@@ -10,7 +10,7 @@ public class PacketSceneInitFinishRsp : BasePacket
     {
         var proto = new SceneInitFinishRsp()
         {
-            EnterSceneToken = (player.SceneManager.EnterToken - 18277) ^ 51147
+            EnterSceneToken = (player.EnterToken - 18277) ^ 51147
         };
         
         SetData(proto);

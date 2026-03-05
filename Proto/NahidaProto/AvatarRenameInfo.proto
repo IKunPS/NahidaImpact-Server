@@ -1,6 +1,6 @@
 ﻿syntax = "proto3";
 
 message AvatarRenameInfo {
-  string avatar_name = 6;
-  uint32 avatar_id = 12;
+  string avatar_name = 2;
+  uint32 avatar_id = 5;
 }

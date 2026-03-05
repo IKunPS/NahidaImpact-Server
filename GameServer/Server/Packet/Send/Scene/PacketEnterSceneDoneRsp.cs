@@ -10,7 +10,7 @@ public class PacketEnterSceneDoneRsp : BasePacket
     {
         var proto = new EnterSceneDoneRsp()
         {
-            EnterSceneToken = (player.SceneManager.EnterToken ^ 49009) - 34315
+            EnterSceneToken = (player.EnterToken ^ 49009) - 34315
         };
         
         SetData(proto);

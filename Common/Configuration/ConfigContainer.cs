@@ -1,9 +1,10 @@
-﻿namespace NahidaImpact.Configuration;
+namespace NahidaImpact.Configuration;
 
 public class ConfigContainer
 {
     public HttpServerConfig HttpServer { get; set; } = new();
     public GameServerConfig GameServer { get; set; } = new();
+    public GameOptionsConfig GameOptions { get; set; } = new();
     public PathConfig Path { get; set; } = new();
     public ServerOption ServerOption { get; set; } = new();
     public RegionConfig Region { get; set; } = new();
@@ -89,4 +90,11 @@ public class ServerProfile
     public int NameCardId { get; set; } = 210001;
     public uint AdventureRank { get; set; } = 1;
     public int WorldLevel { get; set; } = 9;
+}
+
+public class GameOptionsConfig
+{
+    public bool enabledOpenStateAllMap { get; set; } = true;
+    public bool defaultUnlockAllMap { get; set; } = false;
+    public bool resinUsage { get; set; } = true;
 }

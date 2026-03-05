@@ -13,7 +13,7 @@ public class AvatarData : BaseDatabaseDataHelper
 public class AvatarDataInfo
 {
     public uint AvatarId { get; set; }
-    public uint Level { get; set; }
+    public uint Level { get; set; } = 1;
     public uint SkillDepotId { get; set; }
     
     public ulong Guid { get; set; }

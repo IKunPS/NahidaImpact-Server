@@ -35,7 +35,7 @@ public class ServerTextCHS
 /// </summary>
 public class WordTextCHS
 {
-    public string Rank => "星魂";
+    public string Rank => "命座";
     public string Avatar => "角色";
     public string Material => "材料";
     public string Pet => "宠物";
@@ -246,7 +246,7 @@ public class AvatarTextCHS
     public string Desc => "设定玩家已有角色的属性, -1为所有已拥有角色";
     public string Usage =>
         "用法: /avatar talent [角色ID/-1] [行迹等级]\n" +
-        "用法: /avatar rank [角色ID/-1] [星魂]\n" +
+        "用法: /avatar rank [角色ID/-1] [命座]\n" +
         "用法: /avatar level [角色ID/-1] [角色等级]";
     public string InvalidLevel => "{0} 等级无效!";
     public string AllAvatarsLevelSet => "已将全部角色 {0} 等级设置为 {1}.";
@@ -277,7 +277,7 @@ public class GiveAllTextCHS
 {
     public string Desc => "给予玩家全部指定类型的物品";
     public string Usage =>
-        "用法: /giveall avatar r[星魂] l[等级]\n" +
+        "用法: /giveall avatar r[命座] l[等级]\n" +
         "用法: /giveall material x[数量]\n" +
         "用法: /giveall equipment r[叠影] l[等级] x[数量]\n" +
         "用法: /giveall relic x[数量]\n" +

@@ -17,9 +17,7 @@ public class PacketGetPlayerTokenRsp : BasePacket
             Token = connection.Account.ComboToken,
             SecurityCmdBuffer = ByteString.CopyFrom(Crypto.ENCRYPT_SEED_BUFFER),
             PlatformType = 3,
-            ChannelId = 1,
-            CountryCode = "US",
-            ClientVersionRandomKey = "c25-314dd05b0b5f",
+            ChannelId = 1
         };
 
         SetData(proto);
@@ -50,9 +48,7 @@ public class PacketGetPlayerTokenRsp : BasePacket
             ServerRandKey = serverRandKey,
             Sign = sign,
             PlatformType = 3,
-            ChannelId = 1,
-            CountryCode = "US",
-            ClientVersionRandomKey = "c25-314dd05b0b5f",
+            ChannelId = 1
         };
 
         SetData(proto);
@@ -67,8 +63,6 @@ public class PacketGetPlayerTokenRsp : BasePacket
             SecurityCmdBuffer = ByteString.CopyFrom(Crypto.ENCRYPT_SEED_BUFFER),
             PlatformType = 3,
             ChannelId = 1,
-            CountryCode = "US",
-            ClientVersionRandomKey = "c25-314dd05b0b5f",
             ServerRandKey = encryptedSeed,
             Sign = encryptedSeedSign
         };

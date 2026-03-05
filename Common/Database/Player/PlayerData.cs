@@ -11,7 +11,7 @@ public class PlayerData : BaseDatabaseDataHelper
 {
     public string? Name { get; set; } = "";
     public string? Signature { get; set; } = "NahidaPS";
-    public int Level { get; set; } = 60;
+    public int WorldLevel { get; set; } = 1;
     public int Exp { get; set; } = 0;
     public int BirthDay { get; set; } = 0;
     [SugarColumn(IsNullable = true)] public long LastActiveTime { get; set; }

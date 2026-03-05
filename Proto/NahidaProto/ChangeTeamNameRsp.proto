@@ -1,0 +1,8 @@
+﻿syntax = "proto3";
+
+// CmdID: 8309
+message ChangeTeamNameRsp {
+  string team_name = 7;
+  int32 team_id = 6;
+  int32 retcode = 8;
+}

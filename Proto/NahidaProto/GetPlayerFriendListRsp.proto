@@ -2,9 +2,9 @@
 
 import "FriendBrief.proto";
 
-// CmdID: 21879
+// CmdID: 27344
 message GetPlayerFriendListRsp {
   repeated FriendBrief friend_list = 5;
-  repeated FriendBrief ask_friend_list = 10;
-  int32 retcode = 8;
+  repeated FriendBrief ask_friend_list = 7;
+  int32 retcode = 1;
 }

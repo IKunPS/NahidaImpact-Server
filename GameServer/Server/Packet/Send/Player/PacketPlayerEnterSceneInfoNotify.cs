@@ -1,6 +1,8 @@
-﻿using NahidaImpact.GameServer.Game.Player;
+using System;
+using NahidaImpact.GameServer.Game.Player;
 using NahidaImpact.KcpSharp;
 using NahidaImpact.Proto;
+using System.Linq;
 
 namespace NahidaImpact.GameServer.Server.Packet.Send.Player;
 
@@ -10,29 +12,37 @@ public class PacketPlayerEnterSceneInfoNotify : BasePacket
     {
         var proto = new PlayerEnterSceneInfoNotify()
         {
-            CurAvatarEntityId = player.SceneManager!.TeamAvatars[0].EntityId,
-            EnterSceneToken = player.SceneManager.EnterToken,
+            CurAvatarEntityId = player.TeamManager.GetCurrentAvatarEntity().Id,
+            EnterSceneToken = player.EnterToken,
             MpLevelEntityInfo = new MPLevelEntityInfo
             {
-                EntityId = 184549377,
+                EntityId = player.World.getLevelEntityId(),
                 AbilityInfo = new AbilitySyncStateInfo(),
-                AuthorityPeerId = 1
+                AuthorityPeerId = player.PeerId
             },
             TeamEnterInfo = new TeamEnterSceneInfo
             {
-                TeamEntityId = 150994946,
+                TeamEntityId = player.TeamManager.Entity.Id,
                 AbilityControlBlock = new AbilityControlBlock(),
                 TeamAbilityInfo = new AbilitySyncStateInfo()
             }
         };
         
-        proto.AvatarEnterInfo.Add(new AvatarEnterSceneInfo
+        var activeTeam = player.TeamManager.GetActiveTeam();
+        if (activeTeam != null)
         {
-            AvatarGuid = player.EntityAvatar!.AvatarInfo.Guid,
-            AvatarEntityId = player.EntityAvatar.EntityId,
-            WeaponEntityId = player.WeaponEntityId,
-            WeaponGuid = player.EntityAvatar.AvatarInfo.WeaponGuid
-        });
+            foreach (var avatarEntity in activeTeam)
+            {
+                proto.AvatarEnterInfo.Add(new AvatarEnterSceneInfo
+                {
+                    AvatarGuid = avatarEntity.AvatarInfo.Guid,
+                    AvatarEntityId = avatarEntity.Id,
+                    WeaponEntityId = player.WeaponEntityId,
+                    WeaponGuid = avatarEntity.AvatarInfo.WeaponGuid,
+                });
+            }
+        }
+        
         SetData(proto);
     }
 }
