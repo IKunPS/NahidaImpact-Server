@@ -44,7 +44,7 @@ public class CmdIds
     public const int AvatarTeamUpdateNotify = 24736;
     public const int DoSetPlayerBornDataNotify = 2616;
     public const int SetPlayerBornDataReq = 1;
-    public const int GetPlayerFriendListReq = 24197;
+    public const int GetPlayerFriendListReq = 29038;
     public const int GetPlayerFriendListRsp = 27344;
     public const int AbilityInvocationsNotify = 1983;
     public const int AbilityChangeNotify = 4162;

@@ -10,7 +10,8 @@ public abstract class BaseEntity
 {
     public abstract ProtEntityType EntityType { get; }
     public uint Id { get; set; }
-    public PlayerInstance? Owner { get; set; }
+    public Scene Scene { get; set; }
+    public PlayerInstance Owner { get; set; }
     
     public MotionInfo MotionInfo { get; set; }
     public MotionState MotionState { get; set; }

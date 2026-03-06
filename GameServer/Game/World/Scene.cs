@@ -197,8 +197,8 @@ public class Scene
             }
             
             var entity = EntityCreationEvent.Call<EntityAvatar>(
-                new Type[] { typeof(Scene), typeof(AvatarDataInfo) },
-                new object[] { this, avatar });
+                new Type[] { typeof(PlayerInstance), typeof(AvatarDataInfo) },
+                new object[] { player, avatar });
             
             if (entity != null)
             {

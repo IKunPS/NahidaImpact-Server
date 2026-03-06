@@ -197,7 +197,7 @@ public class TeamManager : BasePlayerManager
         if (_activeTeamAvatars.Count == 0)
             return null;
 
-        if (_previousIndex >= _activeTeamAvatars.Count)
+        if (_previousIndex < 0 || _previousIndex >= _activeTeamAvatars.Count)
             _previousIndex = 0;
 
         return _activeTeamAvatars[_previousIndex];
@@ -393,7 +393,7 @@ public class TeamManager : BasePlayerManager
             var avatar = Player.Avatars.FirstOrDefault(a => a.Guid == avatarGuid);
             if (avatar == null)
             {
-                TeamManager.Logger.Warn($"Avatar with guid {avatarGuid} not found for player {Player.Uid}");
+                Logger.Warn($"Avatar with guid {avatarGuid} not found for player {Player.Uid}");
                 continue;
             }
             
@@ -411,12 +411,12 @@ public class TeamManager : BasePlayerManager
             {
                 // Create new entity
                 entity = EntityCreationEvent.Call<EntityAvatar>(
-                    new Type[] { typeof(Scene), typeof(AvatarDataInfo) },
-                    new object[] { Player.Scene, avatar });
+                    new Type[] { typeof(PlayerInstance), typeof(AvatarDataInfo) },
+                    new object[] { Player, avatar });
                 
                 if (entity == null)
                 {
-                    TeamManager.Logger.Warn($"Failed to create entity for avatar {avatarId} for player {Player.Uid}");
+                    Logger.Warn($"Failed to create entity for avatar {avatarId} for player {Player.Uid}");
                     continue;
                 }
             }
@@ -432,12 +432,24 @@ public class TeamManager : BasePlayerManager
             // entity.AvatarInfo.Save();
         }
 
+        // If no avatars were added, reset previous index and return
+        if (_activeTeamAvatars.Count == 0)
+        {
+            _previousIndex = -1;
+            UpdateTeamProperties();
+            return;
+        }
+
         // Set new selected character index
         if (prevSelectedAvatarIndex == -1)
         {
             // Previous selected avatar is not in the same spot, we will select the current one in the
             // prev slot
-            prevSelectedAvatarIndex = Math.Min(_previousIndex, _activeTeamAvatars.Count - 1);
+            // Clamp previous index to valid range
+            int clampedIndex = _previousIndex;
+            if (clampedIndex < 0) clampedIndex = 0;
+            if (clampedIndex >= _activeTeamAvatars.Count) clampedIndex = _activeTeamAvatars.Count - 1;
+            prevSelectedAvatarIndex = clampedIndex;
         }
         _previousIndex = prevSelectedAvatarIndex;
 
@@ -467,7 +479,7 @@ public class TeamManager : BasePlayerManager
             currentEntity = GetCurrentAvatarEntity();
         }
         
-        if (_activeTeamAvatars.Count == 0 || _previousIndex >= _activeTeamAvatars.Count)
+        if (_activeTeamAvatars.Count == 0 || _previousIndex < 0 || _previousIndex >= _activeTeamAvatars.Count)
             return;
 
         // Ensure currently selected character is still alive

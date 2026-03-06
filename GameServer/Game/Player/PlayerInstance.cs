@@ -126,10 +126,12 @@ public class PlayerInstance
         Profile.LastActiveTime = Data.LastActiveTime;
         
         World = new World.World(this);
-        World.AddPlayer(this);
-
-        // Initialize default avatar (mirroring Java implementation)
+        
+        // Initialize default avatar BEFORE adding player to world
+        // This ensures the team has avatars when SetupPlayerAvatars is called
         await AvatarManager.InitializeDefaultAvatar();
+        
+        World.AddPlayer(this);
         
         // Send PlayerEnterSceneNotify BEFORE spawning avatar (mirroring Java behavior)
         await SendPacket(new PacketPlayerEnterSceneNotify(this));

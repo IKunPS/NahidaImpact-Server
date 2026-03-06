@@ -1,3 +1,4 @@
+using System;
 using NahidaImpact.Database.Avatar;
 using NahidaImpact.Enums;
 using NahidaImpact.GameServer.Game.Player;
@@ -23,6 +24,7 @@ public class EntityAvatar : BaseEntity
         Owner = player;
         AvatarInfo = avatarInfo;
         Player = player;
+        Scene = player.Scene;
         Properties = avatarInfo.Properties;
         FightProperties = avatarInfo.FightProperties;
         LastMoveSceneTimeMs = 0;
@@ -79,7 +81,7 @@ public class EntityAvatar : BaseEntity
             entityInfo.AnimatorParaList.Add(new AnimatorParameterValueInfoPair());
 
             // Set motion info if in scene
-            if (Owner?.Scene != null)
+            if (Scene != null)
             {
                 entityInfo.MotionInfo = GetMotionInfo();
             }
