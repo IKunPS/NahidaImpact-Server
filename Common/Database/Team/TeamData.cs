@@ -3,31 +3,27 @@ using System.Collections.Generic;
 
 namespace NahidaImpact.Database.Team;
 
-[SugarTable("TeamData")]
+[SugarTable("Team")]
 public class TeamData : BaseDatabaseDataHelper
 {
-    [SugarColumn(IsJson = true)]
-    public List<TeamInfo> Teams { get; set; } = [];
+    [SugarColumn(IsJson = true)] public List<TeamInfo> Teams { get; set; } = [];
 
-    public uint CurrentTeamIndex { get; set; }
+    [SugarColumn(IsJson = true)] public TeamInfo MpTeam { get; set; } = new();
 
-    [SugarColumn(IsJson = true, IsNullable = true)]
-    public TeamInfo MpTeam { get; set; } = new TeamInfo();
+    [SugarColumn(IsJson = true)] public List<TeamInfo> TemporaryTeams { get; set; } = [];
+    
+    [SugarColumn(IsJson = true)] public TeamInfo? TrialAvatarTeam { get; set; } = new TeamInfo();
 
-    [SugarColumn(IsJson = true, IsNullable = true)]
-    public List<TeamInfo> TemporaryTeams { get; set; } = [];
+    [SugarColumn(IsJson = true)] public Dictionary<int, uint> TrialAvatars { get; set; } = [];
 
+    public int PreviousIndex { get; set; } = -1;
+    
     public int UseTemporarilyTeamIndex { get; set; } = -1;
 
     public bool UsingTrialTeam { get; set; }
+    
+    public uint CurrentTeamIndex { get; set; }
 
-    [SugarColumn(IsJson = true, IsNullable = true)]
-    public TeamInfo? TrialAvatarTeam { get; set; }
-
-    [SugarColumn(IsJson = true, IsNullable = true)]
-    public Dictionary<int, uint> TrialAvatars { get; set; } = [];
-
-    public int PreviousIndex { get; set; } = -1;
 }
 
 public class TeamInfo

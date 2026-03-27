@@ -41,7 +41,6 @@ public class World
         if (_scenes.TryGetValue(sceneId, out var scene))
             return scene;
         
-        // Create scene from scene data if it doesn't exist
         if (GameData.SceneData.TryGetValue(sceneId, out var sceneData))
         {
             scene = new Scene(this, sceneData);
@@ -63,30 +62,21 @@ public class World
         // TODO: Cleanup scene resources
     }
     
-    /// <summary>
-    /// Internal method to add a player to this world with fine-grained locking.
-    /// </summary>
-    /// <param name="player">The player to add.</param>
-    /// <param name="newSceneId">Optional scene ID (use -1 to use player's current scene).</param>
     private void AddPlayerInternal(PlayerInstance player, int newSceneId)
     {
-        // Register player with fine-grained locking
         lock (_playerListLock)
         {
             if (_players.Contains(player))
-                return; // Already in this world
+                return;
             
             player.World = this;
             _players.Add(player);
         }
         
-        // Set player variables (outside lock to minimize lock time)
         player.PeerId = GetNextPeerId();
         
-        // Set team manager entity
         player.TeamManager?.SetEntity(new EntityTeam(player));
         
-        // Copy main team to multiplayer team if in multiplayer
         if (_isMultiplayer)
         {
             var teamManager = player.TeamManager;
@@ -104,25 +94,21 @@ public class World
             
             if (player != Host)
             {
-                // Broadcast chat notification for player entering world
                 BroadcastPacket(new PacketPlayerChatNotify(player, 0, 1)); // SYSTEM_HINT_TYPE_CHAT_ENTER_WORLD = 1
             }
         }
         
-        // Set scene ID if specified
         if (newSceneId != -1)
         {
             player.SceneId = (uint)newSceneId;
         }
         
-        // Add to scene
         var scene = GetSceneById((int)player.SceneId);
         if (scene != null)
         {
             scene.AddPlayer(player);
         }
         
-        // Info packet for other players
         if (_players.Count > 1)
         {
             UpdatePlayerInfos(player);
@@ -131,10 +117,8 @@ public class World
     
     private void UpdatePlayerInfos(PlayerInstance newPlayer)
     {
-        // Update player infos for other players (simplified version)
         foreach (var player in _players)
         {
-            // Don't send packets to the joining player
             if (player == newPlayer)
                 continue;
             
@@ -151,76 +135,33 @@ public class World
         }
     }
     
-    /// <summary>
-    /// Adds a player to this world. Removes from previous world if necessary.
-    /// Fixed to prevent deadlock by removing player from old world BEFORE acquiring lock.
-    /// </summary>
-    /// <param name="player">The player to add to this world.</param>
-    /// <exception cref="ArgumentNullException">Thrown when player is null.</exception>
     public void AddPlayer(PlayerInstance player)
     {
-        // Parameter validation
-        if (player == null)
+        if (player == null) 
             throw new ArgumentNullException(nameof(player), "Player cannot be null");
-        
-        // Check if player already in
-        if (_players.Contains(player))
-            return;
-        
-        // Remove from previous world if necessary
-        if (player.World != null && player.World != this)
-        {
-            player.World.RemovePlayer(player);
-        }
-        
-        // Now add to this world
+        if (_players.Contains(player)) return;
+        if (player.World != null && player.World != this) player.World.RemovePlayer(player);
         AddPlayerInternal(player, -1);
     }
     
-    /// <summary>
-    /// Adds a player to this world with a specific scene ID.
-    /// Fixed to prevent deadlock by removing player from old world BEFORE acquiring lock.
-    /// </summary>
-    /// <param name="player">The player to add to this world.</param>
-    /// <param name="newSceneId">Optional scene ID (use -1 to use player's current scene).</param>
-    /// <exception cref="ArgumentNullException">Thrown when player is null.</exception>
     public void AddPlayer(PlayerInstance player, int newSceneId)
     {
-        // Parameter validation
         if (player == null)
             throw new ArgumentNullException(nameof(player), "Player cannot be null");
-        
-        // Check if player already in
         if (_players.Contains(player))
             return;
-        
-        // Remove from previous world if necessary
-        if (player.World != null && player.World != this)
-        {
-            player.World.RemovePlayer(player);
-        }
-        
-        // Now add to this world
+        if (player.World != null && player.World != this) player.World.RemovePlayer(player);
         AddPlayerInternal(player, newSceneId);
     }
     
-    /// <summary>
-    /// Removes a player from this world.
-    /// Fixed to prevent deadlock by using fine-grained locking and not holding locks
-    /// when calling addPlayer on other worlds.
-    /// </summary>
-    /// <param name="player">The player to remove from this world.</param>
-    /// <exception cref="ArgumentNullException">Thrown when player is null.</exception>
     public void RemovePlayer(PlayerInstance player)
     {
-        // Parameter validation
         if (player == null)
             throw new ArgumentNullException(nameof(player), "Player cannot be null");
         
         // Prepare data before acquiring lock
         // Note: In Java version, there's additional logic for team entity IDs and kicking players
         // We'll implement the basic removal for now
-        
         // Critical section with fine-grained lock
         lock (_playerListLock)
         {
@@ -231,11 +172,9 @@ public class World
             player.World = null;
         }
         
-        // Remove from scene (outside lock to prevent circular dependency)
         var scene = GetSceneById((int)player.SceneId);
         scene?.RemovePlayer(player);
-        
-        // If host leaves, handle multiplayer transition
+
         if (player == Host && _players.Count > 0)
         {
             // TODO: Transfer host
@@ -248,12 +187,6 @@ public class World
         }
     }
     
-    public uint GetNextPeerId() => ++_nextPeerId;
-    
-    /// <summary>
-    /// Broadcasts a packet to all players in this world.
-    /// </summary>
-    /// <param name="packet">The packet to broadcast.</param>
     public void BroadcastPacket(BasePacket packet)
     {
         lock (_playerListLock)
@@ -269,14 +202,10 @@ public class World
     }
     
     public PlayerInstance? GetHost() => Host;
-    
-    public int GetNextEntityId(EntityIdTypeEnum idType)
-    {
-        return ((int)idType << 22) + ++_nextEntityId;
-    }
 
-    public uint getLevelEntityId()
-    {
-        return Entity.Id;
-    }
+    public int GetNextEntityId(EntityIdTypeEnum idType) => ((int)idType << 22) + ++_nextEntityId;
+
+    public uint getLevelEntityId() => Entity.Id;
+    
+    public uint GetNextPeerId() => ++_nextPeerId;
 }

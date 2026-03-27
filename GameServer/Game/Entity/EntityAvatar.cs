@@ -29,11 +29,11 @@ public class EntityAvatar : BaseEntity
         FightProperties = avatarInfo.FightProperties;
         LastMoveSceneTimeMs = 0;
         LastMoveReliableSeq = 0;
-        LifeState = 1; // Default alive state
+        LifeState = 1;
 
-        if (Player.Scene != null)
+        if (Player.World != null)
         {
-            Id = (uint)Player.Scene.World.GetNextEntityId(EntityIdTypeEnum.Avatar);
+            Id = (uint)Player.World.GetNextEntityId(EntityIdTypeEnum.Avatar);
         }
     }
     
@@ -56,7 +56,6 @@ public class EntityAvatar : BaseEntity
     {
         try
         {
-            // Build EntityAuthorityInfo similar to Java implementation
             var authority = new EntityAuthorityInfo
             {
                 AbilityInfo = new AbilitySyncStateInfo(),
@@ -64,8 +63,7 @@ public class EntityAvatar : BaseEntity
                 AiInfo = new SceneEntityAiInfo(),
                 BornPos = new Vector()
             };
-
-            // Build SceneEntityInfo
+            
             var entityInfo = new SceneEntityInfo
             {
                 EntityId = Id,
@@ -76,11 +74,9 @@ public class EntityAvatar : BaseEntity
                 LifeState = LifeState,
                 EntityClientData = new EntityClientData()
             };
-
-            // Add animator parameter list (empty entry like Java)
+            
             entityInfo.AnimatorParaList.Add(new AnimatorParameterValueInfoPair());
-
-            // Set motion info if in scene
+            
             if (Scene != null)
             {
                 entityInfo.MotionInfo = GetMotionInfo();
@@ -98,18 +94,15 @@ public class EntityAvatar : BaseEntity
             entityInfo.PropList.Add(new PropPair 
             { 
                 Type = PlayerProp.PROP_LEVEL, 
-                PropValue = new PropValue { Type = PlayerProp.PROP_LEVEL, Ival = 1 } // Default level 1
+                PropValue = new PropValue { Type = PlayerProp.PROP_LEVEL, Ival = 1 }
             });
-
-            // Set avatar information
+            
             entityInfo.Avatar = GetSceneAvatarInfo();
 
             return entityInfo;
         }
         catch (Exception ex)
         {
-            // Log error and rethrow or return empty entity info
-            // For now, rethrow the exception
             throw new InvalidOperationException("Failed to convert EntityAvatar to proto", ex);
         }
     }
@@ -152,8 +145,7 @@ public class EntityAvatar : BaseEntity
             // TODO: Get actual team resonances
             // For now, keep empty
         }
-
-        // Add weapon information
+        
         sceneAvatarInfo.Weapon = new SceneWeaponInfo
         {
             EntityId = player.WeaponEntityId,
@@ -164,8 +156,7 @@ public class EntityAvatar : BaseEntity
             PromoteLevel = 0,
             AbilityInfo = new AbilitySyncStateInfo()
         };
-
-        // Add equip ID list
+        
         sceneAvatarInfo.EquipIdList.Add(avatarInfo.WeaponId);
 
         // TODO: Add reliquary list when equipment system is implemented

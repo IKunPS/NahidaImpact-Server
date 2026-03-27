@@ -3,6 +3,7 @@ using NahidaImpact.Database;
 using NahidaImpact.Database.Account;
 using NahidaImpact.Database.Avatar;
 using NahidaImpact.Database.Player;
+using NahidaImpact.Database.Repositories;
 using NahidaImpact.GameServer.Game.Avatar;
 using NahidaImpact.GameServer.Game.Entity;
 using NahidaImpact.GameServer.Game.Friends;
@@ -44,20 +45,6 @@ public class PlayerInstance
     public uint EntityIdSeed { get; set; }
     public uint EnterToken { get; set; }
 
-    public PlayerInstance(PlayerData data)
-    {
-        Data = data;
-        Uid = data.Uid;
-        Profile = new PlayerProfile(data.Name ?? "Traveler");
-        
-        TeamManager = new TeamManager(this);
-        AvatarManager = new AvatarManager(this);
-        InventoryManager = new InventoryManager(this);
-        SocialManager = new SocialManager(this);
-        ProgressManager = new ProgressManager(this);
-        AbilityManager = new AbilityManager(this);
-    }
-
     public uint WeaponEntityId = 100663300;
     
     // Position and rotation (mirroring Java implementation)
@@ -66,6 +53,21 @@ public class PlayerInstance
     public Position PrevPos { get; private set; } = new Position();
     public Position PrevPosForHome { get; private set; } = Position.Zero;
     public int PrevScene { get; set; }
+    
+    public PlayerInstance(PlayerData data)
+    {
+        Data = data;
+        Uid = data.Uid;
+        Profile = new PlayerProfile(data.Name ?? "Traveler");
+        
+        ITeamRepository teamRepository = new TeamRepository(DatabaseHelper.sqlSugarScope!);
+        TeamManager = new TeamManager(this, teamRepository);
+        AvatarManager = new AvatarManager(this);
+        InventoryManager = new InventoryManager(this);
+        SocialManager = new SocialManager(this);
+        ProgressManager = new ProgressManager(this);
+        AbilityManager = new AbilityManager(this);
+    }
     
     public void SetPosition(Position position)
     {
@@ -90,7 +92,6 @@ public class PlayerInstance
     #region Initializers
     public PlayerInstance(int uid) : this(new PlayerData { Uid = uid })
     {
-        // new player
         IsNewPlayer = true;
         Data.Name = AccountData.GetAccountByUid(uid)?.Username;
         Profile = new PlayerProfile(Data.Name ?? "Traveler");
@@ -127,16 +128,14 @@ public class PlayerInstance
         
         World = new World.World(this);
         
-        // Initialize default avatar BEFORE adding player to world
-        // This ensures the team has avatars when SetupPlayerAvatars is called
         await AvatarManager.InitializeDefaultAvatar();
         
         World.AddPlayer(this);
         
-        // Send PlayerEnterSceneNotify BEFORE spawning avatar (mirroring Java behavior)
-        await SendPacket(new PacketPlayerEnterSceneNotify(this));
+        // 初始化队伍实体 (先这样写吧
+        await TeamManager.UpdateTeamEntitiesAsync();
         
-        // Send other login packets
+        await SendPacket(new PacketPlayerEnterSceneNotify(this));
         await SendPacket(new PacketPlayerDataNotify(this));
         await SendPacket(new PacketAvatarDataNotify(this, Avatars!));
         await SendPacket(new PacketOpenStateUpdateNotify(this));

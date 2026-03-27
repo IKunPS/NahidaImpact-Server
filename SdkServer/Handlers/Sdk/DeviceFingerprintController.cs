@@ -1,4 +1,4 @@
-﻿namespace NahidaImpact.Data.Models.Sdk;
+﻿namespace NahidaImpact.SdkServer.Handlers.Sdk;
 
 public class GetDeviceFingerprintRequest
 {

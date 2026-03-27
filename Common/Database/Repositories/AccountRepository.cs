@@ -1,6 +1,6 @@
 using NahidaImpact.Database.Account;
 
-namespace NahidaImpact.Data.Models.Sdk;
+namespace NahidaImpact.Database.Repositories;
 
 public static class AccountRepository
 {

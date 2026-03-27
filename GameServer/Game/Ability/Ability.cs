@@ -23,7 +23,7 @@ public class Ability
         Data = data;
         Owner = owner;
         PlayerOwner = playerOwner;
-        Manager = playerOwner.AbilityManager; // Use player's AbilityManager
+        Manager = playerOwner.AbilityManager;
         
         if (Data.AbilitySpecials != null)
         {
@@ -33,12 +33,10 @@ public class Ability
             }
         }
         
-        // Simple hash calculation (temporary)
         Hash = data.AbilityName.GetHashCode();
         
         Data.Initialize();
         
-        // Collect skill IDs referenced by AvatarSkillStart modifier actions
         AvatarSkillStartIds = new HashSet<int>();
         if (Data.OnAbilityStart != null)
         {
@@ -51,7 +49,6 @@ public class Ability
             }
         }
         
-        // Also check modifiers' onAdded actions
         foreach (var modifier in Data.Modifiers.Values)
         {
             if (modifier.OnAdded != null)

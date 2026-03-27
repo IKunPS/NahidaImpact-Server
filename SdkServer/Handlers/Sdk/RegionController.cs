@@ -1,54 +1,62 @@
 ﻿using Google.Protobuf;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using System.Text.RegularExpressions;
 using NahidaImpact.Data.Models.Dispatch;
 using NahidaImpact.Util;
 using NahidaImpact.Util.Security;
-using NahidaImpact.Configuration;
 
 namespace NahidaImpact.SdkServer.Handlers.Sdk;
 
 [ApiController]
 public class RegionController : ControllerBase
 {
-    private const string DefaultRegionKey = "os_usa";
-    private const string DefaultRegionData = "CAESGE5vdCBGb3VuZCB2ZXJzaW9uIGNvbmZpZw==";
+    private const string OsSdkEnv = "2";
+    private const string CnSdkEnv = "0";
 
+    // 静态只读缓存 – 初始化后不可变，线程安全
     private static readonly int[] ServerVersionParts =
         GameConstants.GAME_VERSION.Split('.').Select(int.Parse).ToArray();
 
-    private static readonly Dictionary<string, RegionData> Regions;
+    private static readonly IReadOnlyDictionary<string, RegionData> Regions;
+    private static readonly string RegionListResponseOs;
+    private static readonly string RegionListResponseCn;
 
-    // 缓存 CN 和 OS 区域列表的响应
-    private static string _regionListResponseOs = string.Empty;
-    private static string _regionListResponseCn = string.Empty;
+    // 版本前缀集合，用于快速判断
+    private static readonly HashSet<string> CnVersionPrefixes = new()
+    {
+        "CNRELiOS", "CNRELWin", "CNRELAnd"
+    };
+    
+    private readonly ILogger<RegionController> _logger;
 
     static RegionController()
     {
-        Regions = new Dictionary<string, RegionData>
+        // 初始化区域数据
+        var regions = new Dictionary<string, RegionData>
         {
-            { DefaultRegionKey, new RegionData(BuildDefaultRegionResponse()) },
+            { ConfigManager.Config.Region.Name, new RegionData(GetDefaultRegionResponse()) }
         };
-        
-        InitializeRegionList();
-    }
-    
-    private static void InitializeRegionList()
-    {
+        Regions = regions;
+
+        // 初始化区域列表响应
         var dispatchDomain = ConfigManager.Config.HttpServer.GetDisplayAddress();
+        var servers = GetRegionServerList(dispatchDomain);
 
-        var servers = BuildRegionServerList(dispatchDomain);
+        var osConfig = GetRegionClientConfig(OsSdkEnv);
+        RegionListResponseOs = GetRegionListResponse(osConfig, servers);
 
-        // OS 配置
-        var osConfig = BuildRegionClientConfig("2");
-        _regionListResponseOs = BuildRegionListResponse(osConfig, servers);
-        
-        // CN 配置
-        var cnConfig = BuildRegionClientConfig("0");
-        _regionListResponseCn = BuildRegionListResponse(cnConfig, servers);
+        var cnConfig = GetRegionClientConfig(CnSdkEnv);
+        RegionListResponseCn = GetRegionListResponse(cnConfig, servers);
     }
 
-    private static List<RegionSimpleInfo> BuildRegionServerList(string dispatchDomain)
+    public RegionController(ILogger<RegionController> logger)
+    {
+        _logger = logger;
+    }
+
+    // 以下辅助方法均为静态，不依赖实例状态
+    private static List<RegionSimpleInfo> GetRegionServerList(string dispatchDomain)
     {
         return
         [
@@ -62,7 +70,7 @@ public class RegionController : ControllerBase
         ];
     }
 
-    private static object BuildRegionClientConfig(string sdkenv)
+    private static object GetRegionClientConfig(string sdkenv)
     {
         return new
         {
@@ -72,120 +80,30 @@ public class RegionController : ControllerBase
             showexception = "false",
             regionConfig = "pm|fk|add",
             downloadMode = "0",
-            codeSwitch = "4334", // 4.6及以上版本
+            codeSwitch = "4334",
             coverSwitch = "40"
         };
     }
 
-    private static string BuildRegionListResponse(object clientConfig, List<RegionSimpleInfo> servers)
+    private static string GetRegionListResponse(object clientConfig, List<RegionSimpleInfo> servers)
     {
         var configJson = System.Text.Json.JsonSerializer.Serialize(clientConfig);
         var configEncrypted = Crypto.Xor(configJson, Crypto.DISPATCH_KEY);
 
-        QueryRegionListHttpRsp rsp = new()
+        var rsp = new QueryRegionListHttpRsp
         {
             ClientCustomConfigEncrypted = ByteString.CopyFrom(configEncrypted),
             ClientSecretKey = ByteString.CopyFrom(Crypto.DISPATCH_SEED),
             EnableLoginPc = true,
             Retcode = (int)Retcode.RetSucc
         };
-        
         rsp.RegionList.AddRange(servers);
         return Convert.ToBase64String(rsp.ToByteArray());
     }
 
-    [HttpGet("/query_cur_region")]
-    public IActionResult QueryCurRegion([FromQuery] DispatchQuery query, Logger logger)
-    {
-        var version = query.Version;
-        var keyId = query.Key_Id;
-        var dispatchSeed = query.DispatchSeed;
-        const string region = DefaultRegionKey;
-
-        // 获取区域数据（若不存在则返回默认配置）
-        var regionData = GetRegionBase64(region);
-        
-        try
-        {
-            // 清理并解析版本号
-            var clientVersionClean = Regex.Replace(version!, "[a-zA-Z]", "");
-            var versionCode = clientVersionClean.Split('.');
-            if (versionCode.Length < 3)
-            {
-                return Ok(regionData);
-            }
-
-            if (ConfigManager.Config.ServerOption.IsServerStop)
-            {
-                var stopServer = new StopServerInfo
-                {
-                    StopBeginTime = (uint)DateTimeOffset.UtcNow.ToUnixTimeSeconds(),
-                    StopEndTime = (uint)DateTimeOffset.UtcNow.ToUnixTimeSeconds() + 18000,
-                };
-
-                var rsp = new QueryCurrRegionHttpRsp
-                {
-                    Retcode = (int)Retcode.RetStopServer,
-                    Msg = "服务器维护",
-                    RegionInfo = new RegionInfo(),
-                    StopServer = stopServer
-                };
-                    
-                var encryptedResponse = Crypto.EncryptAndSignRegionData(rsp.ToByteArray(), keyId);
-                return Ok(encryptedResponse);
-            }
-
-            var (versionMajor, versionMinor, versionFix) = ParseClientVersion(versionCode);
-
-            // 新客户端处理逻辑
-            if (IsNewClient(versionMajor, versionMinor, versionFix))
-            {
-                // 版本不匹配检查
-                if (IsVersionMismatch(versionMajor, versionMinor, clientVersionClean))
-                {
-                    var encryptedResponse = BuildVersionMismatchEncryptedResponse(clientVersionClean, keyId);
-                    return Ok(encryptedResponse);
-                }
-
-                // UA Patch
-                if (dispatchSeed == null)
-                {
-                    return Ok(new 
-                    { 
-                        content = regionData,
-                        sign = "TW9yZSBsb3ZlIGZvciBVQSBQYXRjaCBwbGF5ZXJz" 
-                    });
-                }
-
-                // Encryption and Signature
-                var encrypted = EncryptRegionData(regionData, keyId);
-                return Ok(encrypted);
-            }
-
-            // 旧版本客户端处理
-            return Ok(regionData);
-        }
-        catch (Exception e)
-        {
-            logger.Error($"Error handling query_cur_region: {e}");
-            return Ok(regionData);
-        }
-    }
-
-    [HttpGet("/query_region_list")] [HttpHead("/query_region_list")]
-    public IActionResult QueryRegionList([FromQuery] DispatchQuery query)
-    {
-        var versionName = query.Version;
-        
-        // 根据版本号前缀判断使用 CN 还是 OS 的区域列表
-        var targetRegionList = DetermineRegionListByVersion(versionName);
-        return Ok(targetRegionList);
-    }
-
-    private static QueryCurrRegionHttpRsp BuildDefaultRegionResponse()
+    private static QueryCurrRegionHttpRsp GetDefaultRegionResponse()
     {
         var cfg = ConfigManager.Config.Region;
-
         return new QueryCurrRegionHttpRsp
         {
             Retcode = (int)Retcode.RetSucc,
@@ -200,20 +118,13 @@ public class RegionController : ControllerBase
 
     private static string GetRegionBase64(string region)
     {
-        if (Regions.TryGetValue(region, out var regionObj))
-        {
-            return regionObj.Base64;
-        }
-
-        return DefaultRegionData;
+        return Regions.TryGetValue(region, out var regionObj) ? regionObj.Base64 : "CAESGE5vdCBGb3VuZCB2ZXJzaW9uIGNvbmZpZw==";
     }
 
     private static (int Major, int Minor, int Fix) ParseClientVersion(string[] versionCode)
     {
-        var major = int.Parse(versionCode[0]);
-        var minor = int.Parse(versionCode[1]);
-        var fix = int.Parse(versionCode[2]);
-        return (major, minor, fix);
+        // 假设 versionCode 长度已确保 >=3，此处不做额外检查（外层已处理）
+        return (int.Parse(versionCode[0]), int.Parse(versionCode[1]), int.Parse(versionCode[2]));
     }
 
     private static bool IsNewClient(int major, int minor, int fix)
@@ -223,21 +134,19 @@ public class RegionController : ControllerBase
                (major == 2 && minor == 8);
     }
 
-    private static bool IsVersionMismatch(int clientMajor, int clientMinor, string clientVersionClean)
+    private static bool IsVersionMismatch(int clientMajor, int clientMinor)
     {
         return clientMajor != ServerVersionParts[0] || clientMinor != ServerVersionParts[1];
     }
 
-    private static object BuildVersionMismatchEncryptedResponse(string clientVersionClean, string? keyId)
+    private static object GetVersionMismatchEncryptedResponse(string clientVersionClean, string? keyId)
     {
-        var updateClient = string.Compare(GameConstants.GAME_VERSION, clientVersionClean, StringComparison.Ordinal) > 0;
-
-        var contentMsg = updateClient
+        bool updateClient = string.Compare(GameConstants.GAME_VERSION, clientVersionClean, StringComparison.Ordinal) > 0;
+        string contentMsg = updateClient
             ? $"\n版本不匹配 过时的客户端! \n\nServer version: {GameConstants.GAME_VERSION}\nClient version: {clientVersionClean}"
             : $"\n版本不匹配 过时的服务器! \n\nServer version: {GameConstants.GAME_VERSION}\nClient version: {clientVersionClean}";
 
-        var now = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
-
+        long now = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
         var stopServer = new StopServerInfo
         {
             Url = "https://www.bilibili.com/video/BV1GJ411x7h7/",
@@ -253,51 +162,89 @@ public class RegionController : ControllerBase
             RegionInfo = new RegionInfo(),
             StopServer = stopServer
         };
-
         return Crypto.EncryptAndSignRegionData(rsp.ToByteArray(), keyId);
     }
 
     private static object EncryptRegionData(string regionData, string? keyId)
     {
-        var regionInfo = Convert.FromBase64String(regionData);
+        byte[] regionInfo = Convert.FromBase64String(regionData);
         return Crypto.EncryptAndSignRegionData(regionInfo, keyId);
     }
 
-    private static string DetermineRegionListByVersion(string? versionName)
+    // Action 方法
+    [HttpGet("/query_cur_region")]
+    public IActionResult QueryCurRegion([FromQuery] DispatchQuery query)
     {
-        if (string.IsNullOrEmpty(versionName))
+        string? version = query.Version;
+        string? keyId = query.Key_Id;
+        string? dispatchSeed = query.DispatchSeed;
+
+        string regionData = GetRegionBase64(ConfigManager.Config.Region.Name);
+
+        // 版本号为空时直接返回默认数据
+        if (string.IsNullOrEmpty(version))
         {
-            return _regionListResponseOs;
+            return Ok(regionData);
         }
 
-        string versionCode;
         try
         {
-            versionCode = versionName.Length >= 8 ? versionName[..8] : versionName;
-        }
-        catch
-        {
-            versionCode = versionName;
-        }
+            string clientVersionClean = Regex.Replace(version, "[a-zA-Z]", "");
+            string[] versionCode = clientVersionClean.Split('.');
+            if (versionCode.Length < 3)
+            {
+                return Ok(regionData);
+            }
 
-        // CN 客户端
-        if ("CNRELiOS".Equals(versionCode) ||
-            "CNRELWin".Equals(versionCode) ||
-            "CNRELAnd".Equals(versionCode))
-        {
-            return _regionListResponseCn;
-        }
+            var (major, minor, fix) = ParseClientVersion(versionCode);
 
-        // OS 客户端
-        if ("OSRELiOS".Equals(versionCode) ||
-            "OSRELWin".Equals(versionCode) ||
-            "OSRELAnd".Equals(versionCode))
-        {
-            return _regionListResponseOs;
-        }
+            if (IsNewClient(major, minor, fix))
+            {
+                if (IsVersionMismatch(major, minor))
+                {
+                    return Ok(GetVersionMismatchEncryptedResponse(clientVersionClean, keyId));
+                }
 
-        // 默认返回 OS 区域列表
-        return _regionListResponseOs;
+                if (dispatchSeed == null)
+                {
+                    return Ok(new
+                    {
+                        content = regionData,
+                        sign = "TW9yZSBsb3ZlIGZvciBVQSBQYXRjaCBwbGF5ZXJz"
+                    });
+                }
+
+                return Ok(EncryptRegionData(regionData, keyId));
+            }
+
+            return Ok(regionData);
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "Error handling query_cur_region for version {Version}", version);
+            return Ok(regionData);
+        }
     }
 
+    [HttpGet("/query_region_list")]
+    public IActionResult QueryRegionList([FromQuery] DispatchQuery query)
+    {
+        string? versionName = query.Version;
+
+        if (string.IsNullOrEmpty(versionName))
+        {
+            return Ok(RegionListResponseOs);
+        }
+
+        // 提取版本前缀（前8个字符）
+        string versionCode = versionName.Length >= 8 ? versionName[..8] : versionName;
+
+        if (CnVersionPrefixes.Contains(versionCode))
+        {
+            return Ok(RegionListResponseCn);
+        }
+
+        // 默认为 OS 版本
+        return Ok(RegionListResponseOs);
+    }
 }

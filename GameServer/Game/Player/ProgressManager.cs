@@ -10,12 +10,10 @@ public class ProgressManager
     
     public Dictionary<int, int> OpenStates = new();
     
-    // Set of open states that are never unlocked, whether they fulfill the conditions or not.
     public static readonly HashSet<int> BlacklistOpenStates = new() { 48 }; // OPEN_STATE_LIMIT_REGION_GLOBAL
     
     public static readonly HashSet<int> IgnoredOpenStates = new() { 1404 }; // OPEN_STATE_MENGDE_INFUSEDCRYSTAL
     
-    // Set of open states that are set per default for all accounts. Can be overwritten by an entry in `map`.
     public static HashSet<int> DefaultOpenStates = CalculateDefaultOpenStates();
     
     public ProgressManager(PlayerInstance player)
@@ -42,11 +40,7 @@ public class ProgressManager
                 result.Add((int)state.Id);
             }
         }
-        // Filter out blacklisted and ignored states
-        /*玄学 测试注释掉这里OPEN_STATE_PAIMON可能就不会卡0了 但没有经过正式环境检验
-        result.ExceptWith(BlacklistOpenStates);
-        result.ExceptWith(IgnoredOpenStates);
-        */
+
         return result;
     }
     

@@ -18,12 +18,10 @@ public abstract class BaseEntity
     public List<PropValue> Properties { get; set; }
     public List<FightPropPair> FightProperties { get; set; }
     
-    // Ability system properties
     public List<Ability.Ability> InstancedAbilities { get; set; } = new();
     public Dictionary<int, AbilityModifierController> InstancedModifiers { get; set; } = new();
     public Dictionary<string, float> GlobalAbilityValues { get; set; } = new();
-
-    // Abstract methods for position and rotation (mirroring Java GameEntity)
+    
     public abstract Position GetPosition();
     public abstract Position GetRotation();
 
@@ -53,7 +51,6 @@ public abstract class BaseEntity
     
     public virtual void Move(Position position, Position rotation)
     {
-        // Set the position and rotation.
         GetPosition().Set(position);
         GetRotation().Set(rotation);
     }

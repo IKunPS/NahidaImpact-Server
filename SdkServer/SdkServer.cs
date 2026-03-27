@@ -11,12 +11,15 @@ public class SdkServer
         BuildWebHost(args).Start();
     }
 
-    private static IWebHost BuildWebHost(string[] args)
+    private static IHost BuildWebHost(string[] args)
     {
-        var builder = WebHost.CreateDefaultBuilder(args)
-            .UseStartup<Startup>()
-            .ConfigureLogging((_, logging) => { logging.ClearProviders(); })
-            .UseUrls(ConfigManager.Config.HttpServer.GetBindDisplayAddress());
+        var builder = Host.CreateDefaultBuilder(args)
+            .ConfigureWebHostDefaults(webBuilder =>
+            {
+                webBuilder.UseStartup<Startup>()
+                    .ConfigureLogging((_, logging) => { logging.ClearProviders(); })
+                    .UseUrls(ConfigManager.Config.HttpServer.GetBindDisplayAddress());
+            });
 
         return builder.Build();
     }

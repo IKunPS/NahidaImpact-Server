@@ -5,6 +5,7 @@ using NahidaImpact.Util.Security;
 using System.Security.Cryptography;
 using System.Text;
 using NahidaImpact.Database.Account;
+using NahidaImpact.Database.Repositories;
 
 namespace NahidaImpact.SdkServer.Handlers.Sdk;
 
@@ -19,7 +20,6 @@ public class MaPassportController : ControllerBase
         string? password = response.Password;
 
         // 如果 account 长度大于 32，说明是加密的，需要解密
-        // If the account length is greater than 32, it means it is encrypted and needs to be decrypted
         if (!string.IsNullOrEmpty(account) && account.Length > 32)
         {
             try
@@ -34,7 +34,6 @@ public class MaPassportController : ControllerBase
                 }
 
                 // 解密 account
-                // Decrypt account
                 byte[] encryptedAccountBytes = Convert.FromBase64String(account);
                 byte[] decryptedAccountBytes = Crypto.SDK_PATCH_KEY.Decrypt(
                     encryptedAccountBytes, RSAEncryptionPadding.Pkcs1);
@@ -44,7 +43,6 @@ public class MaPassportController : ControllerBase
                 logger.Info($"clientLogin account: {account}");
 
                 // 解密 password
-                // Decrypt password
                 if (!string.IsNullOrEmpty(password))
                 {
                     byte[] encryptedPasswordBytes = Convert.FromBase64String(password);

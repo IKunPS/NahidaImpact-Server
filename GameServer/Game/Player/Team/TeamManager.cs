@@ -1,579 +1,501 @@
-using NahidaImpact.Database;
-using NahidaImpact.Database.Team;
+using System;
+using System.Threading.Tasks;
 using NahidaImpact.Database.Avatar;
-using NahidaImpact.GameServer.Game.Avatar;
+using NahidaImpact.Database.Repositories;
+using NahidaImpact.Database.Team;
 using NahidaImpact.GameServer.Game.Entity;
-using NahidaImpact.GameServer.Game.World;
-using NahidaImpact.GameServer.Game.Player.Team;
 using NahidaImpact.GameServer.Server.Packet.Send.Avatar;
 using NahidaImpact.GameServer.Server.Packet.Send.Scene;
-using NahidaImpact.GameServer.Server.Packet;
-using NahidaImpact.Proto;
-using System.Collections.Generic;
-using System.Linq;
-using NahidaImpact.Util;
 using NahidaImpact.KcpSharp;
-using System;
-using System.Linq;
+using NahidaImpact.Util;
 
-namespace NahidaImpact.GameServer.Game.Player.Team;
-
-public class TeamManager : BasePlayerManager
+namespace NahidaImpact.GameServer.Game.Player.Team
 {
-    public static Logger Logger { get; } = new("TeamManager");
-    private TeamData _teamData;
-    private List<EntityAvatar> _activeTeamAvatars;
-    private HashSet<int> _teamResonances;
-    private HashSet<int> _teamResonancesConfig;
-    private HashSet<string> _teamAbilityEmbryos;
-    private TeamInfo _mpTeam;
-    private int _useTemporarilyTeamIndex = -1;
-    private List<TeamInfo> _temporaryTeams;
-    private bool _usingTrialTeam;
-    private TeamInfo? _trialAvatarTeam;
-    private Dictionary<int, uint> _trialAvatars; // avatarId -> avatarGuid mapping
-    private int _previousIndex = -1;
-    
-    private EntityTeam? _entity;
-
-    public TeamManager(PlayerInstance player) : base(player)
+    public class TeamManager : BasePlayerManager
     {
-        _teamData = DatabaseHelper.GetInstanceOrCreateNew<TeamData>(player.Uid);
-        _activeTeamAvatars = new List<EntityAvatar>();
-        _teamResonances = new HashSet<int>();
-        _teamResonancesConfig = new HashSet<int>();
-        _teamAbilityEmbryos = new HashSet<string>();
-        _trialAvatars = new Dictionary<int, uint>();
-        _mpTeam = new TeamInfo();
-        _temporaryTeams = [];
+        private static readonly Logger Logger = new("TeamManager");
+        private readonly ITeamRepository _teamRepository;
+        private readonly object _syncRoot = new object(); // 线程同步对象
 
-        InitializeTeams();
-    }
+        private TeamData _teamData;
+        private readonly Task _initializationTask;
+        private List<EntityAvatar> _activeTeamAvatars;
+        private TeamInfo _mpTeam;
+        private int _useTemporarilyTeamIndex = -1;
+        private List<TeamInfo> _temporaryTeams;
+        private bool _usingTrialTeam;
+        private TeamInfo? _trialAvatarTeam;
+        private Dictionary<int, uint> _trialAvatars; // avatarId -> avatarGuid
+        private int _previousIndex = -1;
 
-    private void InitializeTeams()
-    {
-        if (_teamData.Teams.Count == 0)
-        {
-            // Create default teams
-            for (uint i = 1; i <= GameConstants.DEFAULT_TEAMS; i++)
-            {
-                _teamData.Teams.Add(new TeamInfo { Index = i });
-            }
-            _teamData.CurrentTeamIndex = 1;
-            Save();
-        }
+        private EntityTeam? _entity;
 
-        // Load mp team
-        if (_teamData.MpTeam != null)
+        // 外部可通过此属性访问当前队伍数据（只读）
+        public TeamData TeamData => _teamData;
+
+        public TeamManager(PlayerInstance player, ITeamRepository teamRepository) : base(player)
         {
-            _mpTeam = _teamData.MpTeam;
-        }
-        else
-        {
+            _teamRepository = teamRepository ?? throw new ArgumentNullException(nameof(teamRepository));
+            _activeTeamAvatars = new List<EntityAvatar>();
+            _trialAvatars = new Dictionary<int, uint>();
+            _temporaryTeams = new List<TeamInfo>();
             _mpTeam = new TeamInfo();
-            _teamData.MpTeam = _mpTeam;
-            try
+            _trialAvatarTeam = new TeamInfo();
+
+            // 异步初始化，但构造函数不能 async，所以使用 Fire-and-forget 并捕获异常
+            _initializationTask = InitializeAsync();
+            _initializationTask.ContinueWith(t =>
             {
-                Save();
+                if (t.IsFaulted)
+                    Logger.Error($"Failed to initialize TeamManager for player {player.Uid}", t.Exception);
+            }, TaskContinuationOptions.OnlyOnFaulted);
+        }
+
+        private async Task InitializeAsync()
+        {
+            // 加载或创建数据库记录
+            _teamData = await _teamRepository.GetOrCreateAsync(Player.Uid);
+
+            // 加载内存数据
+            _mpTeam = _teamData.MpTeam ?? new TeamInfo();
+            _temporaryTeams = _teamData.TemporaryTeams ?? new List<TeamInfo>();
+            _usingTrialTeam = _teamData.UsingTrialTeam;
+            _trialAvatarTeam = _teamData.TrialAvatarTeam;
+            _trialAvatars = _teamData.TrialAvatars ?? new Dictionary<int, uint>();
+            _previousIndex = _teamData.PreviousIndex;
+            _useTemporarilyTeamIndex = _teamData.UseTemporarilyTeamIndex;
+
+            // 确保数据一致性
+            EnsureTeamsConsistency();
+
+            // 保存一次以确保所有字段不为 null
+            await SaveChangesAsync();
+        }
+
+        private void EnsureInitialized()
+        {
+            if (_teamData == null)
+            {
+                _initializationTask.GetAwaiter().GetResult();
             }
-            catch (Exception ex) when (ex.Message.Contains("NOT NULL constraint failed"))
+        }
+
+        private void EnsureTeamsConsistency()
+        {
+            if (_teamData.Teams.Count == 0)
             {
-                // If update fails due to NOT NULL constraint, delete and recreate the record
-                DatabaseHelper.DeleteInstance<TeamData>(_teamData.Uid);
-                DatabaseHelper.CreateInstance(_teamData);
+                for (uint i = 1; i <= GameConstants.DEFAULT_TEAMS; i++)
+                    _teamData.Teams.Add(new TeamInfo { Index = i });
+                _teamData.CurrentTeamIndex = 1;
             }
+
+            if (_mpTeam == null)
+                _mpTeam = new TeamInfo();
+            if (_temporaryTeams == null)
+                _temporaryTeams = new List<TeamInfo>();
+            if (_trialAvatars == null)
+                _trialAvatars = new Dictionary<int, uint>();
+            if (_trialAvatarTeam == null)
+                _trialAvatarTeam = new TeamInfo();
+
+            // 确保当前队伍索引有效
+            if (_teamData.CurrentTeamIndex < 1 || _teamData.CurrentTeamIndex > _teamData.Teams.Count)
+                _teamData.CurrentTeamIndex = 1;
+
+            // 确保临时队伍索引有效
+            if (_useTemporarilyTeamIndex < -1 || _useTemporarilyTeamIndex >= _temporaryTeams.Count)
+                _useTemporarilyTeamIndex = -1;
         }
 
-        // Load temporary teams
-        if (_teamData.TemporaryTeams != null)
+        // 统一保存方法，由业务层在合适时机调用（例如玩家下线时）
+        public async Task SaveChangesAsync()
         {
-            _temporaryTeams = _teamData.TemporaryTeams;
-        }
-        else
-        {
-            _temporaryTeams = [];
-            _teamData.TemporaryTeams = _temporaryTeams;
-            Save();
-        }
-
-        // Load trial team data
-        _usingTrialTeam = _teamData.UsingTrialTeam;
-        _trialAvatarTeam = _teamData.TrialAvatarTeam;
-        
-        if (_teamData.TrialAvatars != null)
-        {
-            _trialAvatars = _teamData.TrialAvatars;
-        }
-        else
-        {
-            _trialAvatars = [];
-            _teamData.TrialAvatars = _trialAvatars;
-            Save();
-        }
-        
-        _previousIndex = _teamData.PreviousIndex;
-        _useTemporarilyTeamIndex = _teamData.UseTemporarilyTeamIndex;
-    }
-
-    public TeamData TeamData => _teamData;
-
-    public List<TeamInfo> Teams => _teamData.Teams;
-
-    public List<GameAvatarTeam> GetAvatarTeams()
-    {
-        return Teams.Select(t => new GameAvatarTeam
-        {
-            Index = t.Index,
-            Name = t.Name,
-            AvatarGuidList = t.AvatarGuidList
-        }).ToList();
-    }
-
-    public uint CurrentTeamIndex => _teamData.CurrentTeamIndex;
-
-    private TeamInfo GetCurrentTeamInfoCore()
-    {
-        if (_useTemporarilyTeamIndex >= 0 && _useTemporarilyTeamIndex < _temporaryTeams.Count)
-        {
-            return _temporaryTeams[_useTemporarilyTeamIndex];
-        }
-        if (Player.IsInMultiplayer())
-        {
-            return _mpTeam;
-        }
-        return Teams.FirstOrDefault(t => t.Index == CurrentTeamIndex) ?? Teams[0];
-    }
-
-    public GameAvatarTeam GetCurrentTeamInfo()
-    {
-        var teamInfo = GetCurrentTeamInfoCore();
-        return new GameAvatarTeam
-        {
-            Index = teamInfo.Index,
-            Name = teamInfo.Name,
-            AvatarGuidList = teamInfo.AvatarGuidList
-        };
-    }
-
-    internal TeamInfo GetCurrentTeamInfoInternal()
-    {
-        // Check temporary team and multiplayer team conditions first (same as GetCurrentTeamInfoCore)
-        // But we need to log which type of team we're returning
-        if (_useTemporarilyTeamIndex >= 0 && _useTemporarilyTeamIndex < _temporaryTeams.Count)
-        {
-
-            return _temporaryTeams[_useTemporarilyTeamIndex];
-        }
-        if (Player.IsInMultiplayer())
-        {
-
-            return _mpTeam;
-        }
-        
-        // Special case: Teams is empty - create default team
-        if (Teams.Count == 0)
-        {
-
-            var defaultTeam = new TeamInfo { Index = CurrentTeamIndex };
-            _teamData.Teams.Add(defaultTeam);
-            Save();
-
-            return defaultTeam;
-        }
-        
-        // Use the core logic for normal team selection
-        var teamInfo = GetCurrentTeamInfoCore();
-
-        return teamInfo;
-    }
-
-    public List<EntityAvatar> GetActiveTeam()
-    {
-        return _activeTeamAvatars;
-    }
-
-    public EntityAvatar? GetCurrentAvatarEntity()
-    {
-        if (_activeTeamAvatars.Count == 0)
-            return null;
-
-        if (_previousIndex < 0 || _previousIndex >= _activeTeamAvatars.Count)
-            _previousIndex = 0;
-
-        return _activeTeamAvatars[_previousIndex];
-    }
-
-    public int GetMaxTeamSize()
-    {
-        // TODO: Consider multiplayer limits
-        return GameConstants.MAX_AVATARS_IN_TEAM;
-    }
-
-    public bool CanAddAvatarToTeam(GameAvatarTeam team)
-    {
-        return team.Size < GetMaxTeamSize();
-    }
-
-    public bool AddAvatarToTeam(GameAvatarTeam team, ulong avatarGuid)
-    {
-        if (!CanAddAvatarToTeam(team))
-            return false;
-
-        if (team.Contains(avatarGuid))
-            return false;
-
-        team.AddAvatar(avatarGuid);
-        return true;
-    }
-
-    public bool RemoveAvatarFromTeam(GameAvatarTeam team, int slot)
-    {
-        return team.RemoveAvatar(slot);
-    }
-
-    public void SetCurrentTeam(uint teamIndex)
-    {
-        if (teamIndex < 1 || teamIndex > Teams.Count)
-            return;
-
-        _teamData.CurrentTeamIndex = teamIndex;
-        Save();
-    }
-
-    public async void SetTeamName(uint teamIndex, string name)
-    {
-        var team = Teams.FirstOrDefault(t => t.Index == teamIndex);
-        if (team == null)
-            return;
-
-        team.Name = name;
-        Save();
-        // Send packet
-        await Player.SendPacket(new PacketChangeTeamNameRsp((int)teamIndex, name));
-    }
-
-    public bool AddAvatarToCurrentTeam(ulong avatarGuid)
-    {
-
-        var currentTeam = GetCurrentTeamInfoInternal();
-        if (currentTeam == null)
-        {
-            return false;
-        }
-
-        if (currentTeam.Contains(avatarGuid))
-        {
-
-            return false;
-        }
-        if (currentTeam.Size >= GetMaxTeamSize())
-        {
-
-            return false;
-        }
-
-        currentTeam.AddAvatar(avatarGuid);
-        Save();
-
-        return true;
-    }
-
-    private async void UpdateTeamProperties()
-    {
-        if (Player.EntityAvatar == null)
-            return;
-        
-        UpdateTeamResonances();
-        await Player.SendPacket(new PacketSceneTeamUpdateNotify(Player));
-    }
-
-    private void UpdateTeamResonances()
-    {
-        // TODO: Implement team resonance logic
-        _teamResonances.Clear();
-        _teamResonancesConfig.Clear();
-    }
-
-    public EntityTeam? Entity
-    {
-        get => _entity;
-        set => _entity = value;
-    }
-    
-    public void SetEntity(EntityTeam entity)
-    {
-        _entity = entity;
-    }
-
-    private void Save()
-    {
-        // Ensure fields are not null before saving
-        if (_mpTeam == null)
-            _mpTeam = new TeamInfo();
-        if (_temporaryTeams == null)
-            _temporaryTeams = [];
-        if (_trialAvatars == null)
-            _trialAvatars = [];
-
-        // Update TeamData fields
-        _teamData.MpTeam = _mpTeam;
-        _teamData.UsingTrialTeam = _usingTrialTeam;
-        _teamData.TrialAvatarTeam = _trialAvatarTeam;
-        _teamData.TrialAvatars = _trialAvatars;
-        _teamData.PreviousIndex = _previousIndex;
-        _teamData.UseTemporarilyTeamIndex = _useTemporarilyTeamIndex;
-        _teamData.TemporaryTeams = _temporaryTeams;
-
-        DatabaseHelper.UpdateInstance(_teamData);
-    }
-
-    public TeamInfo GetMpTeam() => _mpTeam;
-    
-    public TeamInfo GetCurrentSinglePlayerTeamInfo()
-    {
-        // Returns the current single player team (not multiplayer team)
-        if (_useTemporarilyTeamIndex >= 0 && _useTemporarilyTeamIndex < _temporaryTeams.Count)
-        {
-            return _temporaryTeams[_useTemporarilyTeamIndex];
-        }
-        return Teams.FirstOrDefault(t => t.Index == CurrentTeamIndex) ?? Teams[0];
-    }
-    
-    /// <summary>
-    /// Gets the current character index in the active team.
-    /// </summary>
-    public int GetCurrentCharacterIndex()
-    {
-        return _previousIndex;
-    }
-    
-    public void SetCurrentCharacterIndex(int index)
-    {
-        if (index >= 0 && index < _activeTeamAvatars.Count)
-        {
-            _previousIndex = index;
-            Player.EntityAvatar = GetCurrentAvatarEntity();
-        }
-    }
-    
-    /// <summary>
-    /// Updates team entities based on current team configuration.
-    /// Reuses existing entities where possible, removes old ones, and creates new ones.
-    /// </summary>
-    /// <param name="responsePacket">Optional response packet to send after update.</param>
-    public void UpdateTeamEntities(BasePacket? responsePacket = null)
-    {
-        // Sanity check - Should never happen
-        var currentTeamInfo = GetCurrentTeamInfoInternal();
-        if (currentTeamInfo.AvatarGuidList.Count <= 0)
-        {
-            return;
-        }
-
-        // If current team has changed
-        var currentEntity = GetCurrentAvatarEntity();
-        var existingAvatars = new Dictionary<int, EntityAvatar>();
-        var prevSelectedAvatarIndex = -1;
-
-        foreach (var entity in _activeTeamAvatars)
-        {
-            existingAvatars[(int)entity.AvatarInfo.AvatarId] = entity;
-        }
-
-        // Clear active team entity list
-        _activeTeamAvatars.Clear();
-
-        // Add back entities into team
-        for (int i = 0; i < currentTeamInfo.AvatarGuidList.Count; i++)
-        {
-            var avatarGuid = currentTeamInfo.AvatarGuidList[i];
-            EntityAvatar entity;
-            
-            // Get avatar by guid
-            var avatar = Player.Avatars.FirstOrDefault(a => a.Guid == avatarGuid);
-            if (avatar == null)
+            lock (_syncRoot)
             {
-                Logger.Warn($"Avatar with guid {avatarGuid} not found for player {Player.Uid}");
-                continue;
+                // 将内存状态写回 _teamData
+                _teamData.MpTeam = _mpTeam;
+                _teamData.TemporaryTeams = _temporaryTeams;
+                _teamData.UsingTrialTeam = _usingTrialTeam;
+                _teamData.TrialAvatarTeam = _trialAvatarTeam;
+                _teamData.TrialAvatars = _trialAvatars;
+                _teamData.PreviousIndex = _previousIndex;
+                _teamData.UseTemporarilyTeamIndex = _useTemporarilyTeamIndex;
             }
-            
-            var avatarId = avatar.AvatarId;
-            if (existingAvatars.ContainsKey((int)avatarId))
+            await _teamRepository.UpdateAsync(_teamData);
+        }
+
+        // 以下方法均为业务逻辑，直接操作内存状态，最后调用 SaveChangesAsync
+        // 若不想每次修改都保存，可将 SaveChangesAsync 调用移到外部（如玩家下线时）
+
+        public List<GameAvatarTeam> GetAvatarTeams()
+        {
+            lock (_syncRoot)
             {
-                entity = existingAvatars[(int)avatarId];
-                existingAvatars.Remove((int)avatarId);
-                if (entity == currentEntity)
+                EnsureInitialized();
+                return _teamData.Teams.Select(t => new GameAvatarTeam
                 {
-                    prevSelectedAvatarIndex = i;
+                    Index = t.Index,
+                    Name = t.Name,
+                    AvatarGuidList = t.AvatarGuidList.ToList() // 深拷贝，防止外部修改
+                }).ToList();
+            }
+        }
+
+        public uint CurrentTeamIndex
+        {
+            get
+            {
+                EnsureInitialized();
+                return _teamData.CurrentTeamIndex;
+            }
+        }
+
+        // 获取当前队伍信息的核心方法（返回内部对象，调用者需自行处理并发）
+        private TeamInfo GetCurrentTeamInfoCore()
+        {
+            EnsureInitialized();
+            if (_useTemporarilyTeamIndex >= 0 && _useTemporarilyTeamIndex < _temporaryTeams.Count)
+                return _temporaryTeams[_useTemporarilyTeamIndex];
+            if (Player.IsInMultiplayer())
+                return _mpTeam;
+            var team = _teamData.Teams.FirstOrDefault(t => t.Index == _teamData.CurrentTeamIndex);
+            return team ?? _teamData.Teams[0];
+        }
+
+        public GameAvatarTeam GetCurrentTeamInfo()
+        {
+            lock (_syncRoot)
+            {
+                var team = GetCurrentTeamInfoCore();
+                return new GameAvatarTeam
+                {
+                    Index = team.Index,
+                    Name = team.Name,
+                    AvatarGuidList = team.AvatarGuidList.ToList()
+                };
+            }
+        }
+
+        internal TeamInfo GetCurrentTeamInfoInternal()
+        {
+            lock (_syncRoot)
+            {
+                return GetCurrentTeamInfoCore();
+            }
+        }
+
+        public List<EntityAvatar> GetActiveTeam()
+        {
+            lock (_syncRoot)
+            {
+                return _activeTeamAvatars.ToList(); // 返回副本
+            }
+        }
+
+        public EntityAvatar? GetCurrentAvatarEntity()
+        {
+            lock (_syncRoot)
+            {
+                if (_activeTeamAvatars.Count == 0)
+                    return null;
+                int index = _previousIndex;
+                if (index < 0 || index >= _activeTeamAvatars.Count)
+                    index = 0;
+                return _activeTeamAvatars[index];
+            }
+        }
+
+        public int GetMaxTeamSize() => GameConstants.MAX_AVATARS_IN_TEAM;
+
+        public bool CanAddAvatarToTeam(GameAvatarTeam team) => team.Size < GetMaxTeamSize();
+
+        public bool AddAvatarToTeam(GameAvatarTeam team, ulong avatarGuid)
+        {
+            lock (_syncRoot)
+            {
+                if (!CanAddAvatarToTeam(team))
+                    return false;
+                if (team.Contains(avatarGuid))
+                    return false;
+                team.AddAvatar(avatarGuid);
+                return true;
+            }
+        }
+
+        public bool RemoveAvatarFromTeam(GameAvatarTeam team, int slot)
+        {
+            lock (_syncRoot)
+            {
+                return team.RemoveAvatar(slot);
+            }
+        }
+
+        public void SetCurrentTeam(uint teamIndex)
+        {
+            lock (_syncRoot)
+            {
+                EnsureInitialized();
+                if (teamIndex < 1 || teamIndex > _teamData.Teams.Count)
+                    return;
+                _teamData.CurrentTeamIndex = teamIndex;
+            }
+        }
+
+        public async Task SetTeamNameAsync(uint teamIndex, string name)
+        {
+            lock (_syncRoot)
+            {
+                EnsureInitialized();
+                var team = _teamData.Teams.FirstOrDefault(t => t.Index == teamIndex);
+                if (team == null)
+                    return;
+                team.Name = name;
+            }
+            await SaveChangesAsync();
+            await Player.SendPacket(new PacketChangeTeamNameRsp((int)teamIndex, name));
+        }
+
+        public bool AddAvatarToCurrentTeam(ulong avatarGuid)
+        {
+            lock (_syncRoot)
+            {
+                var currentTeam = GetCurrentTeamInfoCore();
+                if (currentTeam.Contains(avatarGuid))
+                    return false;
+                if (currentTeam.Size >= GetMaxTeamSize())
+                    return false;
+                currentTeam.AddAvatar(avatarGuid);
+                return true;
+            }
+        }
+
+        // 更新队伍实体列表（场景中的实体）
+        public async Task UpdateTeamEntitiesAsync(BasePacket? responsePacket = null)
+        {
+            TeamInfo currentTeamInfo;
+            lock (_syncRoot)
+            {
+                currentTeamInfo = GetCurrentTeamInfoCore();
+            }
+
+            if (currentTeamInfo.AvatarGuidList.Count == 0)
+                return;
+
+            var existingAvatars = new Dictionary<int, EntityAvatar>();
+            int prevSelectedAvatarIndex = -1;
+
+            // 收集现有实体
+            lock (_syncRoot)
+            {
+                foreach (var entity in _activeTeamAvatars)
+                {
+                    existingAvatars[(int)entity.AvatarInfo.AvatarId] = entity;
                 }
+                _activeTeamAvatars.Clear();
             }
-            else
+
+            var newActiveTeam = new List<EntityAvatar>();
+            var avatarsToRemove = new List<EntityAvatar>();
+
+            for (int i = 0; i < currentTeamInfo.AvatarGuidList.Count; i++)
             {
-                // Create new entity
-                entity = EntityCreationEvent.Call<EntityAvatar>(
-                    new Type[] { typeof(PlayerInstance), typeof(AvatarDataInfo) },
-                    new object[] { Player, avatar });
-                
-                if (entity == null)
+                var avatarGuid = currentTeamInfo.AvatarGuidList[i];
+                var avatar = Player.Avatars.FirstOrDefault(a => a.Guid == avatarGuid);
+                if (avatar == null)
                 {
-                    Logger.Warn($"Failed to create entity for avatar {avatarId} for player {Player.Uid}");
+                    Logger.Warn($"Avatar with guid {avatarGuid} not found for player {Player.Uid}");
                     continue;
                 }
+
+                var avatarId = avatar.AvatarId;
+                EntityAvatar entity;
+                if (existingAvatars.TryGetValue((int)avatarId, out var existing))
+                {
+                    entity = existing;
+                    existingAvatars.Remove((int)avatarId);
+                    if (entity == GetCurrentAvatarEntity())
+                        prevSelectedAvatarIndex = i;
+                }
+                else
+                {
+                    // 创建新实体
+                    entity = EntityCreationEvent.Call<EntityAvatar>(
+                        new Type[] { typeof(PlayerInstance), typeof(AvatarDataInfo) },
+                        new object[] { Player, avatar });
+                    if (entity == null)
+                    {
+                        Logger.Warn($"Failed to create entity for avatar {avatarId} for player {Player.Uid}");
+                        continue;
+                    }
+                }
+                newActiveTeam.Add(entity);
             }
 
-            _activeTeamAvatars.Add(entity);
-        }
-
-        // Unload removed entities
-        foreach (var entity in existingAvatars.Values)
-        {
-            Player.Scene?.RemoveEntity(entity);
-            // TODO: Implement avatar save
-            // entity.AvatarInfo.Save();
-        }
-
-        // If no avatars were added, reset previous index and return
-        if (_activeTeamAvatars.Count == 0)
-        {
-            _previousIndex = -1;
-            UpdateTeamProperties();
-            return;
-        }
-
-        // Set new selected character index
-        if (prevSelectedAvatarIndex == -1)
-        {
-            // Previous selected avatar is not in the same spot, we will select the current one in the
-            // prev slot
-            // Clamp previous index to valid range
-            int clampedIndex = _previousIndex;
-            if (clampedIndex < 0) clampedIndex = 0;
-            if (clampedIndex >= _activeTeamAvatars.Count) clampedIndex = _activeTeamAvatars.Count - 1;
-            prevSelectedAvatarIndex = clampedIndex;
-        }
-        _previousIndex = prevSelectedAvatarIndex;
-
-        // Update properties.
-        // Notify player.
-        UpdateTeamProperties();
-
-        // Send response packet.
-        if (responsePacket != null)
-        {
-            _ = Player.SendPacket(responsePacket);
-        }
-
-        // Ensure new selected character index is alive.
-        // If not, change to another alive one or revive.
-        CheckCurrentAvatarIsAlive(currentEntity);
-    }
-    
-    /// <summary>
-    /// Ensures the currently selected avatar is alive. If not, switches to another alive avatar or revives.
-    /// </summary>
-    /// <param name="currentEntity">The current entity to check (can be null).</param>
-    public void CheckCurrentAvatarIsAlive(EntityAvatar? currentEntity = null)
-    {
-        if (currentEntity == null)
-        {
-            currentEntity = GetCurrentAvatarEntity();
-        }
-        
-        if (_activeTeamAvatars.Count == 0 || _previousIndex < 0 || _previousIndex >= _activeTeamAvatars.Count)
-            return;
-
-        // Ensure currently selected character is still alive
-        if (_activeTeamAvatars[_previousIndex].LifeState != 1)
-        {
-            // Character died in a dungeon challenge...
-            // TODO: Implement getDeadAvatarReplacement logic
-            // For now, just switch to first alive avatar or first if none are alive
-            int replaceIndex = GetDeadAvatarReplacement();
-            if (0 <= replaceIndex && replaceIndex < _activeTeamAvatars.Count)
+            // 移除不再使用的实体
+            foreach (var entity in existingAvatars.Values)
             {
-                _previousIndex = replaceIndex;
+                Player.Scene?.RemoveEntity(entity);
+                avatarsToRemove.Add(entity);
+                // TODO: 保存 avatar 数据
             }
-            else
+
+            // 更新活跃队伍列表
+            lock (_syncRoot)
             {
-                // Team wiped in dungeon...
-                // Revive and change to first avatar.
-                _previousIndex = 0;
-                // TODO: Implement reviveAvatar
-                // ReviveAvatar(GetCurrentAvatarEntity()?.Avatar);
+                _activeTeamAvatars = newActiveTeam;
+                if (_activeTeamAvatars.Count == 0)
+                {
+                    _previousIndex = -1;
+                }
+                else
+                {
+                    if (prevSelectedAvatarIndex == -1)
+                    {
+                        int clampedIndex = _previousIndex;
+                        if (clampedIndex < 0) clampedIndex = 0;
+                        if (clampedIndex >= _activeTeamAvatars.Count) clampedIndex = _activeTeamAvatars.Count - 1;
+                        prevSelectedAvatarIndex = clampedIndex;
+                    }
+                    _previousIndex = prevSelectedAvatarIndex;
+                }
+            }
+
+            // 更新队伍共鸣（空实现）
+            UpdateTeamResonances();
+
+            // 发送更新包
+            await Player.SendPacket(new PacketSceneTeamUpdateNotify(Player));
+            if (responsePacket != null)
+                await Player.SendPacket(responsePacket);
+
+            // 检查当前角色是否存活
+            CheckCurrentAvatarIsAlive();
+        }
+
+        private void UpdateTeamResonances()
+        {
+            // TODO: 实现队伍共鸣逻辑
+        }
+
+        private void CheckCurrentAvatarIsAlive(EntityAvatar? currentEntity = null)
+        {
+            EntityAvatar? current;
+            lock (_syncRoot)
+            {
+                if (_activeTeamAvatars.Count == 0 || _previousIndex < 0 || _previousIndex >= _activeTeamAvatars.Count)
+                    return;
+                current = _activeTeamAvatars[_previousIndex];
+            }
+
+            if (current.LifeState != 1)
+            {
+                int replaceIndex;
+                lock (_syncRoot)
+                {
+                    replaceIndex = GetDeadAvatarReplacement();
+                }
+                if (replaceIndex >= 0 && replaceIndex < _activeTeamAvatars.Count)
+                {
+                    lock (_syncRoot)
+                    {
+                        _previousIndex = replaceIndex;
+                    }
+                }
+                else
+                {
+                    // 全队阵亡，复活第一个角色
+                    lock (_syncRoot)
+                    {
+                        _previousIndex = 0;
+                        // TODO: 实现复活逻辑
+                    }
+                }
+            }
+
+            var newAvatarEntity = GetCurrentAvatarEntity();
+            if (currentEntity != null && newAvatarEntity != null && currentEntity != newAvatarEntity)
+            {
+                // TODO: 切换角色事件
+                // Player.Scene?.ReplaceEntity(currentEntity, newAvatarEntity);
             }
         }
 
-        // Check if character changed
-        var newAvatarEntity = GetCurrentAvatarEntity();
-        if (currentEntity != null && newAvatarEntity != null && currentEntity != newAvatarEntity)
+        private int GetDeadAvatarReplacement()
         {
-            // TODO: Call PlayerSwitchAvatarEvent.
-            // var event = new PlayerSwitchAvatarEvent(Player, currentEntity.Avatar, newAvatarEntity.Avatar);
-            // if (!event.Call()) return;
-
-            // Remove and Add
-            // TODO: Implement ReplaceEntity
-            // Player.Scene?.ReplaceEntity(currentEntity, newAvatarEntity);
-        }
-    }
-    
-    /// <summary>
-    /// Gets a replacement index for a dead avatar. Returns first alive avatar index, or -1 if none are alive.
-    /// </summary>
-    private int GetDeadAvatarReplacement()
-    {
-        for (int i = 0; i < _activeTeamAvatars.Count; i++)
-        {
-            if (_activeTeamAvatars[i].LifeState == 1)
+            for (int i = 0; i < _activeTeamAvatars.Count; i++)
             {
-                return i;
+                if (_activeTeamAvatars[i].LifeState == 1)
+                    return i;
+            }
+            return -1;
+        }
+
+        public TeamInfo GetMpTeam() => _mpTeam;
+
+        public TeamInfo GetCurrentSinglePlayerTeamInfo()
+        {
+            lock (_syncRoot)
+            {
+                return GetCurrentTeamInfoCore();
             }
         }
-        return -1;
+
+        public int GetCurrentCharacterIndex()
+        {
+            lock (_syncRoot)
+            {
+                return _previousIndex;
+            }
+        }
+
+        public void SetCurrentCharacterIndex(int index)
+        {
+            lock (_syncRoot)
+            {
+                if (index >= 0 && index < _activeTeamAvatars.Count)
+                {
+                    _previousIndex = index;
+                    Player.EntityAvatar = GetCurrentAvatarEntity();
+                }
+            }
+        }
+
+        public bool IsUsingTrialTeam() => _usingTrialTeam;
+
+        public Dictionary<int, uint> GetTrialAvatars()
+        {
+            lock (_syncRoot)
+            {
+                return new Dictionary<int, uint>(_trialAvatars);
+            }
+        }
+
+        public uint GetTrialAvatarGuid(int avatarId)
+        {
+            lock (_syncRoot)
+            {
+                return _trialAvatars.TryGetValue(avatarId, out var guid) ? guid : 0;
+            }
+        }
+
+        public AvatarDataInfo? GetTrialAvatar(int avatarId)
+        {
+            var guid = GetTrialAvatarGuid(avatarId);
+            if (guid == 0)
+                return null;
+            return Player.AvatarManager.GetAvatarByGuid(guid);
+        }
+
+        // 公开实体属性
+        public EntityTeam? Entity
+        {
+            get => _entity;
+            set => _entity = value;
+        }
+
+        public void SetEntity(EntityTeam entity)
+        {
+            _entity = entity;
+        }
     }
-    
-    /// <summary>
-    /// Checks if the player is currently using a trial team.
-    /// </summary>
-    public bool IsUsingTrialTeam()
-    {
-        return _usingTrialTeam;
-    }
-    
-    /// <summary>
-    /// Gets the trial avatars dictionary (avatarId -> avatarGuid mapping).
-    /// </summary>
-    public Dictionary<int, uint> GetTrialAvatars()
-    {
-        if (_trialAvatars == null)
-            _trialAvatars = [];
-        return _trialAvatars;
-    }
-    
-    /// <summary>
-    /// Gets a trial avatar by its ID.
-    /// </summary>
-    /// <param name="avatarId">The avatar ID to look up.</param>
-    /// <returns>The avatar GUID if found, otherwise 0.</returns>
-    public uint GetTrialAvatarGuid(int avatarId)
-    {
-        if (_trialAvatars != null && _trialAvatars.TryGetValue(avatarId, out var guid))
-            return guid;
-        return 0;
-    }
-    
-    /// <summary>
-    /// Gets the trial avatar data info by avatar ID.
-    /// </summary>
-    /// <param name="avatarId">The avatar ID to look up.</param>
-    /// <returns>The AvatarDataInfo if found, otherwise null.</returns>
-    public AvatarDataInfo? GetTrialAvatar(int avatarId)
-    {
-        var guid = GetTrialAvatarGuid(avatarId);
-        if (guid == 0)
-            return null;
-        return Player.AvatarManager.GetAvatarByGuid(guid);
-    }
-    
-    // Additional methods for multiplayer, trial avatars, temporary teams, etc. will be added later
 }

@@ -7,6 +7,8 @@ public class GameAvatarTeam
     public uint Index { get; set; }
     public string Name { get; set; } = "";
     public List<ulong> AvatarGuidList { get; set; }
+    
+    public int Size => AvatarGuidList.Count;
 
     public GameAvatarTeam()
     {
@@ -18,24 +20,18 @@ public class GameAvatarTeam
         AvatarGuidList = avatarGuidList;
     }
 
-    public int Size => AvatarGuidList.Count;
-
     public bool Contains(ulong avatarGuid) => AvatarGuidList.Contains(avatarGuid);
 
     public bool AddAvatar(ulong avatarGuid)
     {
-        if (Contains(avatarGuid))
-            return false;
-
+        if (Contains(avatarGuid)) return false;
         AvatarGuidList.Add(avatarGuid);
         return true;
     }
 
     public bool RemoveAvatar(int slot)
     {
-        if (Size <= 1)
-            return false;
-
+        if (Size <= 1) return false;
         AvatarGuidList.RemoveAt(slot);
         return true;
     }
