@@ -12,7 +12,7 @@ namespace NahidaImpact.SdkServer.Handlers.Sdk;
 public class RegionController : ControllerBase
 {
     private const string OsSdkEnv = "2";
-    private const string CnSdkEnv = "0";
+    private const string CnSdkEnv = "2";
 
     // 静态只读缓存 – 初始化后不可变，线程安全
     private static readonly int[] ServerVersionParts =

@@ -1,8 +1,8 @@
 ﻿syntax = "proto3";
 
-// CmdID: 7774
+// CmdID: 24017
 message PingRsp {
-  int32 retcode = 7;
-  uint32 seq = 14;
-  uint32 client_time = 3;
+  uint32 client_time = 4;
+  uint32 seq = 3;
+  int32 retcode = 8;
 }

@@ -203,7 +203,7 @@ public class World
     
     public PlayerInstance? GetHost() => Host;
 
-    public int GetNextEntityId(EntityIdTypeEnum idType) => ((int)idType << 22) + ++_nextEntityId;
+    public int GetNextEntityId(EntityIdTypeEnum idType) => ((int)idType << 21) + ++_nextEntityId;
 
     public uint getLevelEntityId() => Entity.Id;
     

@@ -43,7 +43,7 @@ public class AvatarManager(PlayerInstance player) : BasePlayerManager(player)
         if (AvatarData.Avatars.Count > 0)
             return false;
         
-        var avatarExcel = await AddAvatar(10000007);
+        var avatarExcel = await AddAvatar(10000130);
         return avatarExcel != null;
     }
     

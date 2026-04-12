@@ -1,6 +1,6 @@
 ﻿syntax = "proto3";
 
-// CmdID: 9122
+// CmdID: 28913
 message EnterSceneDoneReq {
-  uint32 enter_scene_token = 9;
+  uint32 enter_scene_token = 15;
 }

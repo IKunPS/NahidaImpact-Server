@@ -2,5 +2,5 @@
 
 // CmdID: 22147
 message OpenStateUpdateNotify {
-  map<uint32, uint32> open_state_map = 3;
+  map<uint32, uint32> open_state_map = 4;
 }

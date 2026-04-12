@@ -1,7 +1,7 @@
 ﻿syntax = "proto3";
 
-// CmdID: 23190
+// CmdID: 9877
 message EnterSceneReadyRsp {
-  int32 retcode = 3; // [(ys_custom).is_masked = true, (ys_custom).value_mask = "(val ^ 33726) - 33726", (ys_custom).value_unmask = "(val + 33726) ^ 33726"];
-  uint32 enter_scene_token = 13; // [(ys_custom).is_masked = true, (ys_custom).value_mask = "(val + 57396) - 8638", (ys_custom).value_unmask = "(val + 8638) - 57396"];
+  int32 retcode = 7;
+  uint32 enter_scene_token = 12;
 }

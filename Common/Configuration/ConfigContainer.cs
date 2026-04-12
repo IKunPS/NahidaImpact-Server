@@ -71,7 +71,7 @@ public class ServerOption
 #if DEBUG
     public bool EnableDebug { get; set; } = true;
 #else
-    public bool EnableDebug { get; set; } = false;
+    public bool EnableDebug { get; set; } = true;
 #endif
     public bool DebugMessage { get; set; } = true;
     public bool DebugDetailMessage { get; set; } = true;

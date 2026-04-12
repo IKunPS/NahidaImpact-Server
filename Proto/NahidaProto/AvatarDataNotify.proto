@@ -4,16 +4,16 @@ import "AvatarInfo.proto";
 import "AvatarTeam.proto";
 import "AvatarRenameInfo.proto";
 
-// CmdID: 1224
+// CmdID: 26997
 message AvatarDataNotify {
-  repeated uint32 OKMCKPKKNPH = 14;
-  repeated AvatarRenameInfo avatar_rename_list = 5;
-  repeated AvatarInfo avatar_list = 15;
-  repeated uint32 EGNMMAAFIMK = 12;
-  map<uint32, AvatarTeam> avatar_team_map = 6;
-  repeated uint64 temp_avatar_guid_list = 7;
-  repeated uint32 HPLGPOGIGIH = 9;
-  repeated uint32 backup_avatar_team_order_list = 11;
-  uint32 cur_avatar_team_id = 2;
-  uint64 choose_avatar_guid = 1;
+  repeated uint32 owned_costume_list = 15;
+  repeated uint64 temp_avatar_guid_list = 4;
+  repeated uint32 owned_flycloak_list = 6;
+  repeated AvatarRenameInfo avatar_rename_list = 12;
+  repeated AvatarInfo avatar_list = 10;
+  map<uint32, AvatarTeam> avatar_team_map = 3;
+  repeated uint32 backup_avatar_team_order_list = 9;
+  repeated uint32 _owned_trace_effect_list = 13;
+  uint64 choose_avatar_guid = 14;
+  uint32 cur_avatar_team_id = 11;
 }

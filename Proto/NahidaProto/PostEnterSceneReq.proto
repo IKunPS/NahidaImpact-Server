@@ -1,7 +1,7 @@
 ﻿syntax = "proto3";
 
-// CmdID: 26806
+// CmdID: 2725
 message PostEnterSceneReq {
-  double total_tick_time = 14;
-  uint32 enter_scene_token = 2;
+  double total_tick_time = 3;
+  uint32 enter_scene_token = 10;
 }

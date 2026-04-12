@@ -4,11 +4,11 @@ import "TeamEnterSceneInfo.proto";
 import "MPLevelEntityInfo.proto";
 import "AvatarEnterSceneInfo.proto";
 
-// CmdID: 2019
+// CmdID: 23085
 message PlayerEnterSceneInfoNotify {
-  repeated AvatarEnterSceneInfo avatar_enter_info = 5;
-  MPLevelEntityInfo mp_level_entity_info = 3;
-  TeamEnterSceneInfo team_enter_info = 11;
-  uint32 enter_scene_token = 14;
-  uint32 cur_avatar_entity_id = 10;
+  repeated AvatarEnterSceneInfo avatar_enter_info = 1;
+  MPLevelEntityInfo mp_level_entity_info = 10;
+  TeamEnterSceneInfo team_enter_info = 3;
+  uint32 cur_avatar_entity_id = 6;
+  uint32 enter_scene_token = 2;
 }
