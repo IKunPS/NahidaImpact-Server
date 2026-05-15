@@ -1,0 +1,5 @@
+syntax = "proto3";
+
+message TowerTeamSelectReq {
+  uint32 floor_id = 2;
+}

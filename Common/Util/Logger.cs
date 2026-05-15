@@ -84,12 +84,13 @@ public class Logger(string moduleName)
     {
         try
         {
-            if (LogFile == null) throw new Exception("LogFile is not set");
+            if (LogFile == null) return;
             using var sw = LogFile.AppendText();
             sw.WriteLine(message);
         }
-        catch
+        catch (Exception e)
         {
+            Console.Error.WriteLine($"Failed to write log: {e.Message}");
         }
     }
 

@@ -1,0 +1,7 @@
+syntax = "proto3";
+
+// CmdID: 3645
+message ReliquaryPromoteReq {
+  uint64 target_guid = 15;
+  uint64 item_guid = 12;
+}

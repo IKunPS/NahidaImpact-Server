@@ -1,0 +1,7 @@
+syntax = "proto3";
+
+// CmdID: 3700
+message TakeoffEquipReq {
+  uint64 avatar_guid = 13;
+  uint32 slot = 10;
+}

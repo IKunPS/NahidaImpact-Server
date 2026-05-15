@@ -2,8 +2,8 @@
 
 import "ChatInfo.proto";
 
-// CmdID: 6569
+// CmdID: 20871
 message PlayerChatNotify {
-  ChatInfo chat_info = 3;
-  uint32 channel_id = 13;
+  ChatInfo chat_info = 12;
+  uint32 channel_id = 1;
 }

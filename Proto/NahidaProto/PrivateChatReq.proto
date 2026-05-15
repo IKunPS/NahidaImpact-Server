@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+// CmdID: 26399
+message PrivateChatReq {
+  message BeyondCostumeShareCode {
+    bytes PGLHKNCCMOE = 4;
+  }
+  uint32 target_uid = 5;
+  oneof content {
+    string text = 1;
+    BeyondCostumeShareCode beyond_costume_share_code = 12;
+    uint32 icon = 4;
+  }
+}

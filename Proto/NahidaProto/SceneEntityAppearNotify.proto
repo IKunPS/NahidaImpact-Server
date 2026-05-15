@@ -5,7 +5,7 @@ import "VisionType.proto";
 
 // CmdID: 5582
 message SceneEntityAppearNotify {
-  repeated SceneEntityInfo entity_list = 10;
-  uint32 param = 4;
-  VisionType appear_type = 1;
+  repeated SceneEntityInfo entity_list = 14;
+  uint32 param = 3;
+  VisionType appear_type = 5;
 }

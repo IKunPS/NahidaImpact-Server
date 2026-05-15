@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+import "AnimatorParameterValueInfo.proto";
+
+message EvtAnimatorParameterInfo {
+  AnimatorParameterValueInfo value = 12;
+  uint32 entity_id = 6;
+  bool is_server_cache = 7;
+  int32 name_id = 10;
+}

@@ -1,0 +1,12 @@
+﻿syntax = "proto3";
+
+import "AbilityString.proto";
+
+message DetailAbilityInfo {
+  AbilityString parent_ability_name = 15;
+  uint32 instanced_modifier_id = 6;
+  int32 modifier_local_id = 14;
+  int32 local_id = 4;
+  uint32 caster_id = 3;
+  uint32 instanced_ability_id = 11;
+}

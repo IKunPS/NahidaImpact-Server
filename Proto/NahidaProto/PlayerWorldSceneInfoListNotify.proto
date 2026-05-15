@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+import "PlayerWorldSceneInfo.proto";
+
+// CmdID: 20396
+message PlayerWorldSceneInfoListNotify {
+  repeated PlayerWorldSceneInfo info_list = 1;
+  repeated uint32 unlocked_area_id_list = 1810;
+}

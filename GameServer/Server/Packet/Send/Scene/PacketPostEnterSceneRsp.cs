@@ -14,5 +14,8 @@ public class PacketPostEnterSceneRsp : BasePacket
         };
         
         SetData(proto);
+
+        // Mirror Java: unfreeze unlocked scene points on post-enter
+        player.UnfreezeUnlockedScenePoints();
     }
 }

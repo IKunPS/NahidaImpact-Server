@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+import "ItemParam.proto";
+
+// CmdID: 1588
+message CalcWeaponUpgradeReturnItemsRsp {
+  uint64 target_weapon_guid = 12;
+  repeated ItemParam item_param_list = 9;
+  int32 retcode = 1;
+}

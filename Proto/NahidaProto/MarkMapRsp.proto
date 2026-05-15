@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+import "MapMarkPoint.proto";
+
+// CmdID: 22562
+message MarkMapRsp {
+  int32 retcode = 1;
+  repeated MapMarkPoint mark_list = 2;
+}

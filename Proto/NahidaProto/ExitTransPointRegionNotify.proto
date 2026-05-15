@@ -1,0 +1,7 @@
+syntax = "proto3";
+
+// CmdID: 2241
+message ExitTransPointRegionNotify {
+  uint32 point_id = 8;
+  uint32 scene_id = 6;
+}

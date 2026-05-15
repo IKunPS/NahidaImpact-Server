@@ -1,0 +1,5 @@
+syntax = "proto3";
+
+message TowerTeamSelectRsp {
+  int32 retcode = 4;
+}

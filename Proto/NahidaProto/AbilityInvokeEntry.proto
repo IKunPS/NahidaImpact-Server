@@ -5,13 +5,13 @@ import "AbilityInvokeArgument.proto";
 import "ForwardType.proto";
 
 message AbilityInvokeEntry {
-  AbilityInvokeEntryHead head = 11;
   bytes ability_data = 8;
-  AbilityInvokeArgument argument_type = 12;
-  bool is_ignore_auth = 2;
-  double total_tick_time = 4;
-  uint32 forward_peer = 7;
-  uint32 event_id = 3;
-  ForwardType forward_type = 1;
-  uint32 entity_id = 14;
+  AbilityInvokeEntryHead head = 15;
+  bool is_ignore_auth = 1;
+  uint32 event_id = 2;
+  double total_tick_time = 3;
+  uint32 entity_id = 7;
+  uint32 forward_peer = 6;
+  ForwardType forward_type = 9;
+  AbilityInvokeArgument argument_type = 5;
 }

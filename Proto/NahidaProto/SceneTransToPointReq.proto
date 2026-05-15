@@ -1,0 +1,7 @@
+syntax = "proto3";
+
+// CmdID: 25962
+message SceneTransToPointReq {
+  uint32 scene_id = 1;
+  uint32 point_id = 2;
+}

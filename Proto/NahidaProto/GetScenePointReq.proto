@@ -1,0 +1,8 @@
+syntax = "proto3";
+
+// CmdID: 27040
+message GetScenePointReq {
+  uint32 scene_id = 7;
+  uint32 belong_uid = 4;
+  bool is_relogin = 3;
+}

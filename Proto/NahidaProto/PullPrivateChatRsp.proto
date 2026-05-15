@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+import "ChatInfo.proto";
+
+// CmdID: 21477
+message PullPrivateChatRsp {
+  repeated ChatInfo chat_info = 2;
+  int32 retcode = 1;
+}

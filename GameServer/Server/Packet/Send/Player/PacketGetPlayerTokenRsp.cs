@@ -15,7 +15,6 @@ public class PacketGetPlayerTokenRsp : BasePacket
         {
             Uid = (uint)connection.Player.Uid,
             Token = connection.Account.ComboToken,
-            SecurityCmdBuffer = ByteString.CopyFrom(Crypto.ENCRYPT_SEED_BUFFER),
             PlatformType = 3,
             ChannelId = 1
         };
@@ -43,7 +42,6 @@ public class PacketGetPlayerTokenRsp : BasePacket
         { 
             Uid = (uint)connection.Player.Uid,
             Token = connection.Account.ComboToken,
-            SecurityCmdBuffer = ByteString.CopyFrom(Crypto.ENCRYPT_SEED_BUFFER),
             KeyId = keyId,
             ServerRandKey = serverRandKey,
             Sign = sign,
@@ -60,7 +58,6 @@ public class PacketGetPlayerTokenRsp : BasePacket
         {
             Uid = (uint)connection.Player.Uid,
             Token = connection.Account.ComboToken,
-            SecurityCmdBuffer = ByteString.CopyFrom(Crypto.ENCRYPT_SEED_BUFFER),
             PlatformType = 3,
             ChannelId = 1,
             ServerRandKey = encryptedSeed,

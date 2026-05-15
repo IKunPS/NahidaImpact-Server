@@ -1,13 +1,13 @@
 syntax = "proto3";
 
-// CmdID: 29231
+// CmdID: 20405
 message PingReq {
-  bytes JDGLEPNDCFF = 12;
-  bytes FNPPAAIEDHG = 15;
-  uint32 seq = 10;
-  uint32 client_time = 8;
-  double total_tick_time = 6;
-  uint32 JDKHCEFFCND = 14;
-  float ue_time = 3;
-  uint64 JPJIEEPHIDC = 2;
+  bytes KHMBHIKDDBH = 1;
+  uint32 seq = 2;
+  bytes GAGLGOMNGAF = 3;
+  uint32 client_time = 4;
+  uint32 BAIGMCECEIF = 6;
+  float ue_time = 9;
+  double total_tick_time = 10;
+  uint64 DONCOOGGOJE = 11;
 }

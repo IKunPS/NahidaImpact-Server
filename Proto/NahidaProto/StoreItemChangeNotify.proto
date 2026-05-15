@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+import "Item.proto";
+import "StoreType.proto";
+
+// CmdID: 27681
+message StoreItemChangeNotify {
+  repeated Item item_list = 7;
+  StoreType store_type = 15;
+}

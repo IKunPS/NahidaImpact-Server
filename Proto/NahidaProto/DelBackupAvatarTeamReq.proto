@@ -1,0 +1,5 @@
+syntax = "proto3";
+
+message DelBackupAvatarTeamReq {
+  uint32 backup_avatar_team_id = 11;
+}

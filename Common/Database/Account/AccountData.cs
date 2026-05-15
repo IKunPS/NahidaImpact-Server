@@ -24,7 +24,8 @@ public class AccountData : BaseDatabaseDataHelper
         AccountData? result = null;
         DatabaseHelper.GetAllInstance<AccountData>()?.ForEach(account =>
         {
-            if (account.Username == username) result = account;
+            if (string.Equals(account.Username, username, StringComparison.OrdinalIgnoreCase))
+                result = account;
         });
         return result;
     }
@@ -44,8 +45,10 @@ public class AccountData : BaseDatabaseDataHelper
         var newUid = uid;
         if (uid == 0)
         {
-            newUid = 100001;
-            while (GetAccountByUid(newUid) != null) newUid++;
+            var allAccounts = DatabaseHelper.GetAllInstance<AccountData>();
+            newUid = allAccounts is { Count: > 0 }
+                ? allAccounts.Max(a => a.Uid) + 1
+                : 100001;
         }
 
         var account = new AccountData
@@ -144,6 +147,52 @@ public class AccountData : BaseDatabaseDataHelper
         ComboToken = Crypto.CreateSessionKey(Uid.ToString());
         DatabaseHelper.UpdateInstance(this);
         return ComboToken;
+    }
+
+    #endregion
+
+    #region Repository
+
+    public static AccountData? FindAccountByUsername(string? username)
+    {
+        if (string.IsNullOrEmpty(username))
+            return null;
+        
+        return AccountData.GetAccountByUserName(username);
+    }
+
+    public static async Task<(bool success, int accountUid)> CreateAccount(string? username, string? password)
+    {
+        if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
+            return (false, 0);
+
+        try
+        {
+            await Task.Run(() =>
+            {
+                AccountData.CreateAccount(username, 0, password);
+            });
+
+            var account = AccountData.GetAccountByUserName(username);
+            if (account != null)
+            {
+                return (true, account.Uid);
+            }
+
+            return (false, 0);
+        }
+        catch
+        {
+            return (false, 0);
+        }
+    }
+
+    public static AccountData? FindAccountByAccountUid(int accountUid)
+    {
+        if (accountUid <= 0)
+            return null;
+
+        return AccountData.GetAccountByUid(accountUid);
     }
 
     #endregion

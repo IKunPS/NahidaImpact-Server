@@ -1,0 +1,7 @@
+syntax = "proto3";
+
+// CmdID: 24225
+message GetSceneAreaReq {
+  uint32 belong_uid = 2;
+  uint32 scene_id = 1;
+}

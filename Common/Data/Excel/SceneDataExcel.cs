@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
-using NahidaImpact.Common.Enums.Scene;
+using NahidaImpact.Enums.Scene;
 
 namespace NahidaImpact.Data.Excel;
 

@@ -1,0 +1,6 @@
+syntax = "proto3";
+
+// CmdID: 23726
+message UnlockTransPointRsp {
+  int32 retcode = 1;
+}

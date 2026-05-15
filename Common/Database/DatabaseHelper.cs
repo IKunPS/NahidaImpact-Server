@@ -15,6 +15,9 @@ public class DatabaseHelper
     public static readonly List<int> ToSaveUidList = [];
     public static long LastSaveTick = DateTime.UtcNow.Ticks;
     public static Thread? SaveThread;
+    public static readonly CancellationTokenSource SaveCts = new();
+    public static readonly ManualResetEventSlim AccountLoadedEvent = new(false);
+    public static readonly ManualResetEventSlim AllDataLoadedEvent = new(false);
     public static bool LoadAccount;
     public static bool LoadAllData;
 
@@ -44,17 +47,16 @@ public class DatabaseHelper
         var list = sqlSugarScope.Queryable<AccountData>().ToList();
         foreach (var inst in list)
         {
-            if (!UidInstanceMap.TryGetValue(inst.Uid, out var value))
+            var value = UidInstanceMap.GetOrAdd(inst.Uid, _ => []);
+            lock (value)
             {
-                value = [];
-                UidInstanceMap[inst.Uid] = value;
+                value.Add(inst);
             }
-
-            value.Add(inst); // add to the map
         }
 
         // start dispatch server
         LoadAccount = true;
+        AccountLoadedEvent.Set();
 
         var res = Parallel.ForEach(list, account =>
         {
@@ -75,19 +77,33 @@ public class DatabaseHelper
             }); // cache the data
         });
 
-        while (!res.IsCompleted)
-        {
-        }
-
         LastSaveTick = DateTime.UtcNow.Ticks;
 
         SaveThread = new Thread(() =>
         {
-            while (true) CalcSaveDatabase();
+            var token = SaveCts.Token;
+            while (!token.IsCancellationRequested)
+            {
+                try
+                {
+                    CalcSaveDatabase();
+                    Thread.Sleep(1000);
+                }
+                catch (OperationCanceledException)
+                {
+                    break;
+                }
+                catch (Exception e)
+                {
+                    logger.Error("Error in save thread", e);
+                }
+            }
         });
+        SaveThread.IsBackground = true;
         SaveThread.Start();
 
         LoadAllData = true;
+        AllDataLoadedEvent.Set();
     }
 
     public static void InitializeTable<T>(int uid) where T : BaseDatabaseDataHelper, new()
@@ -100,13 +116,11 @@ public class DatabaseHelper
 
         foreach (var inst in list!.Select(instance => (instance as BaseDatabaseDataHelper)!))
         {
-            if (!UidInstanceMap.TryGetValue(inst.Uid, out var value))
+            var value = UidInstanceMap.GetOrAdd(inst.Uid, _ => []);
+            lock (value)
             {
-                value = [];
-                UidInstanceMap[inst.Uid] = value;
+                value.Add(inst);
             }
-
-            value.Add(inst); // add to the map
         }
     }
 
@@ -126,9 +140,9 @@ public class DatabaseHelper
         {
             sqlSugarScope?.CodeFirst.InitTables<T>();
         }
-        catch
+        catch (Exception e)
         {
-            // ignored
+            logger.Error($"Failed to initialize table for {typeof(T).Name}", e);
         }
     }
 
@@ -148,18 +162,12 @@ public class DatabaseHelper
             if (t is { Count: > 0 })
             {
                 var instance = t[0];
-
-                if (!UidInstanceMap.TryGetValue(uid, out var list))
+                var cacheList = UidInstanceMap.GetOrAdd(uid, _ => []);
+                lock (cacheList)
                 {
-                    list = new List<BaseDatabaseDataHelper>();
-                    UidInstanceMap[uid] = list;
+                    cacheList.RemoveAll(i => i is T);
+                    cacheList.Add(instance);
                 }
-                else
-                {
-                    list.RemoveAll(i => i is T);
-                }
-
-                list.Add(instance);
                 return instance;
             }
 
@@ -204,17 +212,23 @@ public class DatabaseHelper
     public static void UpdateInstance<T>(T instance) where T : BaseDatabaseDataHelper, new()
     {
         sqlSugarScope?.Updateable(instance).ExecuteCommand();
+        NeedSave(instance.Uid);
+    }
+
+    public static void NeedSave(int uid)
+    {
+        if (!ToSaveUidList.Contains(uid))
+            ToSaveUidList.Add(uid);
     }
 
     public static void CreateInstance<T>(T instance) where T : BaseDatabaseDataHelper, new()
     {
         sqlSugarScope?.Insertable(instance).ExecuteCommand();
-        if (!UidInstanceMap.TryGetValue(instance.Uid, out var value))
+        var value = UidInstanceMap.GetOrAdd(instance.Uid, _ => []);
+        lock (value)
         {
-            value = [];
-            UidInstanceMap[instance.Uid] = value;
+            value.Add(instance);
         }
-        value.Add(instance);
     }
 
     public static void DeleteInstance<T>(int key) where T : BaseDatabaseDataHelper, new()
@@ -231,8 +245,7 @@ public class DatabaseHelper
 
     public static void DeleteAllInstance(int key)
     {
-
-        var value = UidInstanceMap[key];
+        if (!UidInstanceMap.TryGetValue(key, out var value)) return;
         var baseType = typeof(BaseDatabaseDataHelper);
         var assembly = typeof(BaseDatabaseDataHelper).Assembly;
         var types = assembly.GetTypes().Where(t => t.IsSubclassOf(baseType));
@@ -263,7 +276,7 @@ public class DatabaseHelper
             var list = ToSaveUidList.ToList(); // copy the list to avoid the exception
             foreach (var uid in list)
             {
-                var value = UidInstanceMap[uid];
+                if (!UidInstanceMap.TryGetValue(uid, out var value)) continue;
                 var baseType = typeof(BaseDatabaseDataHelper);
                 var assembly = typeof(BaseDatabaseDataHelper).Assembly;
                 var types = assembly.GetTypes().Where(t => t.IsSubclassOf(baseType));

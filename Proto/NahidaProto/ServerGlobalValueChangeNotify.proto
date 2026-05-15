@@ -1,0 +1,8 @@
+syntax = "proto3";
+
+// CmdID: 28243
+message ServerGlobalValueChangeNotify {
+  uint32 key_hash = 8;
+  float value = 12;
+  uint32 entity_id = 14;
+}

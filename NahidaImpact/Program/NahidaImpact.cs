@@ -41,14 +41,7 @@ public class NahidaImpact
         LoaderManager.InitDatabase();
         if (!DatabaseHelper.LoadAllData)
         {
-            var t = Task.Run(() =>
-            {
-                while (!DatabaseHelper.LoadAllData) // wait for all data to be loaded
-                    Thread.Sleep(100);
-            });
-
-            await t.WaitAsync(new CancellationToken());
-
+            DatabaseHelper.AllDataLoadedEvent.Wait();
             Logger.Info(I18NManager.Translate("Server.ServerInfo.LoadedItem", I18NManager.Translate("Word.Database")));
         }
 
@@ -67,9 +60,15 @@ public class NahidaImpact
 
     private static bool IsRunningAsAdministrator()
     {
-        using var identity = System.Security.Principal.WindowsIdentity.GetCurrent();
-        var principal = new System.Security.Principal.WindowsPrincipal(identity);
-        return principal.IsInRole(System.Security.Principal.WindowsBuiltInRole.Administrator);
+        if (OperatingSystem.IsWindows())
+        {
+            using var identity = System.Security.Principal.WindowsIdentity.GetCurrent();
+            var principal = new System.Security.Principal.WindowsPrincipal(identity);
+            return principal.IsInRole(System.Security.Principal.WindowsBuiltInRole.Administrator);
+        }
+
+        // On Linux/macOS, check if running as root
+        return Environment.UserName == "root";
     }
 
     # region Exit
@@ -101,7 +100,8 @@ public class NahidaImpact
     private static void ProcessExit()
     {
         KcpListener.Connections.Values.ToList().ForEach(x => x.Stop(true));
-        DatabaseHelper.SaveThread?.Interrupt();
+        DatabaseHelper.SaveCts.Cancel();
+        DatabaseHelper.SaveThread?.Join(TimeSpan.FromSeconds(5));
         DatabaseHelper.SaveDatabase();
     }
 

@@ -1,0 +1,8 @@
+syntax = "proto3";
+
+// CmdID: 28745
+message TakeoffEquipRsp {
+  uint64 avatar_guid = 8;
+  uint32 slot = 14;
+  int32 retcode = 2;
+}

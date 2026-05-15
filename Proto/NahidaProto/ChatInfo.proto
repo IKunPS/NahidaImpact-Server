@@ -2,77 +2,86 @@
 
 message ChatInfo {
   message SystemHint {
-    repeated uint32 uid_list = 9;
-    uint32 type = 13;
+    repeated uint32 uid_list = 13;
+    uint32 type = 9;
   }
   message BeyondCollectionNewCaptain {
-    string IKHDOCIMCIM = 1;
-    uint32 EDODKPMDMCA = 15;
-    uint32 GDBKBJGLENJ = 13;
+    string HCHPDANLMOG = 6;
+    uint32 MFBOOJMFCNP = 5;
+    uint32 ACIFGBKINDP = 10;
   }
   message HallInvitation {
-    repeated uint32 KOEMJKJKBBE = 2;
-    uint32 OJFPKPKGNIM = 1;
-    uint32 FBCFANAPPIE = 6;
-    uint32 JFLMNACCCPA = 9;
-    uint32 PAEKHFOKGDP = 14;
-    uint64 ABIJGKNKLOL = 5;
-    uint64 GBCKPMPJPLO = 8;
+    repeated uint32 JOFKGFKFNFO = 10;
+    uint64 GFGEKNJPNHN = 9;
+    uint64 CMNPEHMNIMJ = 5;
+    uint32 KEFDEAGLADO = 11;
+    uint32 FHLJIAGJHIB = 13;
+    uint32 CPOKKOBODAD = 6;
+    uint32 GKFAIFHMIDN = 1;
   }
   message BeyondTeamInvitation {
-    uint64 GBCKPMPJPLO = 5;
-    uint32 PAEKHFOKGDP = 4;
-    uint32 FBCFANAPPIE = 1;
-    uint32 OJFPKPKGNIM = 14;
+    uint64 GFGEKNJPNHN = 4;
+    uint32 KEFDEAGLADO = 8;
+    uint32 FHLJIAGJHIB = 3;
+    uint32 GKFAIFHMIDN = 13;
   }
   message BeyondTeamApplication {
-    uint32 JGPFLBBDFPA = 1;
-    uint32 IMFAOFKPPKI = 11;
-    uint64 INHFIFLNJGC = 14;
-    uint32 target_uid = 8;
+    uint64 HBOFNHOEJPL = 10;
+    uint32 IJLBKOGAIDI = 13;
+    uint32 target_uid = 5;
+    uint32 LOEIPNIOEFE = 1;
   }
   message BeyondTeamRecruitment {
-    uint32 IAPFFOHDFLJ = 3;
-    uint32 PHEFKMAKDCK = 1;
-    uint32 IPMHPINJLIF = 15;
+    uint32 GDPCEFJMHEA = 5;
+    uint32 HAEDGOFHBJO = 7;
+    uint32 GGGCKHGOINM = 12;
   }
   message BeyondRoomInvitation {
-    uint32 FBCFANAPPIE = 14;
-    uint64 JNMFOIFEDHF = 6;
-    uint32 OJFPKPKGNIM = 7;
-    uint32 PAEKHFOKGDP = 4;
-    uint64 GBCKPMPJPLO = 10;
+    uint32 KEFDEAGLADO = 13;
+    uint32 GKFAIFHMIDN = 2;
+    uint32 FHLJIAGJHIB = 5;
+    uint64 GGBFMBEEFJD = 7;
+    uint64 GFGEKNJPNHN = 15;
   }
   message BeyondGachaGift {
-    string GKADLHOKEPL = 4;
+    string transaction = 10;
   }
-  message PDHLMGPBJFB {
-    bytes APMCBIFOFPB = 1;
+  message BeyondCostumeShareCode {
+    bytes PGLHKNCCMOE = 4;
   }
-  string xbox_id = 11;
-  bool is_read = 5;
-  uint32 platform_type = 1;
-  uint64 DNILFJNIHGN = 12;
-  uint32 sequence = 8;
-  uint32 time = 15;
-  uint32 AJENHILOIPG = 9;
-  uint32 to_uid = 2;
+  message HallRecruitingInvitation {
+    repeated uint32 JCJBIBCMCLC = 8;
+    uint32 LCLNLENNBFE = 15;
+    uint32 GGGCKHGOINM = 11;
+    uint32 PKOEDOFJAFE = 12;
+    uint64 HAEDGOFHBJO = 6;
+    uint64 IDMJDPKFIML = 5;
+  }
+  string xbox_id = 10;
+  uint64 GIDCNDEAHFG = 12;
+  uint32 to_uid = 8;
+  uint32 platform_type = 6;
+  uint32 time = 5;
   uint32 uid = 13;
-  oneof content {
-    uint32 icon = 126;
-    BeyondCollectionNewCaptain beyond_collection_new_captain = 604;
-    BeyondTeamRecruitment beyond_team_recruitment = 1335;
-    SystemHint system_hint = 1791;
-    BeyondRoomInvitation beyond_room_invitation = 38;
-    BeyondGachaGift beyond_gacha_gift = 227;
-    string text = 267;
-    PDHLMGPBJFB beyond_costume_share_code = 311;
-    BeyondTeamInvitation beyond_team_invitation = 1318;
-    BeyondTeamApplication beyond_team_application = 1708;
-    HallInvitation hall_invitation = 21;
+  uint32 JODAMIAHCPP = 3;
+  bool is_read = 7;
+  uint32 sequence = 4;
+  oneof HGIIOKKHLPF {
+    uint32 mentioned_uid = 9;
+    bool is_mention_all = 1;
   }
-  oneof IMDGBONKHAI {
-    uint32 mentioned_uid = 3;
-    bool is_mention_all = 10;
+  oneof content {
+    uint32 icon = 830;
+    HallRecruitingInvitation hall_recruiting_invitation = 1860;
+    BeyondCollectionNewCaptain beyond_collection_new_captain = 649;
+    string text = 1097;
+    HallInvitation hall_invitation = 59;
+    BeyondTeamRecruitment beyond_team_recruitment = 1652;
+    BeyondRoomInvitation beyond_room_invitation = 531;
+    BeyondCostumeShareCode beyond_costume_share_code = 489;
+    SystemHint system_hint = 1236;
+    BeyondGachaGift beyond_gacha_gift = 1413;
+    BeyondTeamInvitation beyond_team_invitation = 1429;
+    BeyondTeamApplication beyond_team_application = 1308;
   }
 }

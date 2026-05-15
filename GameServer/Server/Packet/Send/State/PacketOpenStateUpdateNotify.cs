@@ -18,7 +18,7 @@ public class PacketOpenStateUpdateNotify : BasePacket
             uint id = state.Id;
             uint value = 0;
 
-            if (ConfigManager.Config.GameOptions.enabledOpenStateAllMap)
+            if (ConfigManager.Config.GameOptions.EnabledOpenStateAllMap)
             {
                 // 将所有OpenState的状态改为1 也就是全部打开 与/unlockall效果相同
                 value = 1;
@@ -26,7 +26,7 @@ public class PacketOpenStateUpdateNotify : BasePacket
                 proto.OpenStateMap[48] = 1; // 把地图大边界状态改为1
             }
             
-            if (id == 45 && !ConfigManager.Config.GameOptions.resinUsage)
+            if (id == 45 && !ConfigManager.Config.GameOptions.ResinUsage)
             {
                 // Remove resin from map
                 proto.OpenStateMap[id] = 0;

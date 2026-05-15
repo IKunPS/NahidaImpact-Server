@@ -2,7 +2,8 @@
 
 import "AbilityControlBlock.proto";
 
+// CmdID: 3318
 message AbilityChangeNotify {
-  AbilityControlBlock ability_control_block = 14;
-  uint32 entity_id = 9;
+  AbilityControlBlock ability_control_block = 12;
+  uint32 entity_id = 4;
 }

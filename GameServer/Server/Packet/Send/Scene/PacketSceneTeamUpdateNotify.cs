@@ -1,8 +1,8 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using NahidaImpact.GameServer.Game.Player;
 using NahidaImpact.GameServer.Game.Entity;
+using NahidaImpact.GameServer.Server.Packet.Send.State;
 using NahidaImpact.KcpSharp;
 using NahidaImpact.Proto;
 
@@ -10,6 +10,19 @@ namespace NahidaImpact.GameServer.Server.Packet.Send.Scene;
 
 public class PacketSceneTeamUpdateNotify : BasePacket
 {
+    // Hexenzirkel avatar IDs
+    private static readonly HashSet<int> HexenzirkelAvatars = new()
+    {
+        10000123, 10000020, 10000022, 10000029,
+        10000031, 10000038, 10000041, 10000043
+    };
+
+    // MoonPhase avatar IDs
+    private static readonly HashSet<int> MoonAvatars = new()
+    {
+        10000122, 10000120, 10000119, 10000121, 10000116
+    };
+
     public PacketSceneTeamUpdateNotify(PlayerInstance player) : base(CmdIds.SceneTeamUpdateNotify)
     {
         var proto = new SceneTeamUpdateNotify
@@ -17,41 +30,56 @@ public class PacketSceneTeamUpdateNotify : BasePacket
             IsInMp = player.IsInMultiplayer()
         };
 
-        // Get current avatar entity for comparison (not used currently but kept for future)
-        var currentAvatarEntity = player.TeamManager?.GetCurrentAvatarEntity();
-        
-        // Get active team - TeamManager should not be null but check anyway
-        var activeTeam = player.TeamManager?.GetActiveTeam();
-        if (activeTeam == null) 
+        if (player.World != null)
         {
-            SetData(proto);
-            return;
-        }
-        
-        foreach (var entityAvatar in activeTeam)
-        {
-            if (entityAvatar == null) continue;
-            
-            var sceneTeamAvatar = new SceneTeamAvatar
+            foreach (var p in player.World.GetPlayers())
             {
-                SceneEntityInfo = entityAvatar.ToProto(),
-                WeaponEntityId = player.WeaponEntityId,
-                PlayerUid = (uint)player.Uid,
-                WeaponGuid = entityAvatar.AvatarInfo.WeaponGuid,
-                EntityId = entityAvatar.Id,
-                AvatarGuid = entityAvatar.AvatarInfo.Guid,
-                AbilityControlBlock = entityAvatar.GetAbilityControlBlock(),
-                SceneId = player.SceneId,
-            };
-            
-            // For multiplayer, set additional fields like Java version
-            if (player.IsInMultiplayer())
-            {
-                sceneTeamAvatar.AvatarInfo = entityAvatar.GetAvatarInfo();
-                sceneTeamAvatar.SceneAvatarInfo = entityAvatar.GetSceneAvatarInfo();
+                int hexenzirkelCount = 0;
+                int moonPhaseCount = 0;
+
+                var activeTeam = p.TeamManager?.GetActiveTeam(true);
+
+                foreach (var entityAvatar in activeTeam)
+                {
+                    if (entityAvatar == null) continue;
+
+                    int avatarId = (int)entityAvatar.AvatarInfo.AvatarId;
+                    if (HexenzirkelAvatars.Contains(avatarId))
+                        hexenzirkelCount++;
+                    if (MoonAvatars.Contains(avatarId))
+                        moonPhaseCount++;
+
+                    var sceneTeamAvatar = new SceneTeamAvatar
+                    {
+                        PlayerUid = (uint)p.Uid,
+                        AvatarGuid = entityAvatar.AvatarInfo.Guid,
+                        SceneId = p.SceneId,
+                        EntityId = entityAvatar.Id,
+                        SceneEntityInfo = entityAvatar.ToProto(),
+                        WeaponGuid = entityAvatar.AvatarInfo.WeaponGuid,
+                        WeaponEntityId = entityAvatar.WeaponEntityId,
+                        AbilityControlBlock = entityAvatar.GetAbilityControlBlock()
+                    };
+
+                    proto.SceneTeamAvatarList.Add(sceneTeamAvatar);
+                }
+
+                // Send Hexenzirkel/MoonPhase global value changes (mirrors Java)
+                var entity = p.TeamManager?.Entity;
+                if (entity != null)
+                {
+                    p.SendPacket(new PacketServerGlobalValueChangeNotify(
+                        entity.Id,
+                        "SGV_HexenzirkelLevel",
+                        hexenzirkelCount
+                    ));
+                    p.SendPacket(new PacketServerGlobalValueChangeNotify(
+                        entity.Id,
+                        "SGV_MoonPhaseLevel",
+                        moonPhaseCount
+                    ));
+                }
             }
-            
-            proto.SceneTeamAvatarList.Add(sceneTeamAvatar);
         }
 
         SetData(proto);

@@ -1,0 +1,6 @@
+syntax = "proto3";
+
+// CmdID: 26963
+message ChooseCurAvatarTeamReq {
+  uint32 team_id = 7;
+}

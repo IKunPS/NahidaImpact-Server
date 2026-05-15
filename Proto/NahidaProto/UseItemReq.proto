@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+// CmdID: 4800
+message UseItemReq {
+  uint64 guid = 1;
+  uint64 target_guid = 13;
+  uint32 count = 14;
+  uint32 option_idx = 10;
+  repeated uint32 option_idx_list = 6;
+  bool is_enter_mp_dungeon_team = 7;
+}

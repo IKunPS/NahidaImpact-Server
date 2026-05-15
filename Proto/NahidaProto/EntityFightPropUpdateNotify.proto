@@ -1,0 +1,7 @@
+﻿syntax = "proto3";
+
+// CmdId: 8914
+message EntityFightPropUpdateNotify {
+  map<uint32, float> fight_prop_map = 5;
+  uint32 entity_id = 14;
+}

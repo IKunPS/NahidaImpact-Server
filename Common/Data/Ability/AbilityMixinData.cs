@@ -1,6 +1,6 @@
-using System.Text.Json.Serialization;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
-using System.Text.Json;
 
 namespace NahidaImpact.Data.Ability;
 
@@ -41,45 +41,36 @@ public class AbilityMixinData
         ReviveElemEnergyMixin,
     }
 
-    [JsonPropertyName("$type")]
+    [JsonProperty("$type")]
     public MixinType Type { get; set; }
 
-    [JsonPropertyName("modifierName")]
-    public JsonElement ModifierName { get; set; }
+    /// <summary>Can be a string or array of strings. Handled by GetModifierNames().</summary>
+    [JsonProperty("modifierName")]
+    public JToken? ModifierName { get; set; }
 
-    [JsonPropertyName("stateIDs")]
+    [JsonProperty("stateIDs")]
     public List<string> StateIDs { get; set; } = [];
 
-    [JsonPropertyName("globalValueKey")]
+    [JsonProperty("globalValueKey")]
     public string GlobalValueKey { get; set; } = string.Empty;
 
-    [JsonPropertyName("speed")]
     public float Speed { get; set; }
 
-    [JsonPropertyName("costStaminaDelta")]
     public float CostStaminaDelta { get; set; }
 
-    [JsonPropertyName("ratio")]
     public float Ratio { get; set; } = 1.0f;
 
-    [JsonPropertyName("defaultGlobalValueOnCreate")]
     public float DefaultGlobalValueOnCreate { get; set; }
 
-    [JsonPropertyName("ratioSteps")]
     public List<float> RatioSteps { get; set; } = [];
 
-    [JsonPropertyName("modifierNameSteps")]
     public List<string> ModifierNameSteps { get; set; } = [];
 
     public List<string> GetModifierNames()
     {
-        if (ModifierName.ValueKind == JsonValueKind.Array)
-        {
-            return JsonSerializer.Deserialize<List<string>>(ModifierName.GetRawText());
-        }
-        else
-        {
-            return new List<string> { ModifierName.GetString() };
-        }
+        if (ModifierName == null) return new List<string>();
+        if (ModifierName.Type == JTokenType.Array)
+            return ModifierName.ToObject<List<string>>() ?? new List<string>();
+        return new List<string> { ModifierName.ToString() };
     }
 }

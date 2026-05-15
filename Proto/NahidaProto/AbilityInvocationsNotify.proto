@@ -2,6 +2,7 @@
 
 import "AbilityInvokeEntry.proto";
 
+// CmdID: 8630
 message AbilityInvocationsNotify {
-  repeated AbilityInvokeEntry invokes = 5;
+  repeated AbilityInvokeEntry invokes = 3;
 }

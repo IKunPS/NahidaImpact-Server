@@ -1,0 +1,9 @@
+﻿syntax = "proto3";
+
+import "AbilityInvokeEntry.proto";
+
+// CmdID: 21742
+message ClientAbilityInitFinishNotify {
+  repeated AbilityInvokeEntry invokes = 12;
+  uint32 entity_id = 14;
+}

@@ -2,8 +2,8 @@
 
 import "SceneTeamAvatar.proto";
 
-// CmdID: 21351
+// CmdID: 22857
 message SceneTeamUpdateNotify {
-  repeated SceneTeamAvatar scene_team_avatar_list = 15;
-  bool is_in_mp = 14;
+  repeated SceneTeamAvatar scene_team_avatar_list = 3;
+  bool is_in_mp = 1;
 }

@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+import "Vector.proto";
+
+// CmdID: 21565
+message PersonalSceneJumpRsp {
+  Vector dest_pos = 7;
+  uint32 dest_scene_id = 3;
+  int32 retcode = 10;
+}

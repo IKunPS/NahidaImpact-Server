@@ -1,0 +1,8 @@
+syntax = "proto3";
+
+// CmdID: 3041
+message WeaponAwakenReq {
+  uint64 target_weapon_guid = 10;
+  repeated uint64 item_guid_list = 11;
+  uint32 awaken_material_count = 15;
+}

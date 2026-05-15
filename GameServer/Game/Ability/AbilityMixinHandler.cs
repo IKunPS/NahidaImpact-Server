@@ -8,10 +8,25 @@ namespace NahidaImpact.GameServer.Game.Ability;
 public abstract class AbilityMixinHandler
 {
     public abstract Task<bool> Execute(Ability ability, AbilityMixinData mixinData, ByteString abilityData, BaseEntity target);
+    
+    protected static BaseEntity? GetTarget(Ability ability, BaseEntity entity, string target)
+    {
+        return target switch
+        {
+            "Self" => entity,
+            "Team" => ability.PlayerOwner?.TeamManager?.Entity,
+            "OriginOwner" => ability.PlayerOwner?.TeamManager?.GetCurrentAvatarEntity(),
+            "Owner" => ability.Owner,
+            "Applier" => entity,
+            "CurLocalAvatar" => ability.PlayerOwner?.TeamManager?.GetCurrentAvatarEntity(),
+            "CasterOriginOwner" => null,
+            _ => null
+        };
+    }
 }
 
-[AttributeUsage(AttributeTargets.Class, Inherited = false, AllowMultiple = false)]
-public sealed class AbilityMixinAttribute : Attribute
+[System.AttributeUsage(System.AttributeTargets.Class, Inherited = false, AllowMultiple = false)]
+public sealed class AbilityMixinAttribute : System.Attribute
 {
     public AbilityMixinData.MixinType MixinType { get; }
 

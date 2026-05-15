@@ -1,0 +1,8 @@
+syntax = "proto3";
+
+// CmdID: 4504
+message SetEquipLockStateRsp {
+  uint64 target_equip_guid = 5;
+  bool is_locked = 8;
+  int32 retcode = 13;
+}

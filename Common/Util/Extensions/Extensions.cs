@@ -51,16 +51,15 @@ public static partial class Extensions
 
     public static T RandomElement<T>(this List<T> values)
     {
-        var index = new Random().Next(values.Count);
+        var index = Random.Shared.Next(values.Count);
         return values[index];
     }
 
     public static string RandomKey(int length)
     {
         const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-        var random = new Random();
         return new string(Enumerable.Repeat(chars, length)
-            .Select(s => s[random.Next(s.Length)]).ToArray());
+            .Select(s => s[Random.Shared.Next(s.Length)]).ToArray());
     }
 
     public static ICollection<T> Clone<T>(this ICollection<T> values)
@@ -72,7 +71,7 @@ public static partial class Extensions
 
     public static int RandomInt(int from, int to)
     {
-        return new Random().Next(from, to);
+        return Random.Shared.Next(from, to);
     }
 
     public static string GetSha256Hash(string input)

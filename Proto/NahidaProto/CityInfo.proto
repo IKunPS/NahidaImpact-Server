@@ -1,0 +1,7 @@
+syntax = "proto3";
+
+message CityInfo {
+  uint32 level = 13;
+  uint32 city_id = 5;
+  uint32 crystal_num = 14;
+}

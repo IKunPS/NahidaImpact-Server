@@ -8,20 +8,20 @@ import "AvatarInfo.proto";
 import "SceneAvatarInfo.proto";
 
 message SceneTeamAvatar {
+  repeated ServerBuff server_buff_list = 10;
   AbilityControlBlock ability_control_block = 15;
-  SceneEntityInfo scene_entity_info = 6;
-  AbilitySyncStateInfo FDNFFNIMCNP = 11;
-  AvatarInfo avatar_info = 3;
-  repeated ServerBuff server_buff_list = 4;
-  SceneAvatarInfo scene_avatar_info = 12;
-  AbilitySyncStateInfo JLHNKELHLCF = 14;
-  uint32 entity_id = 2;
+  AbilitySyncStateInfo LBIJJANPOOL = 7;
+  SceneAvatarInfo scene_avatar_info = 13;
+  SceneEntityInfo scene_entity_info = 3;
+  AbilitySyncStateInfo DMLKOPFAJAI = 2;
+  AvatarInfo avatar_info = 4;
+  uint64 weapon_guid = 8;
+  uint64 avatar_guid = 11;
+  bool is_reconnect = 6;
+  bool EANFCMEECFP = 9;
+  bool DCMMNCFHGIN = 1600;
   uint32 scene_id = 1;
-  uint64 weapon_guid = 10;
-  uint64 avatar_guid = 8;
-  uint32 player_uid = 7;
-  bool is_player_cur_avatar = 5;
-  bool is_on_scene = 1318;
-  bool is_reconnect = 9;
-  uint32 weapon_entity_id = 13;
+  uint32 weapon_entity_id = 14;
+  uint32 entity_id = 12;
+  uint32 player_uid = 5;
 }

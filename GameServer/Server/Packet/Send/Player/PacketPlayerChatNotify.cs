@@ -7,30 +7,60 @@ namespace NahidaImpact.GameServer.Server.Packet.Send.Player;
 
 public class PacketPlayerChatNotify : BasePacket
 {
-    public PacketPlayerChatNotify(PlayerInstance player, int channelId, int systemHintType) : base(CmdIds.PlayerChatNotify)
+    // Text message
+    public PacketPlayerChatNotify(PlayerInstance player, int channelId, string message) : base(CmdIds.PlayerChatNotify)
     {
-        var systemHint = new ChatInfo.Types.SystemHint
-        {
-            Type = (uint)systemHintType
-            // uid_list is optional, leave empty
-        };
-        
         var chatInfo = new ChatInfo
         {
-            SystemHint = systemHint,
             Uid = (uint)player.Uid,
-            Time = (uint)DateTimeOffset.UtcNow.ToUnixTimeSeconds(),
-            PlatformType = 0, // Default platform type
-            IsRead = false,
-            Sequence = 1 // Default sequence
+            Text = message,
+            Time = (uint)DateTimeOffset.UtcNow.ToUnixTimeSeconds()
         };
-        
+
         var proto = new PlayerChatNotify
         {
             ChatInfo = chatInfo,
             ChannelId = (uint)channelId
         };
-        
+
+        SetData(proto);
+    }
+
+    // Icon/emote message
+    public PacketPlayerChatNotify(PlayerInstance player, int channelId, int icon) : base(CmdIds.PlayerChatNotify)
+    {
+        var chatInfo = new ChatInfo
+        {
+            Uid = (uint)player.Uid,
+            Icon = (uint)icon,
+            Time = (uint)DateTimeOffset.UtcNow.ToUnixTimeSeconds()
+        };
+
+        var proto = new PlayerChatNotify
+        {
+            ChatInfo = chatInfo,
+            ChannelId = (uint)channelId
+        };
+
+        SetData(proto);
+    }
+
+    // System hint (enter/leave world)
+    public PacketPlayerChatNotify(PlayerInstance player, int channelId, ChatInfo.Types.SystemHint systemHint) : base(CmdIds.PlayerChatNotify)
+    {
+        var chatInfo = new ChatInfo
+        {
+            SystemHint = systemHint,
+            Uid = (uint)player.Uid,
+            Time = (uint)DateTimeOffset.UtcNow.ToUnixTimeSeconds()
+        };
+
+        var proto = new PlayerChatNotify
+        {
+            ChatInfo = chatInfo,
+            ChannelId = (uint)channelId
+        };
+
         SetData(proto);
     }
 }

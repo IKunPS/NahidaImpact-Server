@@ -1,0 +1,6 @@
+syntax = "proto3";
+
+message DelTeamEntityNotify {
+  uint32 scene_id = 7;
+  repeated uint32 del_entity_id_list = 10;
+}

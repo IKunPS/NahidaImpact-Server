@@ -1,0 +1,8 @@
+﻿syntax = "proto3";
+
+// CmdID: 1415
+message SceneTimeNotify {
+  bool is_paused = 13;
+  uint32 scene_id = 3;
+  uint64 scene_time = 10;
+}

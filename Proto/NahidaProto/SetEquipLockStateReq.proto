@@ -1,0 +1,7 @@
+syntax = "proto3";
+
+// CmdID: 21501
+message SetEquipLockStateReq {
+  uint64 target_equip_guid = 9;
+  bool is_locked = 3;
+}

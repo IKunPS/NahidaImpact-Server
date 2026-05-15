@@ -1,0 +1,10 @@
+﻿syntax = "proto3";
+
+import "AbilityInvokeEntry.proto";
+
+// CmdID: 43
+message ClientAbilityChangeNotify {
+  repeated AbilityInvokeEntry invokes = 1;
+  uint32 entity_id = 9;
+  bool is_init_hash = 4;
+}

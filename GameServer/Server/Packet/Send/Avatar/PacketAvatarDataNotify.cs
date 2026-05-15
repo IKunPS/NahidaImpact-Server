@@ -1,7 +1,4 @@
-using System;
-using NahidaImpact.Database.Avatar;
 using NahidaImpact.GameServer.Game.Player;
-using NahidaImpact.GameServer.Game.Player.Team;
 using NahidaImpact.KcpSharp;
 using NahidaImpact.Proto;
 using System.Collections.Generic;
@@ -11,57 +8,42 @@ namespace NahidaImpact.GameServer.Server.Packet.Send.Avatar;
 
 public class PacketAvatarDataNotify : BasePacket
 {
-    public PacketAvatarDataNotify(PlayerInstance player, List<AvatarDataInfo> Avatars): base(CmdIds.AvatarDataNotify)
+    public PacketAvatarDataNotify(PlayerInstance player) : base(CmdIds.AvatarDataNotify)
     {
-        // Set choose avatar guid (similar to Java version)
-        ulong chooseAvatarGuid = 228; // Default value like Java version
-        var currentAvatarEntity = player.TeamManager?.GetCurrentAvatarEntity();
-        if (currentAvatarEntity != null)
+        var proto = new AvatarDataNotify
         {
-            chooseAvatarGuid = currentAvatarEntity.AvatarInfo.Guid;
-        }
-        
-        var proto = new AvatarDataNotify()
-        {
-            CurAvatarTeamId = player.TeamManager?.CurrentTeamIndex ?? 1,
-            ChooseAvatarGuid = chooseAvatarGuid,
-            AvatarList = { Avatars.Select(avatar => avatar.ToProto()) }
+            CurAvatarTeamId = (uint)(player.TeamManager?.CurrentTeamIndex ?? 1),
+            ChooseAvatarGuid = player.TeamManager?.GetCurrentCharacterGuid() ?? 0,
         };
         
-        var teams = player.TeamManager?.GetAvatarTeams() ?? new List<GameAvatarTeam>();
-        foreach (GameAvatarTeam team in teams)
-        {
-            AvatarTeam avatarTeam = new();
-            avatarTeam.AvatarGuidList.AddRange(team.AvatarGuidList);
+        // Add owned flycloak, costume, trace effect lists                                                                                                                                                        
+        proto.OwnedFlycloakList.AddRange(player.GetFlyCloakList().Select(x => (uint)x));                                                                                                                          
+        proto.OwnedCostumeList.AddRange(player.GetCostumeList().Select(x => (uint)x));                                                                                                                            
+        proto.OwnedTraceEffectList.AddRange(player.GetTraceEffectList().Select(x => (uint)x)); 
 
-            proto.AvatarTeamMap.Add(team.Index, avatarTeam);
-            if (team.Index > 4)
-            {
-                // Add to backup team order list (like Java version)
-                proto.BackupAvatarTeamOrderList.Add((uint)team.Index);
-            }
-        }
-        
-        // Add owned flycloak list (default flycloak like Java version)
-        // proto.OwnedFlycloakList.Add(340005); // Default wind glider
-        
-        // Add owned costume list (empty for now)
-        // proto.OwnedCostumeList.Add(0);
-        
-        // Add owned trace effect list (empty for now)
-        // proto.OwnedTraceEffectList.Add(0);
-        
-        // Add backup avatar team order list for teams 5-10 (like Java version)
-        for (uint i = 5; i <= 10; i++)
+        // Avatar list
+        foreach (var avatar in player.Avatars)
         {
-            if (!proto.BackupAvatarTeamOrderList.Contains(i))
+            proto.AvatarList.Add(avatar.ToProto());
+        }
+
+        // Team data
+        foreach (var kv in player.TeamManager?.Teams ?? new Dictionary<int, Database.Team.TeamInfo>())
+        {
+            proto.AvatarTeamMap[(uint)kv.Key] = kv.Value.ToProto();
+            if (kv.Key > 4)
             {
-                proto.BackupAvatarTeamOrderList.Add(i);
+                proto.BackupAvatarTeamOrderList.Add((uint)kv.Key);
             }
         }
-        
-        // Console.WriteLine($"[DEBUG] PacketAvatarDataNotify: OwnedFlycloakList.Count={proto.OwnedFlycloakList.Count}, BackupAvatarTeamOrderList.Count={proto.BackupAvatarTeamOrderList.Count}");
-        
+
+        // Set main character as choose avatar if available
+        var mainCharacter = player.AvatarManager.GetAvatar(player.GetMainCharacterId());
+        if (mainCharacter != null)
+        {
+            proto.ChooseAvatarGuid = mainCharacter.Guid;
+        }
+
         SetData(proto);
     }
 }

@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+import "MapMarkPoint.proto";
+
+// CmdID: 1331
+message MarkMapReq {
+  MapMarkPoint mark = 15;
+  MapMarkPoint old = 2;
+  Operation op = 3;
+
+  enum Operation {
+    OPERATION_ADD = 0;
+    OPERATION_MOD = 1;
+    OPERATION_DEL = 2;
+    OPERATION_GET = 3;
+  }
+}
+
+
+    

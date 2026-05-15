@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+import "Vector.proto";
+import "ForwardType.proto";
+
+message EvtBulletMoveNotify {
+  Vector cur_pos = 3;
+  ForwardType forward_type = 2;
+  uint32 entity_id = 4;
+}

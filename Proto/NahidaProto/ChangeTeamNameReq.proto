@@ -1,0 +1,7 @@
+syntax = "proto3";
+
+// CmdID: 1006
+message ChangeTeamNameReq {
+  string team_name = 13;
+  int32 team_id = 7;
+}

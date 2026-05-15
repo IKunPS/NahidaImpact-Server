@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+message AttackResult {
+  int32 attacker_id = 1;
+  int32 defense_id = 2;
+  string anim_event_id = 3;
+  float damage = 5;
+  int32 element_type = 6;
+  int32 hit_retreat_angle_compat = 7;
+  int32 hit_pos_type = 8;
+  int32 endure_break = 9;
+  bool is_crit = 10;
+  bool mute_element_hurt = 12;
+  uint32 attack_timestamp_ms = 14;
+}

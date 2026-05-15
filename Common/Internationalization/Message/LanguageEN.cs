@@ -1,12 +1,15 @@
-﻿namespace NahidaImpact.Internationalization.Message;
+namespace NahidaImpact.Internationalization.Message;
 
 #region Root
 
+/// <summary>
+///     English
+/// </summary>
 public class LanguageEN
 {
     public GameTextEN Game { get; } = new();
     public ServerTextEN Server { get; } = new();
-    public WordTextEN Word { get; } = new(); // a placeholder for the actual word text
+    public WordTextEN Word { get; } = new();
 }
 
 #endregion
@@ -35,20 +38,6 @@ public class ServerTextEN
 /// </summary>
 public class WordTextEN
 {
-    public string Star => "Star";
-    public string Valk => "Valkyrie";
-    public string Material => "Material";
-    public string Stigmata => "Stigmata";
-    public string Weapon => "Weapon";
-    public string Banner => "Gacha";
-    public string Activity => "Activity";
-    public string Elf => "Elf";
-    public string Dress => "Outfit";
-    public string Bracket => "Bracket";
-    public string Disturbance => "Disturbance";
-    public string Site => "Site";
-
-    // server info
     public string Config => "Config File";
     public string Language => "Language";
     public string Log => "Log";
@@ -71,27 +60,6 @@ public class WordTextEN
 #endregion
 
 #region Layer 2
-
-#region GameText
-
-/// <summary>
-///     path: Game.Command
-/// </summary>
-public class CommandTextEN
-{
-    public NoticeTextEN Notice { get; } = new();
-    public HelpTextEN Help { get; } = new();
-    public ValkTextEN Valk { get; } = new();
-    public GiveAllTextEN GiveAll { get; } = new();
-    public ElfTextEN Elf { get; } = new();
-    public AbyssTextEN Abyss { get; } = new();
-    public EndlessTextEN Endless { get; } = new();
-    public AvatarTextEN Avatar { get; } = new();
-}
-
-#endregion
-
-#region ServerTextEN
 
 /// <summary>
 ///     path: Server.Web
@@ -123,32 +91,46 @@ public class ServerInfoTextEN
     public string LoadedItem => "Loaded {0}.";
     public string LoadedItems => "Loaded {0} {1}(s).";
     public string ServerRunning => "{0} server listening on {1}";
-
-    public string ServerStarted =>
-        "Startup complete! Took {0}s, better than 99% of users. Type 'help' for command help"; // This is a meme, consider localpermissiong in English
-
-    public string MissionEnabled =>
-        "Mission system enabled. This feature is still in development and may not work as expected. Please report any bugs to the developers.";
+    public string ServerStarted => "Startup complete! Took {0}s. Type 'help' for command help";
+    public string MissionEnabled => "Mission system enabled. This feature is still in development.";
     public string KeyStoreError => "The SSL certificate does not exist, SSL functionality has been disabled.";
     public string CacheLoadSkip => "Skipped cache loading.";
-
-    public string ConfigMissing => "{0} is missing. Please check your resource folder: {1}, {2} may not be available.";
+    public string ConfigMissing => "{0} is missing. Please check: {1}, {2} may not be available.";
     public string UnloadedItems => "Unloaded all {0}.";
     public string SaveDatabase => "Database saved in {0}s";
-
-    public string WaitForAllDone =>
-        "You cannot enter the game yet. Please wait for all items to load before trying again";
-
+    public string WaitForAllDone => "Please wait for all items to load before logging in.";
     public string UnhandledException => "An unhandled exception occurred: {0}";
+}
+
+/// <summary>
+///     path: Game.Command
+/// </summary>
+public class CommandTextEN
+{
+    public NoticeTextEN Notice { get; } = new();
+    public HelpTextEN Help { get; } = new();
+    public GiveTextEN Give { get; } = new();
+    public GiveAllTextEN GiveAll { get; } = new();
+    public TeleportTextEN Teleport { get; } = new();
+    public HealTextEN Heal { get; } = new();
+    public ClearTextEN Clear { get; } = new();
+    public AccountTextEN Account { get; } = new();
+    public PermissionTextEN Permission { get; } = new();
+    public KickTextEN Kick { get; } = new();
+    public ListTextEN List { get; } = new();
+    public SetPropTextEN SetProp { get; } = new();
+    public UnlockAllTextEN UnlockAll { get; } = new();
+    public SpawnTextEN Spawn { get; } = new();
+    public KillAllTextEN KillAll { get; } = new();
+    public MapAreaTextEN MapArea { get; } = new();
+    public WeatherTextEN Weather { get; } = new();
+    public PositionTextEN Position { get; } = new();
+    public StopTextEN Stop { get; } = new();
 }
 
 #endregion
 
-#endregion
-
-#region Layer 3
-
-#region CommandText
+#region Layer 3 - Command Texts
 
 /// <summary>
 ///     path: Game.Command.Notice
@@ -160,8 +142,8 @@ public class NoticeTextEN
     public string InvalidArguments => "Invalid arguments!";
     public string NoPermission => "You don't have permission!";
     public string CommandNotFound => "Command not found! Type '/help' for assistance";
-    public string TargetOffline => "Target {0}({1}) is offline! Clearing current target";
-    public string TargetFound => "Target {0}({1}) found. Next command will default to this target";
+    public string TargetOffline => "Target {0}({1}) is offline!";
+    public string TargetFound => "Target {0}({1}) found.";
     public string TargetNotFound => "Target {0} not found!";
     public string InternalError => "Internal error occurred while processing command!";
 }
@@ -172,38 +154,22 @@ public class NoticeTextEN
 public class HelpTextEN
 {
     public string Desc => "Show help information";
-    public string Usage =>
-        "Usage: /help\n" +
-        "Usage: /help [cmd]";
+    public string Usage => "Usage: /help\nUsage: /help [cmd]";
     public string Commands => "Commands: ";
-    public string CommandUsage => "Usage: ";
-    public string CommandPermission => "Level Permission For Access: ";
-    public string CommandAlias => "Command Alias：";
+    public string CommandPermission => "Permission: ";
+    public string CommandAlias => "Aliases: ";
 }
 
 /// <summary>
-///     path: Game.Command.Valk
+///     path: Game.Command.Give
 /// </summary>
-public class ValkTextEN
+public class GiveTextEN
 {
-    public string Desc => "Set attributes for owned characters\n" +
-                          "Note: -1 means all owned characters\n";
-
-    public string Usage =>
-        "Usage: /valk add [ValkID/-1] l<Level> s<Star>\n\n" +
-        "Usage: /valk level [ValkID/-1] [Level]\n\n" +
-        "Usage: /valk star [ValkID/-1] [Star]\n\n" +
-        "Usage: /valk skill [ValkID/-1] for max skill level";
-
-    public string ValkNotFound => "Character does not exist!";
-    public string ValkAddedAll => "Granted all characters to player!";
-    public string ValkAdded => "Granted character {0} to player!";
-    public string ValkSetLevelAll => "Set all characters to level {0}!";
-    public string ValkSetLevel => "Set character {0} to level {1}!";
-    public string ValkSetStarAll => "Set all characters' Resonance to {0}!";
-    public string ValkSetStar => "Set character {0}'s Resonance to {1}!";
-    public string ValkSetSkillLevelAll => "Set all characters' skill levels to max!";
-    public string ValkSetSkillLevel => "Set character {0}'s skill levels to max!";
+    public string Desc => "Give items to a player";
+    public string Usage => "Usage: /give <itemId> [amount] [level]";
+    public string InvalidItemId => "Invalid item ID.";
+    public string Success => "Gave {0}x item {1} (level {2}) to player {3}.";
+    public string Failed => "Failed to give item {0}. Item type may not be supported yet.";
 }
 
 /// <summary>
@@ -211,86 +177,198 @@ public class ValkTextEN
 /// </summary>
 public class GiveAllTextEN
 {
-    public string Desc => "Give all items of specified type\n" +
-                          "weapon,stigmata";
-
-    public string Usage =>
-        "Usage: /giveall weapon\n\n" +
-        "Usage: /giveall stigmata\n\n" +
-        "Usage: /giveall material\n\n" +
-        "Usage: /giveall dress\n";
-
-    public string GiveAllItems => "Granted all {0}";
+    public string Desc => "Give all items of specified type";
+    public string Usage => "Usage: /giveall <avatars|weapons|relics|materials|essentials|all> [amount]";
+    public string GiveAllItems => "Gave all {0} x{1}.";
+    public string AvatarsGiven => "Gave {0} avatars to player {1}.";
+    public string MaterialsGiven => "Gave {0} material types x{1} to player {2}.";
+    public string WeaponsGiven => "Gave {0} weapons to player {1}.";
+    public string RelicsGiven => "Gave {0} relics to player {1}.";
+    public string EssentialsGiven => "Gave {0} essential items x{1} to player {2}.";
 }
 
 /// <summary>
-///     path: Game.Command.Elf
+///     path: Game.Command.Teleport
 /// </summary>
-public class ElfTextEN
+public class TeleportTextEN
 {
-    public string Desc => "Set attributes for owned elfs\n" +
-                          "Note: -1 means all owned elfs\n";
-
-    public string Usage =>
-        "Usage: /elf add [ElfID/-1] l<Level> s<Star>\n\n";
-
-    public string ElfNotFound => "Elf does not exist!";
-    public string ElfAddedAll => "Granted all Elfs to player!";
-    public string ElfAdded => "Granted Elf {0} to player!";
-    public string ElfSetLevelAll => "Set all Elfs to level {0}!";
-    public string ElfSetLevel => "Set Elf {0} to level {1}!";
-    public string ElfSetStarAll => "Set all Elf's Resonance to {0}!";
-    public string ElfSetStar => "Set Elf {0}'s Resonance to {1}!";
+    public string Desc => "Teleport player to coordinates";
+    public string Usage => "Usage: /tp <x> <y> <z> [sceneId]";
+    public string InvalidCoords => "Invalid coordinates.";
+    public string Success => "Teleported {0} to ({1:F0}, {2:F0}, {3:F0}) scene {4}.";
+    public string Failed => "Failed to teleport. Scene {0} may not exist.";
 }
 
 /// <summary>
-///     path: Game.Command.Abyss
+///     path: Game.Command.Heal
 /// </summary>
-public class AbyssTextEN
+public class HealTextEN
 {
-    public string Desc => "Set abyss disturbance,bracket,site \n";
-
-    public string Usage =>
-        "Usage: /abyss bracket [1-9]\n\n" +
-        "Usage: /abyss temp [value]\n\n" + 
-        "Usage: /abyss site [siteId]\n";
-
-    public string Success => "Success set {0}";
-    public string AreaNotFound => "SiteId Not Found";
+    public string Desc => "Heal all team members";
+    public string Usage => "Usage: /heal";
+    public string NoTeam => "Player has no team.";
+    public string Success => "Healed all characters for player {0}.";
 }
 
 /// <summary>
-///     path: Game.Command.Endless
+///     path: Game.Command.Clear
 /// </summary>
-public class EndlessTextEN
+public class ClearTextEN
 {
-    public string Desc => "Set Memorial Arena boss \n";
-
-    public string Usage =>
-        "Usage: /endless [bossid1] [bossid2] [bossid3]\n\n" +
-        "/endless 1001 1002 1003";
-
-    public string Success => "Success set Memorial Arena Boss";
-    public string NotFound => "BossId Not Found";
+    public string Desc => "Clear player inventory";
+    public string Usage => "Usage: /clear <weapons|materials|all>";
+    public string ClearedAll => "Cleared all items for player {0}.";
+    public string ClearedMaterials => "Cleared all materials for player {0}.";
+    public string ClearedWeapons => "Cleared all weapons for player {0}.";
 }
 
 /// <summary>
-///     path: Game.Command.Avatar
+///     path: Game.Command.Account
 /// </summary>
-public class AvatarTextEN
+public class AccountTextEN
 {
-    public string Desc => "Give avatar to player";
-
-    public string Usage =>
-        "Usage: /avatar <avatarId> [level]\n" +
-        "Usage: /avatar all [level] - Give all avatars";
-
-    public string InvalidId => "Invalid avatar ID.";
-    public string AddFailed => "Failed to add avatar {0}. Avatar may already exist or ID is invalid.";
-    public string AddSuccess => "Successfully added avatar {0} (Lv.{1}) to player {2}.";
-    public string AddAllSuccess => "Successfully added {0} avatars (Lv.{1}) to player {2}.";
+    public string Desc => "Manage database accounts";
+    public string Usage => "Usage: /account <create|delete> [username] [uid]";
+    public string InvalidUid => "Invalid UID.";
+    public string CreateSuccess => "Account '{0}' created with UID {1}.";
+    public string DeleteSuccess => "Account with UID {0} deleted.";
 }
 
-#endregion
+/// <summary>
+///     path: Game.Command.Permission
+/// </summary>
+public class PermissionTextEN
+{
+    public string Desc => "Manage player permissions";
+    public string Usage => "Usage: /perm <add|remove|clear|list> [permission]";
+    public string AccountNotFound => "Account not found.";
+    public string InvalidPerm => "Invalid permission. Valid: {0}";
+    public string Added => "Added permission '{0}' to UID {1}.";
+    public string Removed => "Removed permission '{0}' from UID {1}.";
+    public string Cleared => "Cleared all permissions for UID {0}.";
+    public string List => "Permissions for UID {0}: {1}";
+}
+
+/// <summary>
+///     path: Game.Command.Kick
+/// </summary>
+public class KickTextEN
+{
+    public string Desc => "Kick a player from the server";
+    public string Usage => "Usage: /kick @<uid>";
+    public string PlayerKicked => "Kicked player {0}.";
+    public string KickMessage => "You have been kicked by the server.";
+}
+
+/// <summary>
+///     path: Game.Command.List
+/// </summary>
+public class ListTextEN
+{
+    public string Desc => "List online players";
+    public string Usage => "Usage: /list";
+    public string Header => "Online players ({0}):";
+    public string Entry => "  UID: {0} | Name: {1} | Scene: {2} | Pos: ({3:F0}, {4:F0}, {5:F0})";
+}
+
+/// <summary>
+///     path: Game.Command.SetProp
+/// </summary>
+public class SetPropTextEN
+{
+    public string Desc => "Set player properties";
+    public string Usage => "Usage: /setprop <worldLevel|exp|name|signature> <value>";
+    public string WorldLevel => "Set World Level to {0} for player {1}.";
+    public string Exp => "Set EXP to {0} for player {1}.";
+    public string Name => "Set name to '{0}' for player {1}.";
+    public string Signature => "Set signature to '{0}' for player {1}.";
+    public string Unknown => "Unknown property: {0}";
+}
+
+/// <summary>
+///     path: Game.Command.UnlockAll
+/// </summary>
+public class UnlockAllTextEN
+{
+    public string Desc => "Unlock all scene points";
+    public string Usage => "Usage: /unlockall";
+    public string Success => "Unlocked {0} scene points for player {1} in scene {2}.";
+}
+
+/// <summary>
+///     path: Game.Command.Spawn
+/// </summary>
+public class SpawnTextEN
+{
+    public string Desc => "Spawn monsters or gadgets";
+    public string Usage => "Usage: /spawn <monster|gadget> <id> [amount] [level]";
+    public string InvalidEntityId => "Invalid entity ID.";
+    public string NoScene => "Player is not in a scene.";
+    public string Success => "Spawned {0} {1}(s) (ID: {2}, Lv: {3}) near player {4}.";
+}
+
+/// <summary>
+///     path: Game.Command.KillAll
+/// </summary>
+public class KillAllTextEN
+{
+    public string Desc => "Kill all monsters in scene";
+    public string Usage => "Usage: /killall";
+    public string Success => "Killed all monsters in current scene for player {0}.";
+}
+
+/// <summary>
+/// <summary>
+///     path: Game.Command.MapArea
+/// </summary>
+public class MapAreaTextEN
+{
+    public string Desc => "Manage map areas";
+    public string Usage => "Usage: /maparea <give|remove|isopen> ...";
+    public string Unknown => "Unknown subcommand: {0}";
+    public string GiveUsage => "Usage: /maparea give <id|all> [isOpen]";
+    public string GiveAll => "Gave all map areas to player {0} (isOpen={1})";
+    public string GiveOne => "Gave map area {0} to player {1} (isOpen={2})";
+    public string RemoveUsage => "Usage: /maparea remove <id>";
+    public string RemoveSuccess => "Removed map area {0} from player {1}";
+    public string SetOpenUsage => "Usage: /maparea isopen <id> <true|false>";
+    public string SetOpenSuccess => "Set map area {0} isOpen={1} for player {2}";
+    public string InvalidId => "Invalid map area ID: {0}";
+    public string NotFound => "Map area {0} not found for player {1}";
+    public string InvalidArgs => "Invalid arguments: id={0}, isOpen={1}";
+}
+
+/// <summary>
+///     path: Game.Command.Weather
+/// </summary>
+public class WeatherTextEN
+{
+    public string Desc => "Change scene weather";
+    public string Usage => "Usage: /weather <0-5>";
+    public string Invalid => "Invalid weather type. Range: 0-5";
+    public string Success => "Weather set to type {0} for player {1}.";
+}
+
+/// <summary>
+///     path: Game.Command.Position
+/// </summary>
+public class PositionTextEN
+{
+    public string Desc => "Show current position";
+    public string Usage => "Usage: /pos";
+    public string PlayerInfo => "Player: {0} | Scene: {1}";
+    public string PositionInfo => "Position: X={0:F1} Y={1:F1} Z={2:F1}";
+    public string RotationInfo => "Rotation: X={0:F1} Y={1:F1} Z={2:F1}";
+}
+
+/// <summary>
+///     path: Game.Command.Stop
+/// </summary>
+public class StopTextEN
+{
+    public string Desc => "Shutdown the server";
+    public string Usage => "Usage: /stop";
+    public string ShuttingDown => "Server shutting down...";
+}
 
 #endregion

@@ -1,0 +1,6 @@
+syntax = "proto3";
+
+message SceneAreaUnlockNotify {
+  uint32 scene_id = 11;
+  repeated uint32 area_list = 7;
+}

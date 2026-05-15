@@ -80,7 +80,7 @@ public class LoaderManager : NahidaImpact
         {
             _ = Task.Run(DatabaseHelper.Initialize); // do not wait
 
-            while (!DatabaseHelper.LoadAccount) Thread.Sleep(100);
+            DatabaseHelper.AccountLoadedEvent.Wait();
 
             Logger.Info(I18NManager.Translate("Server.ServerInfo.LoadedItem",
                 I18NManager.Translate("Word.DatabaseAccount")));

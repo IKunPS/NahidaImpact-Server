@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+import "TeamEntityInfo.proto";
+
+// CmdID: 4567
+message SyncTeamEntityNotify {
+  repeated TeamEntityInfo team_entity_info_list = 1;
+  uint32 scene_id = 14;
+}

@@ -1,0 +1,6 @@
+﻿syntax = "proto3";
+
+// CmdID: 27941
+message ServerTimeNotify {
+  uint64 server_time = 9;
+}

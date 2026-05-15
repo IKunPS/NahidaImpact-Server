@@ -1,0 +1,7 @@
+syntax = "proto3";
+
+// CmdID: 9249
+message EnterWorldAreaReq {
+  uint32 area_id = 9;
+  uint32 area_type = 15;
+}

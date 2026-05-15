@@ -1,0 +1,22 @@
+﻿syntax = "proto3";
+
+import "PropChangeDetailInfo.proto";
+import "ChangeHpDebtsReason.proto";
+import "ChangeEnergyReason.proto";
+import "PropChangeReason.proto";
+import "ChangHpReason.proto";
+
+// CmdID: 29948
+message EntityFightPropChangeReasonNotify {
+  repeated uint32 param_list = 10;
+  PropChangeDetailInfo detail_info = 7;
+  uint32 prop_type = 5;
+  ChangeHpDebtsReason change_hp_debts_reason = 12;
+  float prop_delta = 9;
+  uint32 LJFGBOOMIPP = 3;
+  ChangeEnergyReason change_energy_reson = 4;
+  uint32 entity_id = 8;
+  float BJLOMIGAOFH = 2;
+  PropChangeReason reason = 15;
+  ChangHpReason change_hp_reason = 6;
+}

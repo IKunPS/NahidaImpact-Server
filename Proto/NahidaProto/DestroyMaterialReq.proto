@@ -1,0 +1,8 @@
+syntax = "proto3";
+
+import "MaterilaInfo.proto";
+
+// CmdID: 5054
+message DestroyMaterialReq {
+  repeated MaterilaInfo material_list = 11;
+}

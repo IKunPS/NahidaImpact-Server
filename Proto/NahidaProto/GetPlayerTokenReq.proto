@@ -1,33 +1,33 @@
 ﻿syntax = "proto3";
 
-// CmdID: 22738
+// CmdId: 29446
 message GetPlayerTokenReq {
-  string PEPFJDEKDCL = 14;
-  string account_uid = 1;
-  string _xbox_id = 1443;
-  string CAFGDLOOKOP = 1015;
-  string NCGCNPEDNLI = 2;
-  string psn_id = 5;
-  string auth_appid = 1304;
-  string CDMDEIMBLOL = 1797;
-  string country_code = 7;
-  string _gate_ticket = 1741;
-  string online_id = 3;
-  string FPGEJFOEAGD = 166;
-  string client_ip_str = 13;
-  string client_rand_key = 2015;
-  string birthday = 646;
-  string account_token = 10;
-  uint32 minors_reg_min_age = 1914;
-  uint32 cloud_client_ip = 6;
-  uint32 platform_type = 8;
-  uint32 uid = 12;
-  uint32 channel_id = 9;
-  uint32 sub_channel_id = 4;
-  uint32 key_id = 929;
-  uint32 sign_type = 448;
-  uint32 lang = 1237;
-  bool is_guest = 11;
-  uint32 account_type = 15;
-  uint32 authkey_ver = 1824;
+  uint32 MBFOBONPMCI = 1;
+  uint32 channel_id = 2;
+  uint32 uid = 3;
+  string GLBGNFMGEFM = 4;
+  uint32 platform_type = 5;
+  uint32 HLOIPJDIIEE = 6;
+  string DLKMJKHOIMC = 7;
+  string account_uid = 8;
+  string EKFJJELBNFB = 9;
+  uint32 KFCBOHBPMAO = 10;
+  bool CGPKHDOAOCP = 11;
+  string MIPKNOMHEKL = 12;
+  string CKPJABMALEA = 13;
+  string LEJILKNBCFO = 14;
+  string BNADAPMAIAC = 15;
+  string HADOFGGLMDB = 84;
+  string GEOOAGIDMBE = 452;
+  uint32 LKOFAAGFHPG = 640;
+  uint32 IOFANDNNFMK = 731;
+  string MLFOHICHEFN = 744;
+  string IKIOBLOOJEO = 755;
+  uint32 key_id = 849;
+  uint32 COEDDLOPBGB = 923;
+  string JFDGEANHJCL = 958;
+  string GCNGCNFKGLE = 1276;
+  string auth_appid = 1679;
+  string client_rand_key = 1978;
+  uint32 ICPNDPFPHGP = 1998;
 }

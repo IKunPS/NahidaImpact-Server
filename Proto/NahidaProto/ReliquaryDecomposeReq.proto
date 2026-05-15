@@ -1,0 +1,8 @@
+syntax = "proto3";
+
+// CmdID: 26691
+message ReliquaryDecomposeReq {
+  repeated uint64 guid_list = 10;
+  uint32 target_count = 8;
+  uint32 config_id = 2;
+}

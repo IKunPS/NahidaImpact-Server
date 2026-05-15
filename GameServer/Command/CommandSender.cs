@@ -1,5 +1,6 @@
-﻿using NahidaImpact.Enums.Player;
+using NahidaImpact.Enums.Player;
 using NahidaImpact.GameServer.Game.Player;
+using NahidaImpact.GameServer.Server.Packet.Send.Player;
 using NahidaImpact.Util;
 
 namespace NahidaImpact.GameServer.Command;
@@ -31,7 +32,7 @@ public class PlayerCommandSender(PlayerInstance player) : ICommandSender
 
     public async ValueTask SendMsg(string msg)
     {
-        // await Player.SendPacket(new PacketRecvChatMsgNotify(msg));
+        await Player.SendPacket(new PacketPrivateChatNotify(GameConstants.SERVER_CONSOLE_UID, Player.Uid, msg));
     }
 
     public int GetSender()

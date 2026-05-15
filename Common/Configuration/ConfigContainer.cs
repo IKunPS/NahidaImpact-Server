@@ -1,3 +1,5 @@
+using NahidaImpact.Util;
+
 namespace NahidaImpact.Configuration;
 
 public class ConfigContainer
@@ -85,7 +87,7 @@ public class ServerProfile
 {
     public string NickName { get; set; } = "Nahida";
     public string Signature { get; set; } = "Welcome to NahidaServer!";
-    public int Uid { get; set; } = 511694508;
+    public int Uid { get; set; } = GameConstants.SERVER_CONSOLE_UID;
     public int AvatarId { get; set; } = 10000007;
     public int NameCardId { get; set; } = 210001;
     public uint AdventureRank { get; set; } = 1;
@@ -94,7 +96,13 @@ public class ServerProfile
 
 public class GameOptionsConfig
 {
-    public bool enabledOpenStateAllMap { get; set; } = true;
-    public bool defaultUnlockAllMap { get; set; } = false;
-    public bool resinUsage { get; set; } = true;
+    public bool EnabledOpenStateAllMap { get; set; } = true;
+    public bool DefaultUnlockAllMap { get; set; } = true;
+    public bool ResinUsage { get; set; } = true;
+    public QuestingConfig Questing { get; set; } = new();
+}
+
+public class QuestingConfig
+{
+    public bool EnabledBornQuest { get; set; } = false;
 }

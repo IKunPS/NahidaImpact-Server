@@ -8,7 +8,7 @@ namespace NahidaImpact.Util.Security;
 
 public class Crypto
 {
-    private static readonly Random SecureRandom = new();
+    private static readonly RandomNumberGenerator SecureRandom = RandomNumberGenerator.Create();
     private static readonly Logger _logger = new("Crypto");
     public static byte[] DISPATCH_KEY { get; private set; } = Array.Empty<byte>();
     public static byte[] DISPATCH_SEED { get; private set; } = Array.Empty<byte>();
@@ -25,26 +25,26 @@ public class Crypto
         try
         {
             // Load scheduling key
-            DISPATCH_KEY = File.ReadAllBytes("Config/security/dispatchKey.bin");
+            DISPATCH_KEY = File.ReadAllBytes("Config/Security/dispatchKey.bin");
             DISPATCH_SEED = File.ReadAllBytes("Config/security/dispatchSeed.bin");
             
             // Load encryption key
-            ENCRYPT_KEY = File.ReadAllBytes("Config/security/secretKey.bin");
-            ENCRYPT_SEED_BUFFER = File.ReadAllBytes("Config/security/secretKeyBuffer.bin");
+            ENCRYPT_KEY = File.ReadAllBytes("Config/Security/secretKey.bin");
+            ENCRYPT_SEED_BUFFER = File.ReadAllBytes("Config/Security/secretKeyBuffer.bin");
             
             // Load signature private key
-            var signingKeyBytes = File.ReadAllBytes("Config/security/SigningKey.der");
+            var signingKeyBytes = File.ReadAllBytes("Config/Security/SigningKey.der");
             CUR_SIGNING_KEY = RSA.Create();
             CUR_SIGNING_KEY.ImportPkcs8PrivateKey(signingKeyBytes, out _);
             
             // Load sdk private key
-            var sdkBytes = File.ReadAllBytes("Config/security/sdk_private_key.der");
+            var sdkBytes = File.ReadAllBytes("Config/Security/sdk_private_key.der");
             SDK_PATCH_KEY = RSA.Create();
             SDK_PATCH_KEY.ImportPkcs8PrivateKey(sdkBytes, out _);
             
             
             // Load the game public key
-            var gameKeysDir = "Config/security/game_keys";
+            var gameKeysDir = "Config/Security/game_keys";
             if (Directory.Exists(gameKeysDir))
             {
                 var pattern = new Regex(@"([0-9]*)_Pub\.der");
@@ -93,20 +93,12 @@ public class Crypto
     public static string CreateSessionKey(string accountUid)
     {
         var random = new byte[32];
-        SecureRandom.NextBytes(random);
+        SecureRandom.GetBytes(random);
 
-        var temp = accountUid + "." + DateTime.Now.Ticks + "." + SecureRandom;
+        var temp = accountUid + "." + DateTime.Now.Ticks + "." + Convert.ToHexString(random);
 
-        try
-        {
-            var bytes = SHA512.HashData(Encoding.UTF8.GetBytes(temp));
-            return Convert.ToBase64String(bytes);
-        }
-        catch
-        {
-            var bytes = SHA512.HashData(Encoding.UTF8.GetBytes(temp));
-            return Convert.ToBase64String(bytes);
-        }
+        var bytes = SHA512.HashData(Encoding.UTF8.GetBytes(temp));
+        return Convert.ToBase64String(bytes);
     }
     
     public static QueryCurRegionRspJson EncryptAndSignRegionData(byte[] regionInfo, string keyId)

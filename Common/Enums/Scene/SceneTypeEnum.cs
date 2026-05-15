@@ -1,4 +1,4 @@
-namespace NahidaImpact.Common.Enums.Scene;
+namespace NahidaImpact.Enums.Scene;
 
 public enum SceneTypeEnum
 {

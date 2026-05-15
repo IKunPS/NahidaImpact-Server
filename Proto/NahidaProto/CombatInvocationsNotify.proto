@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+import "CombatInvokeEntry.proto";
+
+// CmdID: 4056
+message CombatInvocationsNotify {
+  repeated CombatInvokeEntry invoke_list = 14;
+  uint32 client_sequence_id = 8;
+}

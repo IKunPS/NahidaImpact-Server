@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+import "CityInfo.proto";
+
+// CmdID: 470
+message GetSceneAreaRsp {
+  repeated CityInfo city_info_list = 8;
+  repeated uint32 area_id_list = 6;
+  uint32 scene_id = 15;
+  int32 retcode = 14;
+}

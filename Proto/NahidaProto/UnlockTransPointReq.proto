@@ -1,0 +1,7 @@
+syntax = "proto3";
+
+// CmdID: 2582
+message UnlockTransPointReq {
+  uint32 scene_id = 9;
+  uint32 point_id = 11;
+}

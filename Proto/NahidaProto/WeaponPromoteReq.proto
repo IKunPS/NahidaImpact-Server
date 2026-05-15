@@ -1,0 +1,6 @@
+syntax = "proto3";
+
+// CmdID: 23264
+message WeaponPromoteReq {
+  uint64 target_weapon_guid = 9;
+}

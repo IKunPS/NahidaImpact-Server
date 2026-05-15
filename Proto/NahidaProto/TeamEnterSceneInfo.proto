@@ -4,10 +4,10 @@ import "AbilitySyncStateInfo.proto";
 import "AbilityControlBlock.proto";
 
 message TeamEnterSceneInfo {
-  AbilitySyncStateInfo team_ability_info = 13;
-  AbilityControlBlock ability_control_block = 14;
-  // repeated FJDJGNOEPKA HNOGEFHANJD = 10;
-  // ILPFHNNNFNI JGPLGJFKCML = 2;
-  uint32 team_entity_id = 12;
-  float OPHNDGLDCKJ = 9;
+  AbilitySyncStateInfo team_ability_info = 9;
+  // repeated PIEGHMIIPBO NILPPIMHCCE = 15;
+  // KJLCAPIOBMP PCFMMLPNOGP = 10;
+  AbilityControlBlock ability_control_block = 13;
+  uint32 team_entity_id = 11;
+  float EIIEAOHKGDC = 14;
 }

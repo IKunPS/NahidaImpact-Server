@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+import "StoreType.proto";
+
+// CmdID: 8176
+message StoreItemDelNotify {
+  repeated uint64 guid_list = 6;
+  StoreType store_type = 1;
+}

@@ -1,0 +1,6 @@
+syntax = "proto3";
+
+message AvatarDieAnimationEndRsp {
+  uint64 die_guid = 14;
+  uint32 retcode = 13;
+}

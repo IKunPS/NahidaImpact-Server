@@ -1,0 +1,5 @@
+syntax = "proto3";
+
+message AvatarDelNotify {
+  repeated uint64 avatar_guid_list = 1;
+}

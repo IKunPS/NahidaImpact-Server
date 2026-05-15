@@ -1,8 +1,7 @@
-using System;
 using NahidaImpact.GameServer.Game.Player;
 using NahidaImpact.KcpSharp;
 using NahidaImpact.Proto;
-using System.Linq;
+using NahidaImpact.Util;
 
 namespace NahidaImpact.GameServer.Server.Packet.Send.Player;
 
@@ -10,24 +9,42 @@ public class PacketPlayerEnterSceneInfoNotify : BasePacket
 {
     public PacketPlayerEnterSceneInfoNotify(PlayerInstance player) : base(CmdIds.PlayerEnterSceneInfoNotify)
     {
-        var proto = new PlayerEnterSceneInfoNotify()
+        // Phlogiston scalar value — mirrors Java:
+        // AbilityScalarValueEntry with key "SGV_PlayerTeam_Phlogiston"
+        var scalarValue = new AbilityScalarValueEntry
         {
-            CurAvatarEntityId = player.TeamManager.GetCurrentAvatarEntity().Id,
+            FloatValue = player.GetPhlogistonValue()
+        };
+        scalarValue.Key = new AbilityString
+        {
+            Hash = Utils.AbilityHash("SGV_PlayerTeam_Phlogiston"),
+            Str = "SGV_PlayerTeam_Phlogiston"
+        };
+
+        var phlogistonState = new AbilitySyncStateInfo();
+        phlogistonState.SgvDynamicValueMap.Add(scalarValue);
+
+        var currentAvatar = player.TeamManager.GetCurrentAvatarEntity();
+        var teamEntity = player.TeamManager.Entity;
+
+        var proto = new PlayerEnterSceneInfoNotify
+        {
+            CurAvatarEntityId = currentAvatar?.Id ?? 0,
             EnterSceneToken = player.EnterToken,
             MpLevelEntityInfo = new MPLevelEntityInfo
             {
-                EntityId = player.World.getLevelEntityId(),
-                AbilityInfo = new AbilitySyncStateInfo(),
-                AuthorityPeerId = player.PeerId
+                EntityId = player.World?.getLevelEntityId() ?? 0,
+                AuthorityPeerId = player.World?.GetHostPeerId() ?? 0,
+                AbilityInfo = phlogistonState
             },
             TeamEnterInfo = new TeamEnterSceneInfo
             {
-                TeamEntityId = player.TeamManager.Entity.Id,
-                AbilityControlBlock = new AbilityControlBlock(),
-                TeamAbilityInfo = new AbilitySyncStateInfo()
+                TeamEntityId = teamEntity?.Id ?? 0,
+                TeamAbilityInfo = phlogistonState,
+                AbilityControlBlock = player.TeamManager.GetAbilityControlBlock()
             }
         };
-        
+
         var activeTeam = player.TeamManager.GetActiveTeam();
         if (activeTeam != null)
         {
@@ -37,12 +54,12 @@ public class PacketPlayerEnterSceneInfoNotify : BasePacket
                 {
                     AvatarGuid = avatarEntity.AvatarInfo.Guid,
                     AvatarEntityId = avatarEntity.Id,
-                    WeaponEntityId = player.WeaponEntityId,
                     WeaponGuid = avatarEntity.AvatarInfo.WeaponGuid,
+                    WeaponEntityId = avatarEntity.WeaponEntityId
                 });
             }
         }
-        
+
         SetData(proto);
     }
 }

@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+import "Item.proto";
+import "StoreType.proto";
+
+// CmdID: 24081
+message PlayerStoreNotify {
+  repeated Item item_list = 11;
+  uint32 weight_limit = 4;
+  StoreType store_type = 15;
+}

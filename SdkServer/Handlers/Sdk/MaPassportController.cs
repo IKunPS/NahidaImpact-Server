@@ -5,7 +5,6 @@ using NahidaImpact.Util.Security;
 using System.Security.Cryptography;
 using System.Text;
 using NahidaImpact.Database.Account;
-using NahidaImpact.Database.Repositories;
 
 namespace NahidaImpact.SdkServer.Handlers.Sdk;
 
@@ -66,11 +65,11 @@ public class MaPassportController : ControllerBase
             }
         }
         
-        var accountData = AccountRepository.FindAccountByUsername(account);
+        var accountData = AccountData.FindAccountByUsername(account);
         
         if (accountData == null && ConfigManager.Config.ServerOption.AutoCreateUser)
         {
-            var (success, accountUid) = await AccountRepository.CreateAccount(account, password);
+            var (success, accountUid) = await AccountData.CreateAccount(account, password);
             if (!success)
             {
                 return Ok(new ResponseBase
@@ -80,7 +79,7 @@ public class MaPassportController : ControllerBase
                 });
             }
 
-            accountData = AccountRepository.FindAccountByAccountUid(accountUid);
+            accountData = AccountData.FindAccountByAccountUid(accountUid);
         }
         
         if (accountData == null)

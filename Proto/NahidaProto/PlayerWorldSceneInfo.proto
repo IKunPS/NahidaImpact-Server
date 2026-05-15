@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+import "MapLayerInfo.proto";
+
+message PlayerWorldSceneInfo {
+  MapLayerInfo map_layer_info = 6;
+  repeated uint32 scene_tag_id_list = 11;
+  bool is_locked = 5;
+  uint32 scene_id = 7;
+}

@@ -1,0 +1,8 @@
+syntax = "proto3";
+
+// CmdID: 23839
+message ChangeAvatarRsp {
+  int32 retcode = 2;
+  uint32 skill_id = 5;
+  uint64 cur_guid = 1;
+}

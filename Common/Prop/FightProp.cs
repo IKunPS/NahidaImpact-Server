@@ -59,6 +59,8 @@ public static class FightProp
     public const uint FIGHT_PROP_MAX_WIND_ENERGY = 74;
     public const uint FIGHT_PROP_MAX_ICE_ENERGY = 75;
     public const uint FIGHT_PROP_MAX_ROCK_ENERGY = 76;
+    public const uint FIGHT_PROP_MAX_SPECIAL_ENERGY = 77;
+    public const uint FIGHT_PROP_START_SPECIAL_ENERGY = 78;
     public const uint FIGHT_PROP_SKILL_CD_MINUS_RATIO = 80;
     public const uint FIGHT_PROP_SHIELD_COST_MINUS_RATIO = 81;
     public const uint FIGHT_PROP_CUR_FIRE_ENERGY = 1000;
@@ -68,11 +70,16 @@ public static class FightProp
     public const uint FIGHT_PROP_CUR_WIND_ENERGY = 1004;
     public const uint FIGHT_PROP_CUR_ICE_ENERGY = 1005;
     public const uint FIGHT_PROP_CUR_ROCK_ENERGY = 1006;
+    public const uint FIGHT_PROP_CUR_SPECIAL_ENERGY = 1007;
     public const uint FIGHT_PROP_CUR_HP = 1010;
+    public const uint FIGHT_PROP_MIN_SPECIAL_ENERGY = 6969;
     public const uint FIGHT_PROP_MAX_HP = 2000;
     public const uint FIGHT_PROP_CUR_ATTACK = 2001;
     public const uint FIGHT_PROP_CUR_DEFENSE = 2002;
     public const uint FIGHT_PROP_CUR_SPEED = 2003;
+    public const uint FIGHT_PROP_CUR_HP_DEBTS = 2004;
+    public const uint FIGHT_PROP_CUR_HP_PAID_DEBTS = 2005;
+    public const uint FIGHT_PROP_CUR_NATLAN_HP = 2006;
     public const uint FIGHT_PROP_NONEXTRA_ATTACK = 3000;
     public const uint FIGHT_PROP_NONEXTRA_DEFENSE = 3001;
     public const uint FIGHT_PROP_NONEXTRA_CRITICAL = 3002;
