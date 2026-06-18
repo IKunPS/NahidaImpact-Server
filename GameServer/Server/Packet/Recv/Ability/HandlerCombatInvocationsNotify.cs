@@ -150,7 +150,7 @@ public class HandlerCombatInvocationsNotify : Handler
     /// </summary>
     private void HandleFallDamage(PlayerInstance player, BaseEntity entity, MotionState motionState, MotionInfo motionInfo)
     {
-        if (motionState == MotionState.MotionLandSpeed)
+        if (motionState == MotionState.LandSpeed)
         {
             // Cache the landing Y speed for later fall damage calculation
             _cachedLandingSpeed = motionInfo.Speed?.Y ?? 0;
@@ -158,7 +158,7 @@ public class HandlerCombatInvocationsNotify : Handler
             _monitorLandingEvent = true;
         }
 
-        if (_monitorLandingEvent && motionState == MotionState.MotionFallOnGround)
+        if (_monitorLandingEvent && motionState == MotionState.FallOnGround)
         {
             _monitorLandingEvent = false;
             ApplyFallDamage(player, entity, motionState);
@@ -250,8 +250,8 @@ public class HandlerCombatInvocationsNotify : Handler
         var moveInfo = EntityMoveInfo.Parser.ParseFrom(entry.CombatData);
         var motionState = moveInfo.MotionInfo.State;
 
-        if (motionState == MotionState.MotionNotify ||
-            motionState == MotionState.MotionFight)
+        if (motionState == MotionState.Notify ||
+            motionState == MotionState.Fight)
             return false;
 
         return true;

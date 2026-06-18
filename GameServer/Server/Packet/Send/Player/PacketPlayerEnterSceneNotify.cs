@@ -9,9 +9,6 @@ namespace NahidaImpact.GameServer.Server.Packet.Send.Player;
 
 public class PacketPlayerEnterSceneNotify : BasePacket
 {
-    /// <summary>
-    /// Login constructor. Ported from Java PacketPlayerEnterSceneNotify(Player).
-    /// </summary>
     public PacketPlayerEnterSceneNotify(PlayerInstance player) : base(CmdIds.PlayerEnterSceneNotify)
     {
         player.EnterToken = (uint)Extensions.RandomInt(1000, 99999);
@@ -39,10 +36,7 @@ public class PacketPlayerEnterSceneNotify : BasePacket
 
         SetData(proto);
     }
-
-    /// <summary>
-    /// Respawn constructor. Mirrors Java PacketPlayerEnterSceneNotify(Player, EnterType, EnterReason, int, Position).
-    /// </summary>
+    
     public PacketPlayerEnterSceneNotify(PlayerInstance player, EnterType type, uint enterReason, int sceneId, Position pos) : base(CmdIds.PlayerEnterSceneNotify)
     {
         player.EnterToken = (uint)Extensions.RandomInt(1000, 99999);
@@ -52,10 +46,7 @@ public class PacketPlayerEnterSceneNotify : BasePacket
         proto.Type = type;
         SetData(proto);
     }
-
-    /// <summary>
-    /// Teleport constructor. Ported from Java PacketPlayerEnterSceneNotify(Player, Player, TeleportProperties).
-    /// </summary>
+    
     public PacketPlayerEnterSceneNotify(PlayerInstance player, int prevSceneId, Position prevPos, int newSceneId, Position newPos) : base(CmdIds.PlayerEnterSceneNotify)
     {
         player.EnterToken = (uint)Extensions.RandomInt(1000, 99999);
@@ -67,16 +58,13 @@ public class PacketPlayerEnterSceneNotify : BasePacket
 
         SetData(proto);
     }
-
-    /// <summary>
-    /// Builds the common fields shared by login and teleport constructors.
-    /// </summary>
+    
     private static PlayerEnterSceneNotify BuildBaseProto(PlayerInstance player, Position pos, int sceneId, int enterReason)
     {
         return new PlayerEnterSceneNotify
         {
             Pos = new Vector { X = pos.X, Y = pos.Y, Z = pos.Z },
-            Type = EnterType.EnterSelf,
+            Type = EnterType.Self,
 
             SceneId = (uint)((sceneId - 49379) ^ 11523),
             SceneTransaction = sceneId + "-" + player.Uid + "-" + (int)(DateTimeOffset.Now.ToUnixTimeMilliseconds() / 1000) + "-" + 18402,

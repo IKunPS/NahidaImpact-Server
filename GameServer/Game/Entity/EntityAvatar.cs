@@ -11,7 +11,7 @@ namespace NahidaImpact.GameServer.Game.Entity;
 
 public class EntityAvatar : BaseEntity
 {
-    public override ProtEntityType EntityType => ProtEntityType.ProtEntityAvatar;
+    public override ProtEntityType EntityType => ProtEntityType.Avatar;
 
     public AvatarDataInfo AvatarInfo { get; }
 
@@ -177,7 +177,7 @@ public class EntityAvatar : BaseEntity
             var entityInfo = new SceneEntityInfo
             {
                 EntityId = Id,
-                EntityType = ProtEntityType.ProtEntityAvatar,
+                EntityType = ProtEntityType.Avatar,
                 EntityAuthorityInfo = authority,
                 LastMoveSceneTimeMs = (uint)LastMoveSceneTimeMs,
                 LastMoveReliableSeq = (uint)LastMoveReliableSeq,

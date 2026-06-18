@@ -5,7 +5,7 @@ namespace NahidaImpact.GameServer.Game.Entity;
 
 public class EntityTeam : BaseEntity
 {
-    public override ProtEntityType EntityType => ProtEntityType.ProtEntityTeam;
+    public override ProtEntityType EntityType => ProtEntityType.Team;
 
     public EntityTeam(Scene scene) : base(scene)
     {

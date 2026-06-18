@@ -1,0 +1,10 @@
+﻿syntax = "proto3";
+
+// Nahida
+// Proto
+
+// CmdID: 28437
+message ReliquaryPromoteReq {
+  uint64 item_guid = 14;
+  uint64 target_guid = 6;
+}

@@ -5,7 +5,7 @@ namespace NahidaImpact.GameServer.Game.Entity;
 
 public class EntityWorld : BaseEntity
 {
-    public override ProtEntityType EntityType => ProtEntityType.ProtEntityMpLevel;
+    public override ProtEntityType EntityType => ProtEntityType.MpLevel;
     
     public World World { get; }
     

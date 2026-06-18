@@ -109,42 +109,39 @@ public class AbilityManager
         var head = invoke.Head;
         var entity = _player.Scene?.GetEntityById((int)invoke.EntityId);
         if (entity == null) return;
-
-        // Handle server invoke (has local_id)
+        
         if (head != null && head.LocalId != 0)
         {
             HandleServerInvoke(invoke, entity);
-            return;
         }
 
         switch (invoke.ArgumentType)
         {
-            case AbilityInvokeArgument.AbilityMetaOverrideParam:
+            case AbilityInvokeArgument.MetaOverrideParam:
                 HandleOverrideParam(invoke, entity);
                 break;
-            case AbilityInvokeArgument.AbilityMetaReinitOverridemap:
+            case AbilityInvokeArgument.MetaReinitOverridemap:
                 HandleReinitOverrideMap(invoke, entity);
                 break;
-            case AbilityInvokeArgument.AbilityMetaModifierChange:
+            case AbilityInvokeArgument.MetaModifierChange:
                 HandleModifierChange(invoke, entity);
                 break;
-            case AbilityInvokeArgument.AbilityMetaGlobalFloatValue:
+            case AbilityInvokeArgument.MetaGlobalFloatValue:
                 HandleGlobalFloatValue(invoke, entity);
                 break;
-            case AbilityInvokeArgument.AbilityMetaClearGlobalFloatValue:
+            case AbilityInvokeArgument.MetaClearGlobalFloatValue:
                 HandleClearGlobalFloatValue(invoke, entity);
                 break;
-            case AbilityInvokeArgument.AbilityMetaAddNewAbility:
+            case AbilityInvokeArgument.MetaAddNewAbility:
                 HandleAddNewAbility(invoke, entity);
                 break;
-            case AbilityInvokeArgument.AbilityMetaSetKilledSetate:
+            case AbilityInvokeArgument.MetaSetKilledSetate:
                 HandleKillState(invoke, entity);
                 break;
-            case AbilityInvokeArgument.AbilityMetaAddSpecialEnergyValue:
+            case AbilityInvokeArgument.MetaAddSpecialEnergyValue:
                 HandleAddSpecialEnergy(invoke, entity);
                 break;
-            case AbilityInvokeArgument.AbilityMixinChangePhlogiston:
-                HandleMixinChangePhlogiston(invoke, entity);
+            case AbilityInvokeArgument.MixinChangePhlogiston:
                 break;
         }
     }
@@ -390,25 +387,6 @@ public class AbilityManager
         // Placeholder: need AbilityMetaSpecialEnergy proto
     }
 
-    private void HandleMixinChangePhlogiston(AbilityInvokeEntry invoke, BaseEntity entity)
-    {
-        // TODO: Parse AbilityMixinChangePhlogiston when proto is available
-        HandleChangeNyxValue(invoke);
-    }
-
-    public void HandleChangeNyxValue(AbilityInvokeEntry invoke)
-    {
-        if (invoke.EntityId == 0) return;
-
-        float phlogistonValue = _player.GetPhlogistonValue();
-        float changePhlogistonValue = 1.0f;
-
-        // TODO: Check if entity is EntityVehicle and handle vehicle phlogiston
-        phlogistonValue = Math.Max(phlogistonValue - changePhlogistonValue, 0f);
-
-        _logger.Debug($"Phlogiston updated: {phlogistonValue}");
-    }
-
     public void HandleServerInvoke(AbilityInvokeEntry invoke, BaseEntity entity)
     {
         var head = invoke.Head;
@@ -442,17 +420,6 @@ public class AbilityManager
 
         // Build DetailAbilityInfo placeholder (proto not yet available)
         // entity.DetailAbilityInfo = ...;
-
-        if (invoke.ArgumentType == AbilityInvokeArgument.AbilityActionCreateGadget)
-        {
-            _logger.Debug("ABILITY_INVOKE_ARGUMENT_ACTION_CREATE_GADGET invoked");
-        }
-
-        if (invoke.ArgumentType == AbilityInvokeArgument.AbilityMixinChangePhlogiston)
-        {
-            HandleChangeNyxValue(invoke);
-            return;
-        }
 
         // Dispatch by local ID to action or mixin
         var action = ability.Data.LocalIdToAction.GetValueOrDefault((int)head.LocalId);

@@ -14,7 +14,7 @@ public class PacketSceneEntityAppearNotify : BasePacket
     {
         var proto = new SceneEntityAppearNotify
         {
-            AppearType = VisionType.VisionBorn,
+            AppearType = VisionType.Born,
             EntityList = { entity.ToProto() }
         };
 
@@ -52,7 +52,7 @@ public class PacketSceneEntityAppearNotify : BasePacket
         var currentAvatar = player.TeamManager?.GetCurrentAvatarEntity();
         var proto = new SceneEntityAppearNotify
         {
-            AppearType = VisionType.VisionBorn,
+            AppearType = VisionType.Born,
         };
 
         if (currentAvatar != null)

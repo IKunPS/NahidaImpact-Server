@@ -9,7 +9,7 @@ namespace NahidaImpact.GameServer.Game.Entity;
 
 public class EntityMonster : BaseEntity
 {
-    public override ProtEntityType EntityType => ProtEntityType.ProtEntityMonster;
+    public override ProtEntityType EntityType => ProtEntityType.Monster;
     
     private readonly Position position;
     private readonly Position rotation;
@@ -123,7 +123,6 @@ public class EntityMonster : BaseEntity
     {
         var aiInfo = new SceneEntityAiInfo
         {
-            IsAiOpen = true
         };
 
         if (OwnerEntityId != 0)
@@ -142,7 +141,7 @@ public class EntityMonster : BaseEntity
         var entityInfo = new SceneEntityInfo
         {
             EntityId = Id,
-            EntityType = ProtEntityType.ProtEntityMonster,
+            EntityType = ProtEntityType.Monster,
             MotionInfo = GetMotionInfo(),
             LifeState = 1,
             EntityClientData = new EntityClientData(),

@@ -200,7 +200,7 @@ public class Scene
         // Remove all entities belonging to this player
         var toRemove = _entities.Values.Where(e => e.Owner == player).ToList();
         foreach (var entity in toRemove)
-            RemoveEntity(entity, VisionType.VisionDie);
+            RemoveEntity(entity, VisionType.Die);
     }
     
     #endregion
@@ -233,7 +233,7 @@ public class Scene
         entity.OnCreate(); // Call entity create event
     }
     
-    public void RemoveEntity(BaseEntity entity, VisionType visionType = VisionType.VisionDie)
+    public void RemoveEntity(BaseEntity entity, VisionType visionType = VisionType.Die)
     {
         BaseEntity removed = null;
         if (_entities.TryRemove((int)entity.Id, out removed))
@@ -248,11 +248,11 @@ public class Scene
     
     public void ReplaceEntity(BaseEntity oldEntity, BaseEntity newEntity)
     {
-        RemoveEntity(oldEntity, VisionType.VisionReplace);
+        RemoveEntity(oldEntity, VisionType.Replace);
         AddEntity(newEntity);
     }
 
-    public void RemoveEntities(IEnumerable<BaseEntity> entities, VisionType visionType = VisionType.VisionDie)
+    public void RemoveEntities(IEnumerable<BaseEntity> entities, VisionType visionType = VisionType.Die)
     {
         foreach (var entity in entities) RemoveEntity(entity, visionType);
     }

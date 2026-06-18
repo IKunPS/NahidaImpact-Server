@@ -49,7 +49,7 @@ public abstract class BaseEntity
     public BaseEntity(Scene scene)
     {
         Scene = scene;
-        MotionState = MotionState.MotionNone;
+        MotionState = MotionState.None;
         Properties = new();
         FightProperties = new();
     }
@@ -173,11 +173,11 @@ public abstract class BaseEntity
         {
             Scene?.BroadcastPacket(new PacketEntityFightPropUpdateNotify(this, FightProp.FIGHT_PROP_CUR_HP_DEBTS));
             var debtsReason = GetFightProperty(FightProp.FIGHT_PROP_CUR_HP_DEBTS) > 0
-                ? ChangeHpDebtsReason.ChangeHpDebtsPay
-                : ChangeHpDebtsReason.ChangeHpDebtsPayFinish;
+                ? ChangeHpDebtsReason.Pay
+                : ChangeHpDebtsReason.PayFinish;
             Scene?.BroadcastPacket(new PacketEntityFightPropChangeReasonNotify(
                 this, FightProp.FIGHT_PROP_CUR_HP_DEBTS, -toRepay,
-                mute ? PropChangeReason.JgingbfbeadPropChangeNone : PropChangeReason.JgingbfbeadPropChangeAbility,
+                mute ? PropChangeReason.None : PropChangeReason.Ability,
                 debtsReason));
         }
 
@@ -222,7 +222,7 @@ public abstract class BaseEntity
         Scene?.BroadcastPacket(new PacketEntityFightPropUpdateNotify(this, FightProp.FIGHT_PROP_CUR_HP));
         Scene?.BroadcastPacket(new PacketEntityFightPropChangeReasonNotify(
             this, FightProp.FIGHT_PROP_CUR_HP, -effectiveDamage,
-            PropChangeReason.JgingbfbeadPropChangeAbility, ChangHpReason.ChangeHpSubAbility));
+            PropChangeReason.Ability, ChangeHpReason.SubAbility));
 
         if (IsDead)
         {
@@ -263,7 +263,7 @@ public abstract class BaseEntity
                 Scene?.BroadcastPacket(new PacketEntityFightPropUpdateNotify(this, FightProp.FIGHT_PROP_CUR_HP_DEBTS));
                 Scene?.BroadcastPacket(new PacketEntityFightPropChangeReasonNotify(
                     this, FightProp.FIGHT_PROP_CUR_HP_DEBTS, -debt,
-                    PropChangeReason.JgingbfbeadPropChangeAbility, ChangeHpDebtsReason.ChangeHpDebtsClear));
+                    PropChangeReason.Ability, ChangeHpDebtsReason.Clear));
             }
             IsDead = true;
         }

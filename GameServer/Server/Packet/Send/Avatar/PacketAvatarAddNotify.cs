@@ -10,7 +10,7 @@ public class PacketAvatarAddNotify : BasePacket
     {
         var proto = new AvatarAddNotify
         {
-            AvatarInfo = avatar.ToProto(),
+            Avatar = avatar.ToProto(),
             IsInTeam = isInTeam
         };
 

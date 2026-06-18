@@ -1,0 +1,10 @@
+﻿syntax = "proto3";
+
+// Nahida
+// Proto
+
+// CmdID: 2271
+message EntityFightPropNotify {
+  map<uint32, float> fight_prop_map = 10;
+  uint32 entity_id = 14;
+}

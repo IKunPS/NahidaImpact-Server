@@ -3,8 +3,6 @@ syntax = "proto3";
 // Nahida
 // Proto
 
-import "BeyondGachaGift.proto";
-
 message ChatInfo {
 	message SystemHint {
 		repeated uint32 uid_list = 5;

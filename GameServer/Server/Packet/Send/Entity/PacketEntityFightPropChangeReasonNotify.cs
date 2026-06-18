@@ -12,7 +12,7 @@ public class PacketEntityFightPropChangeReasonNotify : BasePacket
         uint propType,
         float value,
         PropChangeReason reason,
-        ChangHpReason changeHpReason) : base((ushort)CmdIds.EntityFightPropChangeReasonNotify)
+        ChangeHpReason changeHpReason) : base((ushort)CmdIds.EntityFightPropChangeReasonNotify)
     {
         var proto = new EntityFightPropChangeReasonNotify
         {
@@ -60,7 +60,7 @@ public class PacketEntityFightPropChangeReasonNotify : BasePacket
             PropType = propType,
             PropDelta = value,
             Reason = reason,
-            ChangeEnergyReson = energyReason
+            ChangeEnergyReason = energyReason
         };
 
         SetData(proto);

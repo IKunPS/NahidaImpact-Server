@@ -1,0 +1,15 @@
+﻿syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "Vector.proto";
+import "StoreType.proto";
+
+// CmdID: 23788
+message DropItemReq {
+  Vector pos = 1;
+  uint64 guid = 12;
+  uint32 count = 14;
+  StoreType store_type = 11;
+}

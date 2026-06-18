@@ -1,0 +1,13 @@
+﻿syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "StoreType.proto";
+
+// CmdID: 9269
+message DropItemRsp {
+  uint64 guid = 4;
+  int32 retcode = 8;
+  StoreType store_type = 11;
+}
