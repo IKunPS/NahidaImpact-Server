@@ -1,6 +1,9 @@
-﻿syntax = "proto3";
+syntax = "proto3";
+
+// Nahida
+// Proto
 
 message MirrorAvatarInfo {
-  uint32 copy_from_avatar_type = 1;
-  uint64 IDOIAJOHDOP = 2;
+	uint32 copy_from_avatar_type = 1;
+	uint64 KNIBFKAKJLF = 2;
 }

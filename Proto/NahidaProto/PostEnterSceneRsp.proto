@@ -1,7 +1,10 @@
-﻿syntax = "proto3";
+syntax = "proto3";
 
-// CmdID: 536
+// Nahida
+// Proto
+
+// CmdID: 9161
 message PostEnterSceneRsp {
-  uint32 enter_scene_token = 15;
-  int32 retcode = 2;
+	int32 retcode = 5;
+	uint32 enter_scene_token = 6;
 }

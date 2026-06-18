@@ -40,13 +40,6 @@ public class EntityMonster : BaseEntity
         position = new Position(pos);
         BornPos = pos.Clone();
 
-        // Resolve specific monster config from MonsterMapping + MonsterConfigData
-        if (GameData.MonsterMapping.TryGetValue((int)MonsterId, out var mapping))
-        {
-            GameData.MonsterConfigData.TryGetValue(mapping.MonsterJson, out var config);
-            ConfigEntityMonster = config;
-        }
-
         FightProperties = new List<FightPropPair>
         {
             new() { PropType = FightProp.FIGHT_PROP_CUR_HP, PropValue = 1000f * level },

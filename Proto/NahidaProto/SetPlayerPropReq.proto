@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "PropValue.proto";
+
+// CmdID: 23467
+message SetPlayerPropReq {
+	repeated PropValue prop_list = 14;
+}

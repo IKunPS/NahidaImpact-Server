@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "LanternRiteV6DanmakuLevelInfo.proto";
+import "LanternRiteV6DanmakuRecord.proto";
+import "LanternRiteV6DanmakuTechInfo.proto";
+
+message LanternRiteV6DanmakuInfo {
+	LanternRiteV6DanmakuLevelInfo cur_level_info = 1;
+	LanternRiteV6DanmakuRecord danmaku_record = 2;
+	LanternRiteV6DanmakuTechInfo tech_info = 7;
+}

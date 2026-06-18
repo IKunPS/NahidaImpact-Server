@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "Birthday.proto";
+
+// CmdID: 2679
+message SetPlayerBirthdayReq {
+	Birthday birthday = 9;
+}

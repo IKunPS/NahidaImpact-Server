@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "AkaFesArchaeologyInfo.proto";
+import "AkaFesAstrolabeInfo.proto";
+import "AkaFesPotionInfo.proto";
+import "AkaFesReasoningInfo.proto";
+
+message AkaFesDetailInfo {
+	AkaFesReasoningInfo reasoning_info = 6;
+	AkaFesPotionInfo potion_info = 13;
+	// [obf] LLAJFMLNLLK GCDGCGPIKON = 11;
+	AkaFesArchaeologyInfo archaeology_info = 14;
+	// [obf] MJMPCIAAMDJ OBMDFHBGEGH = 12;
+	AkaFesAstrolabeInfo astrolabe_info = 5;
+}

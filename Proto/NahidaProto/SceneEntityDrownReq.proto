@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+// CmdID: 26444
+message SceneEntityDrownReq {
+	uint32 entity_id = 9;
+}

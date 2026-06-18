@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message MonsterChessV2CombatDetail {
+	uint32 FHIJKPGAFPJ = 6;
+	uint32 CODKIIDMLOF = 13;
+	uint32 EPENLFIIFFM = 7;
+	uint32 GLAENALFBPJ = 4;
+	uint32 cur_round_num = 10;
+	uint32 MNEIFOCKEEL = 15;
+	bool is_infinite = 8;
+}

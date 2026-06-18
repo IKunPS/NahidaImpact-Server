@@ -1,9 +1,12 @@
 syntax = "proto3";
 
+// Nahida
+// Proto
+
 import "AttackResult.proto";
 
 message EvtBeingHitInfo {
-  uint32 frame_num = 4;
-  AttackResult attack_result = 6;
-  uint32 peer_id = 11;
+	AttackResult attack_result = 13;
+	uint32 frame_num = 7;
+	uint32 peer_id = 12;
 }

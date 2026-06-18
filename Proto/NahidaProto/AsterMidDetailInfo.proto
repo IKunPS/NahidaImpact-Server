@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "AsterMidCampInfo.proto";
+
+message AsterMidDetailInfo {
+	repeated AsterMidCampInfo camp_list = 6;
+	uint32 collect_count = 3;
+	bool is_open = 9;
+	uint32 begin_time = 12;
+}

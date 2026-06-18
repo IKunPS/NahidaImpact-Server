@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+// CmdID: 23363
+message GetActivityInfoReq {
+	repeated uint32 activity_id_list = 3;
+}

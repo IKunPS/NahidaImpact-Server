@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+// CmdID: 9894
+message GadgetStateNotify {
+	uint32 gadget_entity_id = 10;
+	bool is_enable_interact = 15;
+	uint32 gadget_state = 2;
+}

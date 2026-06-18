@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "WidgetSlotData.proto";
+import "WidgetSlotOp.proto";
+
+// CmdID: 28507
+message WidgetSlotChangeNotify {
+	WidgetSlotData slot = 10;
+	WidgetSlotOp op = 4;
+}

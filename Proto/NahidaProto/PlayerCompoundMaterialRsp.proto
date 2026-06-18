@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "CompoundQueueData.proto";
+
+// CmdID: 28326
+message PlayerCompoundMaterialRsp {
+	CompoundQueueData compound_que_data = 11;
+	int32 retcode = 10;
+}

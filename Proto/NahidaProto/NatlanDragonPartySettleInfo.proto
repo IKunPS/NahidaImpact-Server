@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "ExhibitionDisplayInfo.proto";
+
+message NatlanDragonPartySettleInfo {
+	repeated ExhibitionDisplayInfo MFGELJKPKHG = 11;
+	// [obf] repeated MCDFHMMPCPG ENIDKJBIAFC = 4;
+	repeated uint32 winner_uid_list = 3;
+	uint32 level_id = 13;
+}

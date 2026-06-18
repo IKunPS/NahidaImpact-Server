@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+// CmdID: 25310
+message HomeAvatarSummonFinishReq {
+	uint32 event_id = 10;
+}

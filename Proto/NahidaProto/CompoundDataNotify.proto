@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "CompoundQueueData.proto";
+
+// CmdID: 24934
+message CompoundDataNotify {
+	repeated CompoundQueueData compound_que_data_list = 11;
+	repeated uint32 unlock_compound_list = 12;
+}

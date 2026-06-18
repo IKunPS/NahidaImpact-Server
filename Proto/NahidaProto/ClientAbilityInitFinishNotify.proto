@@ -1,9 +1,12 @@
-﻿syntax = "proto3";
+syntax = "proto3";
+
+// Nahida
+// Proto
 
 import "AbilityInvokeEntry.proto";
 
-// CmdID: 21742
+// CmdID: 1623
 message ClientAbilityInitFinishNotify {
-  repeated AbilityInvokeEntry invokes = 12;
-  uint32 entity_id = 14;
+	repeated AbilityInvokeEntry invokes = 2;
+	uint32 entity_id = 4;
 }

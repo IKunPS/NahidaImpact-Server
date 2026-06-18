@@ -1,6 +1,9 @@
 syntax = "proto3";
 
+// Nahida
+// Proto
+
 message Vector2Int {
-	int32 x = 1;
 	int32 y = 2;
+	int32 x = 1;
 }

@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "MonsterChessV2RecordTeamInfo.proto";
+
+message MonsterChessV2RecordInfo {
+	repeated uint32 win_round_list = 15;
+	repeated MonsterChessV2RecordTeamInfo team_info_list = 14;
+	repeated uint32 artifact_id_list = 3;
+	bool is_infinite = 7;
+	uint32 infinite_win_num = 2;
+	uint32 timestamp = 11;
+}

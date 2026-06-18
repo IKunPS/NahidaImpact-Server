@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message AsterProgressDetailInfo {
+	uint32 last_auto_add_time = 15;
+	uint32 count = 11;
+}

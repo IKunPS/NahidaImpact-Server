@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "DuelHeartLevelDifficultyInfo.proto";
+
+message DuelHeartLevelInfo {
+	repeated DuelHeartLevelDifficultyInfo difficulty_info_list = 5;
+	bool is_cg_viewed = 14;
+	bool is_open = 8;
+	uint32 level_id = 9;
+}

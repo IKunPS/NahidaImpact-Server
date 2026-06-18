@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message SceneGalleryProgressInfo {
+	repeated uint32 progress_stage_list = 3;
+	string key = 12;
+	uint32 ui_form = 6;
+	uint32 progress = 4;
+}

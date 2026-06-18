@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+// CmdID: 21604
+message QuestTransmitRsp {
+	uint32 quest_id = 15;
+	uint32 point_id = 1;
+	int32 retcode = 13;
+}

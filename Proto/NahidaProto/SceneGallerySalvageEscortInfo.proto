@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message SceneGallerySalvageEscortInfo {
+	uint32 max_box_count = 9;
+	uint32 box_count = 2;
+	uint32 max_monster_count = 8;
+	uint32 monster_count = 7;
+}

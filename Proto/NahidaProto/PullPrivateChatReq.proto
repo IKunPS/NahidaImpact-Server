@@ -1,8 +1,11 @@
 syntax = "proto3";
 
-// CmdID: 4696
+// Nahida
+// Proto
+
+// CmdID: 25719
 message PullPrivateChatReq {
-  uint32 from_sequence = 10;
-  uint32 pull_num = 12;
-  uint32 target_uid = 3;
+	uint32 pull_num = 8;
+	uint32 from_sequence = 15;
+	uint32 target_uid = 1;
 }

@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "ClientPlayDetailInfo.proto";
+
+message ClientPlayLevelInfo {
+	ClientPlayDetailInfo detail_info = 11;
+	uint32 level_id = 6;
+	uint32 best_record = 4;
+	uint32 play_times = 1;
+	uint32 finish_times = 12;
+	bool is_open = 7;
+}

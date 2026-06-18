@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "DungeonEntryInfo.proto";
+import "DungeonEntryPointInfo.proto";
+
+// CmdID: 7886
+message DungeonEntryInfoRsp {
+	repeated DungeonEntryInfo dungeon_entry_list = 8;
+	repeated DungeonEntryPointInfo dungeon_entry_point_list = 12;
+	uint32 point_id = 7;
+	uint32 recommend_dungeon_id = 9;
+	bool LLGNKDJLHLI = 10;
+	uint32 first_pass_reward_status = 4;
+	int32 retcode = 13;
+}

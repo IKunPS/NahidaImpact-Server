@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message HideAndSeekV4ActivityDetailInfo {
+	repeated uint32 CACAGGIIADA = 15;
+	// [obf] repeated HNNPFJHOKIE EHKOEEGIOND = 11;
+	// [obf] repeated HNNPFJHOKIE NICCDOOIIFM = 2;
+	repeated uint32 BKAHAGELIHI = 10;
+	bool ALNDIBJHHHC = 1;
+}

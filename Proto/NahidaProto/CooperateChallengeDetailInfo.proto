@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message CooperateChallengeDetailInfo {
+	bool PECAHAPLPPF = 14;
+	bool ALNDIBJHHHC = 12;
+	uint32 difficulty_id = 4;
+}

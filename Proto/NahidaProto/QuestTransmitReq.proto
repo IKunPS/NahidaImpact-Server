@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+// CmdID: 8106
+message QuestTransmitReq {
+	uint32 template_loading_id = 15;
+	uint32 quest_id = 10;
+	bool LNKLHMKJHNI = 1;
+	uint32 point_id = 4;
+}

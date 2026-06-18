@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "ForgeQueueManipulateType.proto";
+import "ItemHint.proto";
+
+// CmdID: 29306
+message ForgeQueueManipulateRsp {
+	repeated ItemHint extra_output_item_list = 14;
+	repeated ItemHint output_item_list = 9;
+	repeated ItemHint return_item_list = 1;
+	int32 retcode = 4;
+	ForgeQueueManipulateType manipulate_type = 8;
+}

@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "GCGpveLevelDataInfo.proto";
+
+message GCGPveDetailInfo {
+	repeated GCGpveLevelDataInfo level_data_list = 4;
+	bool is_gcg_pve_mode_open = 12;
+}

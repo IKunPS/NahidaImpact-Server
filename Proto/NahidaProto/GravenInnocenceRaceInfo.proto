@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "GravenInnocenceRaceLevelInfo.proto";
+
+message GravenInnocenceRaceInfo {
+	repeated GravenInnocenceRaceLevelInfo level_info_list = 9;
+}

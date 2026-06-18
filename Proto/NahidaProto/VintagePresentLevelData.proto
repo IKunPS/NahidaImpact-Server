@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message VintagePresentLevelData {
+	uint32 present_id = 6;
+	bool is_finish = 4;
+	bool is_open = 7;
+	uint32 stage_id = 5;
+}

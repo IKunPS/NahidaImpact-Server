@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "ItemParam.proto";
+
+// CmdID: 24925
+message TakeCompoundOutputRsp {
+	repeated ItemParam item_list = 7;
+	repeated int32 JFIIMIFHDBN = 13;
+	int32 retcode = 10;
+}

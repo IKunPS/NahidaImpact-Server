@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "Vector.proto";
+
+message PhotoPosData {
+	Vector center = 10;
+	repeated uint32 PHEDHCCLOPG = 8;
+	uint32 pos_id = 5;
+	bool is_open = 3;
+	bool is_view = 6;
+	uint32 open_time = 9;
+}

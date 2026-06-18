@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+// CmdID: 25775
+message AvatarChangeTraceEffectRsp {
+	uint64 avatar_guid = 6;
+	uint32 trace_effect_id = 9;
+	int32 retcode = 5;
+}

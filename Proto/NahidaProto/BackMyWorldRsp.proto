@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+// CmdID: 7446
+message BackMyWorldRsp {
+	int32 retcode = 3;
+}

@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "RogueShowAvatarTeamInfo.proto";
+import "RoguelikeRuneRecord.proto";
+
+message RogueStageInfo {
+	repeated RoguelikeRuneRecord rune_record_list = 10;
+	RogueShowAvatarTeamInfo avatar_team = 4;
+	uint32 revise_monster_level = 544;
+	bool is_explored = 6;
+	bool is_taken_reward = 9;
+	uint32 NCPPBJLCLHP = 13;
+	bool is_open = 8;
+	bool is_passed = 2;
+	bool is_in_combat = 12;
+	uint32 IOMEMEJLCCE = 3;
+	uint32 stage_id = 5;
+	uint32 PDAMMGLBAKM = 1131;
+	uint32 max_passed_level = 14;
+	uint32 coin_c_num = 1;
+	uint32 cur_level = 7;
+}

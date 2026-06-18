@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+// CmdID: 2850
+message GetAuthkeyRsp {
+	string auth_appid = 6;
+	string game_biz = 7;
+	string authkey = 12;
+	int32 retcode = 10;
+	uint32 authkey_ver = 5;
+	uint32 sign_type = 13;
+}

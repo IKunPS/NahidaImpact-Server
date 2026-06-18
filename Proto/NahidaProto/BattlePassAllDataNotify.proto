@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "BattlePassMission.proto";
+import "BattlePassSchedule.proto";
+
+// CmdID: 28058
+message BattlePassAllDataNotify {
+	repeated BattlePassMission mission_list = 4;
+	BattlePassSchedule cur_schedule = 12;
+	uint32 battle_pass_plan = 13;
+	bool LNDHMCDAPIE = 8;
+	bool is_viewed = 3;
+	bool have_cur_schedule = 10;
+}

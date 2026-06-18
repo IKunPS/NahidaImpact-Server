@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "PlayerHomeCompInfo.proto";
+
+// CmdID: 29133
+message PlayerHomeCompInfoNotify {
+	PlayerHomeCompInfo comp_info = 10;
+}

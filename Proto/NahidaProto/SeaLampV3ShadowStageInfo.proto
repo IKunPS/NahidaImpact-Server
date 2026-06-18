@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "SeaLampV3ShadowLevelInfo.proto";
+
+message SeaLampV3ShadowStageInfo {
+	repeated SeaLampV3ShadowLevelInfo level_info_list = 12;
+	bool is_open = 3;
+	uint32 stage_id = 15;
+}

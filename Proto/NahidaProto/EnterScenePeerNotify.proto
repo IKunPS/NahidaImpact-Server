@@ -1,9 +1,12 @@
-﻿syntax = "proto3";
+syntax = "proto3";
 
-// CmdID: 24176
+// Nahida
+// Proto
+
+// CmdID: 8028
 message EnterScenePeerNotify {
-  uint32 enter_scene_token = 5;
-  uint32 dest_scene_id = 6;
-  uint32 host_peer_id = 12;
-  uint32 peer_id = 15;
+	uint32 dest_scene_id = 4;
+	uint32 peer_id = 3;
+	uint32 enter_scene_token = 12;
+	uint32 host_peer_id = 13;
 }

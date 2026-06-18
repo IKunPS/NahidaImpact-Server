@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message RainbowPrinceDetailInfo {
+	// [obf] repeated GDPDMDHHMIF JHGCLOKACHP = 12;
+	// [obf] repeated KIOPGLKFEEN DGKHMPNLFCH = 9;
+}

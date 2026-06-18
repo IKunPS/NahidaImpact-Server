@@ -1,6 +1,9 @@
-﻿syntax = "proto3";
+syntax = "proto3";
+
+// Nahida
+// Proto
 
 message FightPropPair {
-  uint32 prop_type = 1;
-  float prop_value = 2;
+	uint32 prop_type = 1;
+	float prop_value = 2;
 }

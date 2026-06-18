@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message LanV6CardText {
+	uint32 keyword_id = 2;
+	uint32 slot_id = 1;
+}

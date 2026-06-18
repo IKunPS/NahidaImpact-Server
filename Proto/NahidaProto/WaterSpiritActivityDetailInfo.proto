@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message WaterSpiritActivityDetailInfo {
+	map<uint32, uint32> search_time_map = 5;
+	uint32 region_search_id = 6;
+	uint32 mp_play_id = 8;
+}

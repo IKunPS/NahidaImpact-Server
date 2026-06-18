@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+// CmdID: 25683
+message TowerEnterLevelReq {
+	bool NFCFCCADHLN = 5;
+	uint32 enter_point_id = 15;
+}

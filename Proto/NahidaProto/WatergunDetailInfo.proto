@@ -1,0 +1,8 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message WatergunDetailInfo {
+	// [obf] repeated FNLAGMGINEL level_info_list = 6;
+}

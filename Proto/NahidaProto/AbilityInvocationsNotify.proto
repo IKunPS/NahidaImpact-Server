@@ -1,8 +1,11 @@
-﻿syntax = "proto3";
+syntax = "proto3";
+
+// Nahida
+// Proto
 
 import "AbilityInvokeEntry.proto";
 
-// CmdID: 8630
+// CmdID: 20808
 message AbilityInvocationsNotify {
-  repeated AbilityInvokeEntry invokes = 3;
+	repeated AbilityInvokeEntry invokes = 12;
 }

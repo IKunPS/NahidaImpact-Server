@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message SceneGalleryTowerDefenseInfo {
+	repeated uint32 selected_artifact_id_list = 9;
+	repeated uint32 artifact_id_list = 12;
+	uint32 left_redraws = 8;
+}

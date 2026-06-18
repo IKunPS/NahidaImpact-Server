@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message SumeruAdventureTrainingSettleInfo {
+	uint32 collect_num = 7;
+	uint32 play_type = 15;
+	uint32 use_time = 6;
+	uint32 difficulty = 8;
+	uint32 score = 9;
+	bool is_new_record = 5;
+	uint32 level_id = 4;
+}

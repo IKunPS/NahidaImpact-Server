@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+// CmdID: 8633
+message WorldPlayerReviveRsp {
+	int32 retcode = 14;
+}

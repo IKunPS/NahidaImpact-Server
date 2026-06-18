@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message ActivityAvatarInfo {
+	bool is_trial_avatar = 9;
+	uint32 avatar_id = 11;
+}

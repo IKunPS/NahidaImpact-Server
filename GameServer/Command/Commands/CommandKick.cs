@@ -5,7 +5,7 @@ using NahidaImpact.Internationalization;
 namespace NahidaImpact.GameServer.Command.Commands;
 
 [CommandInfo("kick", "Game.Command.Kick.Desc", "Game.Command.Kick.Usage", [], [PermEnum.Admin])]
-public class CommandKick : ICommands
+public class ommandKick : ICommands
 {
     [CommandDefault]
     public static async ValueTask Execute(CommandArg arg)

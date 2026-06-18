@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+// CmdID: 25678
+message PlayerGetForceQuitBanInfoRsp {
+	int32 retcode = 13;
+	uint32 expire_time = 11;
+	uint32 match_id = 14;
+}

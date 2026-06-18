@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "VintageBoothUsedItemData.proto";
+import "VintageCampChallengeStageData.proto";
+import "VintageHuntingStageData.proto";
+import "VintageMarketInfo.proto";
+import "VintagePresentStageData.proto";
+
+message VintageActivityDetailInfo {
+	VintageBoothUsedItemData booth_data = 7;
+	map<uint32, VintageHuntingStageData> hunting_stage_map = 2;
+	map<uint32, VintagePresentStageData> present_stage_map = 9;
+	VintageMarketInfo market_info = 1;
+	map<uint32, VintageCampChallengeStageData> camp_stage_map = 15;
+	bool is_content_closed = 13;
+}

@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+// CmdID: 9770
+message GetParentQuestVideoKeyRsp {
+	uint32 parent_quest_id = 10;
+	int32 retcode = 9;
+	uint64 video_key = 4;
+}

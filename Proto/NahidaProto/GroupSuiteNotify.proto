@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+// CmdID: 9048
+message GroupSuiteNotify {
+	map<uint32, uint32> group_map = 6;
+}

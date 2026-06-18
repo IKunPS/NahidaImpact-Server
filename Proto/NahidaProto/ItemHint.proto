@@ -1,8 +1,12 @@
 syntax = "proto3";
 
+// Nahida
+// Proto
+
 message ItemHint {
-  uint32 item_id = 1;
-  uint64 guid = 4;
-  uint32 count = 2;
-  bool is_new = 3;
+	// [obf] repeated GBPLAMCPAKD DLHKDLNHFIM = 5;
+	bool is_new = 3;
+	uint32 count = 2;
+	uint32 item_id = 1;
+	uint64 guid = 4;
 }

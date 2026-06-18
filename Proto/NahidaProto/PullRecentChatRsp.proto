@@ -1,9 +1,12 @@
 syntax = "proto3";
 
+// Nahida
+// Proto
+
 import "ChatInfo.proto";
 
-// CmdID: 7996
+// CmdID: 1943
 message PullRecentChatRsp {
-  repeated ChatInfo chat_info = 3;
-  int32 retcode = 13;
+	repeated ChatInfo chat_info = 5;
+	int32 retcode = 8;
 }

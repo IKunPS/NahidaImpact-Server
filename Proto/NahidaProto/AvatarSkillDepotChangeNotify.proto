@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+// CmdID: 26620
+message AvatarSkillDepotChangeNotify {
+	repeated uint32 unlocked_skill_depot_id_list = 13;
+	repeated uint32 talent_id_list = 2;
+	map<uint32, uint32> proud_skill_extra_level_map = 5;
+	repeated uint32 special_proud_skill_list = 10;
+	map<uint32, uint32> skill_level_map = 8;
+	repeated uint32 proud_skill_list = 15;
+	uint64 avatar_guid = 1;
+	uint32 skill_depot_id = 4;
+	uint32 entity_id = 14;
+	uint32 core_proud_skill_level = 3;
+}

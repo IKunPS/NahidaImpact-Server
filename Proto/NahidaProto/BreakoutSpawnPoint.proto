@@ -1,14 +1,17 @@
 syntax = "proto3";
- 
+
+// Nahida
+// Proto
+
 import "BreakoutPhysicalObject.proto";
 import "Vector2Int.proto";
 
 message BreakoutSpawnPoint {
-	uint32 JBJJKLFINGN = 5;
-	uint32 brick_suite_id = 2;
-	uint32 OGEPMBDDPOB = 4;
-	uint32 id = 1;
-	repeated int32 int_param_list = 7;
-	repeated Vector2Int NAELJJLFCLF = 6;
 	repeated BreakoutPhysicalObject spawned_brick_list = 3;
+	repeated Vector2Int NABMBJEGFIN = 6;
+	repeated int32 int_param_list = 7;
+	uint32 OKBIAMHNHBD = 5;
+	uint32 brick_suite_id = 2;
+	uint32 id = 1;
+	uint32 PHHNHCOJNPE = 4;
 }

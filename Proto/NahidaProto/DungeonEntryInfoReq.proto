@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "Uint32Pair.proto";
+
+// CmdID: 5346
+message DungeonEntryInfoReq {
+	repeated Uint32Pair scene_point_id_list = 8;
+	uint32 point_id = 2;
+	bool LLGNKDJLHLI = 10;
+	uint32 scene_id = 12;
+}

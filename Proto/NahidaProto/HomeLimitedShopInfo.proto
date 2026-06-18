@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "Vector.proto";
+
+message HomeLimitedShopInfo {
+	Vector djinn_rot = 15;
+	Vector djinn_pos = 6;
+	fixed32 next_guest_open_time = 9;
+	fixed32 next_open_time = 11;
+	uint32 uid = 5;
+	fixed32 next_close_time = 2;
+}

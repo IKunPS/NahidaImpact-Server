@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message BladeDanceSettleInfo {
+	uint32 level_id = 12;
+	uint32 kill_monster_num = 2;
+	bool is_new_record = 1;
+	uint32 cost_time = 6;
+}

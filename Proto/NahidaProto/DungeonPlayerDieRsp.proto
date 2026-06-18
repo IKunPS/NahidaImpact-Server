@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+// CmdID: 4133
+message DungeonPlayerDieRsp {
+	int32 retcode = 4;
+}

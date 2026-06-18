@@ -1,6 +1,13 @@
 syntax = "proto3";
 
+// Nahida
+// Proto
+
+import "Vector.proto";
+
+// CmdID: 8224
 message AvatarDieAnimationEndReq {
-  uint64 die_guid = 15;
-  uint32 skill_id = 1;
+	Vector reborn_pos = 7;
+	uint64 die_guid = 11;
+	uint32 skill_id = 1;
 }

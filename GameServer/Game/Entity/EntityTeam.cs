@@ -1,4 +1,3 @@
-using NahidaImpact.GameServer.Game.Player;
 using NahidaImpact.GameServer.Game.Worlds;
 using NahidaImpact.Enums.Entity;
 
@@ -8,13 +7,10 @@ public class EntityTeam : BaseEntity
 {
     public override ProtEntityType EntityType => ProtEntityType.ProtEntityTeam;
 
-    public PlayerInstance Player { get; }
-
-    public EntityTeam(PlayerInstance player) : base(player.Scene)
+    public EntityTeam(Scene scene) : base(scene)
     {
-        Player = player;
-        Owner = player;
-        Id = (uint)player.World.GetNextEntityId(EntityIdTypeEnum.Team);
+        Owner = scene.GetHost()!;
+        Id = (uint)scene.World.GetNextEntityId(EntityIdTypeEnum.Team);
 
         InitAbilities();
     }
@@ -29,14 +25,9 @@ public class EntityTeam : BaseEntity
             {
                 var data = Data.GameData.GetAbilityData(ability);
                 if (data != null)
-                    Player.World?.GetHost()?.AbilityManager?.AddAbilityToEntity(this, data);
+                    Scene?.World?.Host?.AbilityManager?.AddAbilityToEntity(this, data);
             }
         }
-    }
-
-    public World GetWorld()
-    {
-        return Player.World!;
     }
 
     public override uint getEntityTypeId()

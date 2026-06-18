@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message ChatEmojiCollectionData {
+	repeated uint32 emoji_id_list = 1;
+	repeated uint32 emoji_set_id_list = 2;
+}

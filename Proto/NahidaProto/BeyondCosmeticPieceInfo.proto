@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message BeyondCosmeticPieceInfo {
+	uint32 costume_id = 1;
+	uint32 costume_slot_index = 2;
+}

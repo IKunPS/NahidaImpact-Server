@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+// CmdID: 28149
+message WorktopOptionNotify {
+	repeated uint32 option_list = 15;
+	uint32 gadget_entity_id = 3;
+}

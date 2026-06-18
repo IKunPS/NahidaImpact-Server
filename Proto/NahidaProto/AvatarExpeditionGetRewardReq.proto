@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+// CmdID: 2078
+message AvatarExpeditionGetRewardReq {
+	bool is_claim_all = 10;
+	uint64 avatar_guid = 8;
+}

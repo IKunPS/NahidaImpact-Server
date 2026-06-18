@@ -1,11 +1,14 @@
 syntax = "proto3";
 
-// CmdID: 849
+// Nahida
+// Proto
+
+// CmdID: 1084
 message WeaponAwakenRsp {
-  uint64 target_weapon_guid = 6;
-  uint64 avatar_guid = 7;
-  uint32 target_weapon_awaken_level = 1;
-  map<uint32, uint32> old_affix_map = 8;
-  map<uint32, uint32> cur_affix_map = 14;
-  int32 retcode = 9;
+	map<uint32, uint32> old_affix_level_map = 14;
+	map<uint32, uint32> cur_affix_level_map = 15;
+	uint32 target_weapon_awaken_level = 10;
+	int32 retcode = 3;
+	uint64 avatar_guid = 4;
+	uint64 target_weapon_guid = 12;
 }

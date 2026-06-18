@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+// CmdID: 2879
+message TakePlayerLevelRewardReq {
+	uint32 level = 3;
+}

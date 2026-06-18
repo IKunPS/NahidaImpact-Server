@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message ThemeParkSimDetailInfo {
+	repeated uint32 DGPHKJHHDKP = 8;
+	// [obf] PHOAOPNJOFP HDFALDCFMCO = 6;
+	// [obf] LAFFFGPGHDH KPJFBPKBJMM = 7;
+	repeated uint32 NOOJJAEBJCA = 13;
+}

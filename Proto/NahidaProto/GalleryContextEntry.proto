@@ -1,0 +1,8 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message GalleryContextEntry {
+	map<string, string> NCIOOEJAFII = 4;
+}

@@ -1,14 +1,17 @@
 syntax = "proto3";
 
-import "SceneWeaponInfo.proto";
-import "SceneReliquaryInfo.proto";
+// Nahida
+// Proto
 
-// CmdID: 1605
+import "SceneReliquaryInfo.proto";
+import "SceneWeaponInfo.proto";
+
+// CmdID: 23985
 message AvatarEquipChangeNotify {
-  uint64 avatar_guid = 11;
-  uint64 equip_guid = 15;
-  uint32 equip_type = 8;
-  uint32 item_id = 1;
-  SceneWeaponInfo weapon = 13;
-  SceneReliquaryInfo reliquary = 6;
+	SceneWeaponInfo weapon = 7;
+	SceneReliquaryInfo reliquary = 10;
+	uint64 equip_guid = 2;
+	uint32 item_id = 9;
+	uint32 equip_type = 5;
+	uint64 avatar_guid = 6;
 }

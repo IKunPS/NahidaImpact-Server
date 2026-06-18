@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "Vector.proto";
+
+message ChannelerSlabCamp {
+	Vector pos = 4;
+	uint32 buff_num = 15;
+	uint32 group_id = 6;
+	uint32 reward_id = 8;
+}

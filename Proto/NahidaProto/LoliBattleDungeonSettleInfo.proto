@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message LoliBattleDungeonSettleInfo {
+	uint32 level_id = 3;
+	uint32 difficulty_id = 10;
+	bool is_new_record = 6;
+	uint32 score = 15;
+}

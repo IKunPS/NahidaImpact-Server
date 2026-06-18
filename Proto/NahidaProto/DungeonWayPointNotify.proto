@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+// CmdID: 6652
+message DungeonWayPointNotify {
+	repeated uint32 active_way_point_list = 5;
+	bool is_add = 2;
+}

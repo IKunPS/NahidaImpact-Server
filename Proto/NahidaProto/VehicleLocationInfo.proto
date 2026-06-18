@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "Vector.proto";
+
+message VehicleLocationInfo {
+	Vector pos = 7;
+	Vector rot = 5;
+	repeated uint32 uid_list = 13;
+	uint32 gadget_id = 9;
+	float cur_hp = 12;
+	uint32 owner_uid = 11;
+	float max_hp = 2;
+	uint32 entity_id = 1;
+}

@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "BounceConjuringChapterInfo.proto";
+
+message BounceConjuringActivityDetailInfo {
+	repeated BounceConjuringChapterInfo chapter_info_list = 15;
+	bool is_content_closed = 9;
+	uint32 content_close_time = 5;
+}

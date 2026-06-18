@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "EquipParam.proto";
+import "MaterialDeleteInfo.proto";
+
+message MailItem {
+	MaterialDeleteInfo delete_info = 2;
+	EquipParam equip_param = 1;
+}

@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message RoguelikeSettleCoinInfo {
+	uint32 NJJFLDPJHND = 14;
+	uint32 ECJEKBMIGOG = 9;
+	uint32 coin_b = 15;
+}

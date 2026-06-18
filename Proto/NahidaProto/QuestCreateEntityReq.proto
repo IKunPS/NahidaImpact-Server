@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "CreateEntityInfo.proto";
+
+// CmdID: 25010
+message QuestCreateEntityReq {
+	CreateEntityInfo entity = 11;
+	uint32 quest_id = 7;
+	uint32 parent_quest_id = 8;
+	bool is_rewind = 3;
+}

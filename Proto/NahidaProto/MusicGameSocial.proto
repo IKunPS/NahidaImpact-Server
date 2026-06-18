@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message MusicGameSocial {
+	uint32 JFPBOLPMJIG = 5;
+	uint32 like_num = 9;
+	uint32 play_num = 1;
+	uint32 IOFODCPDHOM = 10;
+	uint32 AJDCKPKIFMD = 8;
+}

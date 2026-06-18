@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message EffigyChallengeV5SettleInfo {
+	repeated uint32 player_uid_list = 4;
+	repeated uint32 GJNADDHKABN = 9;
+	repeated uint32 OGKMDIBOKHO = 6;
+	bool is_new_record = 7;
+	bool NGHOPKOBEFC = 10;
+	uint32 difficulty_id = 12;
+	uint32 EBNBDLPEGOD = 1;
+	uint32 cost_time = 11;
+}

@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message BargainSnapshot {
+	uint32 expected_price = 7;
+	uint32 bargain_id = 9;
+	int32 cur_mood = 3;
+	uint32 lowest_price = 1;
+}

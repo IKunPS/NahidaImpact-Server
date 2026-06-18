@@ -1,7 +1,10 @@
 syntax = "proto3";
 
+// Nahida
+// Proto
+
 message EntityRendererChangedInfo {
+	map<string, uint32> changed_renderers = 1;
 	bool is_cached = 3;
 	uint32 visibility_count = 2;
-	map<string, uint32> changed_renderers = 1;
 }

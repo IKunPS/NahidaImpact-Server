@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "OnlinePlayerInfo.proto";
+
+// CmdID: 3692
+message HomeGetOnlineStatusRsp {
+	repeated OnlinePlayerInfo player_info_list = 12;
+	int32 retcode = 1;
+}

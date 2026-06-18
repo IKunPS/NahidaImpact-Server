@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+// CmdID: 27674
+message AddQuestContentProgressRsp {
+	int32 retcode = 10;
+	uint32 content_type = 2;
+}

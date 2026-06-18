@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "HomeResource.proto";
+
+// CmdID: 4557
+message HomeResourceTakeFetterExpRsp {
+	HomeResource fetter_exp = 7;
+	int32 retcode = 11;
+}

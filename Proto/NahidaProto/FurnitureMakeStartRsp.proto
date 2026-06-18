@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "FurnitureMakeSlot.proto";
+
+// CmdID: 9677
+message FurnitureMakeStartRsp {
+	FurnitureMakeSlot furniture_make_slot = 10;
+	int32 retcode = 8;
+}

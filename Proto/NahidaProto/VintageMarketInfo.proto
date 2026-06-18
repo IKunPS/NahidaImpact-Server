@@ -1,0 +1,32 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "VintageMarketDealInfo.proto";
+import "VintageMarketStoreInfo.proto";
+
+message VintageMarketInfo {
+	repeated VintageMarketStoreInfo open_store_list = 5;
+	VintageMarketDealInfo deal_info = 8;
+	repeated uint32 PKBPBFPHBHG = 6;
+	repeated uint32 cur_npc_event_list = 3;
+	repeated uint32 LDMCLAIHOON = 1518;
+	repeated uint32 store_round_income_list = 4;
+	map<uint32, bool> bargain_info_map = 12;
+	repeated uint32 cur_env_event_list = 1;
+	bool MCEKANOEHBO = 7;
+	bool is_strategy_module_open = 9;
+	bool is_store_content_interrupt = 2;
+	bool BHBFPPPFNIK = 14;
+	uint32 FNKIDHNDLII = 10;
+	uint32 store_round = 15;
+	uint32 help_skill_id = 314;
+	uint32 CDFEHJKKEJE = 82;
+	uint32 LHBCCNFGCHK = 443;
+	bool is_market_content_open = 11;
+	bool KAFHHLIFPFL = 415;
+	bool CGLABDKCKDF = 1831;
+	bool CGKINBNKLEJ = 179;
+	uint32 dividend_reward_count = 13;
+}

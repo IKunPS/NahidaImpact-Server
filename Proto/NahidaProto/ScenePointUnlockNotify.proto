@@ -1,10 +1,13 @@
 syntax = "proto3";
 
-// CmdID: 3774
+// Nahida
+// Proto
+
+// CmdID: 546
 message ScenePointUnlockNotify {
-  repeated uint32 point_list = 11;
-  repeated uint32 KGPIGLMEADN = 15;
-  repeated uint32 DJCOOCONAFO = 4;
-  repeated uint32 BEGHMCICBEB = 9;
-  uint32 scene_id = 2;
+	repeated uint32 locked_point_list = 11;
+	repeated uint32 unhide_point_list = 14;
+	repeated uint32 point_list = 2;
+	repeated uint32 hide_point_list = 4;
+	uint32 scene_id = 9;
 }

@@ -1,6 +1,9 @@
-﻿syntax = "proto3";
+syntax = "proto3";
+
+// Nahida
+// Proto
 
 enum InterOpType {
-  INTER_OP_TYPE_INTER_OP_FINISH = 0;
-  INTER_OP_TYPE_INTER_OP_START = 1;
+	InterOpType_INTER_OP_FINISH = 0;
+	InterOpType_INTER_OP_START = 1;
 }

@@ -1,8 +1,11 @@
-﻿syntax = "proto3";
+syntax = "proto3";
 
-// CmdID: 3928
+// Nahida
+// Proto
+
+// CmdID: 1116
 message ChangeTeamNameRsp {
-  string team_name = 2;
-  int32 retcode = 8;
-  int32 team_id = 10;
+	string team_name = 2;
+	int32 retcode = 8;
+	int32 team_id = 6;
 }

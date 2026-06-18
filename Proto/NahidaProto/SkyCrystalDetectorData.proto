@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "Vector.proto";
+
+message SkyCrystalDetectorData {
+	Vector hint_center_pos = 5;
+	uint32 group_id = 7;
+	uint32 config_id = 14;
+	bool is_hint_valid = 11;
+}

@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+// CmdID: 29577
+message ItemGivingRsp {
+	uint32 giving_id = 3;
+	uint32 giving_group_id = 5;
+	int32 retcode = 9;
+}

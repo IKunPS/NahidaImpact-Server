@@ -1,0 +1,37 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "GachaUpInfo.proto";
+
+message GachaInfo {
+	repeated uint32 display_up5_item_list = 1802;
+	repeated GachaUpInfo gacha_up_info_list = 593;
+	string gacha_prob_url_oversea = 11;
+	repeated uint32 display_up4_item_list = 323;
+	string title_textmap = 149;
+	repeated uint32 display_chronicle_5_item_list = 1652;
+	string gacha_preview_prefab_path = 14;
+	string gacha_prefab_path = 3;
+	string gacha_record_url = 12;
+	string gacha_prob_url = 1241;
+	string gacha_record_url_oversea = 1845;
+	uint32 end_time = 2;
+	uint32 gacha_times_limit = 13;
+	uint32 left_gacha_times = 4;
+	bool unk_bool = 769;
+	bool is_new_wish = 1554;
+	uint32 gacha_sort_id = 1;
+	uint32 cur_schedule_daily_gacha_times = 980;
+	uint32 ten_cost_item_id = 7;
+	uint32 wish_max_progress = 1905;
+	uint32 wish_progress = 514;
+	uint32 schedule_id = 5;
+	uint32 cost_item_num = 6;
+	uint32 cost_item_id = 9;
+	uint32 begin_time = 8;
+	uint32 gacha_type = 10;
+	uint32 wish_item_id = 973;
+	uint32 ten_cost_item_num = 15;
+}

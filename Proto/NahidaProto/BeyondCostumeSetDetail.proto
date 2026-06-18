@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "BeyondCostumePieceAdjustment.proto";
+import "BeyondCostumePieceInfo.proto";
+
+message BeyondCostumeSetDetail {
+	repeated BeyondCostumePieceInfo piece_info = 1;
+	repeated BeyondCostumePieceAdjustment piece_adjustment = 2;
+}

@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+// CmdID: 9457
+message DungeonSlipRevivePointActivateRsp {
+	int32 retcode = 13;
+	uint32 slip_revive_point_id = 1;
+}

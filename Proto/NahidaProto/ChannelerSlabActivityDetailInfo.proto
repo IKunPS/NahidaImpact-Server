@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "ChannelerSlabChallengeStage.proto";
+import "ChannellerSlabBuffInfo.proto";
+import "ChannellerSlabLoopDungeonStageInfo.proto";
+
+message ChannelerSlabActivityDetailInfo {
+	repeated ChannelerSlabChallengeStage stage_list = 11;
+	ChannellerSlabBuffInfo buff_info = 1;
+	ChannellerSlabLoopDungeonStageInfo loop_dungeon_stage_info = 12;
+	uint32 play_end_time = 5;
+}

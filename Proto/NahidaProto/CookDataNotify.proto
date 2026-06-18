@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "CookRecipeData.proto";
+
+// CmdID: 29044
+message CookDataNotify {
+	repeated CookRecipeData recipe_data_list = 3;
+	uint32 grade = 10;
+}

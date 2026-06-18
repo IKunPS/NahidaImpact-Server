@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message RogueDiaryDungeonRecord {
+	uint32 difficulty = 4;
+	bool is_finish = 6;
+	uint32 finish_time = 2;
+	uint32 max_round = 13;
+}

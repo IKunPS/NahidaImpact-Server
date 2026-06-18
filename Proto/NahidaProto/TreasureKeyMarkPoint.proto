@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "Vector.proto";
+
+message TreasureKeyMarkPoint {
+	Vector mark_pos = 9;
+	uint32 group_id = 6;
+	uint32 material_id = 3;
+	bool is_active = 4;
+	uint32 mark_scene_id = 14;
+	uint32 mark_map_layer_id = 5;
+	uint32 config_id = 11;
+}

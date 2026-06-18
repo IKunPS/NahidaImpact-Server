@@ -1,7 +1,10 @@
 syntax = "proto3";
 
-// CmdID: 24225
+// Nahida
+// Proto
+
+// CmdID: 26382
 message GetSceneAreaReq {
-  uint32 belong_uid = 2;
-  uint32 scene_id = 1;
+	uint32 scene_id = 1;
+	uint32 belong_uid = 5;
 }

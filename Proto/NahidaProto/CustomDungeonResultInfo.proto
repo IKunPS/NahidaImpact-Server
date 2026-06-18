@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "ChallengeBrief.proto";
+import "CustomDungeonFinishType.proto";
+
+message CustomDungeonResultInfo {
+	repeated ChallengeBrief child_challenge_list = 3;
+	uint32 got_coin_num = 11;
+	bool is_stored = 2;
+	bool is_arrive_finish = 5;
+	bool is_liked = 10;
+	uint64 dungeon_guid = 13;
+	uint32 time_cost = 15;
+	CustomDungeonFinishType finish_type = 14;
+}

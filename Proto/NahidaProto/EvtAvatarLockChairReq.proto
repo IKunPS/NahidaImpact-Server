@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "Vector.proto";
+
+// CmdID: 23654
+message EvtAvatarLockChairReq {
+	Vector position = 8;
+	int32 direction = 15;
+	uint64 chair_id = 14;
+}

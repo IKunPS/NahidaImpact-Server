@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+// CmdID: 8825
+message HomeGetArrangementInfoReq {
+	repeated uint32 scene_id_list = 14;
+}

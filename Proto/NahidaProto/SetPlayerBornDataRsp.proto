@@ -1,5 +1,0 @@
-syntax = "proto3";
-
-message SetPlayerBornDataRsp {
-  int32 retcode = 6;
-}

@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message RechargeDiskSettleInfo {
+	repeated uint32 score_list = 5;
+	uint32 difficulty = 9;
+	uint32 LDMFGKOABBG = 12;
+	uint32 level_id = 8;
+	bool is_new_record = 15;
+}

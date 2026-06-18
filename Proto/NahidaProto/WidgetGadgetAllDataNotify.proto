@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "WidgetGadgetData.proto";
+
+// CmdID: 25593
+message WidgetGadgetAllDataNotify {
+	repeated WidgetGadgetData widget_gadget_data = 4;
+}

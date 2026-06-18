@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "Vector.proto";
+
+message UgcShortVideoRecord {
+	repeated string replay_config_name_list = 12;
+	Vector KLEMJPNDNGF = 6;
+	Vector PJKNMLEMAOA = 7;
+	float BDOHNOELIDL = 9;
+	float DGCAJNBPLDN = 15;
+	bool KLFGKJCEDDC = 11;
+	bool BADAHMGCBCC = 13;
+	uint32 camera_config_id = 5;
+}

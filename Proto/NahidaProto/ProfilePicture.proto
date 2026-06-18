@@ -1,8 +1,11 @@
-﻿syntax = "proto3";
+syntax = "proto3";
+
+// Nahida
+// Proto
 
 message ProfilePicture {
-  uint32 profile_picture_id = 3;
-  uint32 avatar_id = 1;
-  uint32 costume_id = 2;
-  uint32 profile_frame_id = 4;
+	uint32 profile_frame_id = 4;
+	uint32 costume_id = 2;
+	uint32 profile_picture_id = 3;
+	uint32 avatar_id = 1;
 }

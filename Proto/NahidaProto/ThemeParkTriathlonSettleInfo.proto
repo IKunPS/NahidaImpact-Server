@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message ThemeParkTriathlonSettleInfo {
+	bool PFGDKNIPEKG = 5;
+	uint32 level_id = 7;
+}

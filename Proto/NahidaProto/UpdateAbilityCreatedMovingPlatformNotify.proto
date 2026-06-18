@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+// CmdID: 9467
+message UpdateAbilityCreatedMovingPlatformNotify {
+	enum OpType {
+		OpType_OP_NONE = 0;
+		OpType_OP_ACTIVATE = 1;
+		OpType_OP_DEACTIVATE = 2;
+	}
+	uint32 entity_id = 10;
+	OpType op_type = 1;
+}

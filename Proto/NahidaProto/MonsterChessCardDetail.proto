@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message MonsterChessCardDetail {
+	uint32 guid = 1;
+	uint32 card_id = 5;
+	uint32 card_star_num = 6;
+	uint32 card_extra_level = 2;
+	uint32 card_level = 12;
+}

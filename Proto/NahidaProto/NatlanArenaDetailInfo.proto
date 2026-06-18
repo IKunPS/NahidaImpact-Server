@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message NatlanArenaDetailInfo {
+	// [obf] repeated MFACIEDKBNF level_info_list = 6;
+	uint32 KKKFOKCEBAD = 3;
+}

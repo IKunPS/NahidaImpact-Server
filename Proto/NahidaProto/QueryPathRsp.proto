@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "Vector.proto";
+
+// CmdID: 2358
+message QueryPathRsp {
+	enum PathStatusType {
+		PathStatusType_STATUS_FAIL = 0;
+		PathStatusType_STATUS_SUCC = 1;
+		PathStatusType_STATUS_PARTIAL = 2;
+	}
+	repeated Vector corners = 6;
+	int32 query_id = 14;
+	int32 retcode = 12;
+	PathStatusType query_status = 8;
+}

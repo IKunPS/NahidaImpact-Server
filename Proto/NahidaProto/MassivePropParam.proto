@@ -1,8 +1,11 @@
 syntax = "proto3";
 
+// Nahida
+// Proto
+
 message MassivePropParam {
-	int32 type = 1;
-	uint32 sync_flag = 4;
 	repeated float param_list = 3;
 	repeated uint32 reaction_info_list = 2;
+	uint32 sync_flag = 4;
+	int32 type = 1;
 }

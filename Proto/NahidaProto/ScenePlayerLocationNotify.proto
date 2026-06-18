@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "PlayerLocationInfo.proto";
+import "VehicleLocationInfo.proto";
+
+// CmdID: 5023
+message ScenePlayerLocationNotify {
+	repeated VehicleLocationInfo vehicle_loc_list = 4;
+	repeated PlayerLocationInfo player_loc_list = 13;
+	uint32 scene_id = 10;
+}

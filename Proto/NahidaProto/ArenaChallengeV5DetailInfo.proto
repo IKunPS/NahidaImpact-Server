@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message ArenaChallengeV5DetailInfo {
+	// [obf] repeated LGJFOKABDGN level_info_list = 2;
+	// [obf] repeated FONANDBJKGC level_list = 14;
+}

@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "ItemParam.proto";
+
+message IrodoriFlowerData {
+	repeated ItemParam used_flower_list = 15;
+	repeated uint32 finished_theme_list = 4;
+}

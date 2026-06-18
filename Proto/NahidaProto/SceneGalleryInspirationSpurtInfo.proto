@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message SceneGalleryInspirationSpurtInfo {
+	uint32 kill_normal_monster_num = 10;
+	uint64 CEEGIBFDOOK = 3;
+	uint32 kill_elite_monster_num = 11;
+	uint32 buff_num = 14;
+	uint64 GJMJOMHIPOB = 5;
+}

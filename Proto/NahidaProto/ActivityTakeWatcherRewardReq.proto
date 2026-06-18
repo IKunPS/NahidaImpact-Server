@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+// CmdID: 5935
+message ActivityTakeWatcherRewardReq {
+	uint32 activity_id = 12;
+	uint32 watcher_id = 14;
+}

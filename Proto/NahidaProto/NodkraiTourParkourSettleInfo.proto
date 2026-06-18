@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "GalleryStopReason.proto";
+
+message NodkraiTourParkourSettleInfo {
+	uint32 max_collect_num = 5;
+	uint32 DEDHLFIOPCG = 7;
+	bool is_new_record = 4;
+	uint32 NCFNCGLLDFP = 9;
+	uint32 collect_num = 10;
+	GalleryStopReason reason = 3;
+	uint32 use_time = 13;
+	uint32 score = 15;
+}

@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message FurnitureMakeMakeInfo {
+	uint32 furniture_id = 10;
+	uint32 make_count = 15;
+}

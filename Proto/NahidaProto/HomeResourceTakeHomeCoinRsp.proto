@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "HomeResource.proto";
+
+// CmdID: 22917
+message HomeResourceTakeHomeCoinRsp {
+	HomeResource home_coin = 12;
+	int32 retcode = 6;
+}

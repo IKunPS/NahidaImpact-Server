@@ -1,0 +1,8 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message TreasureHuntV4DetailInfo {
+	// [obf] repeated BBCBCJKPAMA level_info_list = 6;
+}

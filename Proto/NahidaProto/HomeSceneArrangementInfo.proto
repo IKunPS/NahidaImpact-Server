@@ -1,0 +1,27 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "HomeBlockArrangementInfo.proto";
+import "HomeFurnitureData.proto";
+import "Vector.proto";
+
+message HomeSceneArrangementInfo {
+	repeated HomeFurnitureData stair_list = 8;
+	Vector djinn_pos = 11;
+	Vector MODELBCJAPG = 545;
+	Vector born_rot = 9;
+	repeated HomeBlockArrangementInfo block_arrangement_info_list = 10;
+	HomeFurnitureData main_house = 5;
+	Vector born_pos = 1;
+	Vector GDFOGBCJNFI = 4;
+	repeated HomeFurnitureData door_list = 3;
+	// [obf] repeated DMJKKKFLIGA GFNOIABIHKK = 542;
+	uint32 scene_id = 12;
+	uint32 comfort_value = 15;
+	uint32 bgm_id = 13;
+	uint32 tmp_version = 6;
+	bool is_set_born_pos = 7;
+	bool OCIHMJGDNFD = 14;
+}

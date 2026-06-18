@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "SeaLampSectionInfo.proto";
+
+message SeaLampActivityInfo {
+	repeated SeaLampSectionInfo section_info_list = 9;
+	bool is_content_closed = 3;
+	bool is_mechanicus_open = 11;
+	bool is_mechanicus_feature_close = 5;
+	uint32 FODPMHGKADF = 14;
+	uint32 day_index = 13;
+	uint32 popularity = 8;
+	uint32 MBDICDDJCOL = 10;
+	uint32 first_day_start_time = 12;
+}

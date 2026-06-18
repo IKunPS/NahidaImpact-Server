@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "LanV6CardSticker.proto";
+import "LanV6CardTextInfo.proto";
+
+message LanV6CardDetail {
+	repeated LanV6CardSticker card_sticker = 3;
+	LanV6CardTextInfo card_text_info = 4;
+	fixed64 card_guid = 1;
+	uint32 FHEJPCCHCJF = 5;
+	uint32 LKKCMFAPOML = 2;
+}

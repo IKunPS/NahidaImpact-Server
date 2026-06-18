@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "VintageHuntingFirstStageInfo.proto";
+import "VintageHuntingSecondStageInfo.proto";
+import "VintageHuntingThirdStageInfo.proto";
+
+message SceneGalleryVintageHuntingInfo {
+	uint32 stage_id = 11;
+	oneof info {
+		VintageHuntingFirstStageInfo first_stage_info = 1;
+		VintageHuntingSecondStageInfo second_stage_info = 9;
+		VintageHuntingThirdStageInfo third_stage_info = 14;
+	}
+}

@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+// CmdID: 5682
+message NpcTalkReq {
+	uint32 talk_id = 14;
+	uint32 npc_entity_id = 2;
+	uint32 entity_id = 11;
+}

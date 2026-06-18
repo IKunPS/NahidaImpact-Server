@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message IrodoriChessMonsterInfo {
+	repeated uint32 affix_list = 12;
+	uint32 monster_id = 4;
+	uint32 grant_points = 5;
+	uint32 level = 13;
+}

@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "SceneEntityInfo.proto";
+
+// CmdID: 4896
+message AvatarChangeTraceEffectNotify {
+	SceneEntityInfo entity_info = 4;
+}

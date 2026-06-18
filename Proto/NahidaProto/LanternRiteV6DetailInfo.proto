@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "LanternRiteV6CardInfo.proto";
+import "LanternRiteV6DanmakuInfo.proto";
+
+message LanternRiteV6DetailInfo {
+	LanternRiteV6DanmakuInfo danmaku_info = 3;
+	LanternRiteV6CardInfo card_info = 12;
+	uint32 FLAKKIEPBBE = 4;
+	bool is_taken_costume_reward = 9;
+	uint32 like_num = 10;
+}

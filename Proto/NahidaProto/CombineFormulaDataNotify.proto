@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+// CmdID: 21846
+message CombineFormulaDataNotify {
+	bool is_locked = 7;
+	uint32 combine_id = 10;
+}

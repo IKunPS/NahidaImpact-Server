@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "ChatInfo.proto";
+
+// CmdID: 27785
+message PrivateChatRsp {
+	int32 retcode = 4;
+	uint32 chat_forbidden_endtime = 14;
+}

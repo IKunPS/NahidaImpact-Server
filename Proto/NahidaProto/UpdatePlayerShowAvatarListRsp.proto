@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+// CmdID: 8319
+message UpdatePlayerShowAvatarListRsp {
+	repeated uint32 show_avatar_id_list = 1;
+	bool is_show_constellation_num = 12;
+	bool is_show_avatar = 6;
+	int32 retcode = 10;
+}

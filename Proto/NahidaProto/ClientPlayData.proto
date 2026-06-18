@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "ClientPlayInfo.proto";
+
+message ClientPlayData {
+	repeated ClientPlayInfo play_info_list = 6;
+}

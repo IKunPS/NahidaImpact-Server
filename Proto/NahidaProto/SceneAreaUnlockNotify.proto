@@ -1,6 +1,10 @@
 syntax = "proto3";
 
+// Nahida
+// Proto
+
+// CmdID: 20067
 message SceneAreaUnlockNotify {
-  uint32 scene_id = 11;
-  repeated uint32 area_list = 7;
+	repeated uint32 area_list = 11;
+	uint32 scene_id = 4;
 }

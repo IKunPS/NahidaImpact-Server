@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message TeamHexenzirkelInfo {
+	uint32 hexenzirkel_type = 9;
+	uint32 hexenzirkel_level = 6;
+}
+
+// CmdID: 1950
+message TeamHexenzirkelChangeNotify {
+	TeamHexenzirkelInfo info = 1;
+}

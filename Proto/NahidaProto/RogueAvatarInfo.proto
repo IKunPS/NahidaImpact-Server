@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message RogueAvatarInfo {
+	bool is_alive = 15;
+	bool is_onstage = 12;
+	uint32 avatar_id = 4;
+}

@@ -1,8 +1,11 @@
 syntax = "proto3";
- 
+
+// Nahida
+// Proto
+
 import "Item.proto";
 
 message TrifleGadget {
-	uint32 PFCMOHDPOPA = 2;
 	Item item = 1;
+	uint32 DGGLLNELDPH = 2;
 }

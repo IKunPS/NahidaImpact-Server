@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "WindFieldStageInfo.proto";
+
+message WindFieldDetailInfo {
+	repeated WindFieldStageInfo stage_info_list = 14;
+}

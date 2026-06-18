@@ -1,0 +1,37 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "ExhibitionDisplayInfo.proto";
+import "ProfilePicture.proto";
+
+message CooperateChallengeSettleInfo {
+	enum DKDOKFKBMMM {
+		DKDOKFKBMMM_SETTLE_REASON_NONE = 0;
+		DKDOKFKBMMM_SETTLE_REASON_SUCC = 1;
+		DKDOKFKBMMM_SETTLE_REASON_PLAYER_NOT_ENOUGH = 2;
+	}
+	message MEEPMBHFJEO {
+		repeated uint32 uid_list = 8;
+		int32 IPMKEJEJPML = 4;
+		uint32 KFBDMKDOPPL = 1;
+	}
+	message HFLACPFGGNM {
+		ProfilePicture profile_picture = 2;
+		string online_id = 8;
+		string nickname = 7;
+		string HADOFGGLMDB = 14;
+		repeated uint32 JPFILPCHIDC = 13;
+		repeated ExhibitionDisplayInfo card_list = 6;
+		uint32 uid = 9;
+		uint32 score = 1;
+		uint32 add_score = 3;
+	}
+	// [obf] repeated MEEPMBHFJEO FPNIBACONBI = 12;
+	// [obf] repeated HFLACPFGGNM settle_list = 3;
+	repeated uint32 LJDCLNBOCGN = 13;
+	uint32 difficulty_id = 10;
+	uint32 HFKKDBKNJII = 6;
+	// [obf] DKDOKFKBMMM KEIGDPEAOBD = 4;
+}

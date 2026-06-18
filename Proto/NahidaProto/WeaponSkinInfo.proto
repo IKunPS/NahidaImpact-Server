@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message WeaponSkinInfo {
+	repeated uint64 equipped_avatar_guid_list = 7;
+	uint32 weapon_skin_id = 13;
+	uint64 expire_time = 12;
+}

@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "WeaponSkinInfo.proto";
+
+// CmdID: 20312
+message AvatarWeaponSkinDataNotify {
+	repeated WeaponSkinInfo weapon_skin_info_list = 7;
+	repeated uint32 record_weapon_skin_id_list = 8;
+	uint64 IKOHEEBIDBH = 4;
+}

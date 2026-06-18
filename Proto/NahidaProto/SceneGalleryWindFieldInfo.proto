@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message SceneGalleryWindFieldInfo {
+	uint32 challenge_ball_cur_count = 11;
+	uint32 killed_monster_num = 4;
+	uint32 DNAJCBPJDEL = 8;
+	uint32 challenge_total_time = 6;
+	uint32 show_id = 7;
+	uint32 element_ball_num = 1;
+	uint32 coin_num = 9;
+	uint32 challenge_ball_cur_count_dup1 = 14;
+}

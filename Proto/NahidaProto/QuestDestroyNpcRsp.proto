@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+// CmdID: 26970
+message QuestDestroyNpcRsp {
+	int32 retcode = 14;
+	uint32 npc_id = 5;
+	uint32 parent_quest_id = 1;
+}

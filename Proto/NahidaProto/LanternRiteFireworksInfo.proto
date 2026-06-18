@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "LanternRiteFireworksStageInfo.proto";
+
+message LanternRiteFireworksInfo {
+	repeated LanternRiteFireworksStageInfo stage_info_list = 6;
+}

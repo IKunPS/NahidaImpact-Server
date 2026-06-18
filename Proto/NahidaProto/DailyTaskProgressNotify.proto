@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "DailyTaskInfo.proto";
+
+// CmdID: 4209
+message DailyTaskProgressNotify {
+	DailyTaskInfo info = 3;
+}

@@ -2,12 +2,9 @@ using System;
 using NahidaImpact.Data;
 using NahidaImpact.Data.Excel;
 using NahidaImpact.Database.Avatar;
-using NahidaImpact.GameServer.Game.Avatar;
 using NahidaImpact.GameServer.Game.Entity;
 using NahidaImpact.GameServer.Game.Player;
 using NahidaImpact.Enums.Scene;
-using NahidaImpact.Proto;
-using NahidaImpact.GameServer.Server.Packet;
 using NahidaImpact.KcpSharp;
 using System.Collections.Concurrent;
 using NahidaImpact.GameServer.Server.Packet.Send.Scene;
@@ -180,8 +177,8 @@ public class Scene
             }
             
             var entity = EntityCreationEvent.Call<EntityAvatar>(
-                new Type[] { typeof(PlayerInstance), typeof(AvatarDataInfo) },
-                new object[] { player, avatar });
+                new Type[] { typeof(Scene), typeof(AvatarDataInfo) },
+                new object[] { this, avatar });
             
             if (entity != null)
             {

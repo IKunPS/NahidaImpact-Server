@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "EntityClientData.proto";
+
+// CmdID: 21553
+message SetEntityClientDataNotify {
+	EntityClientData entity_client_data = 13;
+	uint32 entity_id = 1;
+}

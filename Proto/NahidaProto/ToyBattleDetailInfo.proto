@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message ToyBattleDetailInfo {
+	// [obf] KKBIPJBHLEF EEOMHIBHCJB = 6;
+	// [obf] MGNHFDDNBBL camp_info = 1;
+	// [obf] MKBAOCHJFHC camp_info_dup1 = 12;
+}

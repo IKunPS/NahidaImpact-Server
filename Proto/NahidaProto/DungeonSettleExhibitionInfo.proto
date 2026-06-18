@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "ExhibitionDisplayInfo.proto";
+import "OnlinePlayerInfo.proto";
+
+message DungeonSettleExhibitionInfo {
+	repeated ExhibitionDisplayInfo card_list = 10;
+	OnlinePlayerInfo player_info = 7;
+}

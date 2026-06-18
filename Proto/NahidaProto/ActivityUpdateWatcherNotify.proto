@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "ActivityWatcherInfo.proto";
+
+// CmdID: 29802
+message ActivityUpdateWatcherNotify {
+	ActivityWatcherInfo watcher_info = 14;
+	uint32 activity_id = 3;
+}

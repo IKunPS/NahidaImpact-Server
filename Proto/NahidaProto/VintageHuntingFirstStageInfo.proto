@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message VintageHuntingFirstStageInfo {
+	uint32 timid_cnt = 6;
+	uint32 elite_cnt = 1;
+	uint32 score = 10;
+	uint32 brutal_cnt = 14;
+}

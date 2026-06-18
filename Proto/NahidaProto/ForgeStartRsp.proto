@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+// CmdID: 129
+message ForgeStartRsp {
+	int32 retcode = 8;
+}

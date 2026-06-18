@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+// CmdID: 7437
+message ChallengeDataNotify {
+	uint32 value = 11;
+	uint32 challenge_index = 3;
+	uint32 param_index = 15;
+}

@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message SceneGalleryFilmfestSniperInfo {
+	uint32 DPCHHEKOHLO = 6;
+	uint32 MFIEIOHMKKG = 7;
+	bool EAGGGAMNDIL = 4;
+	uint32 kill_monster_num = 12;
+	uint32 DKBNIBCMNJI = 13;
+	float HLNFFAMCBNM = 5;
+}

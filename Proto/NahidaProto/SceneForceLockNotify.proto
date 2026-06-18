@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+// CmdID: 27103
+message SceneForceLockNotify {
+	repeated uint32 force_id_list = 4;
+}

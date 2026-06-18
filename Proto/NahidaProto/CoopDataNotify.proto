@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "CoopChapter.proto";
+
+// CmdID: 2155
+message CoopDataNotify {
+	repeated CoopChapter chapter_list = 11;
+	repeated uint32 viewed_chapter_list = 13;
+	bool is_have_progress = 9;
+	uint32 cur_coop_point = 10;
+}

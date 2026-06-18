@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+enum ChallengeFinishType {
+	ChallengeFinishType_NONE = 0;
+	ChallengeFinishType_FAIL = 1;
+	ChallengeFinishType_SUCC = 2;
+	ChallengeFinishType_PAUSE = 3;
+}

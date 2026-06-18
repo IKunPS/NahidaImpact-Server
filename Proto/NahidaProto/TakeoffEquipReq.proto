@@ -1,7 +1,10 @@
 syntax = "proto3";
 
-// CmdID: 3700
+// Nahida
+// Proto
+
+// CmdID: 26585
 message TakeoffEquipReq {
-  uint64 avatar_guid = 13;
-  uint32 slot = 10;
+	uint64 avatar_guid = 1;
+	uint32 slot = 4;
 }

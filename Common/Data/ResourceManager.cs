@@ -22,7 +22,6 @@ public class ResourceManager
         LoadConfigLevelEntityData();
         LoadGlobalCombatConfig();
         LoadMonsterConfigData();
-        LoadMonsterMappings();
         LoadExcel();
         LoadScenePoints();
         LoadTrialAvatarCustomData();
@@ -211,7 +210,7 @@ public class ResourceManager
                 foreach (var (pointId, pointData) in pointsDict)
                 {
                     pointData.Id = pointId;
-                    var entry = new ScenePointEntry(sceneId, pointData);
+                    var entry = new ConfigScenePointEntry(sceneId, pointData);
 
                     scenePoints.Add(pointId);
                     GameData.ScenePointIdList.Add(pointId);
@@ -497,32 +496,6 @@ public class ResourceManager
         catch (Exception ex)
         {
             Logger.Error("Failed to load monster config data.", ex);
-        }
-    }
-
-    private static void LoadMonsterMappings()
-    {
-        var filePath = Path.Combine(ConfigManager.Config.Path.ResourcePath, "Server", "MonsterMapping.json");
-        if (!File.Exists(filePath))
-        {
-            Logger.Warn($"MonsterMapping file not found: {filePath}");
-            return;
-        }
-
-        try
-        {
-            var json = File.ReadAllText(filePath);
-            var list = JsonConvert.DeserializeObject<List<MonsterMapping>>(json);
-            if (list != null)
-            {
-                foreach (var entry in list)
-                    GameData.MonsterMapping[entry.MonsterId] = entry;
-            }
-            Logger.Info($"Loaded {GameData.MonsterMapping.Count} monster mappings");
-        }
-        catch (Exception ex)
-        {
-            Logger.Error("Failed to load MonsterMapping.", ex);
         }
     }
 }

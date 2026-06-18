@@ -1,19 +1,26 @@
 syntax = "proto3";
 
+// Nahida
+// Proto
+
 import "BreakoutSnapShot.proto";
-import "FilmfestBallGameSnapShot.proto";
 import "DrawPlayInfo.proto";
+import "FilmfestBallGameSnapShot.proto";
 import "MassivePropSyncInfo.proto";
 
 message AbilityMixinRecoverInfo {
-	uint32 local_id = 3;
-	optional DrawPlayInfo draw_play_info = 100;
-	FilmfestBallGameSnapShot CBELCPJELCP = 8;
 	BreakoutSnapShot breakout_snap_shot = 7;
-	repeated float AHMEHLMJLOC = 11;
 	repeated uint32 data_list = 4;
 	repeated MassivePropSyncInfo massive_prop_list = 6;
-	oneof CFBEHHMPCCK {
+	// [obf] AAJONFDNNFH GPEOOIFFGBD = 9;
+	repeated float CMHDJBBAMKH = 11;
+	FilmfestBallGameSnapShot EPDOKLHPMFI = 8;
+	uint32 local_id = 3;
+	// [obf] KFEJHJCACKB CGFCNFDDCAI = 10;
+	oneof info {
+		DrawPlayInfo draw_play_info = 100;
+	}
+	oneof source {
 		uint32 instanced_ability_id = 1;
 		uint32 instanced_modifier_id = 2;
 	}

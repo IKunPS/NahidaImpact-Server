@@ -1,17 +1,28 @@
 syntax = "proto3";
- 
+
+// Nahida
+// Proto
+
 import "FilmfestBallGameAction.proto";
 import "FilmfestBallGameSyncCreateConnect.proto";
 
 message FilmfestBallGameSnapShot {
-	uint64 client_game_time = 1;
-	uint64 server_game_time = 2;
-	int32 GIDIIAFEGMP = 11;
-	int32 HPOFPJAMELO = 12;
-	int32 raw_client_game_time = 7;
-	int32 wave_index = 9;
-	bool is_finish = 5;
-	FilmfestBallGameSyncCreateConnect OAPOBGHOAGC = 10;
+	// [obf] repeated ANOICJCLKMF player_info_list = 8;
+	FilmfestBallGameSyncCreateConnect CKABLNNANPP = 10;
 	repeated uint32 id_index_list = 6;
 	repeated FilmfestBallGameAction action_list = 4;
+	// [obf] repeated AGBEDALGLKB entity_list = 3;
+	uint32 IAMEDLBNEDE = 14;
+	uint32 stage_index = 17;
+	int32 HKACKOLBEBC = 18;
+	int32 raw_client_game_time = 7;
+	int32 wave_index = 9;
+	uint32 POLHOAJOFGL = 13;
+	uint64 server_game_time = 2;
+	uint32 IPPOFDODFAP = 15;
+	uint64 client_game_time = 1;
+	uint32 LCHDPCEAEEM = 16;
+	int32 LNOBOOAACMK = 11;
+	int32 BDIKCMCEDFF = 12;
+	bool is_finish = 5;
 }

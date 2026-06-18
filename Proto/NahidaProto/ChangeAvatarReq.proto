@@ -1,12 +1,15 @@
 syntax = "proto3";
 
+// Nahida
+// Proto
+
 import "Vector.proto";
 
-// CmdID: 6317
+// CmdID: 3754
 message ChangeAvatarReq {
-  Vector move_pos = 8;
-  bool FMMMBGLJBBE = 15;
-  bool DPPIDJAPLAA = 3;
-  uint32 skill_id = 2;
-  uint64 guid = 1;
+	Vector move_pos = 3;
+	bool is_move = 8;
+	bool FMMMBGLJBBE = 14;
+	uint32 skill_id = 2;
+	uint64 guid = 6;
 }

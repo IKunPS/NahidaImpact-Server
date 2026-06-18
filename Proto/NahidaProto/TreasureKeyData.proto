@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "TreasureKeyMarkPoint.proto";
+
+message TreasureKeyData {
+	TreasureKeyMarkPoint mark_point = 9;
+}

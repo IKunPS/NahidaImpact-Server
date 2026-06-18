@@ -1,0 +1,8 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message AbilityMetaSpecialEnergy {
+    float value = 6;
+}

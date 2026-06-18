@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+// CmdID: 33
+message HomeKickPlayerRsp {
+	int32 retcode = 2;
+	uint32 target_uid = 5;
+	bool is_kick_all = 8;
+}

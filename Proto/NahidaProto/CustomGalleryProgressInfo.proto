@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message CustomGalleryProgressInfo {
+	repeated uint32 uid_list = 4;
+	repeated string score_board_list = 3;
+	uint32 HBBJHIEPAHM = 5;
+	uint32 LAINLHHJMOM = 6;
+}

@@ -1,11 +1,14 @@
-﻿syntax = "proto3";
+syntax = "proto3";
+
+// Nahida
+// Proto
 
 import "AbilityScalarValueEntry.proto";
 import "AbilityString.proto";
 
 message AbilityAppliedAbility {
-  repeated AbilityScalarValueEntry override_map = 3;
-  AbilityString ability_name = 1;
-  AbilityString ability_override = 2;
-  uint32 instanced_ability_id = 4;
+	AbilityString ability_name = 1;
+	repeated AbilityScalarValueEntry override_map = 3;
+	AbilityString ability_override = 2;
+	uint32 instanced_ability_id = 4;
 }

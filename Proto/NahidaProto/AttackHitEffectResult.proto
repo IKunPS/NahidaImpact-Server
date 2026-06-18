@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message AttackHitEffectResult {
+	float retreat_strength = 1;
+	uint32 DDMMELKFINN = 12;
+	float air_strength = 9;
+	uint32 HMLKNBABIHG = 11;
+	float hit_halt_time_scale = 4;
+	float hit_halt_time = 6;
+}

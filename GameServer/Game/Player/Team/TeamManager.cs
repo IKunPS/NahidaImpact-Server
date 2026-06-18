@@ -2,6 +2,7 @@ using NahidaImpact.Database;
 using NahidaImpact.Database.Avatar;
 using NahidaImpact.Database.Team;
 using NahidaImpact.GameServer.Game.Entity;
+using NahidaImpact.GameServer.Game.Worlds;
 using NahidaImpact.GameServer.Server.Packet.Send.Team;
 using NahidaImpact.GameServer.Server.Packet.Send.Scene;
 using NahidaImpact.GameServer.Server.Packet.Send.Avatar;
@@ -233,8 +234,8 @@ public class TeamManager : BasePlayerManager
                 var avatarInfo = Player.AvatarManager.GetAvatarByGuid(guid);
                 if (avatarInfo == null) continue;
                 entity = EntityCreationEvent.Call<EntityAvatar>(
-                    [typeof(PlayerInstance), typeof(AvatarDataInfo)],
-                    [Player, avatarInfo]);
+                    [typeof(Scene), typeof(AvatarDataInfo)],
+                    [Player.Scene, avatarInfo]);
                 if (entity == null) continue;
             }
             _activeTeam.Add(entity);

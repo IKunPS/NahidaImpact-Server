@@ -1,6 +1,9 @@
-﻿syntax = "proto3";
+syntax = "proto3";
+
+// Nahida
+// Proto
 
 message AvatarTeam {
-  repeated uint64 avatar_guid_list = 2;
-  string team_name = 8;
+	repeated uint64 avatar_guid_list = 6;
+	string team_name = 2;
 }

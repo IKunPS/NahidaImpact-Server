@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "GalleryStopReason.proto";
+
+message SnowRaceParkourSettleInfo {
+	uint32 level_id = 7;
+	bool is_new_record = 3;
+	uint32 use_time = 15;
+	uint32 collect_num = 2;
+	uint32 score = 6;
+	uint32 max_collect_num = 1;
+	GalleryStopReason reason = 14;
+}

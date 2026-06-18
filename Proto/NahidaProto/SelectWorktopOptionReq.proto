@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+// CmdID: 22855
+message SelectWorktopOptionReq {
+	uint32 CDIGFADDFDI = 7;
+	uint32 option_id = 12;
+	uint32 gadget_entity_id = 11;
+}

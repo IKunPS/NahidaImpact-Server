@@ -1,6 +1,10 @@
 syntax = "proto3";
 
+// Nahida
+// Proto
+
+// CmdID: 23619
 message ChooseCurAvatarTeamRsp {
-  int32 retcode = 7;
-  uint32 cur_team_id = 9;
+	uint32 cur_team_id = 11;
+	int32 retcode = 4;
 }

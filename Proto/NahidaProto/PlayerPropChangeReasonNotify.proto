@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "PropChangeReason.proto";
+
+// CmdID: 21535
+message PlayerPropChangeReasonNotify {
+	float cur_value = 6;
+	PropChangeReason reason = 12;
+	uint32 prop_type = 7;
+	float old_value = 1;
+}

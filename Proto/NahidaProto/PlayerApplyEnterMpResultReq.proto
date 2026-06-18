@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+// CmdID: 6665
+message PlayerApplyEnterMpResultReq {
+	uint32 apply_uid = 12;
+	bool is_agreed = 9;
+}

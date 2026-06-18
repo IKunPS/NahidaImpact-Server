@@ -1,10 +1,15 @@
 syntax = "proto3";
 
+// Nahida
+// Proto
+
 import "MotionInfo.proto";
 
+// CmdID: 7802
 message SceneEntityMoveNotify {
-  MotionInfo motion_info = 3;
-  uint32 scene_time = 11;
-  uint32 reliable_seq = 8;
-  uint32 entity_id = 6;
+	// [obf] ICFJCKPMDGJ AALLMDMBCCN = 15;
+	MotionInfo motion_info = 13;
+	uint32 reliable_seq = 12;
+	uint32 scene_time = 2;
+	uint32 entity_id = 10;
 }

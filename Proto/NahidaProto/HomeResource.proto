@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message HomeResource {
+	uint32 store_value = 10;
+	uint32 store_limit = 8;
+	fixed32 next_refresh_time = 1;
+}

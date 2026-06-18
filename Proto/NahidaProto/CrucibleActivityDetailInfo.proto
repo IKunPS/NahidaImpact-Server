@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "CrucibleBattleUidInfo.proto";
+import "Vector.proto";
+
+message CrucibleActivityDetailInfo {
+	repeated CrucibleBattleUidInfo uid_info_list = 13;
+	Vector pos = 4;
+	uint32 cost_time = 1;
+	uint32 battle_world_level = 5;
+}

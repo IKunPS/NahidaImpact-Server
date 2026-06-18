@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "Vector.proto";
+
+message WeekendDjinnInfo {
+	Vector pos = 1;
+	Vector rot = 10;
+}

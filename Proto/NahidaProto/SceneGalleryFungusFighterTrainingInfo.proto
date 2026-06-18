@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message SceneGalleryFungusFighterTrainingInfo {
+	uint32 max_skill_count = 12;
+	uint32 killed_monster_count = 2;
+	uint32 buff_id = 1;
+	uint32 rest_skill_count = 4;
+	uint32 killed_monster_count_dup1 = 3;
+	uint32 KCPJBBOMAGG = 14;
+	uint32 max_monster_count = 15;
+}

@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+// CmdID: 22464
+message QuestProgressUpdateNotify {
+	repeated uint32 fail_progress_list = 4;
+	repeated uint32 finish_progress_list = 5;
+	uint32 quest_id = 10;
+}

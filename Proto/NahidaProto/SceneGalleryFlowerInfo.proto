@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message SceneGalleryFlowerInfo {
+	uint32 end_time = 10;
+	uint32 target_score = 12;
+	uint32 cur_score = 9;
+}

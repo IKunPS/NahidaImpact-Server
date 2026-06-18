@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "MainCoop.proto";
+
+// CmdID: 8510
+message StartCoopPointRsp {
+	MainCoop start_main_coop = 3;
+	uint32 coop_point = 14;
+	int32 retcode = 7;
+	bool is_start = 5;
+}

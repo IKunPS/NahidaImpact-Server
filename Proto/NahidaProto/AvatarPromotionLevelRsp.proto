@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+// CmdID: 25968
+message AvatarPromotionLevelRsp {
+	uint32 JKDFOPBINHA = 1;
+	uint64 avatar_guid = 11;
+	uint32 avatar_level = 2;
+	int32 retcode = 14;
+}

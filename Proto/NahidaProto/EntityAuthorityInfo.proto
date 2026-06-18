@@ -1,17 +1,22 @@
 syntax = "proto3";
 
-import "AnimatorParameterValueInfoPair.proto";
-import "Vector.proto";
-import "SceneEntityAiInfo.proto";
-import "EntityClientExtraInfo.proto";
+// Nahida
+// Proto
+
 import "AbilitySyncStateInfo.proto";
+import "AnimatorParameterValueInfoPair.proto";
+import "EntityClientExtraInfo.proto";
 import "EntityRendererChangedInfo.proto";
+import "SceneEntityAiInfo.proto";
+import "Vector.proto";
 
 message EntityAuthorityInfo {
+	// [obf] HMLMPJIEJNJ HOAIMHCPPIC = 7;
+	repeated AnimatorParameterValueInfoPair pose_para_list = 5;
 	EntityClientExtraInfo client_extra_info = 6;
 	Vector born_pos = 4;
+	Vector GDFOGBCJNFI = 8;
+	AbilitySyncStateInfo ability_info = 1;
 	EntityRendererChangedInfo renderer_changed_info = 2;
 	SceneEntityAiInfo ai_info = 3;
-	AbilitySyncStateInfo ability_info = 1;
-	repeated AnimatorParameterValueInfoPair pose_para_list = 5;
 }

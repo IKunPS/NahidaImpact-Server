@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+// CmdID: 5130
+message CombineDataNotify {
+	repeated uint32 combine_id_list = 15;
+}

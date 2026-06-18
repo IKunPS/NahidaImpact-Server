@@ -1,8 +1,11 @@
 syntax = "proto3";
 
-// CmdID: 25312
+// Nahida
+// Proto
+
+// CmdID: 27004
 message ChangeMpTeamAvatarRsp {
-  repeated uint64 avatar_guid_list = 4;
-  uint64 cur_avatar_guid = 3;
-  int32 retcode = 13;
+	repeated uint64 avatar_guid_list = 10;
+	uint64 cur_avatar_guid = 3;
+	int32 retcode = 6;
 }

@@ -1,6 +1,9 @@
-﻿syntax = "proto3";
+syntax = "proto3";
+
+// Nahida
+// Proto
 
 message AvatarRenameInfo {
-  string avatar_name = 5;
-  uint32 avatar_id = 14;
+	string avatar_name = 12;
+	uint32 avatar_id = 3;
 }

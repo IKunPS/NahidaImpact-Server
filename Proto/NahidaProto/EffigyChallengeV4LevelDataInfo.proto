@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message EffigyChallengeV4LevelDataInfo {
+	uint32 cost_time = 12;
+	uint32 max_score = 14;
+	bool is_open = 7;
+	uint32 level_id = 13;
+}

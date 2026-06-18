@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message SceneGalleryCharAmusementInfo {
+	uint32 max_score = 3;
+	bool is_success = 2;
+	bool is_last_level = 14;
+	bool is_finish = 1;
+	uint32 cur_score = 4;
+}

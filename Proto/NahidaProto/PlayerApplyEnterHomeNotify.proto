@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "OnlinePlayerInfo.proto";
+
+// CmdID: 23366
+message PlayerApplyEnterHomeNotify {
+	OnlinePlayerInfo src_player_info = 12;
+	bool GGLIJAPDKDN = 6;
+	uint32 src_app_id = 2;
+}

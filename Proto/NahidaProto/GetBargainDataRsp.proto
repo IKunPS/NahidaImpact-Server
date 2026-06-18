@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "BargainSnapshot.proto";
+
+// CmdID: 22237
+message GetBargainDataRsp {
+	BargainSnapshot snapshot = 11;
+	uint32 bargain_id = 1;
+	int32 retcode = 6;
+}

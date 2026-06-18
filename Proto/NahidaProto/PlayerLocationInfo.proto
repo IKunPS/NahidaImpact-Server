@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "Vector.proto";
+
+message PlayerLocationInfo {
+	Vector rot = 14;
+	repeated uint32 ADKCLDGFBPK = 2;
+	Vector pos = 8;
+	uint32 uid = 5;
+}

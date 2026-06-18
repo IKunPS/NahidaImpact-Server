@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "RoguelikeSettleCoinInfo.proto";
+
+message RoguelikeDungeonSettleInfo {
+	map<uint32, RoguelikeSettleCoinInfo> finished_challenge_cell_num_map = 6;
+	uint32 cur_level = 2;
+	uint32 total_coin_b_num = 14;
+	uint32 stage_id = 12;
+	bool AGANLAIMOND = 7;
+	bool IIMKHKADMKG = 13;
+	uint32 total_coin_c_num = 11;
+}

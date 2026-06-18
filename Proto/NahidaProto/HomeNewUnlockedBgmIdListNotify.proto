@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+// CmdID: 5664
+message HomeNewUnlockedBgmIdListNotify {
+	repeated uint32 new_unlocked_bgm_id_list = 13;
+}

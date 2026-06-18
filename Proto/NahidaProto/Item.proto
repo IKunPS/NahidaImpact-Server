@@ -1,18 +1,22 @@
-﻿syntax = "proto3";
+syntax = "proto3";
 
+// Nahida
+// Proto
+
+import "BeyondMaterial.proto";
 import "Equip.proto";
+import "Facility.proto";
 import "Furniture.proto";
 import "Material.proto";
-import "Facility.proto";
 
 message Item {
-  uint32 item_id = 1;
-  uint64 guid = 2;
-  oneof detail {
-    // BeyondMaterial beyond_material = 8;
-    Equip equip = 6;
-    Furniture furniture = 7;
-    Material material = 5;
-    Facility facility = 9;
-  }
+	uint64 guid = 2;
+	uint32 item_id = 1;
+	oneof detail {
+		BeyondMaterial beyond_material = 8;
+		Equip equip = 6;
+		Furniture furniture = 7;
+		Material material = 5;
+		Facility facility = 9;
+	}
 }

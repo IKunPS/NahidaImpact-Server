@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message LostSamachurlDetailInfo {
+	// [obf] repeated DNOPPMDOLDO GCGNLJIMAKJ = 11;
+	// [obf] repeated BBJNJEOIGMD PACGBDIGHNE = 5;
+}

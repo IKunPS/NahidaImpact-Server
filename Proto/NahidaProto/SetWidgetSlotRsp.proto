@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "WidgetSlotOp.proto";
+import "WidgetSlotTag.proto";
+
+// CmdID: 23594
+message SetWidgetSlotRsp {
+	repeated WidgetSlotTag tag_list = 15;
+	uint32 material_id = 11;
+	int32 retcode = 7;
+	WidgetSlotOp op = 3;
+}

@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "JourneyGearLevelData.proto";
+
+message JourneyGearInfo {
+	repeated JourneyGearLevelData level_info_list = 9;
+}

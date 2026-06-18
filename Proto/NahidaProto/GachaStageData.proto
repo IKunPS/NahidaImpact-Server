@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message GachaStageData {
+	map<uint32, uint32> target_num_map = 2;
+	bool is_open = 3;
+	uint32 stage_id = 7;
+}

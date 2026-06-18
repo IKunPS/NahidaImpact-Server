@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "EffigyChallengeV4LevelDataInfo.proto";
+
+message EffigyChallengeV4DetailInfo {
+	repeated EffigyChallengeV4LevelDataInfo level_data_info_list = 12;
+}

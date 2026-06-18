@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message TreasureMapBonusChallengeInfo {
+	map<uint32, bool> fragment_map = 15;
+	uint32 solution_id = 1;
+	bool is_done = 14;
+	bool is_active = 4;
+	uint32 config_id = 11;
+}

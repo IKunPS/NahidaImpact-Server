@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message GainBuffDetailInfo {
+	// [obf] repeated HPMEPBFILPH level_info_list = 3;
+	uint32 difficulty = 15;
+}

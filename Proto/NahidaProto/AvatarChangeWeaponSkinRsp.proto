@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+// CmdID: 4234
+message AvatarChangeWeaponSkinRsp {
+	repeated uint64 MKDHJIIODCO = 11;
+	repeated uint64 avatar_guid_list = 15;
+	int32 retcode = 8;
+	uint32 weapon_skin_id = 7;
+}

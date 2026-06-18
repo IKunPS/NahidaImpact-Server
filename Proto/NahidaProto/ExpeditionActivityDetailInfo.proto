@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "ExpeditionChallengeInfo.proto";
+import "ExpeditionPathInfo.proto";
+
+message ExpeditionActivityDetailInfo {
+	repeated ExpeditionPathInfo path_info_list = 13;
+	repeated ExpeditionChallengeInfo challenge_info_list = 2;
+	uint32 expedition_count = 5;
+	uint32 content_close_time = 4;
+	uint32 cur_challenge_id = 6;
+	bool is_content_closed = 12;
+}

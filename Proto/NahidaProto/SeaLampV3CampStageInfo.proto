@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message SeaLampV3CampStageInfo {
+	uint32 stage_id = 6;
+	bool is_finished = 7;
+	bool is_open = 2;
+	uint32 level_id = 3;
+}

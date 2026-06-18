@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message GoalChallengeSettleInfo {
+	repeated uint32 DADEEODCJKI = 8;
+	bool is_new_record = 4;
+	uint32 difficulty = 3;
+	uint32 stage_id = 5;
+}

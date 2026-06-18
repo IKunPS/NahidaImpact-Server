@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+// CmdID: 29294
+message AddQuestContentProgressReq {
+	uint32 add_progress = 10;
+	uint32 param = 4;
+	uint32 content_type = 12;
+}

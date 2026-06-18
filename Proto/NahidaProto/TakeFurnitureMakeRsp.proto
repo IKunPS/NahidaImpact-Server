@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "FurnitureMakeSlot.proto";
+import "ItemParam.proto";
+
+// CmdID: 25274
+message TakeFurnitureMakeRsp {
+	FurnitureMakeSlot furniture_make_slot = 15;
+	repeated ItemParam return_item_list = 2;
+	repeated ItemParam output_item_list = 4;
+	uint32 make_id = 1;
+	int32 retcode = 12;
+}

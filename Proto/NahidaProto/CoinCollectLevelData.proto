@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "CoinCollectTeamInfoData.proto";
+
+message CoinCollectLevelData {
+	repeated CoinCollectTeamInfoData double_best_team_info_list = 8;
+	CoinCollectTeamInfoData single_best_team_info = 3;
+	bool is_have_play_double_level = 7;
+	bool KKJFFIMDPCL = 6;
+	bool is_level_open = 5;
+	bool GLHCIHDKONO = 14;
+	uint32 PGFEHEBJFIK = 2;
+	uint32 level_id = 12;
+	uint32 DFMKPHLAFHK = 9;
+	uint32 last_choose_skill_no = 4;
+	uint32 double_best_pass_time_ms = 11;
+	uint32 LEBOCJHPOHJ = 13;
+}

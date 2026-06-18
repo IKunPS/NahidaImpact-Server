@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message BartenderLevelInfo {
+	uint32 max_score = 15;
+	bool is_finish = 7;
+	uint32 id = 8;
+}

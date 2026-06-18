@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "FireworksReformParamType.proto";
+
+message FireworksReformParam {
+	FireworksReformParamType type = 13;
+	int32 value = 14;
+}

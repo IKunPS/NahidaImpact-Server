@@ -1,23 +1,26 @@
 syntax = "proto3";
- 
-import "MovingPlatformType.proto";
+
+// Nahida
+// Proto
+
 import "MathQuaternion.proto";
+import "MovingPlatformType.proto";
 import "Route.proto";
 import "Vector.proto";
 
 message PlatformInfo {
+	Vector start_pos = 7;
+	MathQuaternion start_rot = 9;
+	Route route = 15;
+	Vector pos_offset = 11;
+	MathQuaternion rot_offset = 12;
 	int32 start_index = 2;
+	uint32 point_id = 16;
+	uint32 start_scene_time = 4;
+	uint32 stop_scene_time = 10;
+	uint32 route_id = 1;
+	MovingPlatformType moving_platform_type = 13;
 	bool is_started = 8;
 	bool is_active = 14;
 	uint32 start_route_time = 3;
-	uint32 stop_scene_time = 10;
-	uint32 start_scene_time = 4;
-	uint32 route_id = 1;
-	uint32 point_id = 16;
-	MovingPlatformType moving_platform_type = 13;
-	Vector start_pos = 7;
-	Vector pos_offset = 11;
-	MathQuaternion rot_offset = 12;
-	MathQuaternion start_rot = 9;
-	Route route = 15;
 }

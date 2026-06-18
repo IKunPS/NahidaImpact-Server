@@ -1,0 +1,37 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "ItemParam.proto";
+
+message ShopGoods {
+	// [obf] repeated GJFOKGCGBHB MFEJJNLPJFK = 340;
+	repeated uint32 pre_goods_id_list = 6;
+	repeated uint32 PGDAIPOPLDN = 420;
+	repeated uint32 IAKOJELNFDO = 1225;
+	repeated ItemParam cost_item_list = 12;
+	ItemParam goods_item = 11;
+	uint32 PFGGHGCHICJ = 507;
+	uint32 DDELEDGPOLO = 781;
+	uint32 KFBFOLKGJIL = 1185;
+	uint32 begin_time = 13;
+	uint32 hcoin = 4;
+	uint32 discount_end_time = 413;
+	uint32 disable_type = 9;
+	uint32 max_level = 3;
+	uint32 end_time = 14;
+	uint32 secondary_sheet_id = 1364;
+	uint32 discount_begin_time = 1884;
+	bool BKOGDFJMBDI = 1755;
+	bool IEBKNGBJOCL = 1773;
+	uint32 single_limit = 175;
+	uint32 mcoin = 8;
+	uint32 goods_id = 1;
+	uint32 scoin = 5;
+	uint32 KODAICLBCFL = 1872;
+	uint32 bought_num = 2;
+	uint32 next_refresh_time = 7;
+	uint32 min_level = 15;
+	uint32 buy_limit = 10;
+}

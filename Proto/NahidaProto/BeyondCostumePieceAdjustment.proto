@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message BeyondCostumePieceAdjustment {
+	uint32 adjust_key = 1;
+	uint32 adjust_value = 2;
+}

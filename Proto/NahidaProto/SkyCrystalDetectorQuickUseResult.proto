@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "SkyCrystalDetectorData.proto";
+
+message SkyCrystalDetectorQuickUseResult {
+	SkyCrystalDetectorData sky_crystal_detector_data = 3;
+	int32 retcode = 2;
+}

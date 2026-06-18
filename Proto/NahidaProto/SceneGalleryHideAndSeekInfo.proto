@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message SceneGalleryHideAndSeekInfo {
+	repeated uint32 caught_uid_list = 15;
+	repeated uint32 visible_uid_list = 9;
+}

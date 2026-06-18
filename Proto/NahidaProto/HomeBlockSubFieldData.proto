@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "Vector.proto";
+
+message HomeBlockSubFieldData {
+	Vector rot = 10;
+	Vector pos = 6;
+}

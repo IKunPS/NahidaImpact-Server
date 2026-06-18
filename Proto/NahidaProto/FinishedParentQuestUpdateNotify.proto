@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "ParentQuest.proto";
+
+// CmdID: 6675
+message FinishedParentQuestUpdateNotify {
+	repeated ParentQuest parent_quest_list = 11;
+}

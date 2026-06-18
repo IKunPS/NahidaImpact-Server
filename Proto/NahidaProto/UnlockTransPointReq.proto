@@ -1,7 +1,10 @@
 syntax = "proto3";
 
-// CmdID: 2582
+// Nahida
+// Proto
+
+// CmdID: 29132
 message UnlockTransPointReq {
-  uint32 scene_id = 9;
-  uint32 point_id = 11;
+	uint32 scene_id = 2;
+	uint32 point_id = 15;
 }

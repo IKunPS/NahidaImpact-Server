@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message OfficialCustomDungeon {
+	uint32 win_times = 3;
+	uint32 dungeon_id = 9;
+}

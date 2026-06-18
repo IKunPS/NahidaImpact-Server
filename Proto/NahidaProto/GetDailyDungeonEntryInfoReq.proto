@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+// CmdID: 24533
+message GetDailyDungeonEntryInfoReq {
+	uint32 scene_id = 3;
+}

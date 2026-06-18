@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "ItemParam.proto";
+
+// CmdID: 3221
+message TowerLevelEndNotify {
+	repeated uint32 finished_star_cond_list = 3;
+	repeated ItemParam reward_item_list = 4;
+	uint32 continue_state = 8;
+	bool is_success = 14;
+	uint32 next_floor_id = 7;
+}

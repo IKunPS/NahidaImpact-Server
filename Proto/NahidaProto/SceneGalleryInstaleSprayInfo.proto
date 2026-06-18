@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "SceneGalleryInstableSprayBuffInfo.proto";
+
+message SceneGalleryInstaleSprayInfo {
+	repeated SceneGalleryInstableSprayBuffInfo buff_info_list = 7;
+	uint32 score = 2;
+}

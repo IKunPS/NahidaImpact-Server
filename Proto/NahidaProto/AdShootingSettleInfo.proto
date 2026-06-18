@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "FriendBrief.proto";
+import "Uint32Pair.proto";
+
+message AdShootingSettleInfo {
+	FriendBrief friend_brief = 11;
+	repeated Uint32Pair furniture_arrange_count_list = 8;
+	// [obf] HCJNIAJPENL type = 2;
+	uint32 score = 15;
+	bool GAADCCCOEMH = 14;
+	bool DJNOAFKOHLN = 3;
+	bool LEOMBOJIMED = 12;
+	uint32 level_id = 6;
+}

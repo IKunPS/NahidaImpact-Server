@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "AbilityInvokeEntry.proto";
+
+message EntityAbilityInvokeEntry {
+	repeated AbilityInvokeEntry invokes = 2;
+	uint32 entity_id = 9;
+}

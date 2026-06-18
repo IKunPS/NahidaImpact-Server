@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "BattlePassSchedule.proto";
+
+// CmdID: 28521
+message BattlePassCurScheduleUpdateNotify {
+	BattlePassSchedule cur_schedule = 1;
+	bool is_viewed = 7;
+	bool have_cur_schedule = 3;
+	bool LNDHMCDAPIE = 6;
+	uint32 battle_pass_plan = 10;
+}

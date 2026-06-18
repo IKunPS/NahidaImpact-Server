@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+// CmdID: 22941
+message HomePreChangeEditModeNotify {
+	bool is_enter_edit_mode = 1;
+}

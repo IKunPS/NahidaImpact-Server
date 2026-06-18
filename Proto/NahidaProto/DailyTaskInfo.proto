@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message DailyTaskInfo {
+	bool is_finished = 13;
+	uint32 reward_id = 8;
+	uint32 daily_task_id = 12;
+	uint32 finish_progress = 7;
+	uint32 progress = 5;
+}

@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "AsterLittleStageState.proto";
+
+message AsterLittleDetailInfo {
+	AsterLittleStageState stage_state = 11;
+	uint32 begin_time = 8;
+	bool is_open = 13;
+	uint32 stage_id = 6;
+	uint32 stage_begin_time = 4;
+}

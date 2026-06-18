@@ -1,6 +1,9 @@
-﻿syntax = "proto3";
+syntax = "proto3";
+
+// Nahida
+// Proto
 
 enum FriendOnlineState {
-  FRIEND_ONLINE_STATE_FREIEND_DISCONNECT = 0;
-  FRIEND_ONLINE_STATE_FRIEND_ONLINE = 1;
+	FriendOnlineState_FREIEND_DISCONNECT = 0;
+	FriendOnlineState_FRIEND_ONLINE = 1;
 }

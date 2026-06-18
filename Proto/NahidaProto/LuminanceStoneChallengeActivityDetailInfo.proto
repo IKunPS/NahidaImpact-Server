@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message LuminanceStoneChallengeActivityDetailInfo {
+	uint32 best_score = 4;
+	uint32 current_stage_id = 9;
+	bool is_content_closed = 3;
+	bool is_final_gallery_complete = 8;
+}

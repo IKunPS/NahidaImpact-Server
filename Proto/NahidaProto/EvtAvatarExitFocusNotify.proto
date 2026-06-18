@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "ForwardType.proto";
+import "Vector.proto";
+
+// CmdID: 29383
+message EvtAvatarExitFocusNotify {
+	Vector finish_forward = 15;
+	uint32 entity_id = 4;
+	ForwardType forward_type = 11;
+}

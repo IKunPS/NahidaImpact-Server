@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "ProfilePicture.proto";
+
+// CmdID: 4822
+message SetPlayerHeadImageRsp {
+	ProfilePicture profile_picture = 15;
+	int32 retcode = 11;
+}

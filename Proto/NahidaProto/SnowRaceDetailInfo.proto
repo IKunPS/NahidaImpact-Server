@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message SnowRaceDetailInfo {
+	// [obf] OPGNEGJKIHO IOOMGKMHDFE = 11;
+	uint32 KPMLIJGPPGE = 7;
+}

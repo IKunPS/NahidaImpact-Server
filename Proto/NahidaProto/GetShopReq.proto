@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+// CmdID: 26533
+message GetShopReq {
+	uint32 shop_type = 11;
+}

@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "AkaFesReasoningLevelInfo.proto";
+
+message AkaFesReasoningInfo {
+	repeated AkaFesReasoningLevelInfo level_info_list = 14;
+}

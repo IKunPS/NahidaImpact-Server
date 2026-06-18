@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+// CmdID: 451
+message DeleteFriendRsp {
+	int32 retcode = 13;
+	uint32 target_uid = 14;
+}

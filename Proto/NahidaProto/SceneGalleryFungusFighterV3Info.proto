@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message SceneGalleryFungusFighterV3Info {
+	message ONMCCDGLIFI {
+		uint64 use_skill_time = 9;
+		bool is_alive = 5;
+		uint32 fungus_id = 11;
+	}
+	// [obf] repeated ONMCCDGLIFI fungus_info_list = 3;
+	string transaction = 6;
+	uint64 kaoacldknee = 5;
+	uint32 ANLJLIPNJKN = 1;
+	uint32 DGLKFPPFAMH = 7;
+	uint32 FAEHNALIOMP = 2;
+	float energy_point = 15;
+	uint32 PCEKBKANPGA = 10;
+	uint32 MPNMPEJGPMD = 4;
+}

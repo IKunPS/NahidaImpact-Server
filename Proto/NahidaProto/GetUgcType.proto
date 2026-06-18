@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+enum GetUgcType {
+	GetUgcType_GET_UGC_NONE = 0;
+	GetUgcType_MINE = 1;
+	GetUgcType_PUBLISH = 2;
+}

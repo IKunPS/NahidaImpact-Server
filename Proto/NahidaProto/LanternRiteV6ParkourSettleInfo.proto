@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "GalleryStopReason.proto";
+
+message LanternRiteV6ParkourSettleInfo {
+	uint32 score = 15;
+	uint32 level_id = 7;
+	GalleryStopReason reason = 5;
+	uint32 collect_num = 2;
+	uint32 use_time = 8;
+	uint32 max_collect_num = 6;
+	bool is_new_record = 12;
+}

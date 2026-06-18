@@ -1,14 +1,17 @@
-﻿syntax = "proto3";
+syntax = "proto3";
 
-import "TeamEnterSceneInfo.proto";
-import "MPLevelEntityInfo.proto";
+// Nahida
+// Proto
+
 import "AvatarEnterSceneInfo.proto";
+import "MPLevelEntityInfo.proto";
+import "TeamEnterSceneInfo.proto";
 
-// CmdID: 354
+// CmdID: 29025
 message PlayerEnterSceneInfoNotify {
-  repeated AvatarEnterSceneInfo avatar_enter_info = 3;
-  MPLevelEntityInfo mp_level_entity_info = 12;
-  TeamEnterSceneInfo team_enter_info = 15;
-  uint32 cur_avatar_entity_id = 9;
-  uint32 enter_scene_token = 1;
+	repeated AvatarEnterSceneInfo avatar_enter_info = 14;
+	TeamEnterSceneInfo team_enter_info = 9;
+	MPLevelEntityInfo mp_level_entity_info = 2;
+	uint32 enter_scene_token = 3;
+	uint32 cur_avatar_entity_id = 8;
 }

@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "Vector.proto";
+
+message DigMarkPoint {
+	Vector pos = 3;
+	Vector rot = 5;
+	uint32 bundle_id = 14;
+}

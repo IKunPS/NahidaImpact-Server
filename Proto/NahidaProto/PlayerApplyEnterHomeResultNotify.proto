@@ -1,0 +1,27 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+// CmdID: 21255
+message PlayerApplyEnterHomeResultNotify {
+	enum Reason {
+		Reason_PLAYER_JUDGE = 0;
+		Reason_PLAYER_ENTER_OPTION_REFUSE = 1;
+		Reason_PLAYER_ENTER_OPTION_DIRECT = 2;
+		Reason_SYSTEM_JUDGE = 3;
+		Reason_HOST_IN_MATCH = 4;
+		Reason_PS_PLAYER_NOT_ACCEPT_OTHERS = 5;
+		Reason_OPEN_STATE_NOT_OPEN = 6;
+		Reason_HOST_IN_EDIT_MODE = 7;
+		Reason_PRIOR_CHECK = 8;
+		Reason_XBOX_PLAYER_NOT_ACCEPT_OTHERS = 9;
+		Reason_PLAYER_NOT_ACCEPT_OTHER_PLATFORM = 10;
+		Reason_XBOX_ONLY = 11;
+		Reason_SCENE_CANNOT_ENTER = 12;
+	}
+	string target_nickname = 10;
+	uint32 target_uid = 7;
+	bool is_agreed = 5;
+	Reason reason = 15;
+}

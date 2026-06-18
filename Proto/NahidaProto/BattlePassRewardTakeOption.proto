@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "BattlePassRewardTag.proto";
+
+message BattlePassRewardTakeOption {
+	BattlePassRewardTag tag = 5;
+	uint32 battle_pass_plan = 8;
+	uint32 option_idx = 12;
+}

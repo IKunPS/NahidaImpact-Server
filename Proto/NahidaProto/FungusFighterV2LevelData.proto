@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message FungusFighterV2LevelData {
+	uint32 best_cost_time = 8;
+	bool is_level_open = 5;
+	uint32 level_id = 13;
+}

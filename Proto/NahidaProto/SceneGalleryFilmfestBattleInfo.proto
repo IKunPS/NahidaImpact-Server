@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message SceneGalleryFilmfestBattleInfo {
+	uint32 level_id = 6;
+	uint32 difficulty = 9;
+	uint32 cur_score = 2;
+}

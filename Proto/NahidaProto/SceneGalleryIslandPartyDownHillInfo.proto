@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "GalleryStartSource.proto";
+
+message SceneGalleryIslandPartyDownHillInfo {
+	GalleryStartSource start_source = 1;
+	uint32 total_kill_monster_count = 14;
+	uint32 max_kill_monster_count = 13;
+	uint32 coin = 11;
+}

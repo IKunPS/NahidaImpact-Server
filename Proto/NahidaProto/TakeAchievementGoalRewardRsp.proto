@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "ItemParam.proto";
+
+// CmdID: 9059
+message TakeAchievementGoalRewardRsp {
+	repeated ItemParam item_list = 11;
+	repeated uint32 id_list = 10;
+	int32 retcode = 14;
+}

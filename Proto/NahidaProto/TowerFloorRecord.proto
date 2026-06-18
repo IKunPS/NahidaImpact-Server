@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "TowerLevelRecord.proto";
+
+message TowerFloorRecord {
+	map<uint32, uint32> passed_level_map = 3;
+	repeated TowerLevelRecord passed_level_record_list = 9;
+	uint32 floor_id = 15;
+	uint32 floor_star_reward_progress = 5;
+}

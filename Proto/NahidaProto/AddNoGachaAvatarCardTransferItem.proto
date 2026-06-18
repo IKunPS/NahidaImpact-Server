@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message AddNoGachaAvatarCardTransferItem {
+	uint32 count = 5;
+	uint32 item_id = 9;
+	bool is_new = 10;
+}

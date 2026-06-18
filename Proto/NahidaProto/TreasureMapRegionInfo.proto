@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "Vector.proto";
+
+message TreasureMapRegionInfo {
+	Vector region_center_pos = 4;
+	uint32 region_id = 1;
+	uint32 EIFCLFEDCLF = 2;
+	uint32 start_time = 3;
+	uint32 region_radius = 11;
+	uint32 KLGFEPBOIFI = 8;
+	uint32 scene_id = 6;
+	bool is_done_mp_spot = 10;
+	bool is_find_mp_spot = 14;
+}

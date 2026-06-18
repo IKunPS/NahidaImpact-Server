@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+// CmdID: 20606
+message PlayerNormalLuaShellNotify {
+	bytes payload = 13;
+	uint32 config_id = 12;
+}

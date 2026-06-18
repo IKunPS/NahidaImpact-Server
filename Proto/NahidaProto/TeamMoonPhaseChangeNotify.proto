@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+// CmdID: 2908
+message TeamMoonPhaseChangeNotify {
+	uint32 moon_phase_type = 9;
+	uint32 moon_phase_level = 13;
+}

@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message SummerTimeV2DungeonSettleInfo {
+	uint32 cur_dungeon_reward_limit = 10;
+	uint32 taken_reward_count = 12;
+	bool is_success = 5;
+}

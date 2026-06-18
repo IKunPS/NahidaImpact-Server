@@ -1,6 +1,0 @@
-syntax = "proto3";
-
-// CmdID: 2210
-message ItemCdGroupTimeNotify {
-  map<uint32, uint64> item_cd_map = 12;
-}

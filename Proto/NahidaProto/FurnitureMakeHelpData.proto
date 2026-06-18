@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message FurnitureMakeHelpData {
+	uint32 furniture_type = 9;
+	uint32 avatar_id = 2;
+}

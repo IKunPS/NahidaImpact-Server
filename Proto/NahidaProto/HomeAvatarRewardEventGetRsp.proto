@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "ItemParam.proto";
+
+// CmdID: 5825
+message HomeAvatarRewardEventGetRsp {
+	repeated ItemParam item_list = 7;
+	int32 retcode = 10;
+	uint32 event_id = 12;
+}

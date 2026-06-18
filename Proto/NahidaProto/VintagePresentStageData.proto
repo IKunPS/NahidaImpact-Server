@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "VintagePresentLevelData.proto";
+
+message VintagePresentStageData {
+	map<uint32, VintagePresentLevelData> present_level_map = 9;
+	uint32 stage_id = 6;
+	bool is_finish = 4;
+	bool is_open = 11;
+	uint32 open_time = 15;
+}

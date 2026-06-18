@@ -1,0 +1,8 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message DreamSwitchingLevelInfo {
+	uint32 JJNKGBICAMO = 3;
+}

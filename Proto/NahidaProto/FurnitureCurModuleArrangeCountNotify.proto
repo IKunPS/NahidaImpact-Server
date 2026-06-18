@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "Uint32Pair.proto";
+
+// CmdID: 9527
+message FurnitureCurModuleArrangeCountNotify {
+	repeated Uint32Pair furniture_arrange_count_list = 13;
+}

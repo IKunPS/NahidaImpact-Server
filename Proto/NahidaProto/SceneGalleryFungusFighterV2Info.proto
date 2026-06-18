@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message SceneGalleryFungusFighterV2Info {
+	message FungusInfo {
+		uint32 fungus_id = 11;
+		bool is_alive = 5;
+		uint64 use_skill_time = 9;
+	}
+	string transaction = 5;
+	repeated FungusInfo fungus_info_list = 9;
+	uint64 kaoacldknee = 10;
+	float energy_point = 8;
+	uint32 defeated_tower_count = 12;
+	uint32 defeated_tower_count_dup1 = 3;
+}

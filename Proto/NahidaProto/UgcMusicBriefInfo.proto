@@ -1,0 +1,34 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "MusicGameSocial.proto";
+
+message UgcMusicBriefInfo {
+	MusicGameSocial social = 1393;
+	string creator_nickname = 9;
+	repeated uint32 IDHPIBHJGPJ = 238;
+	repeated uint32 beatmap_category_id_list = 402;
+	repeated uint32 EKJMMNHHCBB = 1242;
+	uint32 music_id = 11;
+	uint32 JMPDOIOBOEA = 761;
+	uint32 publish_time = 1;
+	uint32 save_idx = 10;
+	uint32 HNFOMJGGLED = 14;
+	uint32 GNFKANIPLKP = 439;
+	uint32 max_score = 13;
+	uint32 HNCCOGIFKNJ = 1443;
+	bool is_published = 4;
+	bool is_psn_platform = 2;
+	bool is_changed_after_publish = 15;
+	bool is_played = 5;
+	uint64 ugc_guid = 8;
+	uint32 before_note_list = 3;
+	uint32 PNEGOOJFNEL = 1521;
+	uint32 version = 12;
+	uint32 AOPEMAKNNHI = 401;
+	uint64 import_from_ugc_guid = 7;
+	uint32 FDBMILABIKN = 980;
+	uint32 save_time = 6;
+}

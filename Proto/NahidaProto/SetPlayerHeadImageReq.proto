@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+// CmdID: 7684
+message SetPlayerHeadImageReq {
+	uint32 profile_picture_id = 12;
+}

@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "OnlinePlayerInfo.proto";
+
+message ScenePlayerInfo {
+	string name = 14;
+	OnlinePlayerInfo online_player_info = 15;
+	uint32 uid = 7;
+	uint32 scene_id = 1;
+	bool is_connected = 13;
+	uint32 peer_id = 3;
+}

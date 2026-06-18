@@ -1,0 +1,8 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message AbilityActionSetRandomOverrideMapValue {
+	float random_value = 5;
+}

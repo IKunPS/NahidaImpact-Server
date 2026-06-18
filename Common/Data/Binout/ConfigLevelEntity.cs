@@ -1,9 +1,5 @@
 namespace NahidaImpact.Data.Binout;
 
-/// <summary>
-/// Level entity configuration loaded from BinOutput/LevelEntity/*.json.
-/// Mirrors Java ConfigLevelEntity.
-/// </summary>
 public class ConfigLevelEntity
 {
     public List<ConfigAbilityData>? Abilities { get; set; }

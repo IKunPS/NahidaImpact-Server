@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "ChatEmojiCollectionData.proto";
+
+// CmdID: 215
+message GetChatEmojiCollectionRsp {
+	ChatEmojiCollectionData chat_emoji_collection_data = 8;
+	int32 retcode = 7;
+}

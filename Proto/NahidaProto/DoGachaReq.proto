@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+// CmdID: 6060
+message DoGachaReq {
+	string gacha_tag = 6;
+	uint32 gacha_schedule_id = 10;
+	uint32 gacha_random = 8;
+	uint32 gacha_type = 15;
+	uint32 gacha_times = 9;
+}

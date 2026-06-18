@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message PlayerRTTInfo {
+	uint32 uid = 6;
+	uint32 rtt = 12;
+}

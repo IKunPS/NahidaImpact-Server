@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message SceneGalleryPacmanInfo {
+	uint32 start_time = 11;
+	uint32 coin_num = 12;
+	uint32 cur_score = 7;
+	uint32 killed_monster_num = 5;
+}

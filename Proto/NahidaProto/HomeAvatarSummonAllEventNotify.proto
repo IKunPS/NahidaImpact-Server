@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "HomeAvatarSummonEventInfo.proto";
+
+// CmdID: 23983
+message HomeAvatarSummonAllEventNotify {
+	repeated HomeAvatarSummonEventInfo summon_event_list = 7;
+}

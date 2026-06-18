@@ -1,11 +1,14 @@
-﻿syntax = "proto3";
+syntax = "proto3";
+
+// Nahida
+// Proto
 
 message ResVersionConfig {
-  string version_suffix = 5;
-  string branch = 6;
-  string md5 = 3;
-  string next_script_version = 7;
-  string release_total_size = 4;
-  uint32 version = 1;
-  bool relogin = 2;
+	string md5 = 3;
+	string version_suffix = 5;
+	string branch = 6;
+	string next_script_version = 7;
+	string release_total_size = 4;
+	bool relogin = 2;
+	uint32 version = 1;
 }

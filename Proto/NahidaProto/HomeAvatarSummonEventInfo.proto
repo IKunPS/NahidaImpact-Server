@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message HomeAvatarSummonEventInfo {
+	uint32 suit_id = 3;
+	uint32 event_id = 1;
+	uint32 guid = 9;
+	uint32 avatar_id = 8;
+	uint32 random_position = 2;
+	uint32 event_over_time = 5;
+}

@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "IrodoriChessMapData.proto";
+
+message IrodoriChessLevelData {
+	IrodoriChessMapData hard_map_data = 10;
+	IrodoriChessMapData normal_map_data = 8;
+	uint32 level_id = 13;
+	uint32 open_time = 15;
+}

@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message Mvm2PveSettleInfo {
+	uint32 progress = 4;
+	bool is_new_record = 5;
+	uint32 use_time = 2;
+	uint32 level_id = 11;
+}

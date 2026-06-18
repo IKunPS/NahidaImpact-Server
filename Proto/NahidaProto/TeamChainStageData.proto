@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message TeamChainStageData {
+	uint32 best_score = 14;
+	bool is_open = 10;
+	uint32 stage_id = 8;
+}

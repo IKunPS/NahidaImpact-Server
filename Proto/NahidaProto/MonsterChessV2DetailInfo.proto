@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "MonsterChessV2CombatDetail.proto";
+import "MonsterChessV2RecordInfo.proto";
+
+message MonsterChessV2DetailInfo {
+	MonsterChessV2CombatDetail combat_detail = 8;
+	repeated MonsterChessV2RecordInfo monster_chess_record_info = 3;
+}

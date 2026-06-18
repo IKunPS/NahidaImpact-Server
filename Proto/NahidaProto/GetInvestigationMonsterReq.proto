@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+// CmdID: 20718
+message GetInvestigationMonsterReq {
+	repeated uint32 city_id_list = 11;
+	bool is_for_mark = 14;
+}

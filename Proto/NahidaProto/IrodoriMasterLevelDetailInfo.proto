@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message IrodoriMasterLevelDetailInfo {
+	bool is_finish = 2;
+	bool is_have_try = 15;
+	uint32 min_finish_time = 3;
+	uint32 diffculty = 10;
+}

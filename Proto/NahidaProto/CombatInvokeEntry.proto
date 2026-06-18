@@ -1,10 +1,14 @@
 syntax = "proto3";
 
-import "ForwardType.proto";
+// Nahida
+// Proto
+
 import "CombatTypeArgument.proto";
+import "ForwardType.proto";
 
 message CombatInvokeEntry {
-  ForwardType forward_type = 8;
-  bytes combat_data = 10;
-  CombatTypeArgument argument_type = 13;
+	bytes combat_data = 4;
+	ForwardType forward_type = 14;
+	CombatTypeArgument argument_type = 2;
+	uint32 IAOLAMKOGKH = 12;
 }

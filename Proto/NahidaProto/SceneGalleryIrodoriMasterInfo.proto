@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message SceneGalleryIrodoriMasterInfo {
+	uint32 level_id = 15;
+	uint32 difficulty = 13;
+	bool is_cg_viewed = 7;
+}

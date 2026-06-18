@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message LanternRiteFireworksChallengeInfo {
+	bool is_full_score = 15;
+	uint32 challenge_id = 8;
+	uint32 best_score = 13;
+}

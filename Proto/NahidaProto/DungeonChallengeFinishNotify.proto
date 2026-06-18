@@ -1,0 +1,29 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "ChallengeFinishType.proto";
+import "ChannellerSlabLoopDungeonResultInfo.proto";
+import "CustomDungeonResultInfo.proto";
+import "EffigyChallengeDungeonResultInfo.proto";
+import "PotionDungeonResultInfo.proto";
+import "StrengthenPointData.proto";
+
+// CmdID: 20955
+message DungeonChallengeFinishNotify {
+	map<uint32, StrengthenPointData> strengthen_point_data_map = 6;
+	uint32 challenge_index = 11;
+	uint32 time_cost = 7;
+	uint32 current_value = 1;
+	bool is_new_record = 9;
+	bool is_success = 15;
+	uint32 challenge_record_type = 12;
+	ChallengeFinishType finish_type = 5;
+	oneof detail {
+		PotionDungeonResultInfo potion_dungeon_result_info = 958;
+		EffigyChallengeDungeonResultInfo effigy_challenge_dungeon_result_info = 967;
+		ChannellerSlabLoopDungeonResultInfo channeller_slab_loop_dungeon_result_info = 1552;
+		CustomDungeonResultInfo custom_dungeon_result_info = 1769;
+	}
+}

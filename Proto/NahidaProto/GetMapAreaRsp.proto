@@ -1,9 +1,12 @@
 syntax = "proto3";
 
+// Nahida
+// Proto
+
 import "MapAreaInfo.proto";
 
-// CmdID: 9541
+// CmdID: 28637
 message GetMapAreaRsp {
-  repeated MapAreaInfo map_area_info_list = 11;
-  int32 retcode = 4;
+	repeated MapAreaInfo map_area_info_list = 3;
+	int32 retcode = 12;
 }

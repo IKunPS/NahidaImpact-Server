@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "FleurFairMusicRecord.proto";
+
+message FleurFairMusicGameInfo {
+	map<uint32, FleurFairMusicRecord> music_record_map = 3;
+}

@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "BattlePassUnlockStatus.proto";
+
+message BattlePassRewardTag {
+	uint32 level = 9;
+	uint32 reward_id = 1;
+	BattlePassUnlockStatus unlock_status = 13;
+	uint32 IIFEIBMDIJP = 6;
+}

@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message SumeruAdventureGoalFightingLevelInfo {
+	// [obf] CEAMLMLEAFF PLOANCJHCIN = 9;
+	uint32 HNDIFJABMFN = 5;
+}

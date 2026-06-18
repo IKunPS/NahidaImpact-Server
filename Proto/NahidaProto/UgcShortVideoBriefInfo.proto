@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "UgcShortVideoAvatarInfo.proto";
+
+message UgcShortVideoBriefInfo {
+	string LDKDGOAFJLD = 6;
+	repeated uint32 FFGAMBMADNL = 2;
+	repeated UgcShortVideoAvatarInfo avatar_info_list = 8;
+	repeated uint32 tag_list = 1;
+	repeated uint32 avatar_id_list = 7;
+	repeated uint32 ACAIOIJFGCP = 4;
+	string level_name = 13;
+	uint32 AJDCKPKIFMD = 9;
+	bool MGIPCBKICAO = 14;
+	uint32 IOFODCPDHOM = 10;
+	uint32 JFPBOLPMJIG = 3;
+	uint32 level_id = 15;
+}

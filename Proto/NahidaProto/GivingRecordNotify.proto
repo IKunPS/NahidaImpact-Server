@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "GivingRecord.proto";
+
+// CmdID: 3339
+message GivingRecordNotify {
+	repeated GivingRecord giving_record_list = 8;
+}

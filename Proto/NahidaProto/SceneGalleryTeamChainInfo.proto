@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message SceneGalleryTeamChainInfo {
+	uint32 like_num = 4;
+	uint32 killed_monster_cnt = 3;
+	uint32 store_num = 15;
+	uint32 win_num = 6;
+	uint32 t_remain_use_time = 9;
+}

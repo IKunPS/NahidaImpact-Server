@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "PlayerLocationInfo.proto";
+
+message PlayerWorldLocationInfo {
+	PlayerLocationInfo player_loc = 8;
+	uint32 scene_id = 7;
+}

@@ -1,7 +1,10 @@
 syntax = "proto3";
 
+// Nahida
+// Proto
+
 message CityInfo {
-  uint32 level = 13;
-  uint32 city_id = 5;
-  uint32 crystal_num = 14;
+	uint32 level = 7;
+	uint32 crystal_num = 13;
+	uint32 city_id = 1;
 }

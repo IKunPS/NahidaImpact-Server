@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "ItemParam.proto";
+
+// CmdID: 25280
+message CombineRsp {
+	repeated ItemParam total_extra_item_list = 13;
+	repeated ItemParam total_return_item_list = 10;
+	repeated ItemParam cost_item_list = 7;
+	repeated ItemParam totalExtraItemList_dup1 = 15;
+	repeated ItemParam total_random_item_list = 9;
+	repeated ItemParam result_item_list = 2;
+	int32 retcode = 14;
+	uint32 combine_count = 4;
+	uint32 combine_id = 1;
+	uint64 avatar_guid = 5;
+}

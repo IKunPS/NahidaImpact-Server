@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message CeremonyDetailInfo {
+	// [obf] GCKECFEDDJC battle_info = 5;
+	// [obf] POJLECHLMMM DEBDJLCPMNC = 14;
+	// [obf] MKEMALIAOLC CPPNDHALIOC = 10;
+}

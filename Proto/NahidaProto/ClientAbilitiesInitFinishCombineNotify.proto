@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "EntityAbilityInvokeEntry.proto";
+
+// CmdID: 29404
+message ClientAbilitiesInitFinishCombineNotify {
+	repeated EntityAbilityInvokeEntry entity_invoke_list = 8;
+}

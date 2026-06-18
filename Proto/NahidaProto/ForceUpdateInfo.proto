@@ -1,5 +1,8 @@
-﻿syntax = "proto3";
+syntax = "proto3";
+
+// Nahida
+// Proto
 
 message ForceUpdateInfo {
-  string force_update_url = 1;
+	string force_update_url = 1;
 }

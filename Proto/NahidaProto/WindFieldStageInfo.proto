@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message WindFieldStageInfo {
+	uint32 open_time = 10;
+	uint32 stage_id = 3;
+	bool is_open = 9;
+}

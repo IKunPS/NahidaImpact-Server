@@ -72,7 +72,7 @@ public class World
         
         player.PeerId = GetNextPeerId();
         
-        player.TeamManager?.SetEntity(new EntityTeam(player));
+        player.TeamManager?.SetEntity(new EntityTeam(player.Scene));
         
         if (_isMultiplayer)
         {

@@ -3,7 +3,6 @@ using NahidaImpact.Data;
 using NahidaImpact.Data.Binout;
 using NahidaImpact.Database.Avatar;
 using NahidaImpact.Enums.Entity;
-using NahidaImpact.GameServer.Game.Player;
 using NahidaImpact.GameServer.Game.Worlds;
 using NahidaImpact.Prop;
 using NahidaImpact.Util;
@@ -15,10 +14,9 @@ public class EntityAvatar : BaseEntity
     public override ProtEntityType EntityType => ProtEntityType.ProtEntityAvatar;
 
     public AvatarDataInfo AvatarInfo { get; }
-    public PlayerInstance Player { get; set; }
 
     public uint LifeState { get; set; }
-    public uint WeaponEntityId => Player.WeaponEntityId;
+    public uint WeaponEntityId => Owner?.WeaponEntityId ?? 0;
     
     public override bool IsAlive()
     {
@@ -59,20 +57,19 @@ public class EntityAvatar : BaseEntity
         LifeState = 0;
     }
     
-    public EntityAvatar(PlayerInstance player, AvatarDataInfo avatarInfo) : base(player.Scene)
+    public EntityAvatar(Scene scene, AvatarDataInfo avatarInfo) : base(scene)
     {
-        Owner = player;
+        Owner = scene.GetHost()!;
         AvatarInfo = avatarInfo;
-        Player = player;
         Properties = avatarInfo.Properties;
         FightProperties = avatarInfo.FightProperties;
         LastMoveSceneTimeMs = 0;
         LastMoveReliableSeq = 0;
         LifeState = 1;
 
-        if (Player.World != null)
+        if (Scene?.World != null)
         {
-            Id = (uint)Player.World.GetNextEntityId(EntityIdTypeEnum.Avatar);
+            Id = (uint)Scene.World.GetNextEntityId(EntityIdTypeEnum.Avatar);
         }
 
         InitAbilities();
@@ -141,19 +138,19 @@ public class EntityAvatar : BaseEntity
     
     public override Position GetPosition()
     {
-        return Player.Position;
+        return Owner?.Position ?? new Position();
     }
     
     public override Position GetRotation()
     {
-        return Player.Rotation;
+        return Owner?.Rotation ?? new Position();
     }
 
     public override void Move(Position newPosition, Position rotation)
     {
         // Invoke player move event.
         var evt = new Server.Event.Player.PlayerMoveEvent(
-            Player, Server.Event.Player.PlayerMoveEvent.MoveType.PLAYER, GetPosition(), newPosition);
+            Owner, Server.Event.Player.PlayerMoveEvent.MoveType.PLAYER, GetPosition(), newPosition);
         evt.Call();
 
         // Set position and rotation.
@@ -223,7 +220,7 @@ public class EntityAvatar : BaseEntity
     public SceneAvatarInfo GetSceneAvatarInfo()
     {
         var avatarInfo = AvatarInfo;
-        var player = Player;
+        var player = Owner;
 
         var sceneAvatarInfo = new SceneAvatarInfo
         {
@@ -355,7 +352,7 @@ public class EntityAvatar : BaseEntity
         // }
 
         // 6. Scene LevelEntity config abilities
-        var scene = Player.Scene;
+        var scene = Scene;
         if (scene != null)
         {
             var levelEntityConfig = scene.SceneData?.LevelEntityConfig;

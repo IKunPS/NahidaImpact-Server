@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "DungeonEntryBlockReason.proto";
+
+message DungeonEntryCond {
+	DungeonEntryBlockReason cond_reason = 7;
+	uint32 param1 = 2;
+}

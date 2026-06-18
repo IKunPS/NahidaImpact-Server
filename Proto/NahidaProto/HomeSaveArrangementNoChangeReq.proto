@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+// CmdID: 28563
+message HomeSaveArrangementNoChangeReq {
+	uint32 scene_id = 4;
+}

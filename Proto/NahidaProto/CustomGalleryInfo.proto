@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "CustomGalleryProgressInfo.proto";
+import "CustomGalleryScoreBoardInfo.proto";
+
+message CustomGalleryInfo {
+	repeated uint32 modified_progress_id_list = 9;
+	repeated CustomGalleryProgressInfo progress_list = 4;
+	repeated CustomGalleryScoreBoardInfo score_board_list = 15;
+	bool is_need_update = 1;
+}

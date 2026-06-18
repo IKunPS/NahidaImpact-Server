@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+// CmdID: 23633
+message NpcTalkRsp {
+	int32 retcode = 2;
+	uint32 entity_id = 14;
+	uint32 npc_entity_id = 9;
+	uint32 cur_talk_id = 6;
+}

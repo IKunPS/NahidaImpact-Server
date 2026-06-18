@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message BrickBreakerLevelInfo {
+	repeated uint32 JCALBENFBJA = 5;
+	repeated uint32 ENFLCANOGKM = 15;
+	repeated uint32 FFNLCFCKFIE = 13;
+	bool is_finish = 10;
+	bool is_can_start = 1;
+	uint32 level_id = 6;
+	uint32 max_score = 4;
+}

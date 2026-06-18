@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "SceneGallerySandwormCannonSpecialEffectType.proto";
+
+message SceneGallerySandwormInfo {
+	bool is_sandworm_appear = 15;
+	SceneGallerySandwormCannonSpecialEffectType special_effect_type = 6;
+	uint32 max_energy = 7;
+	uint32 energy = 4;
+}

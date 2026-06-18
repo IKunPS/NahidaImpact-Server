@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "ServerBuff.proto";
+
+// CmdID: 4084
+message ServerBuffChangeNotify {
+	enum ServerBuffChangeType {
+		ServerBuffChangeType_ADD_SERVER_BUFF = 0;
+		ServerBuffChangeType_DEL_SERVER_BUFF = 1;
+	}
+	repeated ServerBuff server_buff_list = 15;
+	repeated uint64 avatar_guid_list = 8;
+	repeated uint32 entity_id_list = 2;
+	bool is_creature_buff = 1;
+	ServerBuffChangeType server_buff_change_type = 13;
+}

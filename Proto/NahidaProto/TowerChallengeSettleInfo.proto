@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message TowerChallengeSettleInfo {
+	uint32 ADKOJFAHCOL = 15;
+	uint32 level_id = 1;
+	uint32 ONJKKEFBOAC = 14;
+	uint32 finish_time = 13;
+}

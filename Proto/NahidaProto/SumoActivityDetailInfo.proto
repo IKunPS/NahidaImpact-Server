@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "SumoStageData.proto";
+
+message SumoActivityDetailInfo {
+	map<uint32, SumoStageData> sumo_stage_map = 9;
+	uint32 last_stage_id = 3;
+	uint32 difficulty_id = 2;
+}

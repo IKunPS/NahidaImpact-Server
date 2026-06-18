@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "InstableSprayTeamInfo.proto";
+
+message InstableSprayStageInfo {
+	repeated InstableSprayTeamInfo team_info_list = 11;
+	bool is_finished = 2;
+	uint32 max_score = 9;
+	uint32 stage_id = 12;
+}

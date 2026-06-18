@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "BuoyantCombatDailyInfo.proto";
+
+message BuoyantCombatDetailInfo {
+	repeated BuoyantCombatDailyInfo daily_info_list = 1;
+}

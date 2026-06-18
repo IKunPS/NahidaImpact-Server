@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+// CmdID: 7771
+message DungeonDataNotify {
+	map<uint32, uint32> dungeon_data_map = 3;
+}

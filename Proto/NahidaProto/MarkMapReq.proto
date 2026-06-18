@@ -1,20 +1,19 @@
 syntax = "proto3";
 
+// Nahida
+// Proto
+
 import "MapMarkPoint.proto";
 
-// CmdID: 1331
+// CmdID: 29102
 message MarkMapReq {
-  MapMarkPoint mark = 15;
-  MapMarkPoint old = 2;
-  Operation op = 3;
-
-  enum Operation {
-    OPERATION_ADD = 0;
-    OPERATION_MOD = 1;
-    OPERATION_DEL = 2;
-    OPERATION_GET = 3;
-  }
+	enum Operation {
+		Operation_ADD = 0;
+		Operation_MOD = 1;
+		Operation_DEL = 2;
+		Operation_GET = 3;
+	}
+	MapMarkPoint mark = 13;
+	MapMarkPoint old = 14;
+	Operation op = 15;
 }
-
-
-    

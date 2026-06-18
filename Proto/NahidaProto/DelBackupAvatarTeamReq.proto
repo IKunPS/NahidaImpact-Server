@@ -1,5 +1,9 @@
 syntax = "proto3";
 
+// Nahida
+// Proto
+
+// CmdID: 3832
 message DelBackupAvatarTeamReq {
-  uint32 backup_avatar_team_id = 11;
+	uint32 backup_avatar_team_id = 2;
 }

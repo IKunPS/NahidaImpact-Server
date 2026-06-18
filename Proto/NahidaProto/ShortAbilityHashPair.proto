@@ -1,6 +1,9 @@
-﻿syntax = "proto3";
+syntax = "proto3";
+
+// Nahida
+// Proto
 
 message ShortAbilityHashPair {
-  sfixed32 ability_config_hash = 11;
-  sfixed32 ability_name_hash = 6;
+	sfixed32 ability_config_hash = 15;
+	sfixed32 ability_name_hash = 11;
 }

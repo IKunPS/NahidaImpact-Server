@@ -11,7 +11,6 @@ public class AccountData : BaseDatabaseDataHelper
 {
     public string Username { get; set; } = "";
     public string Password { get; set; } = "";
-    public BanTypeEnum BanType { get; set; }
 
     [SugarColumn(IsJson = true)] public List<PermEnum> Permissions { get; set; } = [];
 

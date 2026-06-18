@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "Vector.proto";
+
+message AbilityActionCreateGadget {
+	Vector rot = 6;
+	Vector pos = 14;
+	uint32 room_id = 9;
+}

@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "BattlePassMission.proto";
+
+// CmdID: 6293
+message BattlePassMissionUpdateNotify {
+	repeated BattlePassMission mission_list = 5;
+}

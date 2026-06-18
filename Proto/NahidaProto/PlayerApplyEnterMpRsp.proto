@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+// CmdID: 2948
+message PlayerApplyEnterMpRsp {
+	uint32 param = 10;
+	uint32 target_uid = 4;
+	int32 retcode = 2;
+}

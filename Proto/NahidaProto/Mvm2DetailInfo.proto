@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message Mvm2DetailInfo {
+	// [obf] repeated IFHCPPJKOLK MEBPCLEEGHD = 9;
+	// [obf] INMJKPICNJI GIABIIFKMEF = 5;
+}

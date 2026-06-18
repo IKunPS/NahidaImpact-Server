@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "GravenInnocenceCampInfo.proto";
+import "GravenInnocenceCarveInfo.proto";
+import "GravenInnocencePhotoInfo.proto";
+import "GravenInnocenceRaceInfo.proto";
+
+message GravenInnocenceDetailInfo {
+	GravenInnocencePhotoInfo photo_info = 14;
+	GravenInnocenceCarveInfo carve_info = 13;
+	GravenInnocenceRaceInfo race_info = 5;
+	GravenInnocenceCampInfo camp_info = 3;
+	bool is_content_closed = 2;
+}

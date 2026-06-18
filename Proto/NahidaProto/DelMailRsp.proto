@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+// CmdID: 102
+message DelMailRsp {
+	repeated uint32 mail_id_list = 10;
+	int32 retcode = 1;
+}

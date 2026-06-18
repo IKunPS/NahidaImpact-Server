@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "Vector.proto";
+
+message AnchorPointData {
+	Vector rot = 6;
+	Vector pos = 14;
+	uint32 anchor_point_id = 5;
+	uint32 scene_id = 8;
+	uint32 end_time = 11;
+	uint32 material_id = 15;
+}

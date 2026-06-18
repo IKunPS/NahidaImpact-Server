@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message VintageBoothUsedItemData {
+	uint32 gadget_id = 3;
+	bool is_open = 2;
+}

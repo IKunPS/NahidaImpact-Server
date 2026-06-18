@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "MailData.proto";
+
+// CmdID: 4048
+message MailChangeNotify {
+	repeated MailData mail_list = 2;
+	repeated MailData change_mail_list = 4;
+	repeated uint32 del_mail_id_list = 8;
+}

@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message SalvageScoreChallengeInfo {
+	uint32 max_score = 6;
+	uint32 salvage_challenge_id = 9;
+}

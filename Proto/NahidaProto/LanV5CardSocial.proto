@@ -1,0 +1,8 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message LanV5CardSocial {
+	uint32 like_num = 13;
+}

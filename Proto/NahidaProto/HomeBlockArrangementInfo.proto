@@ -1,0 +1,30 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "HomeAnimalData.proto";
+import "HomeBlockDotPattern.proto";
+import "HomeBlockFieldData.proto";
+import "HomeFurnitureCustomSuiteData.proto";
+import "HomeFurnitureData.proto";
+import "HomeFurnitureGroupData.proto";
+import "HomeFurnitureSuiteData.proto";
+import "HomeNpcData.proto";
+import "WeekendDjinnInfo.proto";
+
+message HomeBlockArrangementInfo {
+	repeated HomeFurnitureData deploy_furniure_list = 11;
+	repeated HomeNpcData deploy_npc_list = 6;
+	repeated WeekendDjinnInfo weekend_djinn_info_list = 13;
+	repeated HomeFurnitureSuiteData furniture_suite_list = 9;
+	repeated HomeFurnitureGroupData furniture_group_list = 1;
+	repeated HomeAnimalData deploy_animal_list = 4;
+	repeated HomeBlockDotPattern dot_pattern_list = 5;
+	repeated HomeBlockFieldData field_list = 15;
+	repeated HomeFurnitureData persistent_furniture_list = 10;
+	repeated HomeFurnitureCustomSuiteData furniture_custom_suite_list = 2;
+	bool is_unlocked = 3;
+	uint32 block_id = 14;
+	uint32 comfort_value = 12;
+}

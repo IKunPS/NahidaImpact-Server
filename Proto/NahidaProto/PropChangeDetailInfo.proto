@@ -1,9 +1,12 @@
-﻿syntax = "proto3";
+syntax = "proto3";
+
+// Nahida
+// Proto
 
 import "DetailAbilityInfo.proto";
 
 message PropChangeDetailInfo {
-  oneof detail_info {
-    DetailAbilityInfo detail_ability_info = 12;
-  }
+	oneof detail_info {
+		DetailAbilityInfo detail_ability_info = 1;
+	}
 }

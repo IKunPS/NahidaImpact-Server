@@ -1,17 +1,20 @@
-﻿syntax = "proto3";
+syntax = "proto3";
 
-import "AbilityInvokeEntryHead.proto";
+// Nahida
+// Proto
+
 import "AbilityInvokeArgument.proto";
+import "AbilityInvokeEntryHead.proto";
 import "ForwardType.proto";
 
 message AbilityInvokeEntry {
-  bytes ability_data = 8;
-  AbilityInvokeEntryHead head = 15;
-  bool is_ignore_auth = 1;
-  uint32 event_id = 2;
-  double total_tick_time = 3;
-  uint32 entity_id = 7;
-  uint32 forward_peer = 6;
-  ForwardType forward_type = 9;
-  AbilityInvokeArgument argument_type = 5;
+	bytes ability_data = 9;
+	AbilityInvokeEntryHead head = 3;
+	bool is_ignore_auth = 5;
+	uint32 entity_id = 1;
+	double total_tick_time = 12;
+	ForwardType forward_type = 2;
+	AbilityInvokeArgument argument_type = 10;
+	uint32 forward_peer = 4;
+	uint32 event_id = 6;
 }

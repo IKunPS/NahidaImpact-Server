@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message SceneGalleryHideAndSeekV4Info {
+	// [obf] repeated MDAAHAKBGMF CCCHLBILEIH = 13;
+	repeated uint32 caught_uid_list = 4;
+	repeated uint32 visible_uid_list = 9;
+	// [obf] repeated GCEFFLIIAKM OFKHFOOAMIE = 15;
+}

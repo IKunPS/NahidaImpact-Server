@@ -1,27 +1,30 @@
-﻿syntax = "proto3";
+syntax = "proto3";
 
-import "SceneEntityInfo.proto";
-import "AbilitySyncStateInfo.proto";
+// Nahida
+// Proto
+
 import "AbilityControlBlock.proto";
-import "ServerBuff.proto";
+import "AbilitySyncStateInfo.proto";
 import "AvatarInfo.proto";
 import "SceneAvatarInfo.proto";
+import "SceneEntityInfo.proto";
+import "ServerBuff.proto";
 
 message SceneTeamAvatar {
-  repeated ServerBuff server_buff_list = 10;
-  AbilityControlBlock ability_control_block = 15;
-  AbilitySyncStateInfo LBIJJANPOOL = 7;
-  SceneAvatarInfo scene_avatar_info = 13;
-  SceneEntityInfo scene_entity_info = 3;
-  AbilitySyncStateInfo DMLKOPFAJAI = 2;
-  AvatarInfo avatar_info = 4;
-  uint64 weapon_guid = 8;
-  uint64 avatar_guid = 11;
-  bool is_reconnect = 6;
-  bool EANFCMEECFP = 9;
-  bool DCMMNCFHGIN = 1600;
-  uint32 scene_id = 1;
-  uint32 weapon_entity_id = 14;
-  uint32 entity_id = 12;
-  uint32 player_uid = 5;
+	AbilitySyncStateInfo avatar_ability_info = 11;
+	SceneEntityInfo scene_entity_info = 6;
+	SceneAvatarInfo scene_avatar_info = 8;
+	AvatarInfo avatar_info = 3;
+	AbilitySyncStateInfo weapon_ability_info = 5;
+	repeated ServerBuff server_buff_list = 7;
+	AbilityControlBlock ability_control_block = 10;
+	uint64 avatar_guid = 15;
+	uint32 entity_id = 12;
+	uint32 weapon_entity_id = 2;
+	bool is_player_cur_avatar = 14;
+	bool is_reconnect = 1;
+	bool is_on_scene = 1054;
+	uint32 player_uid = 13;
+	uint64 weapon_guid = 9;
+	uint32 scene_id = 4;
 }

@@ -1,7 +1,10 @@
 syntax = "proto3";
 
-// CmdID: 1006
+// Nahida
+// Proto
+
+// CmdID: 20869
 message ChangeTeamNameReq {
-  string team_name = 13;
-  int32 team_id = 7;
+	string team_name = 4;
+	int32 team_id = 9;
 }

@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "Vector.proto";
+
+message FleurFairV2PhotoPosData {
+	Vector center = 6;
+	uint32 open_time = 15;
+	uint32 pos_id = 12;
+	bool is_view = 8;
+	bool is_open = 14;
+}

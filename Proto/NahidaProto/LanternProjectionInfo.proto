@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "ClientInputType.proto";
+import "LanternProjectionLevelInfo.proto";
+
+message LanternProjectionInfo {
+	repeated ClientInputType MOFJDBNBKNA = 10;
+	repeated uint32 open_stage_list = 6;
+	repeated ClientInputType DFCOFNMKPDH = 13;
+	repeated LanternProjectionLevelInfo level_list = 8;
+}

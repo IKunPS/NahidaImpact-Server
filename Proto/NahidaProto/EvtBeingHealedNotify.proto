@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+// CmdID: 27352
+message EvtBeingHealedNotify {
+	string heal_tag = 7;
+	float heal_amount = 4;
+	bool is_mute = 11;
+	uint32 source_id = 15;
+	float real_heal_amount = 14;
+	uint32 target_id = 9;
+}

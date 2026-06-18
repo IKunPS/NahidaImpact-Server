@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "WidgetSlotData.proto";
+
+message PlayerWidgetInfo {
+	repeated WidgetSlotData slot_list = 15;
+	uint32 uid = 14;
+}

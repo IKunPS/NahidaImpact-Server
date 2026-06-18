@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message GearLevelData {
+	uint32 last_duration = 5;
+	bool is_finished = 7;
+	bool is_open = 1;
+	uint32 open_time = 14;
+	uint32 shortest_time = 8;
+	uint32 level_id = 10;
+}

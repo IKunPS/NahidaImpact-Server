@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message JourneyGearLevelData {
+	repeated uint64 EAFJMFEHFDJ = 2;
+	uint32 level_id = 1;
+	uint32 max_score = 14;
+	uint32 HBANDCMAILD = 5;
+}

@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message SceneGalleryAutoTimeStopInfo {
+	uint64 ICHNBLLGJBJ = 13;
+	uint64 HBDNEIAIJPP = 9;
+	uint32 NNLAKCLEMNO = 11;
+	uint32 NHGDPOMKBDC = 4;
+	uint32 buff_id = 15;
+	uint32 energy = 12;
+	uint32 score = 3;
+}

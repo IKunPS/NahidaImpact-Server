@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message FeverBattleSettleInfo {
+	bool is_new_record = 13;
+	uint32 score = 6;
+	uint32 level_id = 12;
+	uint32 difficulty = 14;
+}

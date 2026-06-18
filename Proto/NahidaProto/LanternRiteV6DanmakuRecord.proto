@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "Uint32Pair.proto";
+
+message LanternRiteV6DanmakuRecord {
+	repeated Uint32Pair level_record_time_list = 11;
+	uint32 DMPEFHILCOK = 9;
+	uint32 CJKMIKNPCMN = 13;
+	uint32 FPKMMPFAIEM = 1;
+}

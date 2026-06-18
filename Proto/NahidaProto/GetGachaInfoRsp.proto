@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "GachaInfo.proto";
+
+// CmdID: 3880
+message GetGachaInfoRsp {
+	repeated GachaInfo gacha_info_list = 5;
+	uint32 daily_gacha_times = 14;
+	uint32 gacha_random = 1;
+	int32 retcode = 3;
+	bool is_under_general_restrict = 9;
+	bool is_under_minors_restrict = 10;
+}

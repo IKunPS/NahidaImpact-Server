@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+// CmdID: 24450
+message GetBargainDataReq {
+	uint32 bargain_id = 2;
+}

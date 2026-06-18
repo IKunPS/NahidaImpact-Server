@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+// CmdID: 1287
+message AvatarUnlockTalentNotify {
+	uint32 skill_depot_id = 4;
+	uint32 entity_id = 1;
+	uint32 talent_id = 13;
+	uint64 avatar_guid = 8;
+}

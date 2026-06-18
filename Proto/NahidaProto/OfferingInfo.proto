@@ -1,5 +1,8 @@
 syntax = "proto3";
 
+// Nahida
+// Proto
+
 message OfferingInfo {
 	uint32 offering_id = 1;
 }

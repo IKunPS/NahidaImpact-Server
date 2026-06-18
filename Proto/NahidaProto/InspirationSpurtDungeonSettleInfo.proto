@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message InspirationSpurtDungeonSettleInfo {
+	uint32 kill_monster_num = 4;
+	uint32 score = 13;
+	uint32 level_id = 2;
+	bool is_new_record = 3;
+	uint32 use_time = 1;
+}

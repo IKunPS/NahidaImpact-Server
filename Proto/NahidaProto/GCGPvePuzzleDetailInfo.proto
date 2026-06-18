@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message GCGPvePuzzleDetailInfo {
+	repeated uint32 KLHFOGPLGND = 9;
+	bool is_gcg_pve_mode_open = 6;
+}

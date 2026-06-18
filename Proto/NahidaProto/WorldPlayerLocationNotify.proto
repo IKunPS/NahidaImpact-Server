@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "PlayerLocationInfo.proto";
+import "PlayerWorldLocationInfo.proto";
+
+// CmdID: 26209
+message WorldPlayerLocationNotify {
+	repeated PlayerWorldLocationInfo player_world_loc_list = 8;
+	repeated PlayerLocationInfo player_loc_list = 5;
+}

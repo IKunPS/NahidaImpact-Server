@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+// CmdID: 24636
+message TakePlayerLevelRewardRsp {
+	uint32 level = 5;
+	int32 retcode = 11;
+	uint32 reward_id = 13;
+}

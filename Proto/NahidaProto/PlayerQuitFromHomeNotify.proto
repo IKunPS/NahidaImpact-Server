@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+// CmdID: 29606
+message PlayerQuitFromHomeNotify {
+	enum QuitReason {
+		QuitReason_INVALID = 0;
+		QuitReason_KICK_BY_HOST = 1;
+		QuitReason_BACK_TO_MY_WORLD = 2;
+		QuitReason_HOME_BLOCKED = 3;
+		QuitReason_HOME_IN_EDIT_MODE = 4;
+		QuitReason_BY_MUIP = 5;
+		QuitReason_CUR_MODULE_CLOSED = 6;
+	}
+	QuitReason reason = 5;
+}

@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+// CmdID: 29761
+message HomeTransferReq {
+	uint32 guid = 4;
+	bool is_transfer_to_safe_point = 1;
+	bool is_transfer_to_main_house_point = 13;
+}

@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "ActivityAvatarInfo.proto";
+
+message HolidayResortBattleLevelInfo {
+	repeated ActivityAvatarInfo avatar_list = 5;
+}

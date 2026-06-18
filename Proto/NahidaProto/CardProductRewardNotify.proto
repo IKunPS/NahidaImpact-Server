@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+// CmdID: 1109
+message CardProductRewardNotify {
+	string product_id = 10;
+	bool IGCHMHKHOKH = 3;
+	uint32 hcoin = 4;
+	uint32 remain_days = 7;
+}

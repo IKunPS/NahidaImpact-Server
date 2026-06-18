@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message CompoundQueueData {
+	uint32 output_time = 4;
+	uint32 wait_count = 8;
+	uint32 compound_id = 14;
+	uint32 output_count = 10;
+}

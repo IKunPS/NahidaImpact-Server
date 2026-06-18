@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+// CmdID: 25296
+message ChangeMailStarNotify {
+	repeated uint32 mail_id_list = 12;
+	bool is_star = 1;
+}

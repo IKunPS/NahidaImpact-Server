@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "ClientPlayLevelInfo.proto";
+
+message ClientPlayInfo {
+	repeated ClientPlayLevelInfo level_info_list = 7;
+	uint32 play_type = 15;
+}

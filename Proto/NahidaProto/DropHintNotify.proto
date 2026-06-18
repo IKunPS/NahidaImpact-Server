@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "Vector.proto";
+
+// CmdID: 21492
+message DropHintNotify {
+	repeated uint32 item_id_list = 1;
+	Vector position = 4;
+	Vector rotation = 5;
+	uint32 entity_id = 8;
+	bool BGHGNBKEODP = 3;
+}

@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+// CmdID: 28
+message GetMailItemReq {
+	repeated uint32 mail_id_list = 2;
+}

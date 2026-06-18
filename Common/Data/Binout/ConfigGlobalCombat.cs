@@ -1,9 +1,5 @@
 namespace NahidaImpact.Data.Binout;
 
-/// <summary>
-/// Global combat configuration loaded from BinOutput/Common/ConfigGlobalCombat.json.
-/// Mirrors Java ConfigGlobalCombat.
-/// </summary>
 public class ConfigGlobalCombat
 {
     public DefaultAbilities? DefaultAbilities { get; set; }
@@ -11,7 +7,6 @@ public class ConfigGlobalCombat
 
 public class DefaultAbilities
 {
-    /// <summary>Monster elite ability name (Java field name preserved)</summary>
     public string MonterEliteAbilityName { get; set; } = "";
     public List<string>? NonHumanoidMoveAbilities { get; set; }
     public List<string>? LevelDefaultAbilities { get; set; }

@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "PlayerRTTInfo.proto";
+
+// CmdID: 20975
+message WorldPlayerRTTNotify {
+	repeated PlayerRTTInfo player_rtt_list = 15;
+}

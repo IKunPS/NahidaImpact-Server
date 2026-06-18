@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "BargainSnapshot.proto";
+
+// CmdID: 20683
+message BargainStartNotify {
+	BargainSnapshot snapshot = 10;
+	uint32 bargain_id = 8;
+}

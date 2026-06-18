@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "StoreType.proto";
+
+// CmdID: 944
+message StoreWeightLimitNotify {
+	uint32 BPMPJNLADBO = 13;
+	uint32 weapon_count_limit = 12;
+	uint32 reliquary_count_limit = 15;
+	uint32 material_count_limit = 4;
+	uint32 furniture_count_limit = 1;
+	uint32 JBDMHOGCILB = 3;
+	uint32 weight_limit = 5;
+	StoreType store_type = 14;
+}

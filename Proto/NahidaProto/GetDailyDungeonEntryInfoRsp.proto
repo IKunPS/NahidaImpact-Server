@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "DailyDungeonEntryInfo.proto";
+
+// CmdID: 21300
+message GetDailyDungeonEntryInfoRsp {
+	repeated DailyDungeonEntryInfo daily_dungeon_info_list = 14;
+	int32 retcode = 4;
+}

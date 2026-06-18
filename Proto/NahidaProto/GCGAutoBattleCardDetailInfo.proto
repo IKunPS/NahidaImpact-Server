@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message GCGAutoBattleCardDetailInfo {
+	// [obf] IAABJEEPBBC FGMAINFDLBM = 12;
+	// [obf] OBAPBONFOFH AGBOBAPBKFJ = 4;
+	// [obf] OABDEHEDOGM FFOCGEKAEPP = 13;
+	repeated uint32 MGKHMEGMCED = 9;
+	bool ALNDIBJHHHC = 10;
+}

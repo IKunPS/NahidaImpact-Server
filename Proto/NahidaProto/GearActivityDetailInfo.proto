@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "GearLevelData.proto";
+import "JigsawPictureData.proto";
+
+message GearActivityDetailInfo {
+	JigsawPictureData jigsaw_picture_data = 7;
+	repeated GearLevelData gear_level_data_list = 8;
+}

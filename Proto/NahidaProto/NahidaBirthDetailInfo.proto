@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message NahidaBirthDetailInfo {
+	// [obf] MAMHGOECFCA JKOLDEABPBL = 3;
+	// [obf] IENFMCMCFOA ONHKGIOLPMK = 13;
+	// [obf] COJDGHDCHNB CPHHLGKAPCH = 8;
+}

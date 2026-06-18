@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "IrodoriPoetryThemeData.proto";
+
+message IrodoriPoetryData {
+	repeated IrodoriPoetryThemeData theme_data_list = 11;
+	uint32 cur_theme_id = 6;
+}

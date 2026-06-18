@@ -1,0 +1,27 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "UgcLanV5CardBriefInfo.proto";
+import "UgcLanV5CardRecord.proto";
+import "UgcMusicBriefInfo.proto";
+import "UgcMusicRecord.proto";
+import "UgcShortVideoRecord.proto";
+import "UgcType.proto";
+
+// CmdID: 28375
+message SaveUgcReq {
+	uint32 schedule_id = 15;
+	// [obf] DKFCFLLEHDF NAOAJNMEDDE = 8;
+	UgcType ugc_type = 1;
+	oneof record {
+		UgcShortVideoRecord short_video_record = 9;
+		UgcMusicRecord music_record = 11;
+		UgcLanV5CardRecord lan_v_5_card_record = 13;
+	}
+	oneof brief {
+		UgcLanV5CardBriefInfo lan_v_5_card_brief_info = 1985;
+		UgcMusicBriefInfo music_brief_info = 391;
+	}
+}

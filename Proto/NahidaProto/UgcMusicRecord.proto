@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "UgcMusicTrack.proto";
+
+message UgcMusicRecord {
+	repeated UgcMusicTrack music_track_list = 11;
+	uint32 music_id = 15;
+}

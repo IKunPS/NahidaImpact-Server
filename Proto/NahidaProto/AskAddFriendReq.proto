@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+// CmdID: 2454
+message AskAddFriendReq {
+	uint32 target_uid = 11;
+	uint32 source_id = 13;
+}

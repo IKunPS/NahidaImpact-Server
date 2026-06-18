@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message BeyondMaterial {
+	// [obf] LNDFMPDOFEL delete_info = 2;
+	uint32 count = 1;
+}

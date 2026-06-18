@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "Birthday.proto";
+
+// CmdID: 21082
+message SetPlayerBirthdayRsp {
+	Birthday birthday = 13;
+	int32 retcode = 9;
+}

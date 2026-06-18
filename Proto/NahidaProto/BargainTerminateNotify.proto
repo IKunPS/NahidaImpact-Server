@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+// CmdID: 29698
+message BargainTerminateNotify {
+	uint32 bargain_id = 12;
+}

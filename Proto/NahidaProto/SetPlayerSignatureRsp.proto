@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+// CmdID: 1359
+message SetPlayerSignatureRsp {
+	string signature = 2;
+	int32 retcode = 6;
+}

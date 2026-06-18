@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message CookRecipeData {
+	uint32 proficiency = 13;
+	uint32 recipe_id = 7;
+}

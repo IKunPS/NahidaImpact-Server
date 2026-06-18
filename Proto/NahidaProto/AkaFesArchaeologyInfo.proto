@@ -1,0 +1,8 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message AkaFesArchaeologyInfo {
+	// [obf] repeated EBOHFOCHHGM level_info_list = 9;
+}

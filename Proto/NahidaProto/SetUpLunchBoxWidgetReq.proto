@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "LunchBoxData.proto";
+
+// CmdID: 5228
+message SetUpLunchBoxWidgetReq {
+	LunchBoxData lunch_box_data = 14;
+}

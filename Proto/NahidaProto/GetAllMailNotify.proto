@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+// CmdID: 21135
+message GetAllMailNotify {
+	bool is_collected = 8;
+}

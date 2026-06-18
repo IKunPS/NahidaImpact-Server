@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "PhotoPosData.proto";
+
+message PhotoActivityDetailInfo {
+	repeated PhotoPosData photo_pos_data_list = 11;
+	bool is_content_closed = 2;
+}

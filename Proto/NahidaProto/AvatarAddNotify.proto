@@ -1,8 +1,12 @@
 syntax = "proto3";
 
+// Nahida
+// Proto
+
 import "AvatarInfo.proto";
 
+// CmdID: 29741
 message AvatarAddNotify {
-  AvatarInfo avatar_info = 3;
-  bool is_in_team = 5;
+	AvatarInfo avatar = 14;
+	bool is_in_team = 11;
 }

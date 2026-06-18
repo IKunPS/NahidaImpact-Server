@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "OnlinePlayerInfo.proto";
+
+// CmdID: 1569
+message PlayerApplyEnterMpNotify {
+	OnlinePlayerInfo src_player_info = 1;
+	uint32 src_app_id = 5;
+	bool MDDBADIOPKJ = 6;
+	uint32 src_thread_index = 14;
+}

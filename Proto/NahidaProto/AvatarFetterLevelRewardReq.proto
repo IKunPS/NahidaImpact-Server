@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+// CmdID: 22357
+message AvatarFetterLevelRewardReq {
+	uint32 fetter_level = 8;
+	uint64 avatar_guid = 6;
+}

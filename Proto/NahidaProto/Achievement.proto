@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message Achievement {
+	enum Status {
+		Status_INVALID = 0;
+		Status_UNFINISHED = 1;
+		Status_FINISHED = 2;
+		Status_REWARD_TAKEN = 3;
+	}
+	uint32 finish_timestamp = 8;
+	uint32 id = 5;
+	uint32 cur_progress = 10;
+	Status status = 11;
+	uint32 total_progress = 2;
+}
