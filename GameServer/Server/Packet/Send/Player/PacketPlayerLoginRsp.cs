@@ -1,6 +1,7 @@
 using Google.Protobuf;
 using System;
 using NahidaImpact.GameServer.Game.Player;
+using NahidaImpact.Internationalization;
 using NahidaImpact.KcpSharp;
 using NahidaImpact.Proto;
 using NahidaImpact.Util;
@@ -33,7 +34,7 @@ public class PacketPlayerLoginRsp : BasePacket
             }
             catch (Exception e)
             {
-                Logger.Error("Error while initializing region cache!", e);
+                Logger.Error(I18NManager.Translate("Server.ConnectionInfo.RegionCacheError"), e);
                 throw;
             }
         }

@@ -24,7 +24,6 @@ public class ResourceManager
         LoadMonsterConfigData();
         LoadExcel();
         LoadScenePoints();
-        LoadTrialAvatarCustomData();
     }
 
     public static void LoadExcel()
@@ -407,13 +406,48 @@ public class ResourceManager
                 try
                 {
                     var json = File.ReadAllText(filePath);
-                    var dict = JsonConvert.DeserializeObject<Dictionary<string, ConfigEntityBase>>(json);
-                    if (dict != null)
+                    var trimmed = json.TrimStart();
+                    if (trimmed.StartsWith("["))
                     {
-                        foreach (var kv in dict)
+                        var jArray = JArray.Parse(json);
+                        foreach (var item in jArray)
                         {
-                            GameData.PlayerAbilities[kv.Key] = kv.Value;
-                            count++;
+                            if (item is JObject jObj)
+                            {
+                                var properties = jObj.Properties().ToList();
+                                if (properties.Count == 1 && properties[0].Value is JObject)
+                                {
+                                    var key = properties[0].Name;
+                                    var value = properties[0].Value.ToObject<ConfigEntityBase>();
+                                    if (value != null)
+                                    {
+                                        GameData.PlayerAbilities[key] = value;
+                                        count++;
+                                    }
+                                }
+                                else
+                                {
+                                    var value = item.ToObject<ConfigEntityBase>();
+                                    if (value != null)
+                                    {
+                                        var key = Path.GetFileNameWithoutExtension(filePath);
+                                        GameData.PlayerAbilities[key] = value;
+                                        count++;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    else
+                    {
+                        var dict = JsonConvert.DeserializeObject<Dictionary<string, ConfigEntityBase>>(json);
+                        if (dict != null)
+                        {
+                            foreach (var kv in dict)
+                            {
+                                GameData.PlayerAbilities[kv.Key] = kv.Value;
+                                count++;
+                            }
                         }
                     }
                 }
@@ -428,39 +462,6 @@ public class ResourceManager
         catch (Exception ex)
         {
             Logger.Error("Failed to load AbilityGroup data.", ex);
-        }
-    }
-
-    private static void LoadTrialAvatarCustomData()
-    {
-        var filePath = Path.Combine(ConfigManager.Config.Path.ResourcePath,
-            "CustomResources", "TrialAvatarExcels", "TrialAvatarData.json");
-        if (!File.Exists(filePath))
-        {
-            Logger.Warn($"TrialAvatarCustomData file not found: {filePath}");
-            return;
-        }
-
-        try
-        {
-            var json = File.ReadAllText(filePath);
-            var list = JsonConvert.DeserializeObject<List<TrialAvatarCustomData>>(json);
-            if (list == null) return;
-
-            foreach (var entry in list)
-            {
-                // Filter blank strings, mirroring Java onLoad()
-                entry.TrialAvatarParamList = entry.TrialAvatarParamList
-                    .Where(x => !string.IsNullOrWhiteSpace(x)).ToList();
-
-                GameData.TrialAvatarCustomDataMap[entry.TrialAvatarId] = entry;
-            }
-
-            Logger.Info($"Loaded {list.Count} trial avatar custom data entries");
-        }
-        catch (Exception ex)
-        {
-            Logger.Error("Failed to load TrialAvatarCustomData.", ex);
         }
     }
     

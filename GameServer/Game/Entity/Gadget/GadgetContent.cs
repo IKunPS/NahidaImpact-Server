@@ -4,16 +4,18 @@ namespace NahidaImpact.GameServer.Game.Entity.Gadget;
 
 public abstract class GadgetContent
 {
-    private readonly EntityGadget gadget;
-    
-    public GadgetContent(EntityGadget gadget) {
-        this.gadget = gadget;
+    private readonly EntityGadget _gadget;
+
+    public GadgetContent(EntityGadget gadget)
+    {
+        _gadget = gadget;
     }
-    
-    public EntityGadget getGadget() {
-        return gadget;
+
+    public EntityGadget GetGadget()
+    {
+        return _gadget;
     }
-    
-    public abstract bool onInteract(PlayerInstance player, GadgetInteractReq req);
-    public abstract void onBuildProto(SceneGadgetInfo gadgetInfo);
+
+    public abstract bool OnInteract(PlayerInstance player, GadgetInteractReq req);
+    public abstract void OnBuildProto(SceneGadgetInfo gadgetInfo);
 }

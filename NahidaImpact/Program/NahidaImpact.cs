@@ -32,7 +32,7 @@ public class NahidaImpact
 
         var time = DateTime.Now;
         RegisterExitEvent();
-        IConsole.InitConsole();
+        ConsoleManager.InitConsole();
         LoaderManager.InitConfig();
         Crypto.LoadKeys();
         await LoaderManager.InitSdkServer();

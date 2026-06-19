@@ -5,6 +5,7 @@ using NahidaImpact.Database.Avatar;
 using NahidaImpact.GameServer.Game.Entity;
 using NahidaImpact.GameServer.Game.Player;
 using NahidaImpact.Enums.Scene;
+using NahidaImpact.Internationalization;
 using NahidaImpact.KcpSharp;
 using System.Collections.Concurrent;
 using NahidaImpact.GameServer.Server.Packet.Send.Scene;
@@ -23,7 +24,7 @@ public class Scene
     private readonly List<PlayerInstance> _players = [];
     private readonly object _playerListLock = new object();
     private readonly ConcurrentDictionary<int, BaseEntity> _entities = new();
-    private readonly ConcurrentDictionary<int, BaseEntity> _weaponEntities = new();
+    public ConcurrentDictionary<int, BaseEntity> WeaponEntities { get; } = new();
     private readonly HashSet<int> _spawnedEntities = [];
     private readonly HashSet<int> _deadSpawnedEntities = [];
     private readonly HashSet<int> _loadedBlocks = [];
@@ -32,12 +33,29 @@ public class Scene
     private bool _finishedLoading = false;
     private int _tickCount = 0;
     private bool _isPaused = false;
-    
+    private readonly long _sceneStartTime = DateTimeOffset.Now.ToUnixTimeMilliseconds();
+    private bool _dontDestroyWhenEmpty = false;
+    private int _prevScenePoint = 0;
+
+    /// <summary>Elapsed time in milliseconds since this scene started.</summary>
+    public long SceneTime => DateTimeOffset.Now.ToUnixTimeMilliseconds() - _sceneStartTime;
+
+    /// <summary>Whether the scene is currently paused.</summary>
+    public bool IsPaused => _isPaused;
+
     public Scene(World world, SceneDataExcel sceneData)
     {
         World = world;
         SceneData = sceneData;
     }
+
+    // Prevents scene from being cleaned up when empty, used during same-scene teleport.
+    public void SetDontDestroyWhenEmpty(bool value) => _dontDestroyWhenEmpty = value;
+    public bool GetDontDestroyWhenEmpty() => _dontDestroyWhenEmpty;
+
+    // Tracks the previous scene point for cross-scene transition logic.
+    public void SetPrevScenePoint(int point) => _prevScenePoint = point;
+    public int GetPrevScenePoint() => _prevScenePoint;
     
     #region Player Management
     
@@ -120,7 +138,7 @@ public class Scene
         // Remove player avatars outside lock to minimize lock time
         RemovePlayerAvatars(player);
         
-        if (GetPlayerCount() == 0)
+        if (GetPlayerCount() == 0 && !_dontDestroyWhenEmpty)
             World.DeregisterScene(this);
     }
     
@@ -129,14 +147,14 @@ public class Scene
         var teamManager = player.TeamManager;
         if (teamManager == null)
         {
-            Logger.Warn($"Player {player.Uid} has no TeamManager, cannot spawn avatar");
+            Logger.Warn(I18NManager.Translate("Game.SceneInfo.NoTeamManagerSpawn", player.Uid.ToString()));
             return;
         }
         
         var currentAvatarEntity = teamManager.GetCurrentAvatarEntity();
         if (currentAvatarEntity == null)
         {
-            Logger.Warn($"Player {player.Uid} has no current avatar entity to spawn");
+            Logger.Warn(I18NManager.Translate("Game.SceneInfo.NoAvatarEntity", player.Uid.ToString()));
             return;
         }
             
@@ -151,7 +169,7 @@ public class Scene
         var teamManager = player.TeamManager;
         if (teamManager == null)
         {
-            Logger.Warn($"Player {player.Uid} has no TeamManager, cannot setup avatars");
+            Logger.Warn(I18NManager.Translate("Game.SceneInfo.NoTeamManagerSetup", player.Uid.ToString()));
             return;
         }
         
@@ -176,7 +194,7 @@ public class Scene
                 continue;
             }
             
-            var entity = EntityCreationEvent.Call<EntityAvatar>(
+            var entity = EntityFactory.Create<EntityAvatar>(
                 new Type[] { typeof(Scene), typeof(AvatarDataInfo) },
                 new object[] { this, avatar });
             
@@ -211,7 +229,7 @@ public class Scene
     {
         if (_entities.TryGetValue(id, out var entity))
             return entity;
-        if (_weaponEntities.TryGetValue(id, out entity))
+        if (WeaponEntities.TryGetValue(id, out entity))
             return entity;
         return null;
     }
@@ -220,7 +238,7 @@ public class Scene
     {
         if (entity == null)
         {
-            Logger.Warn($"Attempted to add null entity to scene {Id}");
+            Logger.Warn(I18NManager.Translate("Game.SceneInfo.NullEntity", Id.ToString()));
             return;
         }
         
@@ -228,9 +246,9 @@ public class Scene
         BroadcastPacket(new PacketSceneEntityAppearNotify(entity));
     }
 
-    private void AddEntityDirectly(BaseEntity entity) {
+    public void AddEntityDirectly(BaseEntity entity) {
         _entities[(int)entity.Id] = entity;
-        entity.OnCreate(); // Call entity create event
+        entity.OnCreate();
     }
     
     public void RemoveEntity(BaseEntity entity, VisionType visionType = VisionType.Die)

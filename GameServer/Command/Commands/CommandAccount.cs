@@ -5,7 +5,7 @@ using NahidaImpact.Internationalization;
 namespace NahidaImpact.GameServer.Command.Commands;
 
 [CommandInfo("account", "Game.Command.Account.Desc", "Game.Command.Account.Usage", [], [PermEnum.Admin])]
-public class CommandAccount : ICommands
+public class CommandAccount : ICommand
 {
     [CommandDefault]
     public static async ValueTask Execute(CommandArg arg)

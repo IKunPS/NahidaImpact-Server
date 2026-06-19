@@ -8,7 +8,7 @@ using NahidaImpact.Internationalization;
 namespace NahidaImpact.GameServer.Command.Commands;
 
 [CommandInfo("spawn", "Game.Command.Spawn.Desc", "Game.Command.Spawn.Usage", [], [PermEnum.Support, PermEnum.Admin])]
-public class CommandSpawn : ICommands
+public class CommandSpawn : ICommand
 {
     [CommandDefault]
     public static async ValueTask Execute(CommandArg arg)

@@ -1,7 +1,9 @@
 using Google.Protobuf;
 using NahidaImpact.Data.Ability;
 using NahidaImpact.GameServer.Game.Entity;
+using NahidaImpact.GameServer.Server.Packet.Send.Entity;
 using NahidaImpact.Prop;
+using NahidaImpact.Proto;
 using System.Threading.Tasks;
 
 namespace NahidaImpact.GameServer.Game.Ability.Actions;
@@ -23,11 +25,13 @@ public class ActionAddHPDebts : AbilityActionHandler
         amountToAdd += action.AmountByTargetCurrentHPRatio * target.GetFightProperty(FightProp.FIGHT_PROP_CUR_HP);
         amountToAdd += action.AmountByTargetMaxHPRatio * maxHp;
 
-        // Clamp between 0 and 2x max HP
         float newDebts = System.Math.Clamp(curDebts + amountToAdd, 0, 2 * maxHp);
         target.SetFightProperty((int)FightProp.FIGHT_PROP_CUR_HP_DEBTS, newDebts);
 
-        // TODO: Broadcast fight prop update and change reason notify
+        target.Scene?.BroadcastPacket(new PacketEntityFightPropUpdateNotify(target, FightProp.FIGHT_PROP_CUR_HP_DEBTS));
+        target.Scene?.BroadcastPacket(new PacketEntityFightPropChangeReasonNotify(
+            target, FightProp.FIGHT_PROP_CUR_HP_DEBTS, amountToAdd,
+            PropChangeReason.Ability, ChangeHpDebtsReason.AddAbility));
 
         return Task.FromResult(true);
     }

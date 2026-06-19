@@ -69,7 +69,7 @@ public static class ItemDataProtoExtensions
             ItemId = (uint)item.ItemId,
             Guid = item.Guid,
             Count = (uint)item.Count,
-            IsNew = false
+            IsNew = item.IsNew
         };
     }
 
@@ -103,6 +103,15 @@ public static class ItemDataProtoExtensions
             Guid = item.Guid,
             Level = (uint)item.Level,
             PromoteLevel = (uint)item.PromoteLevel
+        };
+    }
+
+    public static ItemParam ToItemParam(this ItemData item)
+    {
+        return new ItemParam
+        {
+            ItemId = (uint)item.ItemId,
+            Count = (uint)item.Count
         };
     }
 }

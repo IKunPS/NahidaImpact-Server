@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using NahidaImpact.Data.Models.Sdk;
+using NahidaImpact.Models.Sdk;
 using NahidaImpact.Database.Account;
 using NahidaImpact.Util;
 

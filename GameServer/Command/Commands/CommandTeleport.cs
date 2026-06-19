@@ -5,7 +5,7 @@ using NahidaImpact.Internationalization;
 namespace NahidaImpact.GameServer.Command.Commands;
 
 [CommandInfo("teleport", "Game.Command.Teleport.Desc", "Game.Command.Teleport.Usage", ["tp"], [PermEnum.Support, PermEnum.Admin])]
-public class CommandTeleport : ICommands
+public class CommandTeleport : ICommand
 {
     [CommandDefault]
     public static async ValueTask Execute(CommandArg arg)
@@ -34,7 +34,7 @@ public class CommandTeleport : ICommands
             _ = int.TryParse(arg.Args[3], out sceneId);
 
         var pos = new Position(x, y, z);
-        bool result = player.World.TransferPlayerToScene(player, sceneId, pos);
+        bool result = player.World.TransferPlayerToScene(player, sceneId, TeleportType.Command, pos);
 
         if (result)
             await arg.SendMsg(I18NManager.Translate("Game.Command.Teleport.Success", player.Data.Name ?? player.Uid.ToString(), x.ToString("F0"), y.ToString("F0"), z.ToString("F0"), sceneId.ToString()));

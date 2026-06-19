@@ -151,6 +151,26 @@ public class CmdIds
     
     public const int AvatarFightPropNotify = 3944;
 
+    // Level & Promote
+    public const int AvatarUpgradeReq = 9051;
+    public const int AvatarUpgradeRsp = 20800;
+    public const int AvatarPromoteReq = 6091;
+    public const int AvatarPromoteRsp = 28930;
+    public const int AvatarPropNotify = 28659;
+
+    // Skill & Talent
+    public const int AvatarSkillUpgradeReq = 26582;
+    public const int AvatarSkillUpgradeRsp = 9601;
+    public const int AvatarSkillChangeNotify = 28991;
+    public const int AvatarSkillDepotChangeNotify = 26620;
+    public const int AvatarSkillInfoNotify = 7250;
+    public const int AvatarSkillMaxChargeCountNotify = 5027;
+    public const int ProudSkillChangeNotify = 23487;
+    public const int ProudSkillExtraLevelNotify = 7060;
+    public const int AvatarUnlockTalentNotify = 1287;
+    public const int UnlockAvatarTalentReq = 7839;
+    public const int UnlockAvatarTalentRsp = 29364;
+
     // Inventory
     public const int StoreItemChangeNotify = 27681;
     public const int StoreItemDelNotify = 8176;
@@ -181,6 +201,7 @@ public class CmdIds
     public const int DestroyMaterialRsp = 23522;
     public const int UseItemReq = 4800;
     public const int UseItemRsp = 29891;
+    public const int CalcWeaponUpgradeReturnItemsReq = 3748;
     public const int CalcWeaponUpgradeReturnItemsRsp = 1588;
     public const int AvatarEquipChangeNotify = 1605;
     

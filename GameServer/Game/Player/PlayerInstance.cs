@@ -3,6 +3,7 @@ using NahidaImpact.Data;
 using NahidaImpact.Database;
 using NahidaImpact.Database.Account;
 using NahidaImpact.Database.Avatar;
+using NahidaImpact.Database.Inventory;
 using NahidaImpact.Database.Player;
 using NahidaImpact.GameServer.Game.Avatar;
 using NahidaImpact.GameServer.Game.Entity;
@@ -21,6 +22,7 @@ using NahidaImpact.GameServer.Server.Packet.Send.State;
 using NahidaImpact.GameServer.Server.Packet.Send.Map;
 using NahidaImpact.KcpSharp;
 using NahidaImpact.Proto;
+using NahidaImpact.Enums.Player;
 using NahidaImpact.Util.Extensions;
 using NahidaImpact.Util;
 
@@ -30,6 +32,7 @@ public class PlayerInstance
 {
     public AvatarManager AvatarManager { get; private set; }
     public InventoryManager InventoryManager { get; private set; }
+    public WeaponManager WeaponManager { get; private set; }
     public static readonly List<PlayerInstance> PlayerInstances = [];
     public PlayerData Data { get; set; }
     public EntityAvatar? EntityAvatar { get; set; }
@@ -42,31 +45,52 @@ public class PlayerInstance
     public CombatInvokeHandler CombatInvokeHandler { get; private set; }
     public TeamManager TeamManager { get; private set; }
     public MapMarksManager MapMarksManager { get; private set; }
-    public SotSManager? SotSManager { get; private set; }
+    public StatueOfTheSevenManager? StatueOfTheSevenManager { get; private set; }
     public Scene Scene { get; internal set; }
     public World World { get; internal set; }
     
-    public uint SceneId { get; set; } = 3;
+    public uint SceneId { get; set; } = GameConstants.START_SCENE_ID;
     public int Uid { get; set; }
     public uint PeerId { get; internal set; }
     public Connection? Connection { get; set; }
     public bool IsNewPlayer { get; set; }
     public bool HasSentLoginPackets { get; set; }
     public uint GuidSeed { get; set; }
-    public uint EntityIdSeed { get; set; }
     public ulong GetNextGameGuid() => ((ulong)Uid << 32) + (++GuidSeed);
     public int Primogems { get; set; }
     public int Mora { get; set; }
     public int Crystals { get; set; }
     public int HomeCoin { get; set; }
     public uint EnterToken { get; set; }
+    public SceneLoadState SceneLoadState { get; set; } = SceneLoadState.None;
+
+    /// <summary>True only for the very first enter-scene after account creation.</summary>
+    public bool IsFirstLoginEnterScene => SceneLoadState == SceneLoadState.None;
     public int MainCharacterId { get; set; }
     public List<uint> ChatEmojiIdList { get; set; } = [];
-    public uint WeaponEntityId = 100663300;
-    
-    public Position Position { get; private set; } = new Position(2747, 194, -1719); // START_POSITION from GameConstants
-    public Position Rotation { get; private set; } = new Position(0, 307, 0); // Default rotation
-    public Position PrevPos { get; private set; } = new Position();
+    public List<int> FlyCloakList { get; set; } = [GameConstants.DEFAULT_FLYCLOAK_ID];
+    public List<int> NameCardList { get; set; } = [GameConstants.DEFAULT_NAME_CARD_ID];
+
+    public uint WeaponEntityId
+    {
+        get
+        {
+            var avatar = TeamManager?.GetCurrentAvatarEntity();
+            if (avatar != null)
+            {
+                var weapon = InventoryManager.Items.Values
+                    .FirstOrDefault(i => i.EquipCharacter == (int)avatar.AvatarInfo.AvatarId
+                        && i.ItemType == Enums.Item.ItemType.ITEM_WEAPON);
+                if (weapon != null && weapon.WeaponEntityId > 0)
+                    return (uint)weapon.WeaponEntityId;
+            }
+            return 0x06000064;
+        }
+    }
+
+    public Position Position { get; private set; } = new(GameConstants.START_POS_X, GameConstants.START_POS_Y, GameConstants.START_POS_Z);
+    public Position Rotation { get; private set; } = new(GameConstants.START_ROT_X, GameConstants.START_ROT_Y, GameConstants.START_ROT_Z);
+    public Position PrevPos { get; private set; } = new();
     public Position PrevPosForHome { get; private set; } = Position.Zero;
     public int PrevScene { get; set; }
     
@@ -119,10 +143,11 @@ public class PlayerInstance
         Data = data;
         Uid = data.Uid;
         Profile = new PlayerProfile(data.Name ?? "Traveler");
-        
+
         TeamManager = new TeamManager(this);
         AvatarManager = new AvatarManager(this);
         InventoryManager = new InventoryManager(this);
+        WeaponManager = new WeaponManager(this);
         SocialManager = new SocialManager(this);
         ProgressManager = new ProgressManager(this);
         AbilityManager = new AbilityManager(this);
@@ -130,39 +155,40 @@ public class PlayerInstance
         CombatInvokeHandler = new CombatInvokeHandler(this);
         MapMarksManager = new MapMarksManager(this);
 
-        // Initialize default player properties
-        SetProperty(Prop.PlayerProp.PROP_MAX_STAMINA, 10000);
-        SetProperty(Prop.PlayerProp.PROP_CUR_PERSIST_STAMINA, 10000);
-        SotSManager = new SotSManager(this);
-    }
-    
-    public void SetPosition(Position position)
-    {
-        Position.Set(position);
-    }
-    
-    public void SetRotation(Position rotation)
-    {
-        Rotation.Set(rotation);
-    }
-    
-    public void SetPrevPos(Position pos)
-    {
-        PrevPos.Set(pos);
-    }
-    
-    public void SetPrevPosForHome(Position pos)
-    {
-        PrevPosForHome.Set(pos);
+        ApplyProperties();
+        StatueOfTheSevenManager = new StatueOfTheSevenManager(this);
     }
 
+    private void ApplyProperties()
+    {
+        SetProperty(Prop.PlayerProp.PROP_PLAYER_LEVEL, GameConstants.DEFAULT_PLAYER_LEVEL);
+        SetProperty(Prop.PlayerProp.PROP_IS_SPRING_AUTO_USE, 1);
+        SetProperty(Prop.PlayerProp.PROP_SPRING_AUTO_USE_PERCENT, 50);
+        SetProperty(Prop.PlayerProp.PROP_IS_FLYABLE, 1);
+        SetProperty(Prop.PlayerProp.PROP_PLAYER_CAN_DIVE, 1);
+        SetProperty(Prop.PlayerProp.PROP_IS_TRANSFERABLE, 1);
+        SetProperty(Prop.PlayerProp.PROP_MAX_STAMINA, GameConstants.MAX_STAMINA_DEFAULT);
+        SetProperty(Prop.PlayerProp.PROP_DIVE_MAX_STAMINA, GameConstants.DIVE_MAX_STAMINA_DEFAULT);
+        SetProperty(Prop.PlayerProp.PROP_PLAYER_RESIN, GameConstants.PLAYER_RESIN_DEFAULT);
+        SetProperty(Prop.PlayerProp.PROP_PHLOGISTON_ENABLE, 1);
+        SetProperty(Prop.PlayerProp.PROP_CUR_PERSIST_STAMINA, GameConstants.MAX_STAMINA_DEFAULT);
+        SetProperty(Prop.PlayerProp.PROP_DIVE_CUR_STAMINA, GameConstants.DIVE_MAX_STAMINA_DEFAULT);
+        SetProperty(Prop.PlayerProp.PROP_PLAYER_MP_SETTING_TYPE, GameConstants.MP_SETTING_NONE);
+        SetProperty(Prop.PlayerProp.PROP_IS_MP_MODE_AVAILABLE, 1);
+    }
+
+    public void SetPosition(Position position) => Position.Set(position);
+    public void SetRotation(Position rotation) => Rotation.Set(rotation);
+    public void SetPrevPos(Position pos) => PrevPos.Set(pos);
+    public void SetPrevPosForHome(Position pos) => PrevPosForHome.Set(pos);
+
     #region Initializers
+
     public PlayerInstance(int uid) : this(new PlayerData { Uid = uid })
     {
         IsNewPlayer = true;
         Data.Name = AccountData.GetAccountByUid(uid)?.Username;
         Profile = new PlayerProfile(Data.Name ?? "Traveler");
-
         DatabaseHelper.CreateInstance(Data);
     }
 
@@ -175,62 +201,31 @@ public class PlayerInstance
     #endregion
 
     #region Network
+
     public async ValueTask OnLogin()
     {
         PlayerInstances.Add(this);
 
-        // TODO: Check HOME_SCENE_IDS like in Java
-        // if (GameHome.HOME_SCENE_IDS.Contains(this.SceneId)) {
-        //     this.SceneId = (uint)(this.PrevScene <= 0 ? 3 : this.PrevScene);
-        //     var pos = this.PrevPosForHome;
-        //     if (pos.Equals(Position.Zero)) {
-        //         // TODO: Get born position from scene meta
-        //         // pos = ScriptLoader.getSceneMeta(this.SceneId).config.born_pos;
-        //     }
-        //     this.Position.Set(pos);
-        // }
-
         Data.LastActiveTime = Extensions.GetUnixSec();
         Profile.LastActiveTime = Data.LastActiveTime;
-        
-        World = new World(this);
 
+        World = new World(this);
         World.AddPlayer(this);
 
-        // Initialize map unlocks (scene points, areas)
         ProgressManager.OnPlayerLogin();
-
-        // Apply starting scene tags and send world scene info
         ApplyStartingSceneTags();
         await SendPacket(new PacketPlayerWorldSceneInfoListNotify(this));
 
-        // 初始化队伍实体 (先这样写吧
-        await this.TeamManager.UpdateTeamEntitiesAsync();
-        
+        await TeamManager.UpdateTeamEntitiesAsync();
+
         await SendPacket(new PacketPlayerEnterSceneNotify(this));
         await SendPacket(new PacketPlayerDataNotify(this));
         HasSentLoginPackets = true;
 
-        // Send inventory
         InventoryManager.LoadFromDatabase();
         await SendPacket(new PacketPlayerStoreNotify(InventoryManager.Data.Items));
         await SendPacket(new PacketAvatarDataNotify(this));
         await SendPacket(new PacketOpenStateUpdateNotify(this));
-        
-        // TODO: Multiplayer setting
-        // this.setProperty(PlayerProperty.PROP_PLAYER_MP_SETTING_TYPE, this.getMpSetting().getNumber(), false);
-        // this.setProperty(PlayerProperty.PROP_IS_MP_MODE_AVAILABLE, 1, false);
-        
-        // TODO: Execute daily reset logic if this is a new day.
-        // this.doDailyReset();
-        
-        // TODO: Rewind active quests
-        // getQuestManager().onLogin();
-        
-        // TODO: Handle seelie ability group
-        // this.handleSeelieAbilityGroup();
-        
-        await Task.CompletedTask;
     }
 
     public static PlayerInstance? GetPlayerInstanceByUid(uint uid)
@@ -373,49 +368,83 @@ public class PlayerInstance
     #endregion
 
     #region Avatar
-    
+
     public async ValueTask<AvatarDataInfo?> AddAvatar(int avatarId, bool addToCurrentTeam = true)
+        => await AvatarManager.CreateAvatar(avatarId, addToCurrentTeam);
+
+    /// <summary>Create main character, add to team 1, and trigger full login.</summary>
+    public async ValueTask CompleteFirstLogin(int avatarId, int skillDepot, string? nickname = null)
     {
-        if (!GameData.AvatarData.TryGetValue(avatarId, out var avatarExcel))
-            return null;
-
-        if (AvatarManager.HasAvatar(avatarId))
-            return null;
-
-        uint currentTimestamp = (uint)DateTimeOffset.Now.ToUnixTimeSeconds();
-
-        var avatar = new AvatarDataInfo
+        if (nickname != null)
         {
-            AvatarId = avatarExcel.Id,
-            SkillDepotId = avatarExcel.SkillDepotId,
-            Guid = AvatarManager.NextGuid(),
-            WeaponId = avatarExcel.InitialWeapon,
-            BornTime = currentTimestamp,
-            WearingFlycloakId = 340005
-        };
-
-        avatar.InitDefaultProps(avatarExcel);
-        AvatarManager.AvatarData.Avatars.Add(avatar);
-        AvatarManager.Save();
-
-        // TODO: Add starting weapon (mirrors Java Player.getAvatars().addStartingWeapon(avatar))
-
-        if (HasSentLoginPackets)
-        {
-            avatar.RecalcStats();
-            // TODO: Send PacketAvatarAddNotify
-            if (addToCurrentTeam && TeamManager != null)
-                this.TeamManager.AddAvatarToCurrentTeam(avatar.Guid);
+            Data.Name = nickname;
+            Profile.Nickname = nickname;
         }
 
-        return avatar;
+        var mainChar = await AddAvatar(avatarId, false);
+        if (mainChar == null) return;
+
+        mainChar.SkillDepotId = (uint)skillDepot;
+        MainCharacterId = avatarId;
+        Profile.HeadImage = new ProfilePicture { AvatarId = (uint)avatarId };
+
+        TeamManager.SetMainCharacter(avatarId, mainChar.Guid);
+        TeamManager.Save();
+
+        await OnLogin();
     }
+
+    public void OnPlayerBorn()
+    {
+        // TODO: Trigger born quests via QuestManager
+        // player.QuestManager?.OnPlayerBorn();
+        // TODO: Send welcome mail with items
+    }
+
+    #endregion
     
     public void UnfreezeUnlockedScenePoints()
     {
         // TODO: Implement unfreeze of dungeon scenes' locked points
         // In Java: scenes.stream().filter(Scene::isDungeon).forEach(scene -> scene.unfreezeUnlockedScenePoints(player))
     }
+
+    #region Virtual Item Stubs
+
+    public void AddExpDirectly(int count)
+    {
+        // TODO: implement adventure rank exp gain
+    }
+
+    public void AddResin(int count)
+    {
+        SetProperty(Prop.PlayerProp.PROP_PLAYER_RESIN,
+            GetProperty(Prop.PlayerProp.PROP_PLAYER_RESIN) + count);
+    }
+
+    public void UseResin(int count)
+    {
+        var current = GetProperty(Prop.PlayerProp.PROP_PLAYER_RESIN);
+        SetProperty(Prop.PlayerProp.PROP_PLAYER_RESIN, Math.Max(0, current - count));
+    }
+
+    public void AddLegendaryKey(int count)
+    {
+        SetProperty(Prop.PlayerProp.PROP_PLAYER_LEGENDARY_KEY,
+            GetProperty(Prop.PlayerProp.PROP_PLAYER_LEGENDARY_KEY) + count);
+    }
+
+    public void UseLegendaryKey(int count)
+    {
+        var current = GetProperty(Prop.PlayerProp.PROP_PLAYER_LEGENDARY_KEY);
+        SetProperty(Prop.PlayerProp.PROP_PLAYER_LEGENDARY_KEY, Math.Max(0, current - count));
+    }
+
+    public void AddHomeExp(int count)
+    {
+        // TODO: implement home world exp gain
+    }
+
     #endregion
 
     #region Actions

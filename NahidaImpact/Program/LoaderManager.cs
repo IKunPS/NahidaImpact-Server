@@ -127,7 +127,7 @@ public class LoaderManager : NahidaImpact
         Logger.Info(I18NManager.Translate("Server.ServerInfo.GeneratingItem", I18NManager.Translate("Word.CustomData")));
         try
         {
-            await AssemblyGenerater.LoadCustomData(Assembly.GetExecutingAssembly());
+            await AssemblyGenerator.LoadCustomData(Assembly.GetExecutingAssembly());
         }
         catch (Exception e)
         {
@@ -167,9 +167,9 @@ public class LoaderManager : NahidaImpact
             Console.ReadLine();
             return;
         }
-        IConsole.OnConsoleExcuteCommand += CommandExecutor.ConsoleExcuteCommand;
+        ConsoleManager.OnConsoleExecuteCommand += CommandExecutor.ConsoleExecuteCommand;
         CommandExecutor.OnRunCommand += (sender, e) => { _ = CommandManager.HandleCommand(e, sender); };
 
-        IConsole.ListenConsole();
+        ConsoleManager.ListenConsole();
     }
 }

@@ -1,5 +1,8 @@
+using System.Collections.Generic;
+using System.Linq;
 using SqlSugar;
 using NahidaImpact.Data;
+using NahidaImpact.Data.Common;
 using NahidaImpact.Data.Excel;
 using NahidaImpact.Enums.Item;
 
@@ -29,6 +32,10 @@ public class ItemData
     public int MainPropId { get; set; }
     public List<int> AppendPropIdList { get; set; } = [];
     public int EquipCharacter { get; set; }
+
+    // Transient fields — not persisted to DB
+    [SugarColumn(IsIgnore = true)] public int WeaponEntityId { get; set; }
+    [SugarColumn(IsIgnore = true)] public bool IsNew { get; set; }
 
     public bool IsEquipped => EquipCharacter > 0;
     public bool IsLocked => Locked;
@@ -70,7 +77,18 @@ public class ItemData
             "EQUIP_SHOES" => 3,
             "EQUIP_RING" => 4,
             "EQUIP_DRESS" => 5,
+            "EQUIP_WEAPON" => 6,
             _ => 0
         };
     }
+
+    /// <summary>Generate initial random affixes from item data's skillAffix list.</summary>
+    public void InitWeaponAffixes()
+    {
+        var data = GetItemData();
+        if (data?.SkillAffix == null) return;
+        Affixes = data.SkillAffix.Where(a => a > 0).ToList();
+    }
+
+    public ItemParamData ToItemParamData() => new(ItemId, Count);
 }

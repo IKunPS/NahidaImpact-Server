@@ -40,8 +40,17 @@ public class AvatarSkillDepotDataExcel : ExcelResource
     [JsonPropertyName("skillDepotAbilityGroup")]
     public string SkillDepotAbilityGroup { get; set; } = "";
 
+    [JsonPropertyName("inherentProudSkillOpens")]
+    public List<InherentProudSkillOpen> InherentProudSkillOpens { get; set; } = [];
+
+    [JsonPropertyName("specialProudSkillOpens")]
+    public List<SpecialProudSkillOpen> SpecialProudSkillOpens { get; set; } = [];
+
     /// <summary>Element type resolved from energy skill data. 0=None, 1=Fire, 2=Water, etc.</summary>
     public int ElementType { get; set; }
+
+    /// <summary>命座消耗道具ID，从第一个talent解析</summary>
+    public int TalentCostItemId { get; set; }
 
     public override uint GetId() => Id;
 
@@ -52,14 +61,11 @@ public class AvatarSkillDepotDataExcel : ExcelResource
 
     public override void AfterAllDone()
     {
-        // Resolve element type from energy skill's cost element (runs after all Excel data is loaded)
         if (EnergySkill > 0 && GameData.AvatarSkillData.TryGetValue((int)EnergySkill, out var skillData))
         {
             ElementType = skillData.ElementTypeValue;
         }
 
-        // Look up skill depot ability group in PlayerAbilities (loaded from BinOutput/AbilityGroup/*.json)
-        // Mirrors Java AvatarSkillDepotData.onLoad() — GameDepot.getPlayerAbilities().get()
         if (!string.IsNullOrEmpty(SkillDepotAbilityGroup)
             && GameData.PlayerAbilities.TryGetValue(SkillDepotAbilityGroup, out var abilityGroup))
         {
@@ -73,11 +79,36 @@ public class AvatarSkillDepotDataExcel : ExcelResource
             }
         }
 
-        // Also hash extra abilities from Excel config
         foreach (var ab in ExtraAbilities)
         {
             if (!string.IsNullOrEmpty(ab))
                 AbilityHashes.Add(Utils.AbilityHash(ab));
         }
+
+        // 从第一个talent解析命座消耗道具ID
+        if (Talents.Count > 0 && GameData.AvatarTalentData.TryGetValue((int)Talents[0], out var talentData))
+        {
+            TalentCostItemId = talentData.MainCostItemId;
+        }
+    }
+
+    /// <summary>获取所有技能+能量技能的ID列表</summary>
+    public IEnumerable<uint> GetSkillsAndEnergySkill()
+    {
+        foreach (var skillId in Skills)
+            yield return skillId;
+        if (EnergySkill > 0)
+            yield return EnergySkill;
+    }
+
+    public class InherentProudSkillOpen
+    {
+        [JsonPropertyName("proudSkillGroupId")] public int ProudSkillGroupId { get; set; }
+        [JsonPropertyName("needAvatarPromoteLevel")] public int NeedAvatarPromoteLevel { get; set; }
+    }
+
+    public class SpecialProudSkillOpen
+    {
+        [JsonPropertyName("proudSkillGroupId")] public int ProudSkillGroupId { get; set; }
     }
 }

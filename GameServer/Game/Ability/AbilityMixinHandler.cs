@@ -25,13 +25,4 @@ public abstract class AbilityMixinHandler
     }
 }
 
-[System.AttributeUsage(System.AttributeTargets.Class, Inherited = false, AllowMultiple = false)]
-public sealed class AbilityMixinAttribute : System.Attribute
-{
-    public AbilityMixinData.MixinType MixinType { get; }
-
-    public AbilityMixinAttribute(AbilityMixinData.MixinType mixinType)
-    {
-        MixinType = mixinType;
-    }
-}
+// AbilityMixinAttribute moved to AbilityMixinAttribute.cs

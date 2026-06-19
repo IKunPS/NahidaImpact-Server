@@ -243,4 +243,10 @@ public class ProgressManager(PlayerInstance player) : BasePlayerManager(player)
     {
         return player.SceneTags.TryGetValue(sceneId, out var tags) && tags.Contains(sceneTagId);
     }
+
+    /// <summary>Track item obtain history (stub for codex/achievements).</summary>
+    public void AddItemObtainedHistory(int itemId, int count)
+    {
+        // TODO: integrate with Codex / achievement system
+    }
 }

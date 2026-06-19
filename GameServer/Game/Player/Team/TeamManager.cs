@@ -71,7 +71,15 @@ public class TeamManager : BasePlayerManager
     }
 
     public TeamInfo GetCurrentSinglePlayerTeamInfo()
-        => _teams.GetValueOrDefault(CurrentTeamIndex, new TeamInfo { Index =CurrentTeamIndex });
+        => _teams.GetValueOrDefault(CurrentTeamIndex, new TeamInfo { Index = CurrentTeamIndex });
+
+    /// <summary>Add main character avatar to team 1 during first login.</summary>
+    public void SetMainCharacter(int avatarId, ulong avatarGuid)
+    {
+        var team = GetCurrentSinglePlayerTeamInfo();
+        if (!team.AvatarGuidList.Contains(avatarGuid))
+            team.AvatarGuidList.Add(avatarGuid);
+    }
 
     public List<EntityAvatar> GetActiveTeam(bool fix = false)
     {
@@ -113,9 +121,10 @@ public class TeamManager : BasePlayerManager
     public void SetCurrentTeam(int teamId)
     {
         if (!_teams.ContainsKey(teamId)) return;
+        if (_teams[teamId].AvatarGuidList.Count == 0) return;
+
         CurrentTeamIndex = teamId;
-        _ = UpdateTeamEntitiesAsync();
-        // TODO: Send PacketChooseCurAvatarTeamRsp(teamId)
+        _ = UpdateTeamEntitiesAsync(new PacketChooseCurAvatarTeamRsp(teamId));
     }
 
     public void SetTeamName(int teamId, string teamName)
@@ -233,18 +242,20 @@ public class TeamManager : BasePlayerManager
             {
                 var avatarInfo = Player.AvatarManager.GetAvatarByGuid(guid);
                 if (avatarInfo == null) continue;
-                entity = EntityCreationEvent.Call<EntityAvatar>(
+                entity = EntityFactory.Create<EntityAvatar>(
                     [typeof(Scene), typeof(AvatarDataInfo)],
                     [Player.Scene, avatarInfo]);
                 if (entity == null) continue;
+                // Add new entity to scene
+                Player.Scene?.AddEntityDirectly(entity);
             }
             _activeTeam.Add(entity);
         }
 
-        // Remove old entities from scene
+        // Remove old entities no longer in team — use VisionType.Replace, not Die
         foreach (var removed in existing.Values)
         {
-            Player.Scene?.RemoveEntity(removed);
+            Player.Scene?.RemoveEntity(removed, VisionType.Replace);
         }
 
         if (prevSelectedIndex < 0)
@@ -254,7 +265,26 @@ public class TeamManager : BasePlayerManager
         if (responsePacket != null)
             await Player.SendPacket(responsePacket);
 
+        UpdateTeamProperties();
+
+        // Broadcast full team appear for the new entities
+        if (_activeTeam.Count > 0)
+        {
+            var newEntities = _activeTeam
+                .Where(e => e.Scene != null)
+                .ToList();
+            if (newEntities.Count > 0)
+                Player.Scene?.BroadcastPacket(
+                    new PacketSceneEntityAppearNotify(newEntities, VisionType.Replace));
+        }
+
         await Task.CompletedTask;
+    }
+
+    /// <summary>Broadcast team entity info to all players in world (mirrors Java updateTeamProperties).</summary>
+    private void UpdateTeamProperties()
+    {
+        Player.World?.BroadcastPacket(new PacketSceneTeamUpdateNotify(Player));
     }
 
     public async ValueTask UpdateTeamEntitiesAsync()
@@ -279,8 +309,21 @@ public class TeamManager : BasePlayerManager
 
         if (index < 0 || newEntity == oldEntity) return;
 
+        // Set old entity to standby before swapping
+        oldEntity.SetMotionState(MotionState.Standby);
+
         CurrentCharacterIndex = index;
-        Player.Scene?.ReplaceEntity(oldEntity, newEntity);
+
+        // Replace in scene — use replace vision type for appear too
+        var scene = Player.Scene;
+        if (scene != null)
+        {
+            scene.RemoveEntity(oldEntity, VisionType.Replace);
+            scene.AddEntityDirectly(newEntity);
+            scene.BroadcastPacket(
+                new PacketSceneEntityAppearNotify(newEntity, VisionType.Replace));
+        }
+
         _ = Player.SendPacket(new PacketChangeAvatarRsp(guid));
     }
 

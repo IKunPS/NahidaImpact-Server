@@ -1,8 +1,32 @@
-﻿namespace NahidaImpact.Prop;
+﻿using System.Collections.Generic;
+using System.Reflection;
+
+namespace NahidaImpact.Prop;
 
 public static class FightProp
 {
+    /// <summary>Maps FightProp field names (e.g. "FIGHT_PROP_BASE_HP") to their uint values.</summary>
+    public static readonly Dictionary<string, uint> NameMap = BuildNameMap();
+
+    private static Dictionary<string, uint> BuildNameMap()
+    {
+        var map = new Dictionary<string, uint>();
+        foreach (var field in typeof(FightProp).GetFields(BindingFlags.Public | BindingFlags.Static))
+        {
+            if (field.FieldType == typeof(uint) && field.GetValue(null) is uint value)
+                map[field.Name] = value;
+        }
+        return map;
+    }
+
+    #region None
+
     public const uint FIGHT_PROP_NONE = 0;
+
+    #endregion
+
+    #region Base Stats (1-19)
+
     public const uint FIGHT_PROP_BASE_HP = 1;
     public const uint FIGHT_PROP_HP = 2;
     public const uint FIGHT_PROP_HP_PERCENT = 3;
@@ -16,6 +40,11 @@ public static class FightProp
     public const uint FIGHT_PROP_SPEED_PERCENT = 11;
     public const uint FIGHT_PROP_HP_MP_PERCENT = 12;
     public const uint FIGHT_PROP_ATTACK_MP_PERCENT = 13;
+
+    #endregion
+
+    #region Critical & Combat (20-39)
+
     public const uint FIGHT_PROP_CRITICAL = 20;
     public const uint FIGHT_PROP_ANTI_CRITICAL = 21;
     public const uint FIGHT_PROP_CRITICAL_HURT = 22;
@@ -29,6 +58,11 @@ public static class FightProp
     public const uint FIGHT_PROP_PHYSICAL_ADD_HURT = 30;
     public const uint FIGHT_PROP_DEFENCE_IGNORE_RATIO = 31;
     public const uint FIGHT_PROP_DEFENCE_IGNORE_DELTA = 32;
+
+    #endregion
+
+    #region Elemental Damage Bonus (40-49)
+
     public const uint FIGHT_PROP_FIRE_ADD_HURT = 40;
     public const uint FIGHT_PROP_ELEC_ADD_HURT = 41;
     public const uint FIGHT_PROP_WATER_ADD_HURT = 42;
@@ -37,6 +71,11 @@ public static class FightProp
     public const uint FIGHT_PROP_ROCK_ADD_HURT = 45;
     public const uint FIGHT_PROP_ICE_ADD_HURT = 46;
     public const uint FIGHT_PROP_HIT_HEAD_ADD_HURT = 47;
+
+    #endregion
+
+    #region Elemental Resistance (50-59)
+
     public const uint FIGHT_PROP_FIRE_SUB_HURT = 50;
     public const uint FIGHT_PROP_ELEC_SUB_HURT = 51;
     public const uint FIGHT_PROP_WATER_SUB_HURT = 52;
@@ -44,6 +83,11 @@ public static class FightProp
     public const uint FIGHT_PROP_WIND_SUB_HURT = 54;
     public const uint FIGHT_PROP_ROCK_SUB_HURT = 55;
     public const uint FIGHT_PROP_ICE_SUB_HURT = 56;
+
+    #endregion
+
+    #region Status Resistances (60-69)
+
     public const uint FIGHT_PROP_EFFECT_HIT = 60;
     public const uint FIGHT_PROP_EFFECT_RESIST = 61;
     public const uint FIGHT_PROP_FREEZE_RESIST = 62;
@@ -52,6 +96,11 @@ public static class FightProp
     public const uint FIGHT_PROP_FREEZE_SHORTEN = 65;
     public const uint FIGHT_PROP_TORPOR_SHORTEN = 66;
     public const uint FIGHT_PROP_DIZZY_SHORTEN = 67;
+
+    #endregion
+
+    #region Energy Max & CD (70-89)
+
     public const uint FIGHT_PROP_MAX_FIRE_ENERGY = 70;
     public const uint FIGHT_PROP_MAX_ELEC_ENERGY = 71;
     public const uint FIGHT_PROP_MAX_WATER_ENERGY = 72;
@@ -63,6 +112,11 @@ public static class FightProp
     public const uint FIGHT_PROP_START_SPECIAL_ENERGY = 78;
     public const uint FIGHT_PROP_SKILL_CD_MINUS_RATIO = 80;
     public const uint FIGHT_PROP_SHIELD_COST_MINUS_RATIO = 81;
+
+    #endregion
+
+    #region Energy Current (1000-1009)
+
     public const uint FIGHT_PROP_CUR_FIRE_ENERGY = 1000;
     public const uint FIGHT_PROP_CUR_ELEC_ENERGY = 1001;
     public const uint FIGHT_PROP_CUR_WATER_ENERGY = 1002;
@@ -71,8 +125,18 @@ public static class FightProp
     public const uint FIGHT_PROP_CUR_ICE_ENERGY = 1005;
     public const uint FIGHT_PROP_CUR_ROCK_ENERGY = 1006;
     public const uint FIGHT_PROP_CUR_SPECIAL_ENERGY = 1007;
+
+    #endregion
+
+    #region Current Stats (1010-1999)
+
     public const uint FIGHT_PROP_CUR_HP = 1010;
     public const uint FIGHT_PROP_MIN_SPECIAL_ENERGY = 6969;
+
+    #endregion
+
+    #region Max / Current Stats (2000-2999)
+
     public const uint FIGHT_PROP_MAX_HP = 2000;
     public const uint FIGHT_PROP_CUR_ATTACK = 2001;
     public const uint FIGHT_PROP_CUR_DEFENSE = 2002;
@@ -80,6 +144,11 @@ public static class FightProp
     public const uint FIGHT_PROP_CUR_HP_DEBTS = 2004;
     public const uint FIGHT_PROP_CUR_HP_PAID_DEBTS = 2005;
     public const uint FIGHT_PROP_CUR_NATLAN_HP = 2006;
+
+    #endregion
+
+    #region Non-Extra Stats (3000-3999)
+
     public const uint FIGHT_PROP_NONEXTRA_ATTACK = 3000;
     public const uint FIGHT_PROP_NONEXTRA_DEFENSE = 3001;
     public const uint FIGHT_PROP_NONEXTRA_CRITICAL = 3002;
@@ -105,4 +174,6 @@ public static class FightProp
     public const uint FIGHT_PROP_NONEXTRA_SKILL_CD_MINUS_RATIO = 3022;
     public const uint FIGHT_PROP_NONEXTRA_SHIELD_COST_MINUS_RATIO = 3023;
     public const uint FIGHT_PROP_NONEXTRA_PHYSICAL_ADD_HURT = 3024;
+
+    #endregion
 }

@@ -1,4 +1,4 @@
-﻿using NahidaImpact.Database.Account;
+using NahidaImpact.Database.Account;
 using NahidaImpact.Enums.Player;
 using NahidaImpact.GameServer.Server;
 using NahidaImpact.Internationalization;
@@ -13,14 +13,14 @@ public class CommandManager
 {
     public static Logger Logger { get; } = new("CommandManager");
 
-    public static Dictionary<string, ICommands> Commands { get; } = [];
+    public static Dictionary<string, ICommand> Commands { get; } = [];
     public static Dictionary<string, CommandInfoAttribute> CommandInfo { get; } = [];
     public static Dictionary<string, string> CommandAlias { get; } = []; // <aliasName, fullName>
 
     public static void RegisterCommands()
     {
         foreach (var type in Assembly.GetExecutingAssembly().GetTypes())
-            if (typeof(ICommands).IsAssignableFrom(type) && !type.IsAbstract)
+            if (typeof(ICommand).IsAssignableFrom(type) && !type.IsAbstract)
                 RegisterCommand(type);
 
         Logger.Info(I18NManager.Translate("Server.ServerInfo.RegisterItem", Commands.Count.ToString(),
@@ -32,7 +32,7 @@ public class CommandManager
         var attr = type.GetCustomAttribute<CommandInfoAttribute>();
         if (attr == null) return;
         var instance = Activator.CreateInstance(type);
-        if (instance is not ICommands command) return;
+        if (instance is not ICommand command) return;
         Commands.Add(attr.Name, command);
         CommandInfo.Add(attr.Name, attr);
 
@@ -119,7 +119,7 @@ public class CommandManager
         }
     }
 
-    private static async Task<bool> TryInvokeCommandMethod(ICommands command, CommandArg argInfo)
+    private static async Task<bool> TryInvokeCommandMethod(ICommand command, CommandArg argInfo)
     {
         foreach (var methodInfo in command.GetType().GetMethods())
         {
@@ -134,7 +134,7 @@ public class CommandManager
         return false;
     }
 
-    private static async Task<bool> TryInvokeDefaultMethod(ICommands command, CommandArg argInfo)
+    private static async Task<bool> TryInvokeDefaultMethod(ICommand command, CommandArg argInfo)
     {
         foreach (var methodInfo in command.GetType().GetMethods())
         {
@@ -148,7 +148,7 @@ public class CommandManager
         return false;
     }
 
-    private static async Task InvokeCommandAsync(ICommands command, MethodInfo methodInfo, CommandArg argInfo)
+    private static async Task InvokeCommandAsync(ICommand command, MethodInfo methodInfo, CommandArg argInfo)
     {
         var result = methodInfo.Invoke(command, new object[] { argInfo });
         switch (result)

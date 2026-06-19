@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System.Text.RegularExpressions;
-using NahidaImpact.Data.Models.Dispatch;
+using NahidaImpact.Models.Dispatch;
 using NahidaImpact.Enums.Player;
 using NahidaImpact.Util;
 using NahidaImpact.Util.Security;

@@ -22,6 +22,8 @@ public class LanguageCHT
 public class GameTextCHT
 {
     public CommandTextCHT Command { get; } = new();
+    public SceneInfoTextCHT SceneInfo { get; } = new();
+    public WorldInfoTextCHT WorldInfo { get; } = new();
 }
 
 /// <summary>
@@ -31,6 +33,7 @@ public class ServerTextCHT
 {
     public WebTextCHT Web { get; } = new();
     public ServerInfoTextCHT ServerInfo { get; } = new();
+    public ConnectionInfoTextCHT ConnectionInfo { get; } = new();
 }
 
 /// <summary>
@@ -47,7 +50,7 @@ public class WordTextCHT
     public string Database => "數據庫";
     public string Command => "命令";
     public string SdkServer => "Web服務器";
-    public string Handler => "包處理器";
+    public string Handler => "包處理程序";
     public string Dispatch => "全局分發";
     public string Game => "遊戲";
     public string Handbook => "手冊";
@@ -126,6 +129,7 @@ public class CommandTextCHT
     public WeatherTextCHT Weather { get; } = new();
     public PositionTextCHT Position { get; } = new();
     public StopTextCHT Stop { get; } = new();
+    public AvatarTextCHT Avatar { get; } = new();
 }
 
 #endregion
@@ -369,6 +373,53 @@ public class StopTextCHT
     public string Desc => "關閉服務器";
     public string Usage => "用法: /stop";
     public string ShuttingDown => "服務器正在關閉…";
+}
+
+/// <summary>
+///     path: Game.Command.Avatar
+/// </summary>
+public class AvatarTextCHT
+{
+    public string Desc => "添加或管理角色";
+    public string Usage => "用法: /avatar add <id> [level] [ascension] [talent]";
+    public string InvalidId => "無效的角色ID。";
+    public string NotFound => "角色 {0} 不存在於遊戲數據中。";
+    public string CannotAdd => "無法添加主角或試用角色。";
+    public string AlreadyOwned => "玩家已擁有角色 {0} (uid: {1})。";
+    public string AddSuccess => "已將角色 {0} (等級 {1}) 添加至玩家 {2}。";
+    public string Failed => "添加角色 {0} 失敗。";
+}
+
+#endregion
+
+#region Layer 3 - Connection / Scene / World log messages
+
+public class ConnectionInfoTextCHT
+{
+    public string NewConnection => "新連線來自 {0}。";
+    public string ConnectionClosed => "連線已關閉";
+    public string PacketTooLarge => "封包過大";
+    public string FailedToReceive => "接收封包失敗";
+    public string ParseError => "封包解析錯誤";
+    public string BadDataPackage => "收到損壞封包: got 0x{0}, expect 0x4567";
+    public string InvalidFooter => "收到無效封包尾: got 0x{0}, expected 0x89AB";
+    public string DummySend => "[Dummy] 發送 Dummy {0}";
+    public string NoHandlerFound => "未找到 {0}({1}) 的處理程序";
+    public string RegionCacheError => "初始化區域緩存時出錯！";
+}
+
+public class SceneInfoTextCHT
+{
+    public string NoTeamManagerSpawn => "玩家 {0} 沒有 TeamManager，無法生成角色";
+    public string NoAvatarEntity => "玩家 {0} 沒有當前角色實體可生成";
+    public string NoTeamManagerSetup => "玩家 {0} 沒有 TeamManager，無法設定角色";
+    public string NullEntity => "嘗試向場景 {0} 添加空實體";
+    public string NoAvatarData => "未找到角色數據！請檢查你的 ExcelBinOutput 檔案夾。";
+}
+
+public class WorldInfoTextCHT
+{
+    public string NotifyPlayerInfo => "通知玩家 {0} 有關新玩家 {1} 的資訊";
 }
 
 #endregion

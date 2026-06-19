@@ -1,7 +1,7 @@
 using Google.Protobuf;
 using NahidaImpact.GameServer.Game.Entity;
 using NahidaImpact.GameServer.Game.Worlds;
-using NahidaImpact.GameServer.Server.Event.Entity;
+using NahidaImpact.GameServer.Game.Event.Entity;
 using NahidaImpact.GameServer.Server.Packet.Send.Entity;
 using NahidaImpact.Prop;
 using NahidaImpact.Proto;

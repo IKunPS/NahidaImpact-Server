@@ -13,12 +13,12 @@ public class Logger(string moduleName)
     {
         lock (_lock)
         {
-            var savedInput = IConsole.Input.ToList(); // Copy
-            IConsole.RedrawInput("", false);
+            var savedInput = ConsoleManager.Input.ToList(); // Copy
+            ConsoleManager.RedrawInput("", false);
             AnsiConsole.MarkupLine($"[[[bold deepskyblue3_1]{DateTime.Now:HH:mm:ss}[/]]] " +
                                $"[[[gray]{ModuleName}[/]]] [[[{(ConsoleColor)level}]{level}[/]]] " +
                                $"{message.Replace("[", "[[").Replace("]", "]]")}");
-            IConsole.RedrawInput(savedInput);
+            ConsoleManager.RedrawInput(savedInput);
 
             var logMessage = $"[{DateTime.Now:HH:mm:ss}] [{ModuleName}] [{level}] {message}";
             WriteToFile(logMessage);

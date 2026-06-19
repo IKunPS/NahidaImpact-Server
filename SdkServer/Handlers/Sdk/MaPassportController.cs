@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using NahidaImpact.Data.Models.Sdk;
+using NahidaImpact.Models.Sdk;
 using NahidaImpact.Util;
 using NahidaImpact.Util.Security;
 using System.Security.Cryptography;
@@ -134,4 +134,4 @@ public class MaPassportController : ControllerBase
             }
         });
     }
-}   
+}

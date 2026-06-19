@@ -10,6 +10,8 @@ public static class GameData
     public static Dictionary<int, AvatarDataExcel> AvatarData { get; private set; } = [];
     public static Dictionary<int, AvatarSkillDataExcel> AvatarSkillData { get; private set; } = [];
     public static Dictionary<int, AvatarSkillDepotDataExcel> AvatarSkillDepotData { get; private set; } = [];
+    public static Dictionary<int, ProudSkillDataExcel> ProudSkillData { get; private set; } = [];
+    public static Dictionary<int, AvatarTalentDataExcel> AvatarTalentData { get; private set; } = [];
     public static Dictionary<int, OpenStateDataExcel> OpenStateData { get; private set; } = [];
     public static Dictionary<string, AbilityData> AbilityData { get; private set; } = [];
     public static Dictionary<int, SceneDataExcel> SceneData { get; private set; } = [];
@@ -48,7 +50,15 @@ public static class GameData
 
     // Trial avatar
     public static Dictionary<int, TrialAvatarDataExcel> TrialAvatarDataMap { get; private set; } = [];
-    public static Dictionary<int, TrialAvatarCustomData> TrialAvatarCustomDataMap { get; private set; } = [];
+
+    // Weapon
+    public static Dictionary<int, WeaponPromoteDataExcel> WeaponPromoteData { get; private set; } = [];
+    public static Dictionary<int, WeaponLevelDataExcel> WeaponLevelData { get; private set; } = [];
+
+    // Avatar level
+    public static Dictionary<int, AvatarLevelDataExcel> AvatarLevelData { get; private set; } = [];
+    public static Dictionary<int, AvatarCurveDataExcel> AvatarCurveData { get; private set; } = [];
+    public static Dictionary<int, AvatarPromoteDataExcel> AvatarPromoteData { get; private set; } = [];
 
     public static Dictionary<string, ConfigLevelEntity> GetConfigLevelEntityDataMap() => ConfigLevelEntityDataMap;
 
@@ -75,8 +85,6 @@ public static class GameData
     {
         return GetAbilityNameByHash((uint)hash);
     }
-
-    public static Dictionary<int, TrialAvatarCustomData> GetTrialAvatarCustomData() => TrialAvatarCustomDataMap;
 
     public static Dictionary<int, TrialAvatarDataExcel> GetTrialAvatarDataMap() => TrialAvatarDataMap;
 

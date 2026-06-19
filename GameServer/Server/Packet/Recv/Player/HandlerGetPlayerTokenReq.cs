@@ -1,4 +1,4 @@
-using System.Security.Cryptography;
+﻿using System.Security.Cryptography;
 using NahidaImpact.Data;
 using NahidaImpact.Database;
 using NahidaImpact.Database.Account;
@@ -18,31 +18,27 @@ public class HandlerGetPlayerTokenReq : Handler
     public override async Task OnHandle(Connection connection, byte[] header, byte[] data)
     {
         var req = GetPlayerTokenReq.Parser.ParseFrom(data);
-        var account = AccountData.GetAccountByUid(int.Parse(req.AccountUid));
-        if (account == null) 
-        {
-            return;
-        }
-        if (!ResourceManager.IsLoaded)
-            // resource manager not loaded, return
-            return;
+        int uid = int.Parse(req.AccountUid);
+
+        var account = AccountData.GetAccountByUid(uid);
+        if (account == null) return;
+        if (!ResourceManager.IsLoaded) return;
+
         var prev = Listener.GetActiveConnection(account.Uid);
-        if (prev != null)
-        {
-            prev.Stop();
-        }
+        prev?.Stop();
 
         connection.State = SessionStateEnum.WAITING_FOR_LOGIN;
-        var pd = DatabaseHelper.GetInstance<PlayerData>(int.Parse(req.AccountUid));
-        connection.Player = pd == null ? new PlayerInstance(int.Parse(req.AccountUid)) : new PlayerInstance(pd);
 
-        connection.DebugFile = Path.Combine(ConfigManager.Config.Path.LogPath, "Debug/", $"{req.AccountUid}/",
-            $"Debug-{DateTime.Now:yyyy-MM-dd HH-mm-ss}.log");
-        
+        var pd = DatabaseHelper.GetInstance<PlayerData>(uid);
+        connection.Player = pd == null ? new PlayerInstance(uid) : new PlayerInstance(pd);
+
+        connection.DebugFile = Path.Combine(ConfigManager.Config.Path.LogPath, "Debug/",
+            $"{req.AccountUid}/", $"Debug-{DateTime.Now:yyyy-MM-dd HH-mm-ss}.log");
+
         connection.Player.Connection = connection;
-        connection.Account = AccountData.GetAccountByUid(int.Parse(req.AccountUid));
+        connection.Account = account;
 
-        // await connection.SendPacket(new PacketGetPlayerTokenRsp(connection, req.AccountToken, req.KeyId)); // TODO 加上判断
+        // await connection.SendPacket(new PacketGetPlayerTokenRsp(connection, req.AccountToken, req.KeyId)); // TODO: add validation
 
         ulong randSeed = 0x0;
         await connection.SetSecretKey(randSeed);

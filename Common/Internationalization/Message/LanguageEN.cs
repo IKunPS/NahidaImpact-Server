@@ -22,6 +22,8 @@ public class LanguageEN
 public class GameTextEN
 {
     public CommandTextEN Command { get; } = new();
+    public SceneInfoTextEN SceneInfo { get; } = new();
+    public WorldInfoTextEN WorldInfo { get; } = new();
 }
 
 /// <summary>
@@ -31,6 +33,7 @@ public class ServerTextEN
 {
     public WebTextEN Web { get; } = new();
     public ServerInfoTextEN ServerInfo { get; } = new();
+    public ConnectionInfoTextEN ConnectionInfo { get; } = new();
 }
 
 /// <summary>
@@ -126,6 +129,7 @@ public class CommandTextEN
     public WeatherTextEN Weather { get; } = new();
     public PositionTextEN Position { get; } = new();
     public StopTextEN Stop { get; } = new();
+    public AvatarTextEN Avatar { get; } = new();
 }
 
 #endregion
@@ -369,6 +373,62 @@ public class StopTextEN
     public string Desc => "Shutdown the server";
     public string Usage => "Usage: /stop";
     public string ShuttingDown => "Server shutting down...";
+}
+
+/// <summary>
+///     path: Game.Command.Avatar
+/// </summary>
+public class AvatarTextEN
+{
+    public string Desc => "Add or manage avatars";
+    public string Usage => "Usage: /avatar add <id> [level] [ascension] [talent]";
+    public string InvalidId => "Invalid avatar ID.";
+    public string NotFound => "Avatar {0} not found in game data.";
+    public string CannotAdd => "Cannot add main character or trial avatar.";
+    public string AlreadyOwned => "Player already owns avatar {0} (uid: {1}).";
+    public string AddSuccess => "Added avatar {0} at level {1} to player {2}.";
+    public string Failed => "Failed to add avatar {0}.";
+}
+
+#endregion
+
+#region Layer 3 - Connection / Scene / World log messages
+
+/// <summary>
+///     path: Server.ConnectionInfo
+/// </summary>
+public class ConnectionInfoTextEN
+{
+    public string NewConnection => "New connection from {0}.";
+    public string ConnectionClosed => "Connection was closed";
+    public string PacketTooLarge => "Packet too large";
+    public string FailedToReceive => "Failed to receive packet";
+    public string ParseError => "Packet parse error";
+    public string BadDataPackage => "Bad Data Package Received: got 0x{0}, expect 0x4567";
+    public string InvalidFooter => "Invalid packet footer received: got 0x{0}, expected 0x89AB";
+    public string DummySend => "[Dummy] Send Dummy {0}";
+    public string NoHandlerFound => "No handler found for {0}({1})";
+    public string RegionCacheError => "Error while initializing region cache!";
+}
+
+/// <summary>
+///     path: Game.SceneInfo
+/// </summary>
+public class SceneInfoTextEN
+{
+    public string NoTeamManagerSpawn => "Player {0} has no TeamManager, cannot spawn avatar";
+    public string NoAvatarEntity => "Player {0} has no current avatar entity to spawn";
+    public string NoTeamManagerSetup => "Player {0} has no TeamManager, cannot setup avatars";
+    public string NullEntity => "Attempted to add null entity to scene {0}";
+    public string NoAvatarData => "No avatar data found! Check your ExcelBinOutput folder.";
+}
+
+/// <summary>
+///     path: Game.WorldInfo
+/// </summary>
+public class WorldInfoTextEN
+{
+    public string NotifyPlayerInfo => "Notifying player {0} about new player {1}";
 }
 
 #endregion

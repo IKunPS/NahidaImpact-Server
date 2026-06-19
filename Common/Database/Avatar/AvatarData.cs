@@ -1,4 +1,6 @@
+using NahidaImpact.Data;
 using NahidaImpact.Data.Excel;
+using NahidaImpact.Database.Inventory;
 using NahidaImpact.Prop;
 using NahidaImpact.Proto;
 using SqlSugar;
@@ -42,67 +44,52 @@ public class AvatarData : BaseDatabaseDataHelper
 
 public class AvatarDataInfo
 {
-    // ── Identity ──────────────────────────────────────────────
     public uint AvatarId { get; set; }
     public ulong Guid { get; set; }
     public uint SkillDepotId { get; set; }
     public uint BornTime { get; set; }
 
-    // ── Level & Exp ───────────────────────────────────────────
     public uint Level { get; set; } = 1;
     public uint Exp { get; set; }
     public uint PromoteLevel { get; set; }
 
-    // ── Properties (persisted fight + basic props) ────────────
     public List<PropValue> Properties { get; set; } = [];
     public List<FightPropPair> FightProperties { get; set; } = [];
 
-    // ── Weapon ────────────────────────────────────────────────
     public uint WeaponId { get; set; }
-    public ulong WeaponGuid { get; set; } = 2281337;
+    public ulong WeaponGuid { get; set; }
 
-    // ── Relics ────────────────────────────────────────────────
     public List<uint> ReliquaryList { get; set; } = [];
     public List<ulong> EquipGuidList { get; set; } = [];
 
-    // ── Skills & Talents ──────────────────────────────────────
     public Dictionary<uint, uint> SkillLevelMap { get; set; } = [];
     public List<uint> TalentIdList { get; set; } = [];
     public List<uint> ProudSkillList { get; set; } = [];
     public Dictionary<uint, uint> ProudSkillExtraLevelMap { get; set; } = [];
     public uint CoreProudSkillLevel { get; set; }
 
-    // ── Cosmetics ─────────────────────────────────────────────
     public uint WearingFlycloakId { get; set; }
     public uint CostumeId { get; set; }
     public uint WeaponSkinId { get; set; }
     public uint TraceEffectId { get; set; }
 
-    // ── Fetter ────────────────────────────────────────────────
     public uint FetterLevel { get; set; } = 1;
     public uint FetterExp { get; set; }
 
-    // ── Satiation ─────────────────────────────────────────────
     public uint Satiation { get; set; }
     public uint SatiationPenalty { get; set; }
 
-    // ── NameCard ──────────────────────────────────────────────
     public uint NameCardRewardId { get; set; }
     public uint NameCardId { get; set; }
 
-    // ── Misc persisted ────────────────────────────────────────
     public uint AvatarVoice { get; set; }
     public uint CurPlanIndex { get; set; }
     public string AvatarCosmeticInfoJson { get; set; } = "";
 
-    // ── Trial (persisted) ─────────────────────────────────────
     public uint TrialAvatarId { get; set; }
     public uint GrantReason { get; set; }
     public uint FromParentQuestId { get; set; }
 
-    // ═══════════════════════════════════════════════════════════
-    //  Runtime-only fields (not serialized to DB)
-    // ═══════════════════════════════════════════════════════════
 
     [SugarColumn(IsIgnore = true)]
     public AvatarDataExcel? AvatarExcel { get; set; }
@@ -122,19 +109,13 @@ public class AvatarDataInfo
     [SugarColumn(IsIgnore = true)]
     public Dictionary<uint, uint> SkillExtraChargeMap { get; set; } = [];
 
-    // ── Constructors ──────────────────────────────────────────
-
     public AvatarDataInfo() { }
 
     public AvatarDataInfo(uint avatarId)
     {
         AvatarId = avatarId;
     }
-
-    // ═══════════════════════════════════════════════════════════
-    //  Property helpers (mirrors Java Avatar.setFightProperty etc.)
-    // ═══════════════════════════════════════════════════════════
-
+    
     public void SetProp(uint propType, uint value)
     {
         var prop = Properties.Find(p => p.Type == propType);
@@ -173,10 +154,6 @@ public class AvatarDataInfo
         }
         FightProperties.Add(new FightPropPair { PropType = propType, PropValue = value });
     }
-
-    // ═══════════════════════════════════════════════════════════
-    //  InitDefaultProps (mirrors Java Avatar constructor)
-    // ═══════════════════════════════════════════════════════════
 
     public void InitDefaultProps(AvatarDataExcel excel)
     {
@@ -224,22 +201,122 @@ public class AvatarDataInfo
         SetFightProp(FightProp.FIGHT_PROP_MAX_WIND_ENERGY, 100);
         SetFightProp(FightProp.FIGHT_PROP_MAX_ICE_ENERGY, 100);
         SetFightProp(FightProp.FIGHT_PROP_MAX_ROCK_ENERGY, 100);
+
+        // Populate skill data (mirrors Java setSkillDepotData)
+        if (GameData.AvatarSkillDepotData.TryGetValue((int)SkillDepotId, out var depotData))
+            SetSkillDepotData(depotData);
     }
 
-    // ═══════════════════════════════════════════════════════════
-    //  RecalcStats (stub — mirrors Java Avatar.recalcStats)
-    // ═══════════════════════════════════════════════════════════
-
-    public void RecalcStats()
+    /// <summary>Populate SkillLevelMap and ProudSkillList from depot (mirrors Java setSkillDepotData).</summary>
+    public void SetSkillDepotData(AvatarSkillDepotDataExcel depotData)
     {
-        // TODO: Re-calculate stats based on current equipment, level, promote level,
-        //       weapon, relics, set bonuses, proud skills, and constellations.
-        //       Mirrors Java Avatar.recalcStats().
+        // Default skill levels to 1
+        SkillLevelMap.Clear();
+        foreach (var skillId in depotData.GetSkillsAndEnergySkill())
+            SkillLevelMap[skillId] = 1;
+
+        // Inherent proud skills filtered by current promote level
+        ProudSkillList.Clear();
+        foreach (var open in depotData.InherentProudSkillOpens)
+        {
+            if (open.NeedAvatarPromoteLevel > PromoteLevel || open.ProudSkillGroupId <= 0)
+                continue;
+            int proudSkillId = (int)(open.ProudSkillGroupId * 100) + 1;
+            if (GameData.ProudSkillData.ContainsKey(proudSkillId))
+                ProudSkillList.Add((uint)proudSkillId);
+        }
     }
 
-    // ═══════════════════════════════════════════════════════════
-    //  ToProto (mirrors Java Avatar.toProto)
-    // ═══════════════════════════════════════════════════════════
+    /// <summary>Recalculate all fight properties from level, promote, weapon, and passives.</summary>
+    public void RecalcStats(ItemData? weaponItem = null)
+    {
+        if (AvatarExcel == null) return;
+
+        int level = (int)Level;
+        int promoteLevel = (int)PromoteLevel;
+
+        // Save HP ratio to restore after recalculation
+        float curHp = GetFightProp(FightProp.FIGHT_PROP_CUR_HP);
+        float maxHp = GetFightProp(FightProp.FIGHT_PROP_MAX_HP);
+        float hpRatio = maxHp > 0 ? Math.Min(1f, curHp / maxHp) : 1f;
+
+        FightProperties.Clear();
+
+        // Base stats from level-scaled growth curves
+        SetFightProp(FightProp.FIGHT_PROP_BASE_HP, AvatarExcel.GetBaseHp(level));
+        SetFightProp(FightProp.FIGHT_PROP_BASE_ATTACK, AvatarExcel.GetBaseAttack(level));
+        SetFightProp(FightProp.FIGHT_PROP_BASE_DEFENSE, AvatarExcel.GetBaseDefense(level));
+        SetFightProp(FightProp.FIGHT_PROP_CHARGE_EFFICIENCY, (float)AvatarExcel.ChargeEfficiency);
+        SetFightProp(FightProp.FIGHT_PROP_CRITICAL, (float)AvatarExcel.Critical);
+        SetFightProp(FightProp.FIGHT_PROP_CRITICAL_HURT, (float)AvatarExcel.CriticalHurt);
+
+        foreach (var prop in EnergyProps)
+            SetFightProp(prop, 100f);
+
+        // Apply avatar promotion stat bonuses
+        int promoteId = AvatarExcel.AvatarPromoteId;
+        for (int i = 0; i <= promoteLevel; i++)
+        {
+            int key = (promoteId << 8) + i;
+            if (GameData.AvatarPromoteData.TryGetValue(key, out var promoteData))
+                ApplyFightPropDeltas(promoteData.AddProps);
+        }
+
+        // Apply weapon promotion stat bonuses
+        if (weaponItem != null)
+        {
+            var itemData = weaponItem.GetItemData();
+            if (itemData != null)
+            {
+                int wpnPromoteId = (int)itemData.WeaponPromoteId;
+                for (int i = 0; i <= weaponItem.PromoteLevel; i++)
+                {
+                    int key = (wpnPromoteId << 8) + i;
+                    if (GameData.WeaponPromoteData.TryGetValue(key, out var wpnData))
+                        ApplyFightPropDeltas(wpnData.AddProps);
+                }
+            }
+        }
+
+        // Compute compound stats (cur = base * (1 + percent) + flat)
+        ComputeCompoundStats();
+
+        SetFightProp(FightProp.FIGHT_PROP_CUR_HP, GetFightProp(FightProp.FIGHT_PROP_MAX_HP) * hpRatio);
+    }
+
+    private void ApplyFightPropDeltas(IEnumerable<FightPropData> addProps)
+    {
+        foreach (var prop in addProps)
+            if (FightProp.NameMap.TryGetValue(prop.PropType, out var propId))
+                SetFightProp(propId, GetFightProp(propId) + prop.Value);
+    }
+
+    private void ComputeCompoundStats()
+    {
+        foreach (var (baseProp, flatProp, percentProp, resultProp) in CompoundPropMap)
+        {
+            float b = GetFightProp(baseProp);
+            float p = GetFightProp(percentProp);
+            float f = GetFightProp(flatProp);
+            SetFightProp(resultProp, b * (1f + p) + f);
+        }
+    }
+
+    private static readonly uint[] EnergyProps =
+    [
+        FightProp.FIGHT_PROP_MAX_FIRE_ENERGY, FightProp.FIGHT_PROP_MAX_ELEC_ENERGY,
+        FightProp.FIGHT_PROP_MAX_WATER_ENERGY, FightProp.FIGHT_PROP_MAX_GRASS_ENERGY,
+        FightProp.FIGHT_PROP_MAX_WIND_ENERGY, FightProp.FIGHT_PROP_MAX_ICE_ENERGY,
+        FightProp.FIGHT_PROP_MAX_ROCK_ENERGY
+    ];
+
+    private static readonly (uint Base, uint Flat, uint Percent, uint Result)[] CompoundPropMap =
+    [
+        (FightProp.FIGHT_PROP_BASE_ATTACK, FightProp.FIGHT_PROP_ATTACK, FightProp.FIGHT_PROP_ATTACK_PERCENT, FightProp.FIGHT_PROP_CUR_ATTACK),
+        (FightProp.FIGHT_PROP_BASE_DEFENSE, FightProp.FIGHT_PROP_DEFENSE, FightProp.FIGHT_PROP_DEFENSE_PERCENT, FightProp.FIGHT_PROP_CUR_DEFENSE),
+        (FightProp.FIGHT_PROP_BASE_HP, FightProp.FIGHT_PROP_HP, FightProp.FIGHT_PROP_HP_PERCENT, FightProp.FIGHT_PROP_MAX_HP),
+    ];
+
 
     public AvatarInfo ToProto()
     {
@@ -287,8 +364,9 @@ public class AvatarDataInfo
         foreach (var kv in SkillExtraChargeMap)
             proto.SkillMap[kv.Key] = new AvatarSkillInfo { MaxChargeCount = kv.Value };
 
-        // Equip guid list
-        proto.EquipGuidList.Add(WeaponGuid);
+        // Equip guid list (mirrors Java: only add if actually equipped)
+        if (WeaponGuid > 0)
+            proto.EquipGuidList.Add(WeaponGuid);
         foreach (var guid in EquipGuidList)
             proto.EquipGuidList.Add(guid);
 
@@ -298,10 +376,6 @@ public class AvatarDataInfo
 
         return proto;
     }
-
-    // ═══════════════════════════════════════════════════════════
-    //  Trial avatar
-    // ═══════════════════════════════════════════════════════════
 
     public void SetTrialAvatarInfo(uint weaponId, uint trialAvatarId, int reason, int questMainId)
     {
@@ -317,10 +391,6 @@ public class AvatarDataInfo
         // TODO: Equip trial weapons and relics.
         //       Mirrors Java Avatar.equipTrialItems().
     }
-
-    // ═══════════════════════════════════════════════════════════
-    //  Misc
-    // ═══════════════════════════════════════════════════════════
 
     public void SetOwnerUid(uint uid)
     {
