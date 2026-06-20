@@ -13,11 +13,25 @@ public class ConsoleManager
     private static readonly List<string> InputHistory = [];
     private static int HistoryIndex = -1;
 
+    /// <summary>True when stdin/stdout are a real terminal; false when redirected (headless / piped / service).</summary>
+    public static bool Interactive { get; private set; }
+
     public static event Action<string>? OnConsoleExecuteCommand;
 
     public static void InitConsole()
     {
-        Console.Title = ConfigManager.Config.GameServer.GameServerName;
+        // Cursor-driven input line only works on a real terminal. When stdout/stdin are
+        // redirected (background, piped, service, headless), fall back to plain line I/O.
+        Interactive = !Console.IsOutputRedirected && !Console.IsInputRedirected;
+
+        try
+        {
+            Console.Title = ConfigManager.Config.GameServer.GameServerName;
+        }
+        catch
+        {
+            // No real console attached (output redirected / headless) — title unavailable.
+        }
     }
 
     public static int GetWidth(string str)
@@ -28,6 +42,8 @@ public class ConsoleManager
 
     public static void RedrawInput(string input, bool hasPrefix = true)
     {
+        if (!Interactive) return;
+
         var length = GetWidth(input);
         if (hasPrefix)
         {
@@ -57,6 +73,11 @@ public class ConsoleManager
         InputHistory.Add(input);
         HistoryIndex = InputHistory.Count;
 
+        Dispatch(input);
+    }
+
+    private static void Dispatch(string input)
+    {
         if (input.StartsWith('/')) input = input[1..].Trim();
         OnConsoleExecuteCommand?.Invoke(input);
     }
@@ -146,13 +167,24 @@ public class ConsoleManager
 
     #endregion
 
-    public static string ListenConsole()
+    public static void ListenConsole()
     {
+        if (!Interactive)
+        {
+            ListenNonInteractive();
+            return;
+        }
+
         while (true)
         {
             ConsoleKeyInfo keyInfo;
             try { keyInfo = Console.ReadKey(true); }
-            catch (InvalidOperationException) { continue; }
+            catch (InvalidOperationException)
+            {
+                // Console became unavailable mid-run: fall back instead of busy-looping.
+                ListenNonInteractive();
+                return;
+            }
 
             switch (keyInfo.Key)
             {
@@ -179,5 +211,26 @@ public class ConsoleManager
                     break;
             }
         }
+    }
+
+    /// <summary>
+    /// Headless / redirected mode: read whole lines instead of driving the cursor, then keep
+    /// the process alive so the network threads keep serving even when there is no stdin.
+    /// </summary>
+    private static void ListenNonInteractive()
+    {
+        while (true)
+        {
+            string? line;
+            try { line = Console.ReadLine(); }
+            catch { break; }
+            if (line == null) break; // stdin closed / EOF
+
+            if (string.IsNullOrWhiteSpace(line)) continue;
+            Dispatch(line.Trim());
+        }
+
+        // No more console input — block here so Main() doesn't return and kill the server.
+        Thread.Sleep(Timeout.Infinite);
     }
 }

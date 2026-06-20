@@ -4,7 +4,6 @@ using NahidaImpact.Internationalization;
 using NahidaImpact.Util;
 using Newtonsoft.Json;
 using System.Text;
-using System.Text.Json.Serialization;
 
 namespace NahidaImpact.NahidaImpact.Tool;
 
@@ -49,18 +48,16 @@ public static class HandbookGenerator
             return;
         }
 
-        List<TextMapEntry> textMapList = JsonConvert.DeserializeObject<List<TextMapEntry>>(File.ReadAllText(textMapPath))!;
+        // TextMap files are JSON objects keyed by text hash, e.g. { "9852": "..." }.
+        Dictionary<long, string>? textMap =
+            JsonConvert.DeserializeObject<Dictionary<long, string>>(File.ReadAllText(textMapPath));
 
-        if (textMapList == null)
+        if (textMap == null)
         {
             Logger.GetByClassName().Error(I18NManager.Translate("Server.ServerInfo.FailedToReadItem", textMapPath,
                 I18NManager.Translate("Word.Error")));
             return;
         }
-
-        Dictionary<long, string> textMap = [];
-
-        foreach (var map in textMapList) textMap.Add(map.Value!.Hash, map.Text!);
 
         var builder = new StringBuilder();
         builder.AppendLine("#Handbook generated in " + DateTime.Now.ToString("yyyy/MM/dd HH:mm"));
@@ -101,15 +98,4 @@ public static class HandbookGenerator
             builder.AppendLine(avatar.Id + ": " + name);
         }
     }
-}
-
-public class TextMapEntry
-{
-    [JsonPropertyName("value")] public ValueEntry? Value { get; set; }
-    [JsonPropertyName("text")] public string? Text { get; set; }
-}
-
-public class ValueEntry
-{
-    [JsonPropertyName("hash")] public int Hash { get; set; }
 }
