@@ -1,16 +1,19 @@
 syntax = "proto3";
 
+// Nahida
+// Proto
+
 import "ItemHint.proto";
 import "Vector.proto";
 
-// CmdID: 1931
+// CmdID: 24603
 message ItemAddHintNotify {
-  repeated ItemHint item_list = 6;
-  repeated ItemHint overflow_transformed_item_list = 11;
-  Vector position = 14;
-  uint32 reason = 1;
-  uint32 quest_id = 8;
-  bool LPNPKOHDPBL = 10;
-  bool ALEFNHEHEBE = 13;
-  bool JOEFCMMMOHA = 9;
+	Vector position = 2;
+	repeated ItemHint item_list = 4;
+	repeated ItemHint overflow_transformed_item_list = 8;
+	uint32 quest_id = 14;
+	uint32 reason = 5;
+	bool LPNPKOHDPBL = 7;
+	bool is_general_reward_hidden = 6;
+	bool is_general_reward_hiden = 13;
 }

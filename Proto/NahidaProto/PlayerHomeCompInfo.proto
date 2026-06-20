@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "FriendEnterHomeOption.proto";
+
+message PlayerHomeCompInfo {
+	repeated uint32 unlocked_module_id_list = 15;
+	repeated uint32 seen_module_id_list = 8;
+	repeated uint32 levelup_reward_got_level_list = 1;
+	FriendEnterHomeOption friend_enter_home_option = 5;
+}

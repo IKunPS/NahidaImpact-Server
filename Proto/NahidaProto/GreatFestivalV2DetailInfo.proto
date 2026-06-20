@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message GreatFestivalV2DetailInfo {
+	// [obf] NNIPLLGELJC OBILGCCJGAF = 5;
+	// [obf] PLDCEBCLIDA HGPEDIEBGMC = 1;
+	// [obf] MFEIPFCIEOL JJCHCOJBMID = 8;
+	// [obf] LNMPIKPECFN OMNECKFGGMI = 11;
+}

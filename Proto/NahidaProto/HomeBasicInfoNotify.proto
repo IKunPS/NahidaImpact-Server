@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "HomeBasicInfo.proto";
+
+// CmdID: 492
+message HomeBasicInfoNotify {
+	HomeBasicInfo basic_info = 9;
+}

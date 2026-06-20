@@ -1,5 +1,8 @@
 syntax = "proto3";
 
+// Nahida
+// Proto
+
 enum GadgetBornType {
 	GADGET_BORN_TYPE_NONE = 0;
 	GADGET_BORN_TYPE_IN_AIR = 1;

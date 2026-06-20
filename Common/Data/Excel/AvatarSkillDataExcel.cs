@@ -28,6 +28,9 @@ public class AvatarSkillDataExcel : ExcelResource
     [JsonPropertyName("cdTime")]
     public float CdTime { get; set; }
 
+    [JsonPropertyName("proudSkillGroupId")]
+    public int ProudSkillGroupId { get; set; }
+
     /// <summary>Parsed element type: 1=Fire, 2=Water, 3=Wind, 4=Electric, 5=Grass, 6=Ice, 7=Rock.</summary>
     public int ElementTypeValue => CostElemType switch
     {

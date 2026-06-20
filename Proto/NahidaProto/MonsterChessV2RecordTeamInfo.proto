@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "MonsterChessV2RecordCardDetail.proto";
+
+message MonsterChessV2RecordTeamInfo {
+	repeated MonsterChessV2RecordCardDetail monster_card_list = 1;
+	uint32 flag_id = 4;
+}

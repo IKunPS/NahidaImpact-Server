@@ -1,9 +1,12 @@
 syntax = "proto3";
 
-// CmdID: 6724
+// Nahida
+// Proto
+
+// CmdID: 26484
 message SetUpAvatarTeamRsp {
-  repeated uint64 avatar_team_guid_list = 13;
-  int32 retcode = 3; // [(ys_custom).is_masked = true, (ys_custom).value_mask = "(val - 51228) ^ 9379", (ys_custom).value_unmask = "(val ^ 9379) + 51228"];
-  uint32 team_id = 11;
-  uint64 cur_avatar_guid = 9;
+	repeated uint64 avatar_team_guid_list = 3;
+	uint32 team_id = 4;
+	int32 retcode = 12;
+	uint64 cur_avatar_guid = 5;
 }

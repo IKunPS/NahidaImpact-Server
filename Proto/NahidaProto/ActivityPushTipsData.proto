@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "ActivityPushTipsState.proto";
+
+message ActivityPushTipsData {
+	ActivityPushTipsState state = 14;
+	uint32 activity_push_tips_id = 5;
+}

@@ -1,6 +1,9 @@
-﻿syntax = "proto3";
+syntax = "proto3";
+
+// Nahida
+// Proto
 
 message AvatarEquipAffixInfo {
-  uint32 equip_affix_id = 1;
-  uint32 left_cd_time = 2;
+	uint32 equip_affix_id = 1;
+	uint32 left_cd_time = 2;
 }

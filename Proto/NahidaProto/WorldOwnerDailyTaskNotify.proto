@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "DailyTaskInfo.proto";
+
+// CmdID: 4004
+message WorldOwnerDailyTaskNotify {
+	repeated DailyTaskInfo task_list = 5;
+	uint32 filter_city_id = 15;
+	uint32 finished_daily_task_num = 1;
+}

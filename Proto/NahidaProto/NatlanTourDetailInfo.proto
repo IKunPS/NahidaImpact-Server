@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message NatlanTourDetailInfo {
+	// [obf] LMDKPKOCEPP ONIPNAPBPBG = 15;
+	// [obf] OLKHGMJCCDD LGGJEOLONBC = 13;
+	// [obf] HHGFIMEGFHI explore_info = 2;
+}

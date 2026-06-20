@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message CoopPoint {
+	enum State {
+		State_CLOSE = 0;
+		State_COND_NOT_MEET = 1;
+		State_COND_MEET = 2;
+	}
+	State state = 6;
+	uint32 self_confidence = 7;
+	uint32 id = 3;
+}

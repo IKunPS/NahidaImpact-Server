@@ -4,87 +4,86 @@ public class CmdIds
 {
     public const int None = 0;
     
-    public const int GetPlayerTokenReq = 29446;
-    public const int GetPlayerTokenRsp = 1519;
+    public const int GetPlayerTokenReq = 28757;
+    public const int GetPlayerTokenRsp = 20813;
 
-    public const int PingReq = 20405;
-    public const int PingRsp = 8367;
+    public const int PingReq = 2151;
+    public const int PingRsp = 26395;
 
     // Step 1
-    public const int PlayerLoginReq = 5911;
-    public const int PlayerDataNotify = 29964;
-    public const int AvatarDataNotify = 20773;
-    public const int PlayerEnterSceneNotify = 20140;
-    public const int PlayerLoginRsp = 24430;
+    public const int PlayerLoginReq = 8095;
+    public const int PlayerDataNotify = 7426;
+    public const int AvatarDataNotify = 21044;
+    public const int PlayerEnterSceneNotify = 684;
+    public const int PlayerLoginRsp = 1725;
 
     // Step 2
-    public const int EnterSceneReadyReq = 21908;
-    public const int EnterScenePeerNotify = 24176;          
-    public const int EnterSceneReadyRsp = 27183;
+    public const int EnterSceneReadyReq = 25212;
+    public const int EnterScenePeerNotify = 8028;          
+    public const int EnterSceneReadyRsp = 3297;
 
     // Step 3
-    public const int SceneInitFinishReq = 20180;
-    public const int PlayerEnterSceneInfoNotify = 354;
-    public const int SceneTeamUpdateNotify = 22857;
-    public const int SceneInitFinishRsp = 26465;
+    public const int SceneInitFinishReq = 1892;
+    public const int PlayerEnterSceneInfoNotify = 29025;
+    public const int SceneTeamUpdateNotify = 1273;
+    public const int SceneInitFinishRsp = 21746;
 
     // Step 4
-    public const int EnterSceneDoneReq = 20081;
-    public const int SceneEntityAppearNotify = 6288;
-    public const int SceneEntityDisappearNotify = 24203;
-    public const int EnterSceneDoneRsp = 1901;
+    public const int EnterSceneDoneReq = 28765;
+    public const int SceneEntityAppearNotify = 1890;
+    public const int SceneEntityDisappearNotify = 748;
+    public const int EnterSceneDoneRsp = 9324;
 
     // Step 5
-    public const int PostEnterSceneReq = 20074;
-    public const int PostEnterSceneRsp = 536;
+    public const int PostEnterSceneReq = 6528;
+    public const int PostEnterSceneRsp = 9161;
 
-    public const int OpenStateUpdateNotify = 29587;
-    public const int OpenStateChangeNotify = 7632;
+    public const int OpenStateUpdateNotify = 1796;
+    public const int OpenStateChangeNotify = 709;
     
-    public const int DoSetPlayerBornDataNotify = 2616;
-    public const int SetPlayerBornDataReq = 1;
+    public const int DoSetPlayerBornDataNotify = 27996;
+    public const int SetPlayerBornDataReq = 29815;
     public const int SetPlayerBornDataRsp = 26559;
     
     
     // Ability
-    public const int AbilityInvocationsNotify = 8630;
-    public const int AbilityChangeNotify = 3318;
-    public const int ClientAbilityChangeNotify = 43;
-    public const int ClientAbilityInitFinishNotify = 21742;
+    public const int AbilityInvocationsNotify = 20808;
+    public const int AbilityChangeNotify = 20280;
+    public const int ClientAbilityChangeNotify = 7772;
+    public const int ClientAbilityInitFinishNotify = 1623;
     public const int SceneEntityMoveNotify = 1;
-    public const int CombatInvocationsNotify = 4056;
-    public const int EvtBulletMoveNotify = 1;
+    public const int CombatInvocationsNotify = 26986;
     
     //Entity
-    public const int EntityFightPropChangeReasonNotify = 29948;
-    public const int EntityAiSyncNotify = 21997;
-    public const int EntityFightPropNotify = 4904; //??
-    public const int EntityFightPropUpdateNotify = 8914; //??
+    public const int EntityFightPropChangeReasonNotify = 4914;
+    public const int EntityAiSyncNotify = 220;
+    public const int EntityFightPropNotify = 2271;
+    public const int EntityFightPropUpdateNotify = 24281;
     
     // Time
-    public const int SceneTimeNotify = 1415;
-    public const int ServerTimeNotify = 27941;
+    public const int SceneTimeNotify = 24341;
+    public const int ServerTimeNotify = 1622;
 
     // Map & Scene Points
-    public const int GetScenePointReq = 27040;
-    public const int GetScenePointRsp = 2025;
-    public const int ScenePointUnlockNotify = 3774;
-    public const int SceneTransToPointReq = 1;
-    public const int SceneTransToPointRsp = 1564;
-    public const int UnlockTransPointReq = 2582;
-    public const int UnlockTransPointRsp = 1;
-    public const int MarkMapReq = 1331;
-    public const int MarkMapRsp = 1;
+    public const int GetScenePointReq = 25725;
+    public const int GetScenePointRsp = 7515;
+    public const int ScenePointUnlockNotify = 546;
+    public const int SceneTransToPointReq = 7620;
+    public const int SceneTransToPointRsp = 29357;
+    public const int UnlockTransPointReq = 29132;
+    public const int UnlockTransPointRsp = 25300;
+    public const int MarkMapReq = 29102;
+    public const int MarkMapRsp = 23261;
 
     // Map Area & Scene Area
-    public const int GetSceneAreaReq = 24225;
-    public const int GetSceneAreaRsp = 470;
-    public const int SceneAreaUnlockNotify = 1;
-    public const int GetMapAreaReq = 1;
-    public const int GetMapAreaRsp = 9541;
-    public const int MapAreaChangeNotify = 3148;
-    public const int EnterWorldAreaReq = 9249;
-    public const int EnterWorldAreaRsp = 20876;
+    public const int GetSceneAreaReq = 26382;
+    public const int GetSceneAreaRsp = 26477;
+    public const int SceneAreaUnlockNotify = 20067;
+    public const int GetMapAreaReq = 6396;
+    public const int GetMapAreaRsp = 28637;
+    public const int MapAreaChangeNotify = 4729;
+    public const int EnterWorldAreaReq = 29521;
+    public const int EnterWorldAreaRsp = 24791;
     public const int SceneAreaWeatherNotify = 29909;
 
     // TransPoint Region
@@ -92,30 +91,30 @@ public class CmdIds
     public const int ExitTransPointRegionNotify = 1;
 
     // World Scene Info
-    public const int PlayerWorldSceneInfoListNotify = 20396;
+    public const int PlayerWorldSceneInfoListNotify = 25510;
 
     // Personal Scene Jump
     public const int PersonalSceneJumpReq = 1;
     public const int PersonalSceneJumpRsp = 21565;
 
     // Map Layer
-    public const int PlayerEnterMapLayerNotify = 1;
+    public const int PlayerEnterMapLayerNotify = 22921;
     public const int PlayerEnterChildMapLayerNotify = 1;
     
     // Friend
-    public const int GetPlayerFriendListReq = 7479;
-    public const int GetPlayerFriendListRsp = 27216;
+    public const int GetPlayerFriendListReq = 890;
+    public const int GetPlayerFriendListRsp = 27556;
 
     // Chat
-    public const int PrivateChatReq = 26399;
-    public const int PrivateChatNotify = 29577;
-    public const int PlayerChatReq = 24206;
-    public const int PlayerChatRsp = 1;
-    public const int PlayerChatNotify = 20871;
-    public const int PullPrivateChatReq = 4696;
-    public const int PullPrivateChatRsp = 21477;
-    public const int PullRecentChatReq = 1148;
-    public const int PullRecentChatRsp = 7996;
+    public const int PrivateChatReq = 27651;
+    public const int PrivateChatNotify = 5051;
+    public const int PlayerChatReq = 23586;
+    public const int PlayerChatRsp = 26416;
+    public const int PlayerChatNotify = 527;
+    public const int PullPrivateChatReq = 25719;
+    public const int PullPrivateChatRsp = 25944;
+    public const int PullRecentChatReq = 2145;
+    public const int PullRecentChatRsp = 1943;
 
     // Team Management
     public const int ChooseCurAvatarTeamReq = 26963;
@@ -126,31 +125,51 @@ public class CmdIds
     public const int ChangeMpTeamAvatarRsp = 25312;
     public const int DelBackupAvatarTeamReq = 1;
     public const int DelBackupAvatarTeamRsp = 1;
-    public const int ChangeTeamNameReq =1006;
-    public const int ChangeTeamNameRsp = 3928;
-    public const int SetUpAvatarTeamReq = 29624;
-    public const int SetUpAvatarTeamRsp = 6724;
-    public const int AvatarTeamUpdateNotify = 29089;
-    public const int AvatarTeamAllDataNotify = 6988;
+    public const int ChangeTeamNameReq = 20869;
+    public const int ChangeTeamNameRsp = 1116;
+    public const int SetUpAvatarTeamReq = 6316;
+    public const int SetUpAvatarTeamRsp = 26484;
+    public const int AvatarTeamUpdateNotify = 1256;
+    public const int AvatarTeamAllDataNotify = 514;
     public const int DelTeamEntityNotify = 1;
-    public const int SyncTeamEntityNotify = 4567;
-    public const int SyncScenePlayTeamEntityNotify = 21451;
+    public const int SyncTeamEntityNotify = 24216;
+    public const int SyncScenePlayTeamEntityNotify = 22166;
     public const int TowerTeamSelectReq = 1;
     public const int TowerTeamSelectRsp = 1;
 
     // Avatar Change/Death
-    public const int ChangeAvatarReq = 6317;
-    public const int ChangeAvatarRsp = 23839;
+    public const int ChangeAvatarReq = 3754;
+    public const int ChangeAvatarRsp = 9923;
     public const int AvatarDieAnimationEndReq = 1;
     public const int AvatarDieAnimationEndRsp = 1;
     public const int WorldPlayerDieNotify = 1;
     public const int WorldPlayerReviveRsp = 1;
     public const int AvatarLifeStateChangeNotify = 21104;
     public const int ServerGlobalValueChangeNotify = 28243;
-    public const int AvatarAddNotify = 1;
+    public const int AvatarAddNotify = 29741;
     public const int AvatarDelNotify = 1;
     
     public const int AvatarFightPropNotify = 3944;
+
+    // Level & Promote
+    public const int AvatarUpgradeReq = 9051;
+    public const int AvatarUpgradeRsp = 20800;
+    public const int AvatarPromoteReq = 6091;
+    public const int AvatarPromoteRsp = 28930;
+    public const int AvatarPropNotify = 28659;
+
+    // Skill & Talent
+    public const int AvatarSkillUpgradeReq = 26582;
+    public const int AvatarSkillUpgradeRsp = 9601;
+    public const int AvatarSkillChangeNotify = 28991;
+    public const int AvatarSkillDepotChangeNotify = 26620;
+    public const int AvatarSkillInfoNotify = 7250;
+    public const int AvatarSkillMaxChargeCountNotify = 5027;
+    public const int ProudSkillChangeNotify = 23487;
+    public const int ProudSkillExtraLevelNotify = 7060;
+    public const int AvatarUnlockTalentNotify = 1287;
+    public const int UnlockAvatarTalentReq = 7839;
+    public const int UnlockAvatarTalentRsp = 29364;
 
     // Inventory
     public const int StoreItemChangeNotify = 27681;
@@ -182,6 +201,7 @@ public class CmdIds
     public const int DestroyMaterialRsp = 23522;
     public const int UseItemReq = 4800;
     public const int UseItemRsp = 29891;
+    public const int CalcWeaponUpgradeReturnItemsReq = 3748;
     public const int CalcWeaponUpgradeReturnItemsRsp = 1588;
     public const int AvatarEquipChangeNotify = 1605;
     

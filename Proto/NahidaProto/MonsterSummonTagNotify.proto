@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+// CmdID: 26883
+message MonsterSummonTagNotify {
+	map<uint32, uint32> summon_tag_map = 6;
+	uint32 monster_entity_id = 2;
+}

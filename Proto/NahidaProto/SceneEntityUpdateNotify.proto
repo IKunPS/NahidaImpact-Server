@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "SceneEntityInfo.proto";
+import "VisionType.proto";
+
+// CmdID: 8871
+message SceneEntityUpdateNotify {
+	repeated SceneEntityInfo entity_list = 6;
+	uint32 param = 7;
+	VisionType appear_type = 9;
+}

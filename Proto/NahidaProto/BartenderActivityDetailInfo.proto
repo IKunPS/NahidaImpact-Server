@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "BartenderLevelInfo.proto";
+import "BartenderTaskInfo.proto";
+
+message BartenderActivityDetailInfo {
+	repeated BartenderTaskInfo unlock_task_list = 14;
+	repeated BartenderLevelInfo unlock_level_list = 13;
+	repeated uint32 LMOHECFEFMA = 2;
+	repeated uint32 DGPPCBLNJCF = 15;
+	bool is_content_closed = 1;
+	bool is_develop_module_open = 6;
+}

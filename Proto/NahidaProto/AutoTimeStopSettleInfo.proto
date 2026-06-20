@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message AutoTimeStopSettleInfo {
+	uint32 level_id = 15;
+	bool is_new_record = 12;
+	uint32 NHGDPOMKBDC = 8;
+	uint32 score = 14;
+}

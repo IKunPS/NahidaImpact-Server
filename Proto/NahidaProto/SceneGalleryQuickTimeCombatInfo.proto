@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message SceneGalleryQuickTimeCombatInfo {
+	string DKOLAKOHJNI = 14;
+	repeated uint32 buff_id_list = 2;
+	uint32 cur_round = 3;
+	uint32 GJMJOMHIPOB = 8;
+	uint32 total_score = 9;
+	uint32 KOBPPFMPCDN = 1;
+}

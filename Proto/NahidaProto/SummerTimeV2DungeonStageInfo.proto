@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message SummerTimeV2DungeonStageInfo {
+	uint32 open_time = 11;
+	bool is_open = 14;
+	bool is_prev_dungeon_succeed = 6;
+	uint32 stage_id = 1;
+}

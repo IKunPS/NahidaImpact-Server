@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+// CmdID: 5535
+message HomeAvatarTalkReq {
+	uint32 talk_id = 15;
+	uint32 avatar_id = 11;
+}

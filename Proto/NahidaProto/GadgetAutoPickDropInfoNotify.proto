@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "Item.proto";
+
+// CmdID: 338
+message GadgetAutoPickDropInfoNotify {
+	repeated Item item_list = 13;
+	// [obf] repeated LDKNMJCLOOO BDLJBLMDLJL = 8;
+}

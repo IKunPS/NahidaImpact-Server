@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+// CmdID: 1784
+message TakeBackGivingItemReq {
+	uint32 giving_id = 7;
+}

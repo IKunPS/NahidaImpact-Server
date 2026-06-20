@@ -1,6 +1,9 @@
 syntax = "proto3";
 
-// CmdID: 23264
+// Nahida
+// Proto
+
+// CmdID: 28926
 message WeaponPromoteReq {
-  uint64 target_weapon_guid = 9;
+	uint64 target_weapon_guid = 10;
 }

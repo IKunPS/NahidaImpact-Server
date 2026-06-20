@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message AvatarExpeditionBasicInfo {
+	uint64 avatar_guid = 4;
+	float shorten_ratio = 3;
+	uint32 hour_time = 8;
+	uint32 exp_id = 15;
+}

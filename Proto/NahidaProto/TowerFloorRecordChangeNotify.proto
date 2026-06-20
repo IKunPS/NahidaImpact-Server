@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "TowerFloorRecord.proto";
+
+// CmdID: 26033
+message TowerFloorRecordChangeNotify {
+	repeated TowerFloorRecord tower_floor_record_list = 11;
+	bool is_finished_entrance_floor = 13;
+}

@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "OfficialCustomDungeon.proto";
+
+message UgcActivityDetailInfo {
+	repeated OfficialCustomDungeon official_custom_dungeon_list = 5;
+	uint32 custom_dungeon_group_id = 6;
+	bool NDLKAPFBPDP = 8;
+	bool PKMBHJPAAJN = 1;
+}

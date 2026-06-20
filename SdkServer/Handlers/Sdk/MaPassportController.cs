@@ -1,24 +1,26 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using NahidaImpact.Data.Models.Sdk;
+using NahidaImpact.Database.Account;
+using NahidaImpact.Internationalization;
+using NahidaImpact.Models.Sdk;
 using NahidaImpact.Util;
 using NahidaImpact.Util.Security;
 using System.Security.Cryptography;
 using System.Text;
-using NahidaImpact.Database.Account;
 
 namespace NahidaImpact.SdkServer.Handlers.Sdk;
 
 [ApiController]
 public class MaPassportController : ControllerBase
 {
+    private static readonly Logger Logger = new("MaPassportController");
+
     [HttpPost("/{productName}/account/ma-passport/api/appLoginByPassword")]
     public async Task<IActionResult> AppLoginByPassword(string productName,
-        [FromBody] AppLoginByPasswordRequest response)
+        [FromBody] AppLoginByPasswordRequest request)
     {
-        string? account = response.Account;
-        string? password = response.Password;
+        string? account = request.Account;
+        string? password = request.Password;
 
-        // 如果 account 长度大于 32，说明是加密的，需要解密
         if (!string.IsNullOrEmpty(account) && account.Length > 32)
         {
             try
@@ -28,45 +30,38 @@ public class MaPassportController : ControllerBase
                     return Ok(new ResponseBase
                     {
                         Retcode = -201,
-                        Message = "Account login failed, signature key not initialized"
+                        Message = I18NManager.Translate("Server.Web.LoginFailed")
                     });
                 }
 
-                // 解密 account
                 byte[] encryptedAccountBytes = Convert.FromBase64String(account);
                 byte[] decryptedAccountBytes = Crypto.SDK_PATCH_KEY.Decrypt(
                     encryptedAccountBytes, RSAEncryptionPadding.Pkcs1);
                 account = Encoding.UTF8.GetString(decryptedAccountBytes);
 
-                Logger logger = new("MaPassportController");
-                logger.Info($"clientLogin account: {account}");
+                Logger.Info($"clientLogin account: {account}");
 
-                // 解密 password
                 if (!string.IsNullOrEmpty(password))
                 {
                     byte[] encryptedPasswordBytes = Convert.FromBase64String(password);
                     byte[] decryptedPasswordBytes = Crypto.SDK_PATCH_KEY.Decrypt(
                         encryptedPasswordBytes, RSAEncryptionPadding.Pkcs1);
                     password = Encoding.UTF8.GetString(decryptedPasswordBytes);
-
-                    logger.Info($"clientLogin password: {password}");
                 }
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                Logger logger = new("MaPassportController");
-                logger.Error($"clientLogin error: {e}");
-
+                Logger.Error($"clientLogin decryption error: {ex.Message}");
                 return Ok(new ResponseBase
                 {
                     Retcode = -201,
-                    Message = "Account login failed, account name decryption failed"
+                    Message = I18NManager.Translate("Server.Web.DecryptionFailed")
                 });
             }
         }
-        
+
         var accountData = AccountData.FindAccountByUsername(account);
-        
+
         if (accountData == null && ConfigManager.Config.ServerOption.AutoCreateUser)
         {
             var (success, accountUid) = await AccountData.CreateAccount(account, password);
@@ -75,52 +70,50 @@ public class MaPassportController : ControllerBase
                 return Ok(new ResponseBase
                 {
                     Retcode = -101,
-                    Message = "Failed to create account"
+                    Message = I18NManager.Translate("Server.Web.CreateAccountFailed")
                 });
             }
-
             accountData = AccountData.FindAccountByAccountUid(accountUid);
         }
-        
+
         if (accountData == null)
         {
             return Ok(new ResponseBase
             {
                 Retcode = -101,
-                Message = "Account not found"
+                Message = I18NManager.Translate("Server.Web.AccountNotFound")
             });
         }
-        
+
         if (!AccountData.VerifyPassword(accountData, password))
         {
             return Ok(new ResponseBase
             {
                 Retcode = -201,
-                Message = "Password incorrect"
+                Message = I18NManager.Translate("Server.Web.PasswordIncorrect")
             });
         }
 
         return Ok(new AppLoginByPasswordResponse
         {
             Retcode = 0,
-            Message = "OK",
+            Message = I18NManager.Translate("Server.Web.OK"),
             Data = new AppLoginByPasswordResponse.AppLoginByPasswordAccountData
             {
-                Token = new AppLoginByPasswordToken()
+                Token = new AppLoginByPasswordToken
                 {
                     Token = accountData.GenerateComboToken()
                 },
-                UserInfo = new AppLoginByPasswordUserInfo()
+                UserInfo = new AppLoginByPasswordUserInfo
                 {
                     aid = accountData.Uid.ToString(),
                     mid = accountData.Uid.ToString(),
                     AccountName = accountData.Username,
-                    Email = $"{accountData!.Username}@neonteam.dev",
+                    Email = $"{accountData.Username}@neonteam.dev",
                     IsEmailVerify = 0
                 }
             }
         });
-
     }
 
     [HttpPost("/{productName}/account/ma-passport/token/verifySToken")]
@@ -134,4 +127,4 @@ public class MaPassportController : ControllerBase
             }
         });
     }
-}   
+}

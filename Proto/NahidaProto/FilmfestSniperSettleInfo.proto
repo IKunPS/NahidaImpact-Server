@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message FilmfestSniperSettleInfo {
+	float HLNFFAMCBNM = 7;
+	uint32 level_id = 12;
+	uint32 DPCHHEKOHLO = 6;
+}

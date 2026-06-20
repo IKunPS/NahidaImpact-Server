@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message LanV6LanternGiftSource {
+	fixed32 JJMKGKKFLLP = 5;
+	fixed32 timestamp = 3;
+	// [obf] oneof detail {
+	// [obf] // [obf] FBJPDPPPPFL player = 460;
+	// [obf] // [obf] PEELHJCJJLE npc = 818;
+	// [obf] }
+}

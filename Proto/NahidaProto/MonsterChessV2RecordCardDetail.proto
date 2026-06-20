@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message MonsterChessV2RecordCardDetail {
+	uint32 extra_level = 10;
+	uint32 card_star_num = 14;
+	uint32 card_id = 9;
+}

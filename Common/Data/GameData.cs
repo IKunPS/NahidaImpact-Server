@@ -10,6 +10,8 @@ public static class GameData
     public static Dictionary<int, AvatarDataExcel> AvatarData { get; private set; } = [];
     public static Dictionary<int, AvatarSkillDataExcel> AvatarSkillData { get; private set; } = [];
     public static Dictionary<int, AvatarSkillDepotDataExcel> AvatarSkillDepotData { get; private set; } = [];
+    public static Dictionary<int, ProudSkillDataExcel> ProudSkillData { get; private set; } = [];
+    public static Dictionary<int, AvatarTalentDataExcel> AvatarTalentData { get; private set; } = [];
     public static Dictionary<int, OpenStateDataExcel> OpenStateData { get; private set; } = [];
     public static Dictionary<string, AbilityData> AbilityData { get; private set; } = [];
     public static Dictionary<int, SceneDataExcel> SceneData { get; private set; } = [];
@@ -17,7 +19,7 @@ public static class GameData
     public static Dictionary<int, MonsterDataExcel> MonsterData { get; private set; } = [];
 
     // Scene Points
-    public static Dictionary<int, ScenePointEntry> ScenePointEntry { get; private set; } = [];
+    public static Dictionary<int, ConfigScenePointEntry> ScenePointEntry { get; private set; } = [];
     public static List<int> ScenePointIdList { get; private set; } = [];
     public static Dictionary<int, List<int>> ScenePointsPerScene { get; private set; } = [];
 
@@ -31,7 +33,6 @@ public static class GameData
 
     // Scene Tags
     public static Dictionary<int, ItemDataExcel> ItemData { get; private set; } = [];
-    public static Dictionary<int, MonsterMapping> MonsterMapping{ get; private set; } = [];
     public static Dictionary<string, ConfigEntityMonster> MonsterConfigData { get; private set; } = [];
     public static Dictionary<int, SceneTagDataExcel> SceneTagData { get; private set; } = [];
 
@@ -41,15 +42,23 @@ public static class GameData
     // Global combat
     public static ConfigGlobalCombat? ConfigGlobalCombat { get; set; }
 
-    // Avatar config (BinOutput/Avatar/*.json)
+    // Avatar config
     public static Dictionary<string, ConfigEntityAvatar> AvatarConfigData { get; private set; } = [];
 
-    // Skill depot ability groups (BinOutput/AbilityGroup/*.json). Keyed by group name.
+    // Skill depot ability groups
     public static Dictionary<string, ConfigEntityBase> PlayerAbilities { get; private set; } = [];
 
     // Trial avatar
     public static Dictionary<int, TrialAvatarDataExcel> TrialAvatarDataMap { get; private set; } = [];
-    public static Dictionary<int, TrialAvatarCustomData> TrialAvatarCustomDataMap { get; private set; } = [];
+
+    // Weapon
+    public static Dictionary<int, WeaponPromoteDataExcel> WeaponPromoteData { get; private set; } = [];
+    public static Dictionary<int, WeaponLevelDataExcel> WeaponLevelData { get; private set; } = [];
+
+    // Avatar level
+    public static Dictionary<int, AvatarLevelDataExcel> AvatarLevelData { get; private set; } = [];
+    public static Dictionary<int, AvatarCurveDataExcel> AvatarCurveData { get; private set; } = [];
+    public static Dictionary<int, AvatarPromoteDataExcel> AvatarPromoteData { get; private set; } = [];
 
     public static Dictionary<string, ConfigLevelEntity> GetConfigLevelEntityDataMap() => ConfigLevelEntityDataMap;
 
@@ -61,7 +70,6 @@ public static class GameData
         return data;
     }
 
-    /// <summary>Reverse-lookup ability name from its hash value.</summary>
     public static string? GetAbilityNameByHash(uint hash)
     {
         foreach (var (name, _) in AbilityData)
@@ -72,17 +80,15 @@ public static class GameData
         return null;
     }
 
-    /// <summary>Reverse-lookup ability name from its hash value (int overload).</summary>
+
     public static string? GetAbilityNameByHash(int hash)
     {
         return GetAbilityNameByHash((uint)hash);
     }
 
-    public static Dictionary<int, TrialAvatarCustomData> GetTrialAvatarCustomData() => TrialAvatarCustomDataMap;
-
     public static Dictionary<int, TrialAvatarDataExcel> GetTrialAvatarDataMap() => TrialAvatarDataMap;
 
-    public static ScenePointEntry? GetScenePointEntryById(int sceneId, int pointId)
+    public static ConfigScenePointEntry? GetScenePointEntryById(int sceneId, int pointId)
     {
         ScenePointEntry.TryGetValue((sceneId << 16) + pointId, out var entry);
         return entry;

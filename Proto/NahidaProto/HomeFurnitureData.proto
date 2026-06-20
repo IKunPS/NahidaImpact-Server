@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "Vector.proto";
+
+message HomeFurnitureData {
+	Vector spawn_rot = 2;
+	Vector spawn_pos = 12;
+	int32 parent_furniture_index = 4;
+	uint32 version = 8;
+	uint32 guid = 6;
+	uint32 furniture_id = 7;
+}

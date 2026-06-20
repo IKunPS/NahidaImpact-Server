@@ -12,7 +12,7 @@ public class HandlerExitTransPointRegionNotify : Handler
     public override async Task OnHandle(Connection connection, byte[] header, byte[] data)
     {
         var player = connection.Player!;
-        player.SotSManager?.HandleExitTransPointRegionNotify();
+        player.StatueOfTheSevenManager?.HandleExitTransPointRegionNotify();
 
         await Task.CompletedTask;
     }

@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+// CmdID: 9399
+message GachaWishRsp {
+	uint32 gacha_schedule_id = 6;
+	uint32 wish_item_id = 7;
+	uint32 wish_progress = 5;
+	uint32 gacha_type = 3;
+	int32 retcode = 1;
+	uint32 wish_max_progress = 11;
+}

@@ -10,7 +10,7 @@ public class PacketAvatarDieAnimationEndRsp : BasePacket
         var proto = new AvatarDieAnimationEndRsp
         {
             DieGuid = dieGuid,
-            Retcode = (uint)retcode
+            Retcode = retcode
         };
 
         SetData(proto);

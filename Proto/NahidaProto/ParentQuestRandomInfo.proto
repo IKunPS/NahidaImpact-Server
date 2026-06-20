@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message ParentQuestRandomInfo {
+	repeated uint32 factor_list = 6;
+	uint32 template_id = 2;
+	uint32 entrance_id = 12;
+}

@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+// CmdID: 27994
+message EnterTrialAvatarActivityDungeonReq {
+	uint32 enter_point_id = 3;
+	uint32 trial_avatar_index_id = 2;
+	uint32 activity_id = 5;
+	uint32 enter_training_step = 14;
+}

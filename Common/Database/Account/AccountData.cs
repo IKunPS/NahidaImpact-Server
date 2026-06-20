@@ -1,4 +1,7 @@
-﻿using NahidaImpact.Enums.Player;
+﻿using System.Linq;
+using System.Security.Cryptography;
+using System.Text;
+using NahidaImpact.Enums.Player;
 using NahidaImpact.Util;
 using NahidaImpact.Util.Extensions;
 using NahidaImpact.Util.Security;
@@ -11,7 +14,6 @@ public class AccountData : BaseDatabaseDataHelper
 {
     public string Username { get; set; } = "";
     public string Password { get; set; } = "";
-    public BanTypeEnum BanType { get; set; }
 
     [SugarColumn(IsJson = true)] public List<PermEnum> Permissions { get; set; } = [];
 
@@ -21,13 +23,9 @@ public class AccountData : BaseDatabaseDataHelper
 
     public static AccountData? GetAccountByUserName(string username)
     {
-        AccountData? result = null;
-        DatabaseHelper.GetAllInstance<AccountData>()?.ForEach(account =>
-        {
-            if (string.Equals(account.Username, username, StringComparison.OrdinalIgnoreCase))
-                result = account;
-        });
-        return result;
+        var accounts = DatabaseHelper.GetAllInstance<AccountData>();
+        return accounts?.FirstOrDefault(
+            account => string.Equals(account.Username, username, StringComparison.OrdinalIgnoreCase));
     }
 
     public static AccountData? GetAccountByUid(int uid, bool force = false)
@@ -80,7 +78,11 @@ public class AccountData : BaseDatabaseDataHelper
     }
 
     public static bool VerifyPassword(AccountData account, string password)
-        => account.Password == Extensions.GetSha256Hash(password);
+    {
+        var hash = Extensions.GetSha256Hash(password ?? string.Empty);
+        return CryptographicOperations.FixedTimeEquals(
+            Encoding.UTF8.GetBytes(account.Password), Encoding.UTF8.GetBytes(hash));
+    }
 
 
     #endregion

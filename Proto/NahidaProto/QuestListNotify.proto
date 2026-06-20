@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "Quest.proto";
+
+// CmdID: 1100
+message QuestListNotify {
+	repeated Quest quest_list = 13;
+}

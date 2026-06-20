@@ -1,6 +1,9 @@
 syntax = "proto3";
 
+// Nahida
+// Proto
+
 message GadgetCrucibleInfo {
-	uint32 prepare_end_time = 2;
 	uint32 mp_play_id = 1;
+	uint32 prepare_end_time = 2;
 }

@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+// CmdID: 22633
+message TryEnterHomeRsp {
+	repeated uint32 param_list = 15;
+	uint32 target_uid = 9;
+	int32 retcode = 5;
+}

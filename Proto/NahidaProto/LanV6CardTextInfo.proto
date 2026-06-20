@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "LanV6CardText.proto";
+
+message LanV6CardTextInfo {
+	repeated LanV6CardText card_text = 1;
+}

@@ -1,7 +1,10 @@
 syntax = "proto3";
 
-// CmdID: 2028
+// Nahida
+// Proto
+
+// CmdID: 26416
 message PlayerChatRsp {
-  int32 retcode = 7;
-  uint32 chat_forbidden_endtime = 5;
+	int32 retcode = 15;
+	uint32 chat_forbidden_endtime = 9;
 }

@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message LanternRiteV6DanmakuLevelInfo {
+	uint32 DMPEFHILCOK = 15;
+	uint32 round_num = 1;
+	bool is_succ = 10;
+	uint32 FPKMMPFAIEM = 11;
+	uint32 CJKMIKNPCMN = 7;
+	uint32 NGHNPCBGPKH = 3;
+	uint32 level_id = 9;
+	uint32 HMGDMAGMLBC = 5;
+}

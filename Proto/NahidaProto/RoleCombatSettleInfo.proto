@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message RoleCombatSettleInfo {
+	// [obf] LDPBJNCGCGP INOMKLNPMOH = 11;
+	repeated uint64 DACCMBAJFLJ = 12;
+	repeated uint32 KFPPOFDOJML = 9;
+	repeated uint64 avatar_guid_list = 8;
+	// [obf] repeated KKHFOHIABNL NHNKBMILPNG = 3;
+	uint32 difficulty_id = 13;
+	uint32 MCAHGNOIEDK = 4;
+	uint32 use_time = 15;
+	bool BAIMNFAOABG = 5;
+	bool ABCCGKNBGJB = 14;
+	uint32 coin_num = 2;
+	// [obf] KNMFFMELKOK AMLCFJOLGDE = 6;
+}

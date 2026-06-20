@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message FungusFighterMonsterDetail {
+	bool is_alive = 2;
+	uint32 fungus_id = 12;
+	float cur_hp_percentage = 14;
+}

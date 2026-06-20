@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "TowerLevelStarCondData.proto";
+
+// CmdID: 21928
+message TowerLevelStarCondNotify {
+	repeated TowerLevelStarCondData cond_data_list = 5;
+	uint32 level_index = 13;
+	uint32 floor_id = 7;
+}

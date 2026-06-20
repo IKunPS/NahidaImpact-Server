@@ -1,8 +1,11 @@
 syntax = "proto3";
 
+// Nahida
+// Proto
+
 import "AnimatorParameterValueInfo.proto";
 
 message AnimatorParameterValueInfoPair {
-	int32 name_id = 1;
 	AnimatorParameterValueInfo animator_para = 2;
+	int32 name_id = 1;
 }

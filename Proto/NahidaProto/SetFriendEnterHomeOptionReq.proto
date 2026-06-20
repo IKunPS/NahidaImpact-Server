@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "FriendEnterHomeOption.proto";
+
+// CmdID: 20462
+message SetFriendEnterHomeOptionReq {
+	FriendEnterHomeOption option = 8;
+}

@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "EffigyDailyInfo.proto";
+
+message EffigyActivityDetailInfo {
+	repeated EffigyDailyInfo daily_info_list = 9;
+	repeated uint32 taken_reward_index_list = 13;
+	uint32 last_difficulty_id = 6;
+	uint32 cur_score = 7;
+}

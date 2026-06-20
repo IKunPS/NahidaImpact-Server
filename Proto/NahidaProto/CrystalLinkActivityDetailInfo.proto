@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "CrystalLinkLevelInfo.proto";
+
+message CrystalLinkActivityDetailInfo {
+	repeated CrystalLinkLevelInfo level_info_list = 10;
+	uint32 difficulty_id = 5;
+}

@@ -2,10 +2,14 @@ using NahidaImpact.Util;
 using NahidaImpact.Data;
 using NahidaImpact.GameServer.Game.Entity;
 using NahidaImpact.GameServer.Game.Player;
+using NahidaImpact.Internationalization;
 using System.Collections.Concurrent;
 using NahidaImpact.Enums.Entity;
+using NahidaImpact.Enums.Player;
+using NahidaImpact.Enums.Scene;
 using NahidaImpact.KcpSharp;
 using NahidaImpact.GameServer.Server.Packet.Send.Player;
+using NahidaImpact.GameServer.Server.Packet.Send.Scene;
 
 namespace NahidaImpact.GameServer.Game.Worlds;
 
@@ -72,8 +76,6 @@ public class World
         
         player.PeerId = GetNextPeerId();
         
-        player.TeamManager?.SetEntity(new EntityTeam(player));
-        
         if (_isMultiplayer)
         {
             var teamManager = player.TeamManager;
@@ -106,6 +108,11 @@ public class World
             scene.AddPlayer(player);
         }
         
+        if (player.Scene != null)
+        {
+            player.TeamManager?.SetEntity(new EntityTeam(player.Scene));
+        }
+        
         if (_players.Count > 1)
         {
             UpdatePlayerInfos(player);
@@ -128,7 +135,7 @@ public class World
             // player.GetSession().Send(new PacketSyncScenePlayTeamEntityNotify(player));
             
             // For now, we just log the update
-            Logger.Info($"UpdatePlayerInfos: Notifying player {player.Uid} about new player {newPlayer.Uid}");
+            Logger.Info(I18NManager.Translate("Game.WorldInfo.NotifyPlayerInfo", player.Uid.ToString(), newPlayer.Uid.ToString()));
         }
     }
     
@@ -216,27 +223,128 @@ public class World
 
     public uint GetNextPeerId() => ++_nextPeerId;
     
-    public bool TransferPlayerToScene(PlayerInstance player, int targetSceneId, Position targetPos)
+    // Simple teleport to a scene/position.
+    public bool TransferPlayerToScene(PlayerInstance player, int sceneId, Position pos)
+    {
+        return TransferPlayerToScene(player, sceneId, TeleportType.Internal, pos);
+    }
+
+    // Teleport with an explicit type (WAYPOINT, COMMAND, etc.).
+    public bool TransferPlayerToScene(PlayerInstance player, int sceneId, TeleportType teleportType, Position pos)
+    {
+        var enterReason = teleportType switch
+        {
+            TeleportType.Internal => EnterReason.TransPoint,
+            TeleportType.Waypoint => EnterReason.TransPoint,
+            TeleportType.Map => EnterReason.TransPoint,
+            TeleportType.Command => EnterReason.Gm,
+            TeleportType.Script => EnterReason.Lua,
+            TeleportType.Client => EnterReason.ClientTransmit,
+            TeleportType.Dungeon => EnterReason.DungeonEnter,
+            _ => EnterReason.None
+        };
+        return TransferPlayerToScene(player, sceneId, teleportType, enterReason, pos);
+    }
+
+    // Teleport with explicit teleport type and enter reason.
+    public bool TransferPlayerToScene(PlayerInstance player, int sceneId, TeleportType teleportType,
+        EnterReason enterReason, Position teleportTo)
+    {
+        var props = new TeleportProperties
+        {
+            SceneId = sceneId,
+            TeleportType = teleportType,
+            EnterReason = enterReason,
+            TeleportTo = teleportTo,
+            EnterType = EnterType.Jump
+        };
+
+        // Resolve EnterType: GOTO for same scene, DUNGEON handled separately, HOME via scene type.
+        if (player.SceneId == sceneId)
+        {
+            props.EnterType = EnterType.Goto;
+        }
+        else if (GameData.SceneData.TryGetValue(sceneId, out var sceneData)
+                 && sceneData.SceneType == SceneTypeEnum.SceneHomeWorld)
+        {
+            props.EnterType = EnterType.SelfHome;
+            props.EnterReason = EnterReason.EnterHome;
+        }
+
+        return TransferPlayerToScene(player, props);
+    }
+
+    // Core teleport engine with full TeleportProperties.
+    public bool TransferPlayerToScene(PlayerInstance player, TeleportProperties props)
     {
         if (player == null)
             return false;
 
+        // Validate destination scene exists in game data.
+        if (!GameData.SceneData.ContainsKey(props.SceneId))
+        {
+            Logger.Warn($"Teleport to unknown scene {props.SceneId}");
+            return false;
+        }
+
+        // Default target position to current position if not specified.
+        props.TeleportTo ??= player.Position.Clone();
+
+        // Save previous scene/position BEFORE the transition for the enter-scene packet.
         var oldScene = player.Scene;
-        var newScene = GetSceneById(targetSceneId);
+        int prevSceneId = (int)player.SceneId;
+        var prevPos = player.Position.Clone();
+
+        var newScene = GetSceneById(props.SceneId);
         if (newScene == null)
             return false;
 
-        // Remove from old scene
-        oldScene?.RemovePlayer(player);
+        // Same-scene fast path: just move the player, no full scene transition.
+        if (newScene == oldScene && props.TeleportType == TeleportType.Command)
+        {
+            if (props.TeleportTo != null)
+                player.Position.Set(props.TeleportTo);
+            if (props.TeleportRot != null)
+                player.Rotation.Set(props.TeleportRot);
+            player.SendPacket(new PacketSceneEntityAppearNotify(player));
+            return true;
+        }
 
-        // Update player position and scene
-        player.Position.Set(targetPos);
-        player.SceneId = (uint)targetSceneId;
-        player.PrevScene = oldScene?.Id ?? 3;
-        player.SetPrevPos(targetPos.Clone());
+        // Remove from old scene (preserve scene if teleporting back into it).
+        if (oldScene != null)
+        {
+            if (oldScene == newScene)
+                oldScene.SetDontDestroyWhenEmpty(true);
+            oldScene.RemovePlayer(player);
+        }
 
-        // Add to new scene
-        newScene.AddPlayer(player);
+        // Add to new scene.
+        if (newScene != null)
+        {
+            newScene.AddPlayer(player);
+
+            // Resolve fallback position from scene config if not provided.
+            // TODO: Use scene script config born_pos/born_rot when available.
+        }
+
+        // Update player position and rotation.
+        if (props.TeleportTo != null)
+            player.Position.Set(props.TeleportTo);
+        if (props.TeleportRot != null)
+            player.Rotation.Set(props.TeleportRot);
+
+        // Track previous scene for cross-scene transitions.
+        if (oldScene != null && newScene != null && newScene != oldScene)
+        {
+            newScene.SetPrevScenePoint(oldScene.GetPrevScenePoint());
+            oldScene.SetDontDestroyWhenEmpty(false);
+        }
+
+        player.PrevScene = prevSceneId;
+        player.SetPrevPos(prevPos);
+
+        // Send enter-scene notify with saved previous scene/position.
+        player.SendPacket(new PacketPlayerEnterSceneNotify(player, props, prevSceneId, prevPos));
 
         return true;
     }

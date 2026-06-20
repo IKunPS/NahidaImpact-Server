@@ -1,7 +1,10 @@
-﻿syntax = "proto3";
+syntax = "proto3";
+
+// Nahida
+// Proto
 
 import "AbilityAppliedAbility.proto";
 
 message AbilityMetaAddAbility {
-  AbilityAppliedAbility ability = 11;
+	AbilityAppliedAbility ability = 8;
 }

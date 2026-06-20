@@ -1,8 +1,11 @@
 syntax = "proto3";
 
+// Nahida
+// Proto
+
 import "MapAreaInfo.proto";
 
-// CmdID: 3148
+// CmdID: 4729
 message MapAreaChangeNotify {
-  repeated MapAreaInfo map_area_info_list = 10;
+	repeated MapAreaInfo map_area_info_list = 1;
 }

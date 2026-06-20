@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+// CmdID: 27187
+message CancelCoopTaskReq {
+	uint32 chapter_id = 11;
+}

@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message FairyTalesDetailInfo {
+	repeated uint32 HGNOPAJDKAH = 12;
+	// [obf] JJODILKDBCP OHIJFNILNPH = 4;
+	// [obf] repeated DAIFFPJAPPC FBNLODFFNJM = 14;
+	// [obf] repeated LLLNLAPNMME JIIEHDCDPBE = 1;
+	// [obf] repeated DONLFGGKNMM JKHOFPBNOMA = 15;
+	bool DHMPBMEJODN = 2;
+}

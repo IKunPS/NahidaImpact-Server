@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "Shop.proto";
+
+// CmdID: 7982
+message GetShopRsp {
+	Shop shop = 15;
+	int32 retcode = 13;
+}

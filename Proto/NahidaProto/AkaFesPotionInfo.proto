@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "AkaFesPotionLevelInfo.proto";
+
+message AkaFesPotionInfo {
+	repeated AkaFesPotionLevelInfo level_info_list = 8;
+}

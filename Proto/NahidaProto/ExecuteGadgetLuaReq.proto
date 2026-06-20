@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+// CmdID: 7605
+message ExecuteGadgetLuaReq {
+	uint32 source_entity_id = 15;
+	int32 param2 = 5;
+	int32 param1 = 2;
+	int32 param3 = 10;
+}

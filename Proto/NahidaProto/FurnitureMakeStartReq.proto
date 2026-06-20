@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+// CmdID: 9099
+message FurnitureMakeStartReq {
+	uint32 avatar_id = 5;
+	uint32 make_id = 1;
+}

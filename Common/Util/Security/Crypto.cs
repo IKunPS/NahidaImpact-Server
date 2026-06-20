@@ -2,7 +2,7 @@
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
-using NahidaImpact.Data.Models.Sdk;
+using NahidaImpact.Models.Sdk;
 
 namespace NahidaImpact.Util.Security;
 

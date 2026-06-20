@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message BuoyantCombatDailyInfo {
+	uint32 best_score = 5;
+	uint32 start_time = 3;
+}

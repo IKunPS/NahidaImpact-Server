@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+// CmdID: 5797
+message McoinExchangeHcoinReq {
+	uint32 mcoin_cost = 5;
+	uint32 hcoin = 10;
+}

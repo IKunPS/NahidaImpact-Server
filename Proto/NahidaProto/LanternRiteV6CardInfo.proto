@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "LanV6CardDetail.proto";
+import "LanV6LanternGiftDetail.proto";
+
+message LanternRiteV6CardInfo {
+	repeated LanV6LanternGiftDetail card_gift_list = 12;
+	repeated LanV6CardDetail card_template_list = 2;
+	uint32 claimed_gift_num = 3;
+}

@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+enum WidgetSlotTag {
+	WidgetSlotTag_WIDGET_SLOT_QUICK_USE = 0;
+	WidgetSlotTag_WIDGET_SLOT_ATTACH_AVATAR = 1;
+}

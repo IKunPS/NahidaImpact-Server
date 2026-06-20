@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "HomeSceneArrangementInfo.proto";
+
+// CmdID: 26770
+message HomeUpdateArrangementInfoReq {
+	HomeSceneArrangementInfo scene_arrangement_info = 7;
+}

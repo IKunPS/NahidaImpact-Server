@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+// CmdID: 22056
+message PlayerCookArgsRsp {
+	int32 retcode = 4;
+	float qte_range_ratio = 1;
+}

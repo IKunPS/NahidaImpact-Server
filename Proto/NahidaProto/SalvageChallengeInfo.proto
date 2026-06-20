@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "SalvageBundleChallengeInfo.proto";
+import "SalvageScoreChallengeInfo.proto";
+
+message SalvageChallengeInfo {
+	bool is_unlock = 8;
+	uint32 challenge_type = 6;
+	oneof challenge_detail {
+		SalvageBundleChallengeInfo bundle_info = 1;
+		uint32 boss_challenge_id = 5;
+		SalvageScoreChallengeInfo score_challenge_info = 2;
+	}
+}

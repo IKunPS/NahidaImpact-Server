@@ -8,7 +8,8 @@ public class HandlerPostEnterSceneReq : Handler
 {
     public override async Task OnHandle(Connection connection, byte[] header, byte[] data)
     {
-        await connection.SendPacket(new PacketPostEnterSceneRsp(connection.Player!));
+        if (connection.Player == null) return;
+        await connection.SendPacket(new PacketPostEnterSceneRsp(connection.Player));
     }
 
 }

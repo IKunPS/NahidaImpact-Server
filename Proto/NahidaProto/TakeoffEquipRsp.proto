@@ -1,8 +1,11 @@
 syntax = "proto3";
 
-// CmdID: 28745
+// Nahida
+// Proto
+
+// CmdID: 24019
 message TakeoffEquipRsp {
-  uint64 avatar_guid = 8;
-  uint32 slot = 14;
-  int32 retcode = 2;
+	int32 retcode = 4;
+	uint32 slot = 11;
+	uint64 avatar_guid = 1;
 }

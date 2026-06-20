@@ -1,9 +1,12 @@
-﻿syntax = "proto3";
+syntax = "proto3";
+
+// Nahida
+// Proto
 
 import "AbilityControlBlock.proto";
 
-// CmdID: 3318
+// CmdID: 20280
 message AbilityChangeNotify {
-  AbilityControlBlock ability_control_block = 12;
-  uint32 entity_id = 4;
+	AbilityControlBlock ability_control_block = 1;
+	uint32 entity_id = 11;
 }

@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message SceneGalleryBrokenFloorInfo {
+	map<uint32, uint32> fall_count_map = 4;
+	uint32 end_time = 3;
+}

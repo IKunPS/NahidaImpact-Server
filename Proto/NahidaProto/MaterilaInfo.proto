@@ -1,6 +1,0 @@
-syntax = "proto3";
-
-message MaterilaInfo {
-  uint64 guid = 7;
-  uint32 count = 15;
-}

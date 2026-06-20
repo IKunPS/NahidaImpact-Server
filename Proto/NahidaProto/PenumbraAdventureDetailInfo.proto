@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message PenumbraAdventureDetailInfo {
+	// [obf] GFABIDDDJCF PMNCJJCJICE = 6;
+	// [obf] EAJDMLGLPHJ BGJCBODLMPM = 7;
+	// [obf] LENMHFAOGIL OKMMOFEHLJJ = 1;
+	// [obf] EPDGGHGDGAP CPCNAJAENHI = 12;
+	// [obf] MLNFIPLILGL AFGMMGMOKDM = 13;
+}

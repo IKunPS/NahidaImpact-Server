@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "DungeonEnterPosInfo.proto";
+
+// CmdID: 26013
+message PlayerEnterDungeonReq {
+	DungeonEnterPosInfo enter_pos_info = 11;
+	uint32 dungeon_id = 8;
+	bool is_continue = 14;
+	uint32 DIBLAJPAHCK = 15;
+	uint32 point_id = 7;
+}

@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+// CmdID: 22945
+message PlayerPreEnterMpNotify {
+	enum State {
+		State_INVALID = 0;
+		State_START = 1;
+		State_TIMEOUT = 2;
+	}
+	string nickname = 15;
+	State state = 11;
+	uint32 uid = 7;
+}

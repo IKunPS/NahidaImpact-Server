@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+// CmdID: 22258
+message TowerEnterLevelRsp {
+	repeated uint32 tower_buff_id_list = 7;
+	uint32 level_index = 4;
+	uint32 floor_id = 1;
+	int32 retcode = 14;
+}

@@ -1,11 +1,14 @@
 syntax = "proto3";
 
+// Nahida
+// Proto
+
 import "Item.proto";
 import "StoreType.proto";
 
-// CmdID: 24081
+// CmdID: 24051
 message PlayerStoreNotify {
-  repeated Item item_list = 11;
-  uint32 weight_limit = 4;
-  StoreType store_type = 15;
+	repeated Item item_list = 2;
+	StoreType store_type = 12;
+	uint32 weight_limit = 1;
 }

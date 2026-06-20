@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+// CmdID: 21597
+message UnlockNameCardNotify {
+	uint32 name_card_id = 14;
+}

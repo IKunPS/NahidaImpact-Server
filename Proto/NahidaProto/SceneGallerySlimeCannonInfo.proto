@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message SceneGallerySlimeCannonInfo {
+	uint64 BDNHILNJJPJ = 9;
+	uint32 JGJLFGBNJNI = 12;
+	uint32 kill_num = 3;
+	uint32 OCAPGOENCNA = 10;
+	uint32 score = 11;
+}

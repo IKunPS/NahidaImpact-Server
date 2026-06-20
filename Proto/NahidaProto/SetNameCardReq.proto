@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+// CmdID: 22222
+message SetNameCardReq {
+	uint32 name_card_id = 4;
+}

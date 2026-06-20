@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message NatlanArenaSettleInfo {
+	uint32 JKOGBINKGDH = 6;
+	uint32 NDOAAOGFPAA = 14;
+	uint32 IEIHADFONOM = 13;
+	bool is_new_record = 5;
+	bool CNHFPHOHHGI = 3;
+	bool FGGLCPPGPIE = 4;
+	uint32 cost_time = 10;
+	uint32 level_id = 2;
+	uint32 difficulty = 11;
+	uint32 JGCCHPKNCFN = 9;
+}

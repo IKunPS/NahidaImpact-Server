@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+// CmdID: 23398
+message TakeCompoundOutputReq {
+	uint32 compound_id = 13;
+	bool is_claim_all = 12;
+	uint32 compound_group_id = 15;
+}

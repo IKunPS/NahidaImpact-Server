@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "WidgetSlotData.proto";
+
+// CmdID: 5861
+message GetWidgetSlotRsp {
+	repeated WidgetSlotData slot_list = 14;
+	int32 retcode = 9;
+}

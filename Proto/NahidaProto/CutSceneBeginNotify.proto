@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "CutSceneExtraParam.proto";
+
+// CmdID: 27647
+message CutSceneBeginNotify {
+	repeated CutSceneExtraParam extra_param_list = 14;
+	uint32 cutscene_id = 6;
+	bool is_wait_others = 8;
+}

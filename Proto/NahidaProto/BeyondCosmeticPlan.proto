@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "BeyondCosmeticSet.proto";
+
+message BeyondCosmeticPlan {
+	uint32 IDEJJBEHIJC = 1;
+	BeyondCosmeticSet costume_set = 2;
+	BeyondCosmeticSet makeup_set = 3;
+}

@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message PoetryFestivalDetailInfo {
+	// [obf] CCGOCDFENCP PFGBGENJJGE = 1;
+	// [obf] MMJALNKAABI CCNMGHEDCCB = 7;
+	// [obf] MEPGPPDPNFH JHBGMFNGGFO = 15;
+}

@@ -1,8 +1,11 @@
 syntax = "proto3";
 
-// CmdID: 3041
+// Nahida
+// Proto
+
+// CmdID: 6051
 message WeaponAwakenReq {
-  uint64 target_weapon_guid = 10;
-  repeated uint64 item_guid_list = 11;
-  uint32 awaken_material_count = 15;
+	repeated uint64 item_guid_list = 13;
+	uint32 awaken_material_count = 9;
+	uint64 target_weapon_guid = 6;
 }

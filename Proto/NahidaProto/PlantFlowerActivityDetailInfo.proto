@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message PlantFlowerActivityDetailInfo {
+	map<uint32, uint32> OGFHFPAJHJL = 4;
+	map<uint32, uint32> POEEAHEJFII = 7;
+	uint32 today_seed_reward_id = 13;
+	bool is_content_closed = 14;
+	bool is_today_has_awarded = 6;
+	uint32 day_index = 9;
+}

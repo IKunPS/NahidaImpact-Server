@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "HomeModuleComfortInfo.proto";
+
+// CmdID: 24351
+message HomeComfortInfoNotify {
+	repeated HomeModuleComfortInfo module_info_list = 7;
+}

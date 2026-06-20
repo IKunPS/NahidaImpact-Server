@@ -1,5 +1,8 @@
 syntax = "proto3";
 
+// Nahida
+// Proto
+
 message FilmfestBallGameSyncCreateConnect {
 	repeated uint32 uid_list = 1;
 }

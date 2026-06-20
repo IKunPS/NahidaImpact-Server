@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+enum GalleryStartSource {
+	GalleryStartSource_GALLERY_START_BY_NONE = 0;
+	GalleryStartSource_GALLERY_START_BY_MATCH = 1;
+	GalleryStartSource_GALLERY_START_BY_DRAFT = 2;
+}

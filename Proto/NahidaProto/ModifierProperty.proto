@@ -1,8 +1,11 @@
-﻿syntax = "proto3";
+syntax = "proto3";
+
+// Nahida
+// Proto
 
 import "AbilityString.proto";
 
 message ModifierProperty {
-  AbilityString key = 11;
-  float value = 1;
+	AbilityString key = 14;
+	float value = 3;
 }

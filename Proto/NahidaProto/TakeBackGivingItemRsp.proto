@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+// CmdID: 3757
+message TakeBackGivingItemRsp {
+	uint32 giving_id = 6;
+	int32 retcode = 3;
+}

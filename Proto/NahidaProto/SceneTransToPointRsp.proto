@@ -1,8 +1,11 @@
 syntax = "proto3";
 
-// CmdID: 6535
+// Nahida
+// Proto
+
+// CmdID: 29357
 message SceneTransToPointRsp {
-  int32 retcode = 1;
-  uint32 scene_id = 2;
-  uint32 point_id = 3;
+	int32 retcode = 6;
+	uint32 point_id = 3;
+	uint32 scene_id = 11;
 }

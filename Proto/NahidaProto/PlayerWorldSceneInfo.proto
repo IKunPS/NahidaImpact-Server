@@ -1,10 +1,15 @@
 syntax = "proto3";
 
+// Nahida
+// Proto
+
+import "LimitedRegionInfo.proto";
 import "MapLayerInfo.proto";
 
 message PlayerWorldSceneInfo {
-  MapLayerInfo map_layer_info = 6;
-  repeated uint32 scene_tag_id_list = 11;
-  bool is_locked = 5;
-  uint32 scene_id = 7;
+	repeated uint32 scene_tag_id_list = 8;
+	MapLayerInfo map_layer_info = 13;
+	LimitedRegionInfo limited_region_info = 15;
+	uint32 scene_id = 11;
+	bool is_locked = 3;
 }

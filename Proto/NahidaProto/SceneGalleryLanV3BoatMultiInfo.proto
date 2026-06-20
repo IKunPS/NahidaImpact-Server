@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "LanV3BoatMultiPlayerData.proto";
+
+message SceneGalleryLanV3BoatMultiInfo {
+	repeated LanV3BoatMultiPlayerData player_data = 4;
+}

@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message IslandPartyStageData {
+	bool is_open = 6;
+	uint32 best_score = 9;
+	uint32 stage_id = 15;
+}

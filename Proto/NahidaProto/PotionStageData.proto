@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "PotionLevelData.proto";
+
+message PotionStageData {
+	repeated uint32 IOCLEHKIKKB = 13;
+	repeated uint32 EOJPOJBGAEL = 6;
+	repeated PotionLevelData level_list = 9;
+	bool is_open = 1;
+	uint32 stage_id = 15;
+}

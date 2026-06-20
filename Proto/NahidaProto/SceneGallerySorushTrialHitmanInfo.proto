@@ -1,0 +1,8 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message SceneGallerySorushTrialHitmanInfo {
+	uint64 trans_no = 3;
+}

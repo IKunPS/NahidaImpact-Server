@@ -1,6 +1,9 @@
 syntax = "proto3";
 
-// CmdID: 23726
+// Nahida
+// Proto
+
+// CmdID: 25300
 message UnlockTransPointRsp {
-  int32 retcode = 1;
+	int32 retcode = 7;
 }

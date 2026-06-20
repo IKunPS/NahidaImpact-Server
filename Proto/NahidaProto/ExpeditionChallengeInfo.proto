@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message ExpeditionChallengeInfo {
+	bool is_finished = 5;
+	uint32 open_time = 14;
+	uint32 id = 11;
+}

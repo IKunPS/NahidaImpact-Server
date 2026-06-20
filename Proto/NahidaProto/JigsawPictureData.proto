@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message JigsawPictureData {
+	bool is_open = 11;
+	bool is_finished = 4;
+	uint32 shortest_time = 2;
+	uint32 last_duration = 14;
+}

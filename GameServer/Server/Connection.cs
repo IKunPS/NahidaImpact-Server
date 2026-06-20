@@ -1,5 +1,6 @@
 ﻿using NahidaImpact.GameServer.Game.Player;
 using NahidaImpact.GameServer.Server.Packet;
+using NahidaImpact.Internationalization;
 using NahidaImpact.KcpSharp;
 using NahidaImpact.KcpSharp.Base;
 using NahidaImpact.Util;
@@ -27,7 +28,7 @@ public class Connection(KcpConversation conversation, IPEndPoint remote) : KcpCo
 
     public override async void Start()
     {
-        Logger.Info($"New connection from {RemoteEndPoint}.");
+        Logger.Info(I18NManager.Translate("Server.ConnectionInfo.NewConnection", RemoteEndPoint.ToString()));
         State = SessionStateEnum.WAITING_FOR_TOKEN;
         await ReceiveLoop();
     }
@@ -48,14 +49,14 @@ public class Connection(KcpConversation conversation, IPEndPoint remote) : KcpCo
             var result = await Conversation.WaitToReceiveAsync(CancelToken.Token);
             if (result.TransportClosed)
             {
-                Logger.Debug("Connection was closed");
+                Logger.Debug(I18NManager.Translate("Server.ConnectionInfo.ConnectionClosed"));
                 break;
             }
             
             if (result.BytesReceived > KcpListener.MAX_MSG_SIZE)
             {
                 // The message is too large.
-                Logger.Error("Packet too large");
+                Logger.Error(I18NManager.Translate("Server.ConnectionInfo.PacketTooLarge"));
                 Conversation.SetTransportClosed();
                 break;
             }
@@ -67,7 +68,7 @@ public class Connection(KcpConversation conversation, IPEndPoint remote) : KcpCo
                 // So we don't need to check for result.TransportClosed.
                 if (!Conversation.TryReceive(buffer, out result))
                 {
-                    Logger.Error("Failed to receive packet");
+                    Logger.Error(I18NManager.Translate("Server.ConnectionInfo.FailedToReceive"));
                     break;
                 }
                 
@@ -75,7 +76,7 @@ public class Connection(KcpConversation conversation, IPEndPoint remote) : KcpCo
             }
             catch (Exception ex)
             {
-                Logger.Error("Packet parse error", ex);
+                Logger.Error(I18NManager.Translate("Server.ConnectionInfo.ParseError"), ex);
             }
             finally
             {
@@ -107,22 +108,22 @@ public class Connection(KcpConversation conversation, IPEndPoint remote) : KcpCo
                 var headMagic = br.ReadUInt16BE();
                 if (headMagic != 0x4567)
                 {
-                    Logger.Error($"Bad Data Package Received: got 0x{headMagic:X}, expect 0x4567");
-                    return; // Bad packet
+                    Logger.Error(I18NManager.Translate("Server.ConnectionInfo.BadDataPackage", headMagic.ToString("X")));
+                    return;
                 }
-                
+
                 var CmdId = br.ReadUInt16BE();
                 var HeaderLength = br.ReadUInt16BE();
                 var BodyLength = br.ReadUInt32BE();
-    
+
                 // Data
                 var header = br.ReadBytes(HeaderLength);
                 var Body = br.ReadBytes((int)BodyLength);
-                
+
                 var tail = br.ReadUInt16BE();
                 if (tail != 0x89AB)
                 {
-                    Logger.Error($"Invalid packet footer received: got 0x{tail:X}, expected 0x89AB");
+                    Logger.Error(I18NManager.Translate("Server.ConnectionInfo.InvalidFooter", tail.ToString("X")));
                     return;
                 }
                 
@@ -142,7 +143,7 @@ public class Connection(KcpConversation conversation, IPEndPoint remote) : KcpCo
         if (DummyPacketNames.Contains(packetName!))
         {
             await SendDummy(packetName!);
-            Logger.Info($"[Dummy] Send Dummy {packetName}");
+            Logger.Info(I18NManager.Translate("Server.ConnectionInfo.DummySend", packetName));
             return;
         }
 
@@ -195,7 +196,8 @@ public class Connection(KcpConversation conversation, IPEndPoint remote) : KcpCo
 
         if (ConfigManager.Config.ServerOption.EnableDebug &&
                  ConfigManager.Config.ServerOption.DebugNoHandlerPacket)
-            Logger.Error($"No handler found for {packetName}({opcode})");
+            Logger.Error(I18NManager.Translate("Server.ConnectionInfo.NoHandlerFound",
+                packetName ?? "opcode", opcode.ToString("X")));
     }
 
     private async Task SendDummy(string packetName)

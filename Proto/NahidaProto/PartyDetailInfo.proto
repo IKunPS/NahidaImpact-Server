@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message PartyDetailInfo {
+	bool HBODNPOOFGO = 9;
+	bool NHHAHIOCDNJ = 2;
+}

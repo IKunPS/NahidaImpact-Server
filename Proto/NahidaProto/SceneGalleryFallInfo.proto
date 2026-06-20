@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "FallPlayerInfo.proto";
+
+message SceneGalleryFallInfo {
+	map<uint32, FallPlayerInfo> scene_player_fall_info_map = 6;
+	uint32 end_time = 15;
+}

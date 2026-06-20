@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "PlayerDieOption.proto";
+
+// CmdID: 7181
+message DungeonDieOptionReq {
+	bool is_quit_immediately = 6;
+	PlayerDieOption die_option = 5;
+}

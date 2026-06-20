@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+// CmdID: 24041
+message QuestDestroyEntityRsp {
+	uint32 entity_id = 2;
+	uint32 quest_id = 11;
+	int32 retcode = 9;
+	uint32 scene_id = 15;
+}

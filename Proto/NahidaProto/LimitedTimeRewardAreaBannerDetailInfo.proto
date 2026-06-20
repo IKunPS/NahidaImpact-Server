@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "Uint32Pair.proto";
+
+message LimitedTimeRewardAreaBannerDetailInfo {
+	repeated Uint32Pair IKPKOLNNECJ = 1;
+}

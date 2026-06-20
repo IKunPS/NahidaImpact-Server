@@ -1,10 +1,18 @@
 syntax = "proto3";
 
+// Nahida
+// Proto
+
 import "Item.proto";
 import "StoreType.proto";
 
-// CmdID: 27681
+// CmdID: 20559
 message StoreItemChangeNotify {
-  repeated Item item_list = 7;
-  StoreType store_type = 15;
+	enum ChangeReason {
+		EDDLAKBBKHG_OTHERS = 0;
+		EDDLAKBBKHG_LOCK_OR_STAR = 1;
+	}
+	repeated Item item_list = 4;
+	StoreType store_type = 2;
+	ChangeReason reason = 11;
 }

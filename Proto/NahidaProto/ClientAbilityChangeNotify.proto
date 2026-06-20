@@ -1,10 +1,13 @@
-﻿syntax = "proto3";
+syntax = "proto3";
+
+// Nahida
+// Proto
 
 import "AbilityInvokeEntry.proto";
 
-// CmdID: 43
+// CmdID: 7772
 message ClientAbilityChangeNotify {
-  repeated AbilityInvokeEntry invokes = 1;
-  uint32 entity_id = 9;
-  bool is_init_hash = 4;
+	repeated AbilityInvokeEntry invokes = 9;
+	uint32 entity_id = 14;
+	bool is_init_hash = 12;
 }

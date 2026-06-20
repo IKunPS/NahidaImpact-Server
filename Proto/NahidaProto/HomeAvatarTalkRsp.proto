@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "HomeAvatarTalkFinishInfo.proto";
+
+// CmdID: 8598
+message HomeAvatarTalkRsp {
+	HomeAvatarTalkFinishInfo avatar_talk_info = 10;
+	int32 retcode = 7;
+}

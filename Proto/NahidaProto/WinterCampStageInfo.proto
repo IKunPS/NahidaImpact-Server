@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "Vector.proto";
+
+message WinterCampStageInfo {
+	Vector pos = 13;
+	uint32 id = 11;
+	uint32 cur_progress = 2;
+	bool is_finished = 1;
+	uint32 open_time = 14;
+	uint32 total_progress = 7;
+}

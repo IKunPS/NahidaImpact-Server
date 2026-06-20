@@ -1,8 +1,11 @@
-﻿syntax = "proto3";
+syntax = "proto3";
 
-// CmdID: 1415
+// Nahida
+// Proto
+
+// CmdID: 24341
 message SceneTimeNotify {
-  bool is_paused = 13;
-  uint32 scene_id = 3;
-  uint64 scene_time = 10;
+	uint64 scene_time = 6;
+	bool is_paused = 9;
+	uint32 scene_id = 1;
 }

@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "HomeBlockSubFieldData.proto";
+import "Vector.proto";
+
+message HomeBlockFieldData {
+	Vector pos = 7;
+	repeated HomeBlockSubFieldData sub_field_list = 2;
+	Vector rot = 6;
+	uint32 furniture_id = 3;
+	uint32 guid = 13;
+}

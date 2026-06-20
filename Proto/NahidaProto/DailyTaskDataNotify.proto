@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "Uint32Pair.proto";
+
+// CmdID: 28810
+message DailyTaskDataNotify {
+	repeated Uint32Pair finished_uid_daily_task_list = 1;
+	uint32 finished_num = 10;
+	uint32 score_reward_id = 3;
+	bool is_taken_score_reward = 7;
+}

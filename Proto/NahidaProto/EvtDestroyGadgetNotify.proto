@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "ForwardType.proto";
+
+// CmdID: 9071
+message EvtDestroyGadgetNotify {
+	uint32 entity_id = 10;
+	ForwardType forward_type = 4;
+}

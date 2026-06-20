@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "PlayerDieType.proto";
+
+// CmdID: 21569
+message DungeonPlayerDieReq {
+	PlayerDieType die_type = 11;
+	uint32 dungeon_id = 10;
+}

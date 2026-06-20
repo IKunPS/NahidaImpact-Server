@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message ChildQuest {
+	uint32 quest_id = 9;
+	uint32 quest_config_id = 3;
+	uint32 state = 5;
+}

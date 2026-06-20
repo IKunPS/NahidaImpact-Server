@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "RogueStageInfo.proto";
+import "RoguelikeShikigamiRecord.proto";
+
+message RoguelikeDungeonActivityDetailInfo {
+	repeated RogueStageInfo stage_list = 3;
+	repeated uint32 AIMFGPLLLLM = 2;
+	repeated RoguelikeShikigamiRecord shikigami_list = 11;
+	repeated uint32 NKCDEMNGJAN = 14;
+	bool is_content_closed = 8;
+	uint32 content_close_time = 6;
+}

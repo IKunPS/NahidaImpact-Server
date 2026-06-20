@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "QuestGlobalVar.proto";
+
+// CmdID: 25356
+message QuestGlobalVarNotify {
+	repeated QuestGlobalVar var_list = 6;
+}

@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message BlessingActivityDetailInfo {
+	map<uint32, uint32> pic_num_map = 9;
+	uint32 DDMEMIBBOFD = 14;
+	uint32 KKEEECNBHGF = 13;
+	uint32 PGGAGBPADNN = 2;
+	uint32 next_refresh_time = 5;
+	bool is_activated = 4;
+	bool is_content_closed = 15;
+	uint32 content_close_time = 8;
+}

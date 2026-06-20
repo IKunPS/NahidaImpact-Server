@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "AvatarExpeditionInfo.proto";
+import "AvatarExpeditionRewardInfo.proto";
+
+// CmdID: 4503
+message AvatarExpeditionGetRewardRsp {
+	repeated int32 JFIIMIFHDBN = 5;
+	map<uint64, AvatarExpeditionInfo> expedition_info_map = 9;
+	repeated AvatarExpeditionRewardInfo expedition_reward_list = 10;
+	int32 retcode = 3;
+}

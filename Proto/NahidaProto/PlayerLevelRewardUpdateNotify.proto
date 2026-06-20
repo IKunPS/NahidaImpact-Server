@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+// CmdID: 7870
+message PlayerLevelRewardUpdateNotify {
+	repeated uint32 level_list = 4;
+}

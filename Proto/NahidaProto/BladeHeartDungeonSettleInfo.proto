@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "GalleryStopReason.proto";
+
+message BladeHeartDungeonSettleInfo {
+	GalleryStopReason reason = 15;
+	bool is_perfect = 7;
+	bool is_new_record = 2;
+	uint32 use_time = 14;
+	uint32 level_id = 10;
+}

@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "ExpeditionState.proto";
+
+message ExpeditionPathInfo {
+	repeated uint32 avatar_id_list = 9;
+	float bonus_probability = 3;
+	uint32 assist_uid = 8;
+	uint32 mark_id = 2;
+	uint32 challenge_id = 6;
+	uint32 assist_costume_id = 1;
+	uint32 assist_avatar_id = 14;
+	uint32 start_time = 11;
+	uint32 path_id = 13;
+	ExpeditionState state = 4;
+}

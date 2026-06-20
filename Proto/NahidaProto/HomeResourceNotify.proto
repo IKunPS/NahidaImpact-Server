@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "HomeResource.proto";
+
+// CmdID: 2007
+message HomeResourceNotify {
+	HomeResource fetter_exp = 7;
+	HomeResource home_coin = 10;
+}

@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "IrodoriChessLevelData.proto";
+
+message IrodoriChessData {
+	repeated IrodoriChessLevelData level_data_list = 2;
+	bool is_open = 11;
+}

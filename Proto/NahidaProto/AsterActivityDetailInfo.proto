@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "AsterLargeDetailInfo.proto";
+import "AsterLittleDetailInfo.proto";
+import "AsterMidDetailInfo.proto";
+import "AsterProgressDetailInfo.proto";
+
+message AsterActivityDetailInfo {
+	AsterLittleDetailInfo aster_little = 5;
+	AsterProgressDetailInfo aster_progress = 12;
+	AsterLargeDetailInfo aster_large = 2;
+	AsterMidDetailInfo aster_mid = 11;
+	bool is_special_reward_taken = 13;
+	bool is_content_closed = 7;
+	uint32 aster_token = 6;
+	uint32 content_close_time = 4;
+	uint32 aster_credit = 9;
+}

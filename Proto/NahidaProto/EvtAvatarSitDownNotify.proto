@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "Vector.proto";
+
+// CmdID: 25362
+message EvtAvatarSitDownNotify {
+	Vector position = 8;
+	uint64 chair_id = 1;
+	uint32 entity_id = 15;
+	int32 direction = 2;
+}

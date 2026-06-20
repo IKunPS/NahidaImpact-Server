@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+// CmdID: 28120
+message TryEnterHomeReq {
+	uint32 target_point = 1;
+	uint32 target_uid = 3;
+	bool is_transfer_to_safe_point = 9;
+	bool is_transfer_to_main_house_point = 15;
+}

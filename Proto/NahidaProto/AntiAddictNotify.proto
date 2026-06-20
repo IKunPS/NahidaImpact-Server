@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+// CmdID: 6015
+message AntiAddictNotify {
+	string msg = 4;
+	string level = 7;
+	int32 msg_type = 3;
+}

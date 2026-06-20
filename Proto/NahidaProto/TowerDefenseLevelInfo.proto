@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message TowerDefenseLevelInfo {
+	uint64 first_pass_time_ms = 10;
+	bool is_perfect_defense = 13;
+}

@@ -2,7 +2,9 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System.Text.RegularExpressions;
-using NahidaImpact.Data.Models.Dispatch;
+using NahidaImpact.Internationalization;
+using NahidaImpact.Models.Dispatch;
+using NahidaImpact.Enums.Player;
 using NahidaImpact.Util;
 using NahidaImpact.Util.Security;
 
@@ -11,18 +13,13 @@ namespace NahidaImpact.SdkServer.Handlers.Sdk;
 [ApiController]
 public class RegionController : ControllerBase
 {
-    private const string OsSdkEnv = "2";
-    private const string CnSdkEnv = "2";
-
-    // 静态只读缓存 – 初始化后不可变，线程安全
     private static readonly int[] ServerVersionParts =
         GameConstants.GAME_VERSION.Split('.').Select(int.Parse).ToArray();
 
     private static readonly IReadOnlyDictionary<string, RegionData> Regions;
     private static readonly string RegionListResponseOs;
     private static readonly string RegionListResponseCn;
-
-    // 版本前缀集合，用于快速判断
+    
     private static readonly HashSet<string> CnVersionPrefixes = new()
     {
         "CNRELiOS", "CNRELWin", "CNRELAnd"
@@ -32,21 +29,19 @@ public class RegionController : ControllerBase
 
     static RegionController()
     {
-        // 初始化区域数据
         var regions = new Dictionary<string, RegionData>
         {
             { ConfigManager.Config.Region.Name, new RegionData(GetDefaultRegionResponse()) }
         };
         Regions = regions;
-
-        // 初始化区域列表响应
+        
         var dispatchDomain = ConfigManager.Config.HttpServer.GetDisplayAddress();
         var servers = GetRegionServerList(dispatchDomain);
 
-        var osConfig = GetRegionClientConfig(OsSdkEnv);
+        var osConfig = GetRegionClientConfig(BaseRegionEnum.OS);
         RegionListResponseOs = GetRegionListResponse(osConfig, servers);
 
-        var cnConfig = GetRegionClientConfig(CnSdkEnv);
+        var cnConfig = GetRegionClientConfig(BaseRegionEnum.CN);
         RegionListResponseCn = GetRegionListResponse(cnConfig, servers);
     }
 
@@ -54,8 +49,7 @@ public class RegionController : ControllerBase
     {
         _logger = logger;
     }
-
-    // 以下辅助方法均为静态，不依赖实例状态
+    
     private static List<RegionSimpleInfo> GetRegionServerList(string dispatchDomain)
     {
         return
@@ -70,11 +64,11 @@ public class RegionController : ControllerBase
         ];
     }
 
-    private static object GetRegionClientConfig(string sdkenv)
+    private static object GetRegionClientConfig(BaseRegionEnum sdkenv)
     {
         return new
         {
-            sdkenv,
+            sdkenv = (int)sdkenv,
             checkdevice = "false",
             loadPatch = "false",
             showexception = "false",
@@ -143,8 +137,8 @@ public class RegionController : ControllerBase
     {
         bool updateClient = string.Compare(GameConstants.GAME_VERSION, clientVersionClean, StringComparison.Ordinal) > 0;
         string contentMsg = updateClient
-            ? $"\n版本不匹配 过时的客户端! \n\nServer version: {GameConstants.GAME_VERSION}\nClient version: {clientVersionClean}"
-            : $"\n版本不匹配 过时的服务器! \n\nServer version: {GameConstants.GAME_VERSION}\nClient version: {clientVersionClean}";
+            ? I18NManager.Translate("Server.ServerInfo.InvalidVersion", clientVersionClean, GameConstants.GAME_VERSION)
+            : I18NManager.Translate("Server.ServerInfo.InvalidVersion", clientVersionClean, GameConstants.GAME_VERSION);
 
         long now = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
         var stopServer = new StopServerInfo
@@ -158,7 +152,7 @@ public class RegionController : ControllerBase
         var rsp = new QueryCurrRegionHttpRsp
         {
             Retcode = (int)Retcode.RetStopServer,
-            Msg = "Connection Failed!",
+            Msg = I18NManager.Translate("Server.Web.ConnectionFailed"),
             RegionInfo = new RegionInfo(),
             StopServer = stopServer
         };
@@ -171,7 +165,6 @@ public class RegionController : ControllerBase
         return Crypto.EncryptAndSignRegionData(regionInfo, keyId);
     }
 
-    // Action 方法
     [HttpGet("/query_cur_region")]
     public IActionResult QueryCurRegion([FromQuery] DispatchQuery query)
     {
@@ -180,8 +173,7 @@ public class RegionController : ControllerBase
         string? dispatchSeed = query.DispatchSeed;
 
         string regionData = GetRegionBase64(ConfigManager.Config.Region.Name);
-
-        // 版本号为空时直接返回默认数据
+        
         if (string.IsNullOrEmpty(version))
         {
             return Ok(regionData);
@@ -236,15 +228,13 @@ public class RegionController : ControllerBase
             return Ok(RegionListResponseOs);
         }
 
-        // 提取版本前缀（前8个字符）
         string versionCode = versionName.Length >= 8 ? versionName[..8] : versionName;
 
         if (CnVersionPrefixes.Contains(versionCode))
         {
             return Ok(RegionListResponseCn);
         }
-
-        // 默认为 OS 版本
+        
         return Ok(RegionListResponseOs);
     }
 }

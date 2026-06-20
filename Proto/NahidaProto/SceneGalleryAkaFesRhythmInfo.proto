@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message SceneGalleryAkaFesRhythmInfo {
+	string transaction = 9;
+	bool is_adjust = 5;
+}

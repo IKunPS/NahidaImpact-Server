@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "QueryFilter.proto";
+import "Vector.proto";
+import "Vector3Int.proto";
+
+// CmdID: 2329
+message QueryPathReq {
+	enum OptionType {
+		OPTION_NONE = 0;
+		OPTION_NORMAL = 1;
+		OPTION_FIRST_CAN_GO = 2;
+	}
+	Vector3Int destination_extend = 4;
+	Vector source_pos = 7;
+	repeated Vector destination_pos = 5;
+	Vector3Int source_extend = 12;
+	QueryFilter filter = 14;
+	uint32 scene_id = 15;
+	OptionType query_type = 6;
+	int32 query_id = 11;
+}

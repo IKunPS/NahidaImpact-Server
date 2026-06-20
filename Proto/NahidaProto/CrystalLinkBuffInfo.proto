@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message CrystalLinkBuffInfo {
+	uint32 cond_buff_id = 2;
+	uint32 effect_buff_id = 10;
+}

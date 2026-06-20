@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "AvatarExpeditionBasicInfo.proto";
+
+// CmdID: 28307
+message AvatarExpeditionStartReq {
+	repeated AvatarExpeditionBasicInfo basic_info_list = 14;
+}

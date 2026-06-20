@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message InstableSprayDungeonSettleInfo {
+	repeated uint32 score_list = 5;
+	uint32 level_id = 11;
+	uint32 stage_id = 12;
+	uint32 round = 7;
+	bool is_new_record = 10;
+	uint32 difficulty = 4;
+}

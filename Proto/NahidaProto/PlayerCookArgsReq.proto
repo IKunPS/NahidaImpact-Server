@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+// CmdID: 23023
+message PlayerCookArgsReq {
+	uint32 assist_avatar = 14;
+	uint32 recipe_id = 8;
+}

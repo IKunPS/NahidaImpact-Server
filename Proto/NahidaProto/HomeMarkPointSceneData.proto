@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "HomeMarkPointFurnitureData.proto";
+import "Vector.proto";
+
+message HomeMarkPointSceneData {
+	repeated HomeMarkPointFurnitureData furniture_list = 4;
+	Vector teapot_spirit_pos = 5;
+	Vector safe_point_pos = 14;
+	uint32 scene_id = 13;
+	uint32 module_id = 6;
+}

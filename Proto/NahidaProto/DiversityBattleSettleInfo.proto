@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message DiversityBattleSettleInfo {
+	repeated uint32 score_list = 9;
+	bool is_new_record = 11;
+	uint32 difficulty_id = 1;
+	uint32 level_id = 6;
+}

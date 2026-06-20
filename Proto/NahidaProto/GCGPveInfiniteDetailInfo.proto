@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message GCGPveInfiniteDetailInfo {
+	map<uint32, uint32> GDIFAAICBJA = 11;
+	bool is_gcg_pve_mode_open = 15;
+}

@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message LanternRiteV6BattleSettleInfo {
+	uint32 use_time = 9;
+	uint32 level_id = 5;
+	uint32 score = 7;
+	uint32 difficulty = 2;
+	bool is_new_record = 10;
+}

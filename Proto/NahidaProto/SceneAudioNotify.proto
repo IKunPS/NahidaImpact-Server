@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+// CmdID: 7732
+message SceneAudioNotify {
+	repeated float param2 = 11;
+	repeated string param3 = 13;
+	repeated uint32 param1 = 10;
+	uint32 source_uid = 3;
+	int32 type = 14;
+}

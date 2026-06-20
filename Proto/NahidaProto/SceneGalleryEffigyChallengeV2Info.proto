@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message SceneGalleryEffigyChallengeV2Info {
+	uint32 t_remain_use_time = 15;
+	uint32 GDFMEHFIENN = 14;
+	uint32 win_num = 7;
+	uint32 store_num = 3;
+	uint32 scene_start_time = 13;
+}

@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+// CmdID: 27898
+message VehicleStaminaNotify {
+	float cur_stamina = 8;
+	uint32 entity_id = 10;
+}

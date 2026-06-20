@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "IrodoriMasterLevelDetailInfo.proto";
+
+message IrodoriMasterLevelInfo {
+	repeated IrodoriMasterLevelDetailInfo detail_info = 8;
+	uint32 level_id = 6;
+}

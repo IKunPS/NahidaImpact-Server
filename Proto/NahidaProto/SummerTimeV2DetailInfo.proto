@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "SummerTimeV2BoatStageInfo.proto";
+import "SummerTimeV2DungeonStageInfo.proto";
+
+message SummerTimeV2DetailInfo {
+	repeated SummerTimeV2BoatStageInfo boat_stage_info_list = 10;
+	repeated SummerTimeV2DungeonStageInfo dungeon_stage_info_list = 2;
+	bool is_content_closed = 4;
+	uint32 cur_dungeon_reward_limit = 9;
+	uint32 taken_reward_count = 5;
+}

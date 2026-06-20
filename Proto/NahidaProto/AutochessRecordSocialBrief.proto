@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "Uint32Pair.proto";
+
+message AutochessRecordSocialBrief {
+	Uint32Pair progress = 12;
+	repeated uint32 artifact_id_list = 4;
+	// [obf] OEFDPELEJOL NHGHHGAMMKE = 2;
+	repeated uint32 GMKEMLMPMLB = 15;
+	uint32 coin = 8;
+	uint32 GNGKMHLFPKM = 1;
+	uint32 EALKFMODECC = 5;
+	uint32 IHFOMAAHJIG = 6;
+	bool HJMAMEBGLBO = 14;
+	uint32 hp = 10;
+	uint32 timestamp = 7;
+	uint32 max_hp = 3;
+	uint32 MFALFOGIKPM = 11;
+}

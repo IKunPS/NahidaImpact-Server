@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "FleurFairBalloonInfo.proto";
+import "FleurFairFallInfo.proto";
+import "FleurFairMusicGameInfo.proto";
+
+message FleurFairMinigameInfo {
+	uint32 open_time = 1;
+	bool is_open = 8;
+	uint32 minigame_id = 5;
+	oneof detail {
+		FleurFairFallInfo fall_info = 2;
+		FleurFairMusicGameInfo music_info = 10;
+		FleurFairBalloonInfo balloon_info = 7;
+	}
+}

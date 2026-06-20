@@ -1,10 +1,13 @@
-﻿syntax = "proto3";
+syntax = "proto3";
 
-import "TrialAvatarGrantRecord.proto";
+// Nahida
+// Proto
+
 import "Item.proto";
+import "TrialAvatarGrantRecord.proto";
 
 message TrialAvatarInfo {
-  TrialAvatarGrantRecord grant_record = 3;
-  repeated Item trial_equip_list = 2;
-  uint32 trial_avatar_id = 1;
+	TrialAvatarGrantRecord grant_record = 3;
+	repeated Item trial_equip_list = 2;
+	uint32 trial_avatar_id = 1;
 }

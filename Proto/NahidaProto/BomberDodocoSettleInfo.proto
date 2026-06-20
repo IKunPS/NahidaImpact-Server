@@ -1,0 +1,8 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message BomberDodocoSettleInfo {
+	uint32 game_time = 9;
+}

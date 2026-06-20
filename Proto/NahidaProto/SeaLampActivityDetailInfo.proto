@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message SeaLampActivityDetailInfo {
+	repeated uint32 CACIBNIJIOE = 4;
+	repeated uint32 GENCKEPLOLK = 9;
+	uint32 DGCFIKOOBEJ = 15;
+	uint32 phase_id = 13;
+	uint32 progress = 12;
+	uint32 NKBHMFPDGJK = 11;
+	uint32 days = 2;
+}

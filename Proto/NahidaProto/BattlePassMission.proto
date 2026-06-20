@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message BattlePassMission {
+	enum MissionStatus {
+		MissionStatus_MISSION_INVALID = 0;
+		MissionStatus_MISSION_UNFINISHED = 1;
+		MissionStatus_MISSION_FINISHED = 2;
+		MissionStatus_MISSION_POINT_TAKEN = 3;
+	}
+	MissionStatus mission_status = 13;
+	uint32 mission_type = 2;
+	uint32 total_progress = 3;
+	uint32 cur_progress = 7;
+	uint32 reward_battle_pass_point = 5;
+	uint32 mission_id = 14;
+}

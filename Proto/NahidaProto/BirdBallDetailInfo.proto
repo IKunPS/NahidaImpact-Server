@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message BirdBallDetailInfo {
+	// [obf] repeated IIOFICFEEDL OHAOKMIAMGM = 4;
+	// [obf] repeated IIOFICFEEDL BMAGFJDJEGD = 5;
+	uint32 COCKJFHNHJM = 6;
+}

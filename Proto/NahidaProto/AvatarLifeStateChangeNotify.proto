@@ -1,18 +1,21 @@
 syntax = "proto3";
 
-import "ServerBuff.proto";
-import "PlayerDieType.proto";
+// Nahida
+// Proto
 
-// CmdID: 21104
+import "PlayerDieType.proto";
+import "ServerBuff.proto";
+
+// CmdID: 1076
 message AvatarLifeStateChangeNotify {
-  string attack_tag = 15;
-  repeated string JHHCACAKIDH = 6;
-  repeated ServerBuff server_buff_list = 7;
-  uint32 client_sequence_id = 12;
-  uint32 move_reliable_seq = 10;
-  uint32 source_entity_id = 14;
-  uint32 life_state = 9;
-  uint64 avatar_guid = 4;
-  uint32 IAOLAMKOGKH = 8;
-  PlayerDieType die_type = 3;
+	repeated ServerBuff server_buff_list = 3;
+	string attack_tag = 13;
+	repeated string JHHCACAKIDH = 10;
+	uint32 client_sequence_id = 6;
+	uint32 move_reliable_seq = 11;
+	uint32 source_entity_id = 4;
+	PlayerDieType die_type = 1;
+	uint64 avatar_guid = 5;
+	uint32 life_state = 2;
+	uint32 IAOLAMKOGKH = 9;
 }

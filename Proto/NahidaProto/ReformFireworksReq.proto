@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "FireworksReformData.proto";
+
+// CmdID: 5860
+message ReformFireworksReq {
+	FireworksReformData fireworks_reform_data = 9;
+}

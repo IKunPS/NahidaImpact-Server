@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "PropValue.proto";
+
+// CmdID: 22776
+message PlayerPropNotify {
+	map<uint32, PropValue> prop_map = 11;
+}

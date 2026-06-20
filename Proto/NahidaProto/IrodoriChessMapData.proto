@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "IrodoriChessEntranceDetailInfo.proto";
+
+message IrodoriChessMapData {
+	repeated uint32 equiped_card_list = 6;
+	IrodoriChessEntranceDetailInfo entrance_detail_info = 15;
+	uint32 best_score = 1;
+	uint32 map_id = 9;
+}

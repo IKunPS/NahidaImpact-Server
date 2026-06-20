@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+// CmdID: 21498
+message PlayerGameTimeNotify {
+	bool is_home = 8;
+	uint32 game_time = 6;
+	uint32 uid = 11;
+}

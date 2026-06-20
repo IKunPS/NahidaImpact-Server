@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "Vector.proto";
+
+// CmdID: 25024
+message HitTreeNotify {
+	Vector drop_pos = 11;
+	Vector tree_pos = 6;
+	uint32 tree_type = 4;
+}

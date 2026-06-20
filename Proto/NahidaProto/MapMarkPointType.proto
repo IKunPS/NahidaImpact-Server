@@ -1,9 +1,14 @@
-﻿syntax = "proto3";
+syntax = "proto3";
+
+// Nahida
+// Proto
 
 enum MapMarkPointType {
-  MAP_MARK_POINT_TYPE_NPC = 0;
-  MAP_MARK_POINT_TYPE_QUEST = 1;
-  MAP_MARK_POINT_TYPE_SPECIAL = 2;
-  MAP_MARK_POINT_TYPE_MONSTER = 3;
-  MAP_MARK_POINT_TYPE_FISH_POOL = 4;
+	MapMarkPointType_NPC = 0;
+	MapMarkPointType_QUEST = 1;
+	MapMarkPointType_SPECIAL = 2;
+	MapMarkPointType_MINE = 3;
+	MapMarkPointType_COLLECTION = 4;
+	MapMarkPointType_MONSTER = 5;
+	MapMarkPointType_FISH_POOL = 6;
 }

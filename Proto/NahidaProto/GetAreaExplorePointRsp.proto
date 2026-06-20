@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+// CmdID: 1809
+message GetAreaExplorePointRsp {
+	repeated uint32 explore_point_list = 15;
+	repeated uint32 area_id_list = 11;
+	int32 retcode = 7;
+}

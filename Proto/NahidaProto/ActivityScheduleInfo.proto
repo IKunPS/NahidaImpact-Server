@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message ActivityScheduleInfo {
+	bool is_open = 8;
+	uint32 activity_id = 2;
+	uint32 schedule_id = 13;
+	uint32 begin_time = 6;
+	uint32 end_time = 12;
+}

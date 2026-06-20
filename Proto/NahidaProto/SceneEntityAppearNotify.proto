@@ -1,11 +1,14 @@
-﻿syntax = "proto3";
+syntax = "proto3";
+
+// Nahida
+// Proto
 
 import "SceneEntityInfo.proto";
 import "VisionType.proto";
 
-// CmdID: 5582
+// CmdID: 1890
 message SceneEntityAppearNotify {
-  repeated SceneEntityInfo entity_list = 14;
-  uint32 param = 3;
-  VisionType appear_type = 5;
+	repeated SceneEntityInfo entity_list = 5;
+	VisionType appear_type = 3;
+	uint32 param = 7;
 }

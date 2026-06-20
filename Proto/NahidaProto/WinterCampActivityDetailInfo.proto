@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "ItemParam.proto";
+import "WinterCampRaceStageInfo.proto";
+import "WinterCampStageInfo.proto";
+
+message WinterCampActivityDetailInfo {
+	WinterCampStageInfo explore_info = 1;
+	repeated WinterCampRaceStageInfo race_info_list = 2;
+	WinterCampStageInfo battle_info = 10;
+	repeated ItemParam used_item_list = 8;
+	repeated uint32 battle_taken_reward_list = 15;
+	repeated uint32 OLNNIMECCHL = 9;
+	repeated uint32 KDKPFLEOJHG = 6;
+	bool is_content_closed = 3;
+}

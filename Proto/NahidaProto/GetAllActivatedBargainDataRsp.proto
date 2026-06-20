@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "BargainSnapshot.proto";
+
+// CmdID: 3913
+message GetAllActivatedBargainDataRsp {
+	repeated BargainSnapshot snapshot_list = 3;
+	int32 retcode = 10;
+}

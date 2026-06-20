@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message SceneGalleryFlightGearInfo {
+	uint32 FECAMLOHOOM = 2;
+	uint32 BDAAIIHADBH = 15;
+}

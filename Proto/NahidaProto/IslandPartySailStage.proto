@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+enum IslandPartySailStage {
+	IslandPartySailStage_NONE = 0;
+	IslandPartySailStage_SAIL = 1;
+	IslandPartySailStage_BATTLE = 2;
+}

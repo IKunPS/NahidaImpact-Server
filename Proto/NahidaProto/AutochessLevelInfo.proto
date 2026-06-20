@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "AutochessRecordSocialBrief.proto";
+import "Uint32Pair.proto";
+
+message AutochessLevelInfo {
+	Uint32Pair ALEDHLHGDCL = 2;
+	// [obf] LNGBAFPGKMJ AMHICIMFMDC = 14;
+	repeated AutochessRecordSocialBrief record_list = 9;
+	AutochessRecordSocialBrief best_record = 7;
+	uint32 MEMGJOACCDC = 12;
+}

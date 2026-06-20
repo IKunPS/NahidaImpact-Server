@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message CeremonyBattleSettleInfo {
+	bool is_new_record = 7;
+	uint32 DPJJKGGFDON = 5;
+	uint32 score = 10;
+	uint32 level_id = 4;
+}

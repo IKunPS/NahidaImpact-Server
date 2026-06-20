@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+// CmdID: 8274
+message PlayerTimeNotify {
+	uint64 server_time = 2;
+	uint64 player_time = 4;
+	bool is_paused = 6;
+}

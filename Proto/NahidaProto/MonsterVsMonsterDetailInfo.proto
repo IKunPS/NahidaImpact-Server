@@ -1,0 +1,8 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message MonsterVsMonsterDetailInfo {
+	// [obf] repeated NMGILMCHEBP level_info_list = 6;
+}

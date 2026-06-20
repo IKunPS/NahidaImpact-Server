@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "LanV6CardDetail.proto";
+import "LanV6LanternGiftSource.proto";
+
+message LanV6LanternGiftDetail {
+	LanV6CardDetail card = 1;
+	LanV6LanternGiftSource source = 7;
+}

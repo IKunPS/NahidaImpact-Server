@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "UgcV2OfficialLevelData.proto";
+
+message UgcV2DetailInfo {
+	repeated UgcV2OfficialLevelData official_level_data_list = 5;
+	bool DHBDKADHEJF = 15;
+	bool GOIHOPCINGC = 6;
+}

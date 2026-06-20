@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "AvatarExpeditionState.proto";
+
+message AvatarExpeditionInfo {
+	uint32 start_time = 4;
+	AvatarExpeditionState state = 1;
+	float shorten_ratio = 5;
+	uint32 exp_id = 2;
+	uint32 hour_time = 3;
+}

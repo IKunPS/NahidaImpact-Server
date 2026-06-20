@@ -20,10 +20,10 @@ public class PacketOpenStateUpdateNotify : BasePacket
 
             if (ConfigManager.Config.GameOptions.EnabledOpenStateAllMap)
             {
-                // 将所有OpenState的状态改为1 也就是全部打开 与/unlockall效果相同
+                // Set all open states to 1 (same as /unlockall)
                 value = 1;
                 proto.OpenStateMap[id] = value;
-                proto.OpenStateMap[48] = 1; // 把地图大边界状态改为1
+                proto.OpenStateMap[48] = 1; // Enable map border
             }
             
             if (id == 45 && !ConfigManager.Config.GameOptions.ResinUsage)

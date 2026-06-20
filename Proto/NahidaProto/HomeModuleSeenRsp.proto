@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+// CmdID: 7305
+message HomeModuleSeenRsp {
+	repeated uint32 seen_module_id_list = 10;
+	int32 retcode = 12;
+}

@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+// CmdID: 5644
+message SetOpenStateRsp {
+	uint32 key = 15;
+	int32 retcode = 5;
+	uint32 value = 13;
+}

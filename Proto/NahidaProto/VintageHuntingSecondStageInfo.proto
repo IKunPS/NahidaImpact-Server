@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message VintageHuntingSecondStageInfo {
+	uint32 left_num = 3;
+	uint32 total_num = 1;
+	uint32 capture_animal_num = 8;
+}

@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+// CmdID: 8642
+message ShowTemplateReminderNotify {
+	repeated int32 param_list = 10;
+	repeated uint32 param_uid_list = 3;
+	uint32 template_reminder_id = 2;
+	bool MAEJHCBMBEE = 1;
+	bool NPEGPMOANIL = 15;
+}

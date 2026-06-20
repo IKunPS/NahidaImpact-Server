@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "ForwardType.proto";
+import "Vector.proto";
+
+// CmdID: 28094
+message EvtAvatarEnterFocusNotify {
+	Vector focus_forward = 14;
+	uint32 entity_id = 5;
+	bool disable_aim_layer = 4;
+	bool NNHEEAGDKKP = 1;
+	bool IJIJMGLOLHH = 6;
+	bool fast_focus = 15;
+	bool show_cross_hair = 12;
+	bool disable_anim = 10;
+	ForwardType forward_type = 9;
+	int32 HGJJLJOPCBD = 2;
+	bool use_focus_sticky = 11;
+	bool use_auto_focus = 3;
+	bool enter_holding_focus_shoot = 13;
+	bool can_move = 7;
+}

@@ -1,12 +1,15 @@
-﻿syntax = "proto3";
+syntax = "proto3";
+
+// Nahida
+// Proto
 
 import "PropValue.proto";
 
-// CmdID: 29964
+// CmdID: 7426
 message PlayerDataNotify {
-  map<uint32, PropValue> prop_map = 3;
-  string nick_name = 2;
-  bool is_first_login_today = 11;
-  uint32 region_id = 8;
-  uint64 server_time = 4;
+	string nick_name = 5;
+	map<uint32, PropValue> prop_map = 13;
+	uint64 server_time = 1;
+	bool is_first_login_today = 7;
+	uint32 region_id = 11;
 }

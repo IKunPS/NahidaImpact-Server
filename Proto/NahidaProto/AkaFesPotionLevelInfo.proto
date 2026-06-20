@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message AkaFesPotionLevelInfo {
+	uint32 DCHOOBPCKKI = 11;
+	uint32 level_id = 2;
+	bool is_open = 7;
+	bool is_finish = 8;
+}

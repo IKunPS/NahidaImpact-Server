@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "ChatEmojiCollectionData.proto";
+
+// CmdID: 4925
+message SetChatEmojiCollectionReq {
+	ChatEmojiCollectionData chat_emoji_collection_data = 14;
+}

@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "ShortVideoLevelData.proto";
+import "ShortVideoVoteRecord.proto";
+
+message ShortVideoDetailInfo {
+	repeated ShortVideoLevelData level_data_list = 6;
+	repeated ShortVideoVoteRecord vote_record_list = 15;
+}

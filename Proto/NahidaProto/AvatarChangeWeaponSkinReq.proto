@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+// CmdID: 2186
+message AvatarChangeWeaponSkinReq {
+	repeated uint64 avatar_guid_list = 2;
+	uint32 weapon_skin_id = 9;
+}

@@ -1,8 +1,19 @@
 syntax = "proto3";
 
+// Nahida
+// Proto
+
+import "AbilityString.proto";
 import "PlayerDieType.proto";
 
+// CmdID: 8792
 message WorldPlayerDieNotify {
-  PlayerDieType die_type = 3;
-  uint32 monster_id = 5;
+	AbilityString LICOPPFHGKK = 6;
+	PlayerDieType die_type = 1;
+	uint32 murderer_entity_id = 13;
+	uint32 PBNKLKDBECC = 2;
+	oneof entity {
+		uint32 gadget_id = 12;
+		uint32 monster_id = 14;
+	}
 }

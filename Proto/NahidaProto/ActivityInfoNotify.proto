@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "ActivityInfo.proto";
+
+// CmdID: 5938
+message ActivityInfoNotify {
+	ActivityInfo activity_info = 14;
+}

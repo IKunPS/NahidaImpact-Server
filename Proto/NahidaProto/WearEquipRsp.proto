@@ -1,8 +1,11 @@
 syntax = "proto3";
 
-// CmdID: 22987
+// Nahida
+// Proto
+
+// CmdID: 29365
 message WearEquipRsp {
-  uint64 avatar_guid = 8;
-  uint64 equip_guid = 6;
-  int32 retcode = 12;
+	int32 retcode = 4;
+	uint64 avatar_guid = 10;
+	uint64 equip_guid = 11;
 }

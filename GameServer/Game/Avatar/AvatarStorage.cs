@@ -18,8 +18,11 @@ public class AvatarStorage : BasePlayerManager, IEnumerable<AvatarDataInfo>
     }
 
     public int AvatarCount => this.avatars.Count;
-    public AvatarDataInfo GetAvatarById(uint id) => this.avatars[id]; 
-    public AvatarDataInfo GetAvatarByGuid(ulong id) => this.avatarsGuid[id];
+    public AvatarDataInfo? GetAvatarById(uint id) =>
+        avatars.TryGetValue(id, out var avatar) ? avatar : null;
+
+    public AvatarDataInfo? GetAvatarByGuid(ulong id) =>
+        avatarsGuid.TryGetValue(id, out var avatar) ? avatar : null;
     public bool HasAvatar(uint id) => this.avatars.ContainsKey(id);
 
     public bool AddAvatar(AvatarDataInfo avatar)

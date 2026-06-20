@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "HachiStageInfo.proto";
+
+message HachiActivityDetailInfo {
+	map<uint32, HachiStageInfo> stage_map = 1;
+}

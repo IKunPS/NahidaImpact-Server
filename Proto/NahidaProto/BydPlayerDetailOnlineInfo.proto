@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message BydPlayerDetailOnlineInfo {
+	enum OOBJAGDDBEE {
+		OOBJAGDDBEE_NONE = 0;
+		OOBJAGDDBEE_HALL = 1;
+		OOBJAGDDBEE_DUNGEON = 2;
+		OOBJAGDDBEE_EDIT = 3;
+	}
+	// [obf] AMNGDHJDBLL PHNNLONFDKC = 6;
+	// [obf] ADOKLABHNNJ ECKPOKJHGIE = 3;
+	uint64 AJCNECOHIFI = 4;
+	uint64 CCGIFPBPLEJ = 8;
+	uint64 BEKLLIBCNMI = 7;
+	bool is_in_team = 2;
+	bool KGJJDDBAJAB = 5;
+	// [obf] OOBJAGDDBEE GPFBODGPNEO = 1;
+}

@@ -1,4 +1,4 @@
-﻿using System.Text.RegularExpressions;
+using System.Text.RegularExpressions;
 using NahidaImpact.Data.Common;
 using NahidaImpact.Data.Binout;
 using NahidaImpact.Internationalization;
@@ -22,15 +22,13 @@ public class ResourceManager
         LoadConfigLevelEntityData();
         LoadGlobalCombatConfig();
         LoadMonsterConfigData();
-        LoadMonsterMappings();
         LoadExcel();
         LoadScenePoints();
-        LoadTrialAvatarCustomData();
     }
 
     public static void LoadExcel()
     {
-        var classes = Assembly.GetExecutingAssembly().GetTypes(); // Get all classes in the assembly
+        var classes = Assembly.GetExecutingAssembly().GetTypes();
         List<ExcelResource> resList = [];
 
         foreach (var cls in classes.Where(x => x.IsSubclassOf(typeof(ExcelResource))))
@@ -67,7 +65,9 @@ public class ResourceManager
                     continue;
                 }
 
-                var json = file.OpenText().ReadToEnd();
+                string json;
+                using (var textReader = file.OpenText())
+                    json = textReader.ReadToEnd();
                 using (var reader = new JsonTextReader(new StringReader(json)))
                 {
                     reader.Read();
@@ -75,7 +75,6 @@ public class ResourceManager
                     {
                         case JsonToken.StartArray:
                             {
-                                // array
                                 var jArray = JArray.Parse(json);
                                 foreach (var item in jArray)
                                 {
@@ -89,33 +88,32 @@ public class ResourceManager
                             }
                         case JsonToken.StartObject:
                             {
-                                // dictionary
                                 var jObject = JObject.Parse(json);
                                 foreach (var (_, obj) in jObject)
                                 {
                                     var instance = JsonConvert.DeserializeObject(obj!.ToString(), cls);
 
-                                    if (((ExcelResource?)instance)?.GetId() == 0 || (ExcelResource?)instance == null)
+                                    if (instance == null || ((ExcelResource)instance).GetId() == 0)
                                     {
-                                        // Deserialize as JObject to handle nested dictionaries
                                         var nestedObject = JsonConvert.DeserializeObject<JObject>(obj.ToString());
-
                                         foreach (var nestedItem in nestedObject ?? [])
                                         {
                                             var nestedInstance =
                                                 JsonConvert.DeserializeObject(nestedItem.Value!.ToString(), cls);
-                                            resList.Add((ExcelResource)nestedInstance!);
-                                            ((ExcelResource?)nestedInstance)?.Loaded();
-                                            count++;
+                                            if (nestedInstance != null)
+                                            {
+                                                resList.Add((ExcelResource)nestedInstance);
+                                                ((ExcelResource)nestedInstance).Loaded();
+                                                count++;
+                                            }
                                         }
                                     }
                                     else
                                     {
                                         resList.Add((ExcelResource)instance);
                                         ((ExcelResource)instance).Loaded();
+                                        count++;
                                     }
-
-                                    count++;
                                 }
 
                                 break;
@@ -160,7 +158,8 @@ public class ResourceManager
         }
         catch (Exception ex)
         {
-            Logger.Error("Error in reading " + file.Name, ex);
+            Logger.Error(I18NManager.Translate("Server.ServerInfo.FailedToReadItem", file.Name,
+                I18NManager.Translate("Word.Error")), ex);
         }
 
         switch (customFile)
@@ -181,12 +180,13 @@ public class ResourceManager
 
     private static void LoadScenePoints()
     {
+        var word = I18NManager.Translate("Word.Resource");
         var pattern = new Regex(@"scene(\d+)_point\.json");
         var pointDir = Path.Combine(ConfigManager.Config.Path.ResourcePath, "BinOutput", "Scene", "Point");
 
         if (!Directory.Exists(pointDir))
         {
-            Logger.Warn($"Scene point directory not found: {pointDir}. Teleport waypoints will not work.");
+            Logger.Warn(I18NManager.Translate("Server.ServerInfo.DirNotFound", word, pointDir));
             return;
         }
 
@@ -198,7 +198,7 @@ public class ResourceManager
                 var match = pattern.Match(fileName);
                 if (!match.Success) continue;
 
-                int sceneId = int.Parse(match.Groups[1].Value);
+                if (!int.TryParse(match.Groups[1].Value, out var sceneId)) continue;
 
                 var json = File.ReadAllText(filePath);
                 var root = JObject.Parse(json);
@@ -211,7 +211,7 @@ public class ResourceManager
                 foreach (var (pointId, pointData) in pointsDict)
                 {
                     pointData.Id = pointId;
-                    var entry = new ScenePointEntry(sceneId, pointData);
+                    var entry = new ConfigScenePointEntry(sceneId, pointData);
 
                     scenePoints.Add(pointId);
                     GameData.ScenePointIdList.Add(pointId);
@@ -221,20 +221,22 @@ public class ResourceManager
                 GameData.ScenePointsPerScene[sceneId] = scenePoints;
             }
 
-            Logger.Info($"Loaded {GameData.ScenePointEntry.Count} scene points across {GameData.ScenePointsPerScene.Count} scenes.");
+            Logger.Info(I18NManager.Translate("Server.ServerInfo.LoadedScenePoints",
+                GameData.ScenePointEntry.Count.ToString(), GameData.ScenePointsPerScene.Count.ToString()));
         }
         catch (Exception ex)
         {
-            Logger.Error("Failed to load scene points.", ex);
+            Logger.Error(I18NManager.Translate("Server.ServerInfo.FailedToLoadData", "scene points"), ex);
         }
     }
-    
+
     private static void LoadConfigLevelEntityData()
     {
+        var word = I18NManager.Translate("Word.Resource");
         var levelEntityDir = Path.Combine(ConfigManager.Config.Path.ResourcePath, "BinOutput", "LevelEntity");
         if (!Directory.Exists(levelEntityDir))
         {
-            Logger.Warn($"LevelEntity directory not found: {levelEntityDir}");
+            Logger.Warn(I18NManager.Translate("Server.ServerInfo.DirNotFound", word, levelEntityDir));
             return;
         }
 
@@ -257,24 +259,28 @@ public class ResourceManager
                 }
                 catch (Exception ex)
                 {
-                    Logger.Error($"Failed to load LevelEntity file: {Path.GetFileName(filePath)}", ex);
+                    var name = I18NManager.Translate("Word.Resource");
+                    Logger.Error(I18NManager.Translate("Server.ServerInfo.FailedToLoadFile",
+                        name, Path.GetFileName(filePath)), ex);
                 }
             }
 
-            Logger.Info($"Loaded {count} ConfigLevelEntity entries from {levelEntityDir}");
+            Logger.Info(I18NManager.Translate("Server.ServerInfo.LoadedCountInDir",
+                count.ToString(), "ConfigLevelEntity", levelEntityDir));
         }
         catch (Exception ex)
         {
-            Logger.Error("Failed to load ConfigLevelEntity data.", ex);
+            Logger.Error(I18NManager.Translate("Server.ServerInfo.FailedToLoadData", "ConfigLevelEntity"), ex);
         }
     }
-    
+
     private static void LoadGlobalCombatConfig()
     {
+        var word = I18NManager.Translate("Word.Resource");
         var filePath = Path.Combine(ConfigManager.Config.Path.ResourcePath, "BinOutput", "Common", "ConfigGlobalCombat.json");
         if (!File.Exists(filePath))
         {
-            Logger.Warn($"ConfigGlobalCombat file not found: {filePath}");
+            Logger.Warn(I18NManager.Translate("Server.ServerInfo.FileNotFound", word, filePath));
             return;
         }
 
@@ -282,14 +288,14 @@ public class ResourceManager
         {
             var json = File.ReadAllText(filePath);
             GameData.ConfigGlobalCombat = JsonConvert.DeserializeObject<ConfigGlobalCombat>(json);
-            Logger.Info("Loaded ConfigGlobalCombat");
+            Logger.Info(I18NManager.Translate("Server.ServerInfo.LoadedItem", "ConfigGlobalCombat"));
         }
         catch (Exception ex)
         {
-            Logger.Error("Failed to load ConfigGlobalCombat.", ex);
+            Logger.Error(I18NManager.Translate("Server.ServerInfo.FailedToLoadData", "ConfigGlobalCombat"), ex);
         }
     }
-    
+
     private static readonly JsonSerializerSettings AbilitySerializerSettings = new()
     {
         Error = (_, args) =>
@@ -302,10 +308,11 @@ public class ResourceManager
 
     private static void LoadAbilityModifiers()
     {
+        var word = I18NManager.Translate("Word.Resource");
         var abilityDir = Path.Combine(ConfigManager.Config.Path.ResourcePath, "BinOutput", "Ability", "Temp");
         if (!Directory.Exists(abilityDir))
         {
-            Logger.Warn($"Ability directory not found: {abilityDir}");
+            Logger.Warn(I18NManager.Translate("Server.ServerInfo.DirNotFound", word, abilityDir));
             return;
         }
 
@@ -335,24 +342,27 @@ public class ResourceManager
                 }
                 catch (Exception ex)
                 {
-                    Logger.Error($"Failed to load ability file: {Path.GetFileName(filePath)}", ex);
+                    Logger.Error(I18NManager.Translate("Server.ServerInfo.FailedToLoadFile",
+                        word, Path.GetFileName(filePath)), ex);
                 }
             }
 
-            Logger.Info($"Loaded {count} ability modifiers from {abilityDir}");
+            Logger.Info(I18NManager.Translate("Server.ServerInfo.LoadedCountInDir",
+                count.ToString(), "ability modifier", abilityDir));
         }
         catch (Exception ex)
         {
-            Logger.Error("Failed to load ability modifiers.", ex);
+            Logger.Error(I18NManager.Translate("Server.ServerInfo.FailedToLoadData", "ability modifiers"), ex);
         }
     }
-    
+
     private static void LoadAvatarConfigData()
     {
+        var word = I18NManager.Translate("Word.Resource");
         var avatarDir = Path.Combine(ConfigManager.Config.Path.ResourcePath, "BinOutput", "Avatar");
         if (!Directory.Exists(avatarDir))
         {
-            Logger.Warn($"Avatar config directory not found: {avatarDir}");
+            Logger.Warn(I18NManager.Translate("Server.ServerInfo.DirNotFound", word, avatarDir));
             return;
         }
 
@@ -379,24 +389,27 @@ public class ResourceManager
                 }
                 catch (Exception ex)
                 {
-                    Logger.Error($"Failed to load avatar config: {Path.GetFileName(filePath)}", ex);
+                    Logger.Error(I18NManager.Translate("Server.ServerInfo.FailedToLoadFile",
+                        word, Path.GetFileName(filePath)), ex);
                 }
             }
 
-            Logger.Info($"Loaded {count} avatar configs from {avatarDir}");
+            Logger.Info(I18NManager.Translate("Server.ServerInfo.LoadedCountInDir",
+                count.ToString(), "avatar config", avatarDir));
         }
         catch (Exception ex)
         {
-            Logger.Error("Failed to load avatar configs.", ex);
+            Logger.Error(I18NManager.Translate("Server.ServerInfo.FailedToLoadData", "avatar configs"), ex);
         }
     }
-    
+
     private static void LoadAbilityGroups()
     {
+        var word = I18NManager.Translate("Word.Resource");
         var abilityGroupDir = Path.Combine(ConfigManager.Config.Path.ResourcePath, "BinOutput", "AbilityGroup");
         if (!Directory.Exists(abilityGroupDir))
         {
-            Logger.Warn($"AbilityGroup directory not found: {abilityGroupDir}");
+            Logger.Warn(I18NManager.Translate("Server.ServerInfo.DirNotFound", word, abilityGroupDir));
             return;
         }
 
@@ -408,69 +421,74 @@ public class ResourceManager
                 try
                 {
                     var json = File.ReadAllText(filePath);
-                    var dict = JsonConvert.DeserializeObject<Dictionary<string, ConfigEntityBase>>(json);
-                    if (dict != null)
+                    var trimmed = json.TrimStart();
+                    if (trimmed.StartsWith("["))
                     {
-                        foreach (var kv in dict)
+                        var jArray = JArray.Parse(json);
+                        foreach (var item in jArray)
                         {
-                            GameData.PlayerAbilities[kv.Key] = kv.Value;
-                            count++;
+                            if (item is JObject jObj)
+                            {
+                                var properties = jObj.Properties().ToList();
+                                if (properties.Count == 1 && properties[0].Value is JObject)
+                                {
+                                    var key = properties[0].Name;
+                                    var value = properties[0].Value.ToObject<ConfigEntityBase>();
+                                    if (value != null)
+                                    {
+                                        GameData.PlayerAbilities[key] = value;
+                                        count++;
+                                    }
+                                }
+                                else
+                                {
+                                    var value = item.ToObject<ConfigEntityBase>();
+                                    if (value != null)
+                                    {
+                                        var key = Path.GetFileNameWithoutExtension(filePath);
+                                        GameData.PlayerAbilities[key] = value;
+                                        count++;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    else
+                    {
+                        var dict = JsonConvert.DeserializeObject<Dictionary<string, ConfigEntityBase>>(json);
+                        if (dict != null)
+                        {
+                            foreach (var kv in dict)
+                            {
+                                GameData.PlayerAbilities[kv.Key] = kv.Value;
+                                count++;
+                            }
                         }
                     }
                 }
                 catch (Exception ex)
                 {
-                    Logger.Error($"Failed to load AbilityGroup file: {Path.GetFileName(filePath)}", ex);
+                    Logger.Error(I18NManager.Translate("Server.ServerInfo.FailedToLoadFile",
+                        word, Path.GetFileName(filePath)), ex);
                 }
             }
 
-            Logger.Info($"Loaded {count} player ability groups from {abilityGroupDir}");
+            Logger.Info(I18NManager.Translate("Server.ServerInfo.LoadedCountInDir",
+                count.ToString(), "player ability group", abilityGroupDir));
         }
         catch (Exception ex)
         {
-            Logger.Error("Failed to load AbilityGroup data.", ex);
+            Logger.Error(I18NManager.Translate("Server.ServerInfo.FailedToLoadData", "AbilityGroup"), ex);
         }
     }
 
-    private static void LoadTrialAvatarCustomData()
-    {
-        var filePath = Path.Combine(ConfigManager.Config.Path.ResourcePath,
-            "CustomResources", "TrialAvatarExcels", "TrialAvatarData.json");
-        if (!File.Exists(filePath))
-        {
-            Logger.Warn($"TrialAvatarCustomData file not found: {filePath}");
-            return;
-        }
-
-        try
-        {
-            var json = File.ReadAllText(filePath);
-            var list = JsonConvert.DeserializeObject<List<TrialAvatarCustomData>>(json);
-            if (list == null) return;
-
-            foreach (var entry in list)
-            {
-                // Filter blank strings, mirroring Java onLoad()
-                entry.TrialAvatarParamList = entry.TrialAvatarParamList
-                    .Where(x => !string.IsNullOrWhiteSpace(x)).ToList();
-
-                GameData.TrialAvatarCustomDataMap[entry.TrialAvatarId] = entry;
-            }
-
-            Logger.Info($"Loaded {list.Count} trial avatar custom data entries");
-        }
-        catch (Exception ex)
-        {
-            Logger.Error("Failed to load TrialAvatarCustomData.", ex);
-        }
-    }
-    
     private static void LoadMonsterConfigData()
     {
+        var word = I18NManager.Translate("Word.Resource");
         var monsterDir = Path.Combine(ConfigManager.Config.Path.ResourcePath, "BinOutput", "Monster");
         if (!Directory.Exists(monsterDir))
         {
-            Logger.Warn($"Monster config directory not found: {monsterDir}");
+            Logger.Warn(I18NManager.Translate("Server.ServerInfo.DirNotFound", word, monsterDir));
             return;
         }
 
@@ -490,39 +508,18 @@ public class ResourceManager
                         count++;
                     }
                 }
-                catch { }
+                catch (Exception ex)
+                {
+                    Logger.Debug(I18NManager.Translate("Server.ServerInfo.FailedToLoadFile",
+                        word, Path.GetFileName(filePath) + " - " + ex.Message));
+                }
             }
-            Logger.Info($"Loaded {count} monster configs from {monsterDir}");
+            Logger.Info(I18NManager.Translate("Server.ServerInfo.LoadedCountInDir",
+                count.ToString(), "monster config", monsterDir));
         }
         catch (Exception ex)
         {
-            Logger.Error("Failed to load monster config data.", ex);
-        }
-    }
-
-    private static void LoadMonsterMappings()
-    {
-        var filePath = Path.Combine(ConfigManager.Config.Path.ResourcePath, "Server", "MonsterMapping.json");
-        if (!File.Exists(filePath))
-        {
-            Logger.Warn($"MonsterMapping file not found: {filePath}");
-            return;
-        }
-
-        try
-        {
-            var json = File.ReadAllText(filePath);
-            var list = JsonConvert.DeserializeObject<List<MonsterMapping>>(json);
-            if (list != null)
-            {
-                foreach (var entry in list)
-                    GameData.MonsterMapping[entry.MonsterId] = entry;
-            }
-            Logger.Info($"Loaded {GameData.MonsterMapping.Count} monster mappings");
-        }
-        catch (Exception ex)
-        {
-            Logger.Error("Failed to load MonsterMapping.", ex);
+            Logger.Error(I18NManager.Translate("Server.ServerInfo.FailedToLoadData", "monster config"), ex);
         }
     }
 }

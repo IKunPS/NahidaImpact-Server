@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "WidgetCoolDownData.proto";
+
+// CmdID: 9914
+message WidgetCoolDownNotify {
+	repeated WidgetCoolDownData group_cool_down_data_list = 14;
+	repeated WidgetCoolDownData normal_cool_down_data_list = 1;
+}

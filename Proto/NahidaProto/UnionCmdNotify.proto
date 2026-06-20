@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "UnionCmd.proto";
+
+// CmdID: 29324
+message UnionCmdNotify {
+	repeated UnionCmd cmd_list = 12;
+}

@@ -1,9 +1,12 @@
 syntax = "proto3";
 
+// Nahida
+// Proto
+
 import "MapMarkPoint.proto";
 
-// CmdID: 22562
+// CmdID: 23261
 message MarkMapRsp {
-  int32 retcode = 1;
-  repeated MapMarkPoint mark_list = 2;
+	repeated MapMarkPoint mark_list = 8;
+	int32 retcode = 10;
 }

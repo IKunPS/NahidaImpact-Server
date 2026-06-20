@@ -7,7 +7,7 @@ namespace NahidaImpact.GameServer.Game.Entity;
 
 public class EntityGadget : EntityBaseGadget
 {
-    public override ProtEntityType EntityType => ProtEntityType.ProtEntityGadget;
+    public override ProtEntityType EntityType => ProtEntityType.Gadget;
 
     public int GadgetId { get; }
     public int GadgetState { get; set; }
@@ -69,7 +69,7 @@ public class EntityGadget : EntityBaseGadget
         var entityInfo = new SceneEntityInfo
         {
             EntityId = Id,
-            EntityType = ProtEntityType.ProtEntityGadget,
+            EntityType = ProtEntityType.Gadget,
             MotionInfo = GetMotionInfo(),
             LifeState = 1,
             EntityClientData = new EntityClientData(),

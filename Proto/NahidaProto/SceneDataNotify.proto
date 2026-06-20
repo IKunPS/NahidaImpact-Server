@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "MapLayerInfo.proto";
+import "LimitedRegionInfo.proto";
+
+// CmdID: 4115
+message SceneDataNotify {
+	repeated uint32 scene_tag_id_list = 7;
+	MapLayerInfo map_layer_info = 10;
+	LimitedRegionInfo limited_region_info = 8;
+	repeated string level_config_name_list = 9;
+	uint32 scene_id = 3;
+}

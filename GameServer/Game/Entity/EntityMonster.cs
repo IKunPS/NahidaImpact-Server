@@ -9,7 +9,7 @@ namespace NahidaImpact.GameServer.Game.Entity;
 
 public class EntityMonster : BaseEntity
 {
-    public override ProtEntityType EntityType => ProtEntityType.ProtEntityMonster;
+    public override ProtEntityType EntityType => ProtEntityType.Monster;
     
     private readonly Position position;
     private readonly Position rotation;
@@ -22,7 +22,7 @@ public class EntityMonster : BaseEntity
     private uint MonsterId => MonsterData.Id;
 
     public override Position GetPosition() => position;
-    public override Position GetRotation() => position;
+    public override Position GetRotation() => rotation;
     
     public int Level { get; }
     public Position BornPos { get; }
@@ -38,14 +38,8 @@ public class EntityMonster : BaseEntity
         Owner = scene.GetHost()!;
         Id = (uint)scene.World.GetNextEntityId(EntityIdTypeEnum.Monster);
         position = new Position(pos);
+        rotation = new Position(rot ?? pos);
         BornPos = pos.Clone();
-
-        // Resolve specific monster config from MonsterMapping + MonsterConfigData
-        if (GameData.MonsterMapping.TryGetValue((int)MonsterId, out var mapping))
-        {
-            GameData.MonsterConfigData.TryGetValue(mapping.MonsterJson, out var config);
-            ConfigEntityMonster = config;
-        }
 
         FightProperties = new List<FightPropPair>
         {
@@ -130,7 +124,6 @@ public class EntityMonster : BaseEntity
     {
         var aiInfo = new SceneEntityAiInfo
         {
-            IsAiOpen = true
         };
 
         if (OwnerEntityId != 0)
@@ -149,7 +142,7 @@ public class EntityMonster : BaseEntity
         var entityInfo = new SceneEntityInfo
         {
             EntityId = Id,
-            EntityType = ProtEntityType.ProtEntityMonster,
+            EntityType = ProtEntityType.Monster,
             MotionInfo = GetMotionInfo(),
             LifeState = 1,
             EntityClientData = new EntityClientData(),

@@ -1,59 +1,63 @@
 syntax = "proto3";
 
-import "FriendOnlineState.proto";
-import "FriendEnterHomeOption.proto";
-import "SocialShowAvatarInfo.proto";
-import "ProfilePicture.proto";
-import "PlatformType.proto";
+// Nahida
+// Proto
+
 import "Birthday.proto";
+import "FeatureBlockType.proto";
+import "FriendEnterHomeOption.proto";
+import "FriendOnlineState.proto";
+import "PlatformType.proto";
+import "ProfilePicture.proto";
+import "SocialShowAvatarInfo.proto";
 
 message SocialDetail {
-  enum DetailVersionType {
-    DETAIL_VERSION_TYPE_VERSION_NONE = 0;
-    DETAIL_VERSION_TYPE_V_50 = 1;
-    DETAIL_VERSION_TYPE_V_57 = 2;
-  }
-  string remark_name = 17;
-  repeated SocialShowAvatarInfo show_avatar_info_list = 22;
-  repeated uint32 show_name_card_id_list = 23;
-  Birthday birthday = 6;
-  string online_id = 13;
-  string signature = 5;
-  string nickname = 2;
-  repeated uint32 reserved_list = 8;
-  ProfilePicture profile_picture = 25;
-  // repeated IPFJPLMAACO JHIHOAKFMCF = 43;
-  string HECKFBIEPOB = 29;
-  string xbox_id = 30;
-  string ip_code = 26;
-  uint32 friendship_max_count = 34;
-  FriendOnlineState online_state = 9;
-  uint32 name_card_id = 14;
-  SocialDetail.DetailVersionType data_version = 36;
-  PlatformType platform_type = 31;
-  uint32 star_count = 32;
-  uint32 avatar_id = 4;
-  uint32 GBBKCIHGIBA = 39;
-  uint32 finish_achievement_num = 18;
-  uint32 MNOLHEDNBOC = 41;
-  uint32 tower_star_count = 35;
-  bool PGNFJCPIOPO = 40;
-  bool is_friend = 11;
-  bool DPOFCHDKDND = 42;
-  bool is_chat_no_disturb = 16;
-  uint32 uid = 1;
-  uint32 PCAHDDHDCNC = 37;
-  FriendEnterHomeOption friend_enter_home_option = 24;
-  bool is_mp_mode_available = 12;
-  bool is_show_avatar = 21;
-  bool is_show_constellation_num = 33;
-  bool is_in_blacklist = 15;
-  uint32 EIMGGAADLJE = 38;
-  uint32 world_level = 7;
-  uint32 level = 3;
-  uint32 tower_level_index = 20;
-  uint32 EBDJNENFFIK = 28;
-  uint32 tower_floor_index = 19;
-  uint32 act_id = 27;
-  uint32 param = 10;
+	enum DetailVersionType {
+		DetailVersionType_VERSION_NONE = 0;
+		DetailVersionType_V_50 = 1;
+		DetailVersionType_V_57 = 2;
+	}
+	string HADOFGGLMDB = 29;
+	Birthday birthday = 6;
+	repeated uint32 show_name_card_id_list = 23;
+	repeated uint32 reserved_list = 8;
+	string remark_name = 17;
+	string ip_code = 26;
+	string online_id = 13;
+	string signature = 5;
+	repeated SocialShowAvatarInfo show_avatar_info_list = 22;
+	repeated FeatureBlockType NGLAGEBDGBJ = 43;
+	string xbox_id = 30;
+	ProfilePicture profile_picture = 25;
+	string nickname = 2;
+	DetailVersionType data_version = 36;
+	uint32 tower_star_count = 35;
+	uint32 tower_level_index = 20;
+	uint32 param = 10;
+	FriendOnlineState online_state = 9;
+	uint32 role_combat_difficulty_id = 28;
+	FriendEnterHomeOption friend_enter_home_option = 24;
+	uint32 uid = 1;
+	uint32 world_level = 7;
+	uint32 NCDENFEBAMN = 41;
+	uint32 ley_line_challenge_last_best_time = 38;
+	uint32 tower_floor_index = 19;
+	uint32 friendship_max_count = 34;
+	uint32 finish_achievement_num = 18;
+	uint32 role_combat_star_count = 32;
+	uint32 role_combat_round = 27;
+	bool is_show_avatar = 21;
+	bool is_show_constellation_num = 33;
+	bool FJHJLFLEJFI = 42;
+	bool is_friend = 11;
+	uint32 avatar_id = 4;
+	bool is_in_blacklist = 15;
+	bool is_mp_mode_available = 12;
+	bool is_chat_no_disturb = 16;
+	bool MHANMBINIJA = 40;
+	PlatformType platform_type = 31;
+	uint32 level = 3;
+	uint32 ley_line_challenge_last_schedule_id = 39;
+	uint32 ley_line_challenge_last_difficulty = 37;
+	uint32 name_card_id = 14;
 }

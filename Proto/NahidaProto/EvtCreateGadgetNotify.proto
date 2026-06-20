@@ -1,0 +1,40 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "AbilityString.proto";
+import "ForwardType.proto";
+import "LifeByOwnerType.proto";
+import "Vector.proto";
+
+// CmdID: 22075
+message EvtCreateGadgetNotify {
+	Vector init_pos = 10;
+	Vector init_euler_angles = 6;
+	repeated uint32 target_entity_id_list = 1977;
+	// [obf] FEFGACGJEBK PMBCAOMBINK = 1367;
+	AbilityString ability_name = 1718;
+	repeated uint32 target_lock_point_index_list = 1445;
+	uint32 entity_id = 4;
+	uint32 target_entity_id = 13;
+	uint32 IAOLAMKOGKH = 1070;
+	uint32 MDJKJOJGGCP = 1686;
+	uint32 config_id = 9;
+	LifeByOwnerType life_by_owner_type = 625;
+	uint32 target_lock_point_index = 2;
+	bool is_peer_id_from_player = 1703;
+	bool is_async_load = 8;
+	bool sight_group_with_owner = 424;
+	bool is_true_life_time_by_owner = 11;
+	int32 local_id = 1597;
+	uint32 prop_owner_entity_id = 5;
+	ForwardType forward_type = 1;
+	uint32 camp_id = 12;
+	uint32 camp_type = 3;
+	uint32 owner_entity_id = 14;
+	uint32 init_pose_id = 1538;
+	uint64 guid = 15;
+	uint32 born_slot_index = 2025;
+	uint32 room_id = 7;
+}

@@ -1,0 +1,8 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message HolidayResortDetailInfo {
+	uint32 GLAJMBFHCCP = 9;
+}

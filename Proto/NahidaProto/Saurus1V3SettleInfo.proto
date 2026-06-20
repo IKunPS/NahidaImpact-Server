@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "DungeonSettleExhibitionInfo.proto";
+import "ExhibitionDisplayInfo.proto";
+
+message Saurus1V3SettleInfo {
+	repeated DungeonSettleExhibitionInfo settle_info_list = 3;
+	repeated ExhibitionDisplayInfo score_list = 4;
+	repeated uint32 winner_uid_list = 7;
+	uint32 score = 12;
+	uint32 FLKEBECBNOL = 10;
+}

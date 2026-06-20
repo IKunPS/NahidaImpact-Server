@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "MailData.proto";
+
+// CmdID: 22847
+message GetAllMailResultNotify {
+	repeated MailData mail_list = 9;
+	string transaction = 4;
+	uint32 total_page_count = 12;
+	bool is_collected = 8;
+	int32 retcode = 2;
+	uint32 page_index = 10;
+}

@@ -1,10 +1,13 @@
-﻿syntax = "proto3";
+syntax = "proto3";
+
+// Nahida
+// Proto
 
 message PropValue {
-  uint32 type = 1;
-  int64 val = 4;
-  oneof value {
-    float fval = 3;
-    int64 ival = 2;
-  }
+	uint32 type = 1;
+	int64 val = 4;
+	oneof value {
+		int64 ival = 2;
+		float fval = 3;
+	}
 }

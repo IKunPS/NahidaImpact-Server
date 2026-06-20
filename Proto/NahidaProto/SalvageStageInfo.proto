@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "SalvageChallengeInfo.proto";
+
+message SalvageStageInfo {
+	repeated SalvageChallengeInfo challenge_info_list = 15;
+	uint32 stage_id = 6;
+	bool is_open = 9;
+}

@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "BargainResultType.proto";
+
+// CmdID: 22595
+message BargainOfferPriceRsp {
+	BargainResultType bargain_result = 8;
+	int32 retcode = 13;
+	int32 cur_mood = 14;
+	uint32 result_param = 4;
+}

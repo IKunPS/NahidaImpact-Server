@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "ForgeQueueData.proto";
+
+// CmdID: 7299
+message ForgeGetQueueDataRsp {
+	map<uint32, ForgeQueueData> forge_queue_map = 3;
+	int32 retcode = 8;
+	uint32 max_queue_num = 6;
+}

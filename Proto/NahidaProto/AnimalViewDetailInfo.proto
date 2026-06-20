@@ -1,0 +1,8 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message AnimalViewDetailInfo {
+	// [obf] repeated IGAPFHOFJFN NOOMICPOJHO = 11;
+}

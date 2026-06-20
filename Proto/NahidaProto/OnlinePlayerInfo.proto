@@ -1,0 +1,36 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "BeyondProfilePicture.proto";
+import "BeyondProfileTag.proto";
+import "MpSettingType.proto";
+import "PlatformType.proto";
+import "ProfilePicture.proto";
+
+message OnlinePlayerInfo {
+	string HADOFGGLMDB = 15;
+	string signature = 11;
+	string nickname = 2;
+	string xbox_id = 14;
+	string online_id = 8;
+	ProfilePicture profile_picture = 12;
+	string psn_id = 13;
+	repeated BeyondProfileTag beyond_profile_tag_list = 21;
+	BeyondProfilePicture beyond_profile_picture = 20;
+	repeated uint32 blacklist_uid_list = 10;
+	uint32 name_card_id = 9;
+	MpSettingType mp_setting_type = 5;
+	uint32 total_fashion_value = 23;
+	uint32 cur_player_num_in_world = 6;
+	uint32 world_level = 7;
+	uint32 player_level = 3;
+	PlatformType platform_type = 16;
+	uint32 avatar_id = 4;
+	uint32 beyond_player_level = 22;
+	bool MDDBADIOPKJ = 17;
+	bool CEEDCPOPHLI = 18;
+	bool INNIPHILOLE = 19;
+	uint32 uid = 1;
+}

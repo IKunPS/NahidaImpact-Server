@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message NatlanDrillBattleLevelInfo {
+	// [obf] FJCDNGAMFJE CKPDBKHPBIH = 3;
+	uint32 OJJPLPJPHFH = 12;
+	uint32 BMHLDIDNMBK = 10;
+	uint32 LCHBHPAPBGD = 11;
+	bool is_finished = 2;
+	uint32 JDKCMBIBGCN = 15;
+	uint32 GMILENPPOID = 1;
+}

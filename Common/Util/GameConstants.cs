@@ -2,7 +2,7 @@ namespace NahidaImpact.Util;
 
 public static class GameConstants
 {
-    public const string GAME_VERSION = "6.5.50";
+    public const string GAME_VERSION = "6.6.0";
     public const int MAX_STAMINA = 300;
     public const int STAMINA_RECOVERY_TIME = 360; // 6 minutes
     public const int STAMINA_RESERVE_RECOVERY_TIME = 1080; // 18 minutes
@@ -15,6 +15,34 @@ public static class GameConstants
     
     public const int MAIN_CHARACTER_MALE = 10000005;
     public const int MAIN_CHARACTER_FEMALE = 10000007;
+
+    public const int DEFAULT_FLYCLOAK_ID = 340005;
+    public const int DEFAULT_WEAPON_LEVEL = 1;
+    public const int DEFAULT_WEAPON_PROMOTE = 0;
+    public const int DEFAULT_WEAPON_REFINEMENT = 0;
+
+    // Player defaults
+    public const int START_SCENE_ID = 3; // FU**
+    public const int START_REGION_ID = 1;
+    public const int DEFAULT_PLAYER_LEVEL = 1;
+    public const int DEFAULT_WORLD_LEVEL = 0;
+    public const int DEFAULT_NAME_CARD_ID = 210001;
+    public const int MAX_STAMINA_DEFAULT = 24000;
+    public const int DIVE_MAX_STAMINA_DEFAULT = 10000;
+    public const int PLAYER_RESIN_DEFAULT = 200;
+    public const int MP_SETTING_NONE = 0;
+    public const int MP_SETTING_ENTER_AFTER_APPLY = 1;
+    public const int START_TELEPORT_POINT = 7;
+    public const int START_SCENE_AREA = 1;
+    public const int MALE_SKILL_DEPOT = 504;
+    public const int FEMALE_SKILL_DEPOT = 704;
+
+    public const float START_POS_X = 2747f;
+    public const float START_POS_Y = 194f;
+    public const float START_POS_Z = -1719f;
+    public const float START_ROT_X = 0f;
+    public const float START_ROT_Y = 307f;
+    public const float START_ROT_Z = 0f;
 
     public static readonly string[] DEFAULT_ABILITY_STRINGS =
     {
@@ -42,7 +70,6 @@ public static class GameConstants
     {
         "TeamAbility_Reset_Crystal_Mark",
         "Team_TeamChargeMark",
-        "TeamAbility_Reset_Crystal_Mark",
         "TeamAbility_Reset_MoonOvergrow",
         "TeamAbility_MoonPhase",
         "Ability_Avatar_Dive_Team",

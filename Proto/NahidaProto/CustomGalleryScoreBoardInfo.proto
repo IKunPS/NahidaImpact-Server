@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "CustomGalleryCountdownScoreBoard.proto";
+import "CustomGalleryNormalScoreBoard.proto";
+import "CustomGalleryScoreBoardType.proto";
+import "CustomGalleryTimerScoreBoard.proto";
+
+message CustomGalleryScoreBoardInfo {
+	repeated uint32 progress_id_list = 3;
+	string name = 1;
+	CustomGalleryScoreBoardType type = 12;
+	uint32 current_score = 11;
+	uint32 target_score = 6;
+	oneof detail {
+		CustomGalleryNormalScoreBoard normal = 336;
+		CustomGalleryTimerScoreBoard timer = 1181;
+		CustomGalleryCountdownScoreBoard countdown = 1111;
+	}
+}

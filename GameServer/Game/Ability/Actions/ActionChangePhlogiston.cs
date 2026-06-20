@@ -1,6 +1,7 @@
 using Google.Protobuf;
 using NahidaImpact.Data.Ability;
 using NahidaImpact.GameServer.Game.Entity;
+using NahidaImpact.Prop;
 using System.Threading.Tasks;
 
 namespace NahidaImpact.GameServer.Game.Ability.Actions;
@@ -13,11 +14,25 @@ public class ActionChangePhlogiston : AbilityActionHandler
         var owner = ability.Owner;
         if (owner == null) return Task.FromResult(false);
 
+        var player = owner.Owner;
+        if (player == null) return Task.FromResult(false);
+
         float changeValue = action.Amount;
 
-        // TODO: Handle Add/Lose determineType
-        // TODO: Cap player at 100, vehicle at 50
-        // TODO: Update phlogiston on player/vehicle
+        if (action.DetermineType == "Add")
+        {
+            float currentPhlogiston = player.GetPhlogistonValue();
+            float newValue = currentPhlogiston + changeValue;
+            if (newValue > 100) newValue = 100;
+            player.SetPhlogistonValue(newValue);
+        }
+        else if (action.DetermineType == "Lose")
+        {
+            float currentPhlogiston = player.GetPhlogistonValue();
+            float newValue = currentPhlogiston - changeValue;
+            if (newValue < 0) newValue = 0;
+            player.SetPhlogistonValue(newValue);
+        }
 
         return Task.FromResult(true);
     }

@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message TowerDefenseSettleInfo {
+	uint32 level_id = 3;
+	uint32 CAHBAKCDIHG = 9;
+	uint32 PKIPLAMPPFJ = 11;
+	bool is_new_record = 1;
+	bool is_succ = 5;
+	uint32 DCPLECBCJLG = 6;
+	uint32 max_hp = 13;
+	uint32 kill_num = 10;
+}

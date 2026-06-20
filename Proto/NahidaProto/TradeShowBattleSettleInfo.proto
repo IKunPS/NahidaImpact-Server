@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message TradeShowBattleSettleInfo {
+	bool is_new_record = 2;
+	uint32 difficulty_id = 12;
+	uint32 IIPMNGKLDGH = 8;
+	uint32 ABNLAKLGCIC = 3;
+	uint32 level_id = 14;
+	uint32 score = 15;
+}

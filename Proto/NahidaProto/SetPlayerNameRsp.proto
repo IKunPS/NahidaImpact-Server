@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+// CmdID: 9831
+message SetPlayerNameRsp {
+	string nick_name = 9;
+	int32 retcode = 1;
+}

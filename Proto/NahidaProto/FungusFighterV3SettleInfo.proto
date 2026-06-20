@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message FungusFighterV3SettleInfo {
+	uint32 MPNMPEJGPMD = 15;
+	bool is_new_record = 6;
+	uint32 level_id = 7;
+	uint32 FAEHNALIOMP = 10;
+	uint32 cost_time = 4;
+	uint32 DGLKFPPFAMH = 12;
+	uint32 PCEKBKANPGA = 13;
+	uint32 ANLJLIPNJKN = 2;
+	uint32 NJCMKECKJOC = 1;
+}

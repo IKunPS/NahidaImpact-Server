@@ -1,9 +1,12 @@
-﻿syntax = "proto3";
+syntax = "proto3";
+
+// Nahida
+// Proto
 
 import "SceneTeamAvatar.proto";
 
-// CmdID: 22857
+// CmdID: 1273
 message SceneTeamUpdateNotify {
-  repeated SceneTeamAvatar scene_team_avatar_list = 3;
-  bool is_in_mp = 1;
+	repeated SceneTeamAvatar scene_team_avatar_list = 4;
+	bool is_in_mp = 3;
 }

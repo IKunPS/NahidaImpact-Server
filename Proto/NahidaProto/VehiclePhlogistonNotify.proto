@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+// CmdID: 25945
+message VehiclePhlogistonNotify {
+	float cur_phlogiston = 5;
+	uint32 entity_id = 1;
+}

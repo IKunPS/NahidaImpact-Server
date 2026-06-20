@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message SpiceStageData {
+	uint32 stage_id = 3;
+	bool is_open = 9;
+	uint32 success_times = 7;
+}

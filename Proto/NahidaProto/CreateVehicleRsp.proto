@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+// CmdID: 27267
+message CreateVehicleRsp {
+	uint32 entity_id = 12;
+	int32 retcode = 10;
+	uint32 vehicle_id = 4;
+}

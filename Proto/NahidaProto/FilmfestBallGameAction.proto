@@ -1,25 +1,34 @@
 syntax = "proto3";
- 
+
+// Nahida
+// Proto
+
 import "Vector2Int.proto";
 
 message FilmfestBallGameAction {
-	uint64 execution_game_time = 7;
-	uint64 client_game_time = 2;
-	uint64 server_game_time = 3;
-	int32 rot = 9;
-	bool is_failed = 4;
-	uint32 peer_id = 6;
-	Vector2Int dir = 8;
-	Vector2Int pos = 5;
-	FilmfestBallGameAction.ActionType action_type = 1;
-	repeated uint32 entity_id_list = 10;
-	enum ActionType {
-		ACTION_TYPE_ACTION_TYPE_NONE = 0;
-		ACTION_TYPE_ACTION_TYPE_PLAYER_MOVE = 1;
-		ACTION_TYPE_ACTION_TYPE_SPAWN_WAVE = 2;
-		ACTION_TYPE_ACTION_TYPE_ADD_OBSTACLE = 3;
-		ACTION_TYPE_ACTION_TYPE_REMOVE_OBSTACLE = 4;
-		ACTION_TYPE_ACTION_TYPE_TEAM_SCORE = 5;
-		ACTION_TYPE_ACTION_TYPE_COLLECT_OBSTACLES = 6;
+	enum FilmfestBallGameActionType {
+		FILMFEST_BALL_GAME_ACTION_TYPE_ACTION_TYPE_NONE = 0;
+		FILMFEST_BALL_GAME_ACTION_TYPE_ACTION_TYPE_PLAYER_MOVE = 1;
+		FILMFEST_BALL_GAME_ACTION_TYPE_ACTION_TYPE_SPAWN_WAVE = 2;
+		FILMFEST_BALL_GAME_ACTION_TYPE_ACTION_TYPE_ADD_OBSTACLE = 3;
+		FILMFEST_BALL_GAME_ACTION_TYPE_ACTION_TYPE_REMOVE_OBSTACLE = 4;
+		FILMFEST_BALL_GAME_ACTION_TYPE_ACTION_TYPE_TEAM_SCORE = 5;
+		FILMFEST_BALL_GAME_ACTION_TYPE_ACTION_TYPE_COLLECT_OBSTACLES = 6;
+		HMINHEBEAEJ_ACTION_TYPE_CHANGE_STAGE = 7;
+		HMINHEBEAEJ_ACTION_TYPE_CREATE_COLOR_ZONE = 8;
+		HMINHEBEAEJ_ACTION_TYPE_ADD_RIGHT_PUSH_COUNT = 9;
 	}
+	Vector2Int dir = 8;
+	repeated uint32 entity_id_list = 10;
+	Vector2Int pos = 5;
+	uint32 peer_id = 6;
+	FilmfestBallGameActionType action_type = 1;
+	bool is_failed = 4;
+	bool EOCJOHDBJLL = 12;
+	int32 rot = 9;
+	uint64 client_game_time = 2;
+	uint32 KMFGABFCHEB = 11;
+	int32 radius = 13;
+	uint64 execution_game_time = 7;
+	uint64 server_game_time = 3;
 }

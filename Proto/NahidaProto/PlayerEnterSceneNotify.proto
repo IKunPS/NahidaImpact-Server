@@ -1,35 +1,40 @@
-﻿syntax = "proto3";
+syntax = "proto3";
 
-import "Vector.proto";
-import "MapLayerInfo.proto";
+// Nahida
+// Proto
+
 import "EnterType.proto";
+import "LimitedRegionInfo.proto";
+import "MapLayerInfo.proto";
+import "MirrorWorldSceneDetail.proto";
+import "Vector.proto";
 
-// CmdID: 20140
+// CmdID: 684
 message PlayerEnterSceneNotify {
-  // LimitedRegionInfo limited_region_info = 571; // [(ys_custom).is_masked = true, (ys_custom).value_mask = "(val + 22665) ^ 57361", (ys_custom).value_unmask = "(val ^ 57361) - 22665"];
-  Vector pos = 1;
-  Vector BNNBCCNPOJG = 4; // [(ys_custom).is_masked = true, (ys_custom).value_mask = "(val ^ 64981) - 30022", (ys_custom).value_unmask = "(val + 30022) ^ 64981"];
-  Vector EOKPAOCNGBM = 1752;
-  // NJFHIBIMPPP JEGBHLHCKLD = 1094;
-  // IEHCJBPPCMD HJGLNPEOIDE = 1984;
-  // MirrorWorldSceneDetail mirror_world_scene_detail = 192;
-  MapLayerInfo map_layer_info = 1145;
-  repeated uint32 scene_tag_id_list = 3;
-  string scene_transaction = 772;
-  EnterType type = 2;
-  uint32 prev_scene_id = 5; // [(ys_custom).is_masked = true, (ys_custom).value_mask = "(val ^ 39512) - 40922", (ys_custom).value_unmask = "(val + 40922) ^ 39512"];
-  uint64 scene_begin_time = 6; // [(ys_custom).is_masked = true, (ys_custom).value_mask = "(val ^ 27843) + 16749", (ys_custom).value_unmask = "(val - 16749) ^ 27843"];
-  uint32 template_loading_id = 1973; // [(ys_custom).is_masked = true, (ys_custom).value_mask = "(val - 3554) ^ 2221", (ys_custom).value_unmask = "(val ^ 2221) + 3554"];
-  bool is_skip_ui = 922;
-  bool is_first_login_enter_scene = 13;
-  uint32 scene_id = 11; // [(ys_custom).is_masked = true, (ys_custom).value_mask = "(val - 49379) ^ 11523", (ys_custom).value_unmask = "(val ^ 11523) + 49379"];
-  uint32 enter_scene_token = 12; // [(ys_custom).is_masked = true, (ys_custom).value_mask = "(val ^ 57361) - 22665", (ys_custom).value_unmask = "(val + 22665) ^ 57361"];
-  uint32 dungeon_id = 8; // [(ys_custom).is_masked = true, (ys_custom).value_mask = "(val ^ 27544) - 17829", (ys_custom).value_unmask = "(val + 17829) ^ 27544"];
-  uint32 world_type = 1410; // [(ys_custom).is_masked = true, (ys_custom).value_mask = "(val + 30022) ^ 64981", (ys_custom).value_unmask = "(val ^ 64981) - 30022"];
-  uint32 FCKJJGAHHLI = 419;//  [(ys_custom).is_masked = true, (ys_custom).value_mask = "(val - 7304) ^ 7061", (ys_custom).value_unmask = "(val ^ 7061) + 7304"];
-  uint32 world_level = 7; // [(ys_custom).is_masked = true, (ys_custom).value_mask = "(val ^ 31579) + 19873", (ys_custom).value_unmask = "(val - 19873) ^ 31579"];
-  uint32 create_player_uid = 564; // [(ys_custom).is_masked = true, (ys_custom).value_mask = "(val - 50775) ^ 38388", (ys_custom).value_unmask = "(val ^ 38388) + 50775"];
-  uint32 enter_reason = 1617; // [(ys_custom).is_masked = true, (ys_custom).value_mask = "(val ^ 43962) + 40350", (ys_custom).value_unmask = "(val - 40350) ^ 43962"];
-  uint32 FGNMNKGFDPH = 2042;
-  uint32 target_uid = 15; // [(ys_custom).is_masked = true, (ys_custom).value_mask = "(val - 30259) ^ 4145", (ys_custom).value_unmask = "(val ^ 4145) + 30259"];
+	// [obf] IEHCJBPPCMD HJGLNPEOIDE = 785;
+	MapLayerInfo map_layer_info = 724;
+	string scene_transaction = 205;
+	MirrorWorldSceneDetail mirror_world_scene_detail = 150;
+	Vector pos = 13;
+	Vector BNNBCCNPOJG = 9;
+	// [obf] NJFHIBIMPPP JEGBHLHCKLD = 1289;
+	repeated uint32 scene_tag_id_list = 6;
+	LimitedRegionInfo limited_region_info = 589;
+	Vector prev_pos = 751;
+	uint32 enter_reason = 1911;
+	uint32 enter_scene_token = 2;
+	uint32 FCKJJGAHHLI = 1416;
+	uint32 create_player_uid = 983;
+	bool is_skip_ui = 1551;
+	bool is_first_login_enter_scene = 8;
+	uint32 target_uid = 15;
+	uint32 dungeon_id = 12;
+	uint32 dungeon_difficulty_type = 1292;
+	EnterType type = 4;
+	uint32 scene_id = 11;
+	uint32 template_loading_id = 344;
+	uint32 prev_scene_id = 5;
+	uint64 scene_begin_time = 10;
+	uint32 world_level = 3;
+	uint32 world_type = 1146;
 }

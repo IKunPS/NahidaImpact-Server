@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+// CmdID: 1505
+message AvatarGainCostumeNotify {
+	uint32 costume_id = 5;
+}

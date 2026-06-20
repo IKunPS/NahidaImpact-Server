@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message MainCoop {
+	enum Status {
+		Status_INVALID = 0;
+		Status_UNFINISHED = 1;
+		Status_FINISHED = 2;
+	}
+	map<uint32, uint32> seen_ending_map = 3;
+	repeated uint32 save_point_id_list = 10;
+	map<uint32, int32> temp_var_map = 15;
+	map<uint32, int32> normal_var_map = 11;
+	Status status = 14;
+	uint32 id = 13;
+	uint32 self_confidence = 1;
+}

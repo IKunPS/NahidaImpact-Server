@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "Uint32Pair.proto";
+
+message LanternRiteV6DanmakuTechInfo {
+	repeated uint32 unlocked_tech_group_id_list = 14;
+	repeated Uint32Pair tech_node_id_level_list = 6;
+	uint32 boss_coin_num = 9;
+	uint32 coin_num = 10;
+}

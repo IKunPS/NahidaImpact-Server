@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message TradeShowStgSettleInfo {
+	bool is_new_record = 12;
+	uint32 level_id = 2;
+	uint32 hit_point = 14;
+}

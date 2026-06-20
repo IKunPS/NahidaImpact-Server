@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "Vector.proto";
+
+// CmdID: 20588
+message ScenePlayerSoundNotify {
+	enum PlaySoundType {
+		PlaySoundType_PLAY_SOUND_NONE = 0;
+		PlaySoundType_PLAY_SOUND_START = 1;
+		PlaySoundType_PLAY_SOUND_STOP = 2;
+	}
+	Vector play_pos = 6;
+	string sound_name = 1;
+	PlaySoundType play_type = 13;
+}

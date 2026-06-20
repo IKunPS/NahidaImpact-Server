@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message BeyondProfileTag {
+	enum LFAAAIAMILF {
+		LFAAAIAMILF_BEYOND_PLAYER_TAG_NORMAL = 0;
+		LFAAAIAMILF_BEYOND_PLAYER_TAG_LEVEL = 1;
+	}
+	uint64 level_guid = 3;
+	// [obf] LFAAAIAMILF HHCDOFCIBMO = 1;
+	uint32 KEGGEDNBCJA = 2;
+}

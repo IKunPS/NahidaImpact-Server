@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "Vector.proto";
+
+message AbilityActionGenerateElemBall {
+	Vector pos = 9;
+	Vector rot = 11;
+	uint32 room_id = 4;
+}

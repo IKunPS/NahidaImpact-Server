@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "Achievement.proto";
+
+// CmdID: 29217
+message AchievementAllDataNotify {
+	repeated Achievement achievement_list = 9;
+	repeated uint32 reward_taken_goal_id_list = 5;
+}

@@ -1,0 +1,8 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message ParamList {
+	repeated uint32 param_list = 1;
+}

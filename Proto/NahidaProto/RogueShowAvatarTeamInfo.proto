@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "RogueAvatarInfo.proto";
+
+message RogueShowAvatarTeamInfo {
+	repeated RogueAvatarInfo avatar_list = 1;
+}

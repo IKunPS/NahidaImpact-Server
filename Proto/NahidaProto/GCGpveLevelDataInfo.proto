@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message GCGpveLevelDataInfo {
+	repeated uint32 affix_list = 10;
+	uint32 game_id = 11;
+	uint32 level_id = 7;
+	uint32 max_score = 8;
+}

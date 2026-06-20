@@ -1,9 +1,12 @@
 syntax = "proto3";
 
+// Nahida
+// Proto
+
 import "PlayerWorldSceneInfo.proto";
 
-// CmdID: 20396
+// CmdID: 25510
 message PlayerWorldSceneInfoListNotify {
-  repeated PlayerWorldSceneInfo info_list = 1;
-  repeated uint32 unlocked_area_id_list = 1810;
+	repeated uint32 unlocked_area_id_list = 1129;
+	repeated PlayerWorldSceneInfo info_list = 1;
 }

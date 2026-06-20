@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message AkaFesReasoningLevelInfo {
+	uint32 CCINJJJJBGC = 8;
+	uint32 level_id = 9;
+	bool is_open = 6;
+	uint32 min_finish_time = 7;
+}

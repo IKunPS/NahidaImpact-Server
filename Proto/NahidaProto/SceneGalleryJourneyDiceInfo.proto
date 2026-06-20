@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message SceneGalleryJourneyDiceInfo {
+	repeated uint32 dice_list = 9;
+	uint32 kill_elite_monster_num = 1;
+	uint32 score = 15;
+	uint32 kill_normal_monster_num = 11;
+}

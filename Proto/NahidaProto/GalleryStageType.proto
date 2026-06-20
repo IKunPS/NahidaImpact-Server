@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+enum GalleryStageType {
+	GalleryStageType_GALLERY_NONE = 0;
+	GalleryStageType_GALLERY_PRESTART = 1;
+	GalleryStageType_GALLERY_START = 2;
+	GalleryStageType_GALLERY_INIT = 3;
+}

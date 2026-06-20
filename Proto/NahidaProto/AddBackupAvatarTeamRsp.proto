@@ -1,5 +1,9 @@
 syntax = "proto3";
 
+// Nahida
+// Proto
+
+// CmdID: 5817
 message AddBackupAvatarTeamRsp {
-  int32 retcode = 8;
+	int32 retcode = 8;
 }

@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "AvatarSkillInfo.proto";
+
+// CmdID: 7250
+message AvatarSkillInfoNotify {
+	map<uint32, AvatarSkillInfo> skill_map = 11;
+	uint64 guid = 6;
+}

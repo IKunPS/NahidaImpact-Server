@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+// CmdID: 29364
+message UnlockAvatarTalentRsp {
+	uint32 talent_id = 3;
+	int32 retcode = 11;
+	uint64 avatar_guid = 15;
+}

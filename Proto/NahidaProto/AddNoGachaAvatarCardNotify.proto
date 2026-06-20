@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "AddNoGachaAvatarCardTransferItem.proto";
+
+// CmdID: 25305
+message AddNoGachaAvatarCardNotify {
+	repeated AddNoGachaAvatarCardTransferItem transfer_item_list = 13;
+	uint32 reason = 9;
+	bool is_transfer_to_item = 11;
+	uint32 initial_promote_level = 8;
+	uint32 item_id = 15;
+	uint32 initial_level = 10;
+	uint32 avatar_id = 14;
+}

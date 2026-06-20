@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message FlightDailyRecord {
+	repeated uint32 watcher_id_list = 5;
+	bool is_touched = 12;
+	uint32 group_id = 7;
+	uint32 best_score = 15;
+	uint32 start_time = 4;
+}

@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "MonsterChessRecordInfo.proto";
+
+message MonsterChessDetailInfo {
+	repeated MonsterChessRecordInfo monster_chess_record_info = 1;
+}

@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+// CmdID: 4735
+message HomeAvatarAllFinishRewardNotify {
+	repeated uint32 event_id_list = 13;
+}

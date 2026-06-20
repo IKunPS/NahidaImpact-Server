@@ -1,13 +1,15 @@
+using NahidaImpact.Util;
+
 namespace NahidaImpact.GameServer.Game.Player;
 
 public class PlayerProfile
 {
-    public uint NameCardId { get; set; } = 210001;
+    public uint NameCardId { get; set; } = (uint)GameConstants.DEFAULT_NAME_CARD_ID;
     public string? Nickname { get; set; }
-    public uint Level { get; set; } = 1;
-    public uint WorldLevel { get; set; } = 0;
+    public uint Level { get; set; } = GameConstants.DEFAULT_PLAYER_LEVEL;
+    public uint WorldLevel { get; set; } = GameConstants.DEFAULT_WORLD_LEVEL;
     public Birthday Birthday { get; set; } = new() { Day = 0, Month = 0 };
-    public ProfilePicture HeadImage { get; set; } = new() { AvatarId = 10000007 };
+    public ProfilePicture HeadImage { get; set; } = new() { AvatarId = GameConstants.MAIN_CHARACTER_FEMALE };
     public string? Signature { get; set; } = "";
     public uint Achievements { get; set; }
     public uint DaysSinceLastLogin { get; set; }

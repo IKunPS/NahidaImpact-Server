@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "ForwardType.proto";
+import "Vector.proto";
+
+// CmdID: 20168
+message EvtAvatarUpdateFocusNotify {
+	Vector focus_forward = 14;
+	uint32 entity_id = 11;
+	ForwardType forward_type = 13;
+}

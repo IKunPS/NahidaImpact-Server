@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message BattlePassProduct {
+	string NDOFHEANAIL = 11;
+	string OJBMPNFNNGC = 7;
+	string upgrade_product_id = 14;
+	string normal_product_id = 8;
+	string extra_product_id = 3;
+}

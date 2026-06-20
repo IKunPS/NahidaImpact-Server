@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "ProfilePicture.proto";
+
+message FurnitureMakeBeHelpedData {
+	string player_name = 4;
+	ProfilePicture profile_picture = 9;
+	uint32 uid = 8;
+	fixed32 time = 5;
+	uint32 icon = 7;
+}

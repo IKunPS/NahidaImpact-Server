@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+// CmdID: 27622
+message ChangeGameTimeRsp {
+	int32 retcode = 7;
+	uint32 extra_days = 2;
+	uint32 cur_game_time = 9;
+}

@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message WidgetCoolDownData {
+	uint64 cool_down_time = 6;
+	uint32 id = 15;
+	bool is_success = 4;
+}

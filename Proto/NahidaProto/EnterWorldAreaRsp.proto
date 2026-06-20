@@ -1,8 +1,11 @@
 syntax = "proto3";
 
-// CmdID: 20876
+// Nahida
+// Proto
+
+// CmdID: 24791
 message EnterWorldAreaRsp {
-  uint32 area_id = 13;
-  uint32 area_type = 6;
-  int32 retcode = 11;
+	uint32 area_type = 7;
+	int32 retcode = 15;
+	uint32 area_id = 9;
 }

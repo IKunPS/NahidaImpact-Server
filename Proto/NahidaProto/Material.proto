@@ -1,8 +1,11 @@
-﻿syntax = "proto3";
+syntax = "proto3";
+
+// Nahida
+// Proto
 
 import "MaterialDeleteInfo.proto";
 
 message Material {
-  MaterialDeleteInfo delete_info = 2;
-  uint32 count = 1;
+	MaterialDeleteInfo delete_info = 2;
+	uint32 count = 1;
 }

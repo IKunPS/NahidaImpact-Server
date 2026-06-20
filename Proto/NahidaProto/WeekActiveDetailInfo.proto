@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message WeekActiveDetailInfo {
+	repeated uint32 GFIJAOFGHCJ = 14;
+	repeated uint32 reward_week_list = 9;
+	repeated uint32 claimed_avatar_id_list = 1;
+	uint32 avatar_id = 8;
+	uint32 PNNAAOMJKDD = 6;
+	bool is_week_active_viewed = 4;
+	uint32 progress = 2;
+}

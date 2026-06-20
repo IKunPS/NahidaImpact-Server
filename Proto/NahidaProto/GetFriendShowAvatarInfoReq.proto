@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+// CmdID: 6053
+message GetFriendShowAvatarInfoReq {
+	uint32 uid = 8;
+}

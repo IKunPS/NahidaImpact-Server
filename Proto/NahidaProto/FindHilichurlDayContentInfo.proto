@@ -1,0 +1,8 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message FindHilichurlDayContentInfo {
+	uint32 start_time = 11;
+}

@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+// CmdID: 8495
+message GetAreaExplorePointReq {
+	repeated uint32 area_id_list = 2;
+}

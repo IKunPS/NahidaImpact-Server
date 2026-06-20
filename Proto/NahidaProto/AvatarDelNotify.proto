@@ -1,5 +1,9 @@
 syntax = "proto3";
 
+// Nahida
+// Proto
+
+// CmdID: 27942
 message AvatarDelNotify {
-  repeated uint64 avatar_guid_list = 1;
+	repeated uint64 avatar_guid_list = 12;
 }

@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message CatcafeDetailInfo {
+	// [obf] repeated PGAJAMBHILH HEOMDDGEMKJ = 4;
+	// [obf] repeated FCMMGCOHPBD AHBIHLNPNNN = 2;
+}

@@ -1,5 +1,9 @@
 syntax = "proto3";
 
+// Nahida
+// Proto
+
+// CmdID: 22921
 message PersonalSceneJumpReq {
-  uint32 point_id = 15;
+	uint32 point_id = 1;
 }

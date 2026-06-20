@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "HomeAvatarRewardEventInfo.proto";
+
+// CmdID: 29692
+message HomeAvatarRewardEventNotify {
+	repeated HomeAvatarRewardEventInfo pending_list = 10;
+	HomeAvatarRewardEventInfo reward_event = 11;
+	bool is_event_trigger = 12;
+}

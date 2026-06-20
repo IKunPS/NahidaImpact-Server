@@ -1,8 +1,11 @@
-﻿syntax = "proto3";
+syntax = "proto3";
+
+// Nahida
+// Proto
 
 message RegionSimpleInfo {
-  string type = 3;
-  string name = 1;
-  string title = 2;
-  string dispatch_url = 4;
+	string type = 3;
+	string name = 1;
+	string dispatch_url = 4;
+	string title = 2;
 }

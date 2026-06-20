@@ -1,15 +1,19 @@
 syntax = "proto3";
- 
+
+// Nahida
+// Proto
+
 import "RoutePoint.proto";
 
 message MonsterRoute {
-	float arrive_range = 4;
-	int32 route_id = 8;
-	bool ELLMMHOKLBE = 7;
-	bool HNIGIKMLOHJ = 5;
-	bool EHGCBNCPDDO = 6;
-	bool MOLCEFOMCBA = 9;
-	uint32 route_type = 3;
+	repeated RoutePoint route_points = 1;
 	uint32 speed_level = 2;
-	repeated RoutePoint BICJKMEHKNA = 1;
+	uint32 route_type = 3;
+	float arrive_range = 4;
+	bool IKBKILCMKDO = 10;
+	bool FCPAJCJEPHM = 5;
+	int32 route_id = 8;
+	bool CPHKNKDMPAM = 7;
+	bool CAFPHMBONGP = 9;
+	bool LCKJHJNGOEF = 6;
 }

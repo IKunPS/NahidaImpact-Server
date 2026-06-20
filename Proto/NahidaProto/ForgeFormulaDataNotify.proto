@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+// CmdID: 24377
+message ForgeFormulaDataNotify {
+	uint32 forge_id = 4;
+	bool is_locked = 14;
+}

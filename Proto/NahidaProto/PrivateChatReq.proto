@@ -1,14 +1,18 @@
 syntax = "proto3";
 
-// CmdID: 26399
+// Nahida
+// Proto
+
+// CmdID: 27651
 message PrivateChatReq {
-  message BeyondCostumeShareCode {
-    bytes PGLHKNCCMOE = 4;
-  }
-  uint32 target_uid = 5;
-  oneof content {
-    string text = 1;
-    BeyondCostumeShareCode beyond_costume_share_code = 12;
-    uint32 icon = 4;
-  }
+	message BeyondCostumeShareCode {
+		bytes PGLHKNCCMOE = 13;
+	}
+
+	uint32 target_uid = 13;
+	oneof content {
+		uint32 icon = 7;
+		string text = 4;
+		BeyondCostumeShareCode beyond_costume_share_code = 3;
+	}
 }

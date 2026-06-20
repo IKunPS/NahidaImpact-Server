@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message InstableSprayAvatarInfo {
+	bool is_trial = 15;
+	uint64 avatar_id = 4;
+}

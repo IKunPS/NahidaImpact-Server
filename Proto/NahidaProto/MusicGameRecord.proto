@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message MusicGameRecord {
+	uint32 max_combo = 12;
+	bool is_unlock = 10;
+	uint32 max_score = 8;
+}

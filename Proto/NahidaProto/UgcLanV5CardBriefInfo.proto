@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "LanV5CardSocial.proto";
+
+message UgcLanV5CardBriefInfo {
+	string EKKPJFFFKMB = 5;
+	string creator_nickname = 10;
+	LanV5CardSocial social = 12;
+	uint32 slot_id = 9;
+	uint32 audit_state = 4;
+	uint32 AMOFKJGNJAH = 13;
+	uint32 JOCLPIMGCOK = 3;
+	bool is_stored = 14;
+	bool is_published = 1;
+	bool JNADCEBFIKB = 2;
+	bool is_liked = 6;
+	uint32 save_time = 7;
+	uint64 ugc_guid = 11;
+}

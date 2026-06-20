@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "PotionStageData.proto";
+
+message PotionActivityDetailInfo {
+	repeated PotionStageData stage_list = 12;
+}

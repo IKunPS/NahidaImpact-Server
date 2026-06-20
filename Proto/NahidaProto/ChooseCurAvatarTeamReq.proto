@@ -1,6 +1,9 @@
 syntax = "proto3";
 
-// CmdID: 26963
+// Nahida
+// Proto
+
+// CmdID: 7913
 message ChooseCurAvatarTeamReq {
-  uint32 team_id = 7;
+	uint32 team_id = 10;
 }

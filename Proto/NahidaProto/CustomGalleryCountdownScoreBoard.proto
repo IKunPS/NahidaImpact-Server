@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message CustomGalleryCountdownScoreBoard {
+	int32 passed_time = 7;
+	uint32 start_time = 14;
+	bool is_paused = 10;
+}

@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message SceneGalleryBoxMatchInfo {
+	// [obf] repeated GPJCJPNECFO FGGJHHALDEN = 10;
+	// [obf] repeated GPJCJPNECFO BEMCHKPHOGB = 12;
+}

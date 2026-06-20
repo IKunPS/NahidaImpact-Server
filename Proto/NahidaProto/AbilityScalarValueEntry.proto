@@ -1,8 +1,11 @@
-﻿syntax = "proto3";
+syntax = "proto3";
+
+// Nahida
+// Proto
 
 import "AbilityString.proto";
 
 message AbilityScalarValueEntry {
-  AbilityString key = 1;
-  float float_value = 3;
+	AbilityString key = 1;
+	float float_value = 3;
 }

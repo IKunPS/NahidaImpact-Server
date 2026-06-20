@@ -1,6 +1,9 @@
 syntax = "proto3";
 
+// Nahida
+// Proto
+
 message DrawPlayInfo {
-	repeated uint32 OLABOADLOCC = 1;
-	repeated uint32 POHPCBHELHA = 2;
+	repeated uint32 GGPLHFAMKFC = 2;
+	repeated uint32 HDJCELHPPNA = 1;
 }

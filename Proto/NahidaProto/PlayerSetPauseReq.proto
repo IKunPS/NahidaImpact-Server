@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+// CmdID: 7226
+message PlayerSetPauseReq {
+	bool is_paused = 14;
+}

@@ -1,0 +1,30 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "GachaItem.proto";
+
+// CmdID: 4034
+message DoGachaRsp {
+	repeated GachaItem gacha_item_list = 12;
+	uint32 cost_item_num = 15;
+	uint32 wish_progress = 13;
+	uint32 gacha_times = 2;
+	bool is_under_minors_restrict = 1271;
+	bool is_under_general_restrict = 1914;
+	bool is_epitomized = 72;
+	uint32 ten_cost_item_id = 3;
+	uint32 gacha_schedule_id = 8;
+	uint32 gacha_times_limit = 10;
+	uint32 cur_schedule_daily_gacha_times = 824;
+	uint32 wish_item_id = 9;
+	uint32 ten_cost_item_num = 6;
+	uint32 cost_item_id = 11;
+	uint32 gacha_type = 4;
+	int32 retcode = 1;
+	uint32 new_gacha_random = 14;
+	uint32 wish_max_progress = 5;
+	uint32 daily_gacha_times = 1136;
+	uint32 left_gacha_times = 7;
+}

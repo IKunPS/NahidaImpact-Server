@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+// CmdID: 26973
+message PlayerSetPauseRsp {
+	int32 retcode = 15;
+}

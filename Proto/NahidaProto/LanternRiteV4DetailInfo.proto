@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message LanternRiteV4DetailInfo {
+	// [obf] HPGFKJOIMOH HOLMHDKKNDM = 12;
+	// [obf] CEFNEJDCDPI MPAEGGMJDNM = 7;
+	// [obf] OGOCPJCCDME PJJIMLLMEPE = 13;
+}

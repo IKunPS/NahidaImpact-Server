@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message SummerTimeV2BoatStageInfo {
+	bool is_open = 7;
+	uint32 open_time = 15;
+	uint32 stage_id = 5;
+	uint32 best_score = 8;
+}

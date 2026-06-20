@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "Achievement.proto";
+
+// CmdID: 27961
+message AchievementUpdateNotify {
+	repeated Achievement achievement_list = 12;
+}

@@ -1,0 +1,8 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message SceneGalleryTimeStopPhotoInfo {
+	string transaction = 10;
+}

@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message SceneGalleryAkaFesArchaeologyInfo {
+	uint32 total_count = 12;
+	uint32 found_count = 14;
+}

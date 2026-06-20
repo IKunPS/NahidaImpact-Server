@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "GalleryStopReason.proto";
+
+message LostSamachurlSneakSettleInfo {
+	GalleryStopReason reason = 4;
+	bool is_new_record = 2;
+	uint32 level_id = 3;
+	uint32 cost_time = 12;
+}

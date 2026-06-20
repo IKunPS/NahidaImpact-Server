@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "Vector.proto";
+
+message HomeNpcData {
+	Vector spawn_rot = 11;
+	Vector spawn_pos = 9;
+	uint32 avatar_id = 3;
+	uint32 costume_id = 12;
+}

@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+// CmdID: 6443
+message StartCoopPointReq {
+	uint32 coop_point = 6;
+}

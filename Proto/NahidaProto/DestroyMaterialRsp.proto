@@ -1,8 +1,11 @@
 syntax = "proto3";
 
-// CmdID: 23522
+// Nahida
+// Proto
+
+// CmdID: 28016
 message DestroyMaterialRsp {
-  repeated uint32 item_id_list = 12;
-  repeated uint32 item_count_list = 8;
-  int32 retcode = 10;
+	repeated uint32 item_count_list = 14;
+	repeated uint32 item_id_list = 12;
+	int32 retcode = 13;
 }

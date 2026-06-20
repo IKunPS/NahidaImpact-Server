@@ -1,0 +1,8 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message CollectUnderwaterDetailInfo {
+	// [obf] repeated KHLOAPNAABA level_info_list = 12;
+}

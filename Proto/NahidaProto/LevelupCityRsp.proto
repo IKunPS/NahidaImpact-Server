@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "CityInfo.proto";
+
+// CmdID: 21583
+message LevelupCityRsp {
+	CityInfo city_info = 9;
+	uint32 area_id = 2;
+	uint32 scene_id = 4;
+	int32 retcode = 15;
+}

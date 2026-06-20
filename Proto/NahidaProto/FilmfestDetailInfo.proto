@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message FilmfestDetailInfo {
+	// [obf] repeated JBFDHAPKAPL JHGCLOKACHP = 8;
+	// [obf] repeated DKFGDLDJKPJ PGFAMGOHHGE = 15;
+	// [obf] repeated NCOLIKOJHID OMFKGFOKFEA = 7;
+	bool IFAPCHPALAG = 13;
+}

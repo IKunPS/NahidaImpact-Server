@@ -1,8 +1,11 @@
 syntax = "proto3";
 
-import "MaterilaInfo.proto";
+// Nahida
+// Proto
 
-// CmdID: 5054
+import "MaterialInfo.proto";
+
+// CmdID: 2800
 message DestroyMaterialReq {
-  repeated MaterilaInfo material_list = 11;
+	repeated MaterialInfo material_list = 10;
 }

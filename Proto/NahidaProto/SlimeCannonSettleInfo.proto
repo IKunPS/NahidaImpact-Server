@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message SlimeCannonSettleInfo {
+	uint32 AHJIHPJELDP = 14;
+	uint32 level_id = 3;
+	uint32 kill_num = 12;
+	uint32 LFBDCGEOFDC = 4;
+	uint32 HFGMILMPKJL = 10;
+	uint32 IEDDAHPPGIA = 6;
+}

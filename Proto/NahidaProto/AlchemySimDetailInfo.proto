@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message AlchemySimDetailInfo {
+	// [obf] MFNCBJDAHEM FLBNFJFECFF = 15;
+	// [obf] OIEPKFMCNCI NHNFLBIAGKF = 13;
+	// [obf] HANNHIPCKBK IAPKHNGCDAH = 6;
+	// [obf] OGIJCAHGOKJ FMJPMOCKJML = 5;
+	// [obf] repeated IJODBJGJPLP LKDHLILLLFP = 1;
+	// [obf] GBIHDJELLIM BJDCJHLPNDM = 9;
+	// [obf] OLKPAMOIKPN basic_info = 4;
+	// [obf] repeated OIMAIPKAAHN IMNBGKIFDGM = 11;
+	// [obf] GIPMNILOKDF HKBOGLIKOLE = 14;
+}

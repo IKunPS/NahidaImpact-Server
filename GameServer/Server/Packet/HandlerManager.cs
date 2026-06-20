@@ -12,7 +12,7 @@ public static class HandlerManager
         {
             if (!typeof(Handler).IsAssignableFrom(type) || type.IsAbstract) continue;
 
-            var attribute = type.GetCustomAttribute<Opcode>();
+            var attribute = type.GetCustomAttribute<OpcodeAttribute>();
             if (attribute == null) continue;
 
             var handler = (Handler?)Activator.CreateInstance(type);

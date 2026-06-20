@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "Vector.proto";
+
+message TreasureSeelieRegionData {
+	Vector region_center_pos = 5;
+	bool is_done = 2;
+	bool is_open = 15;
+	float region_radius = 14;
+	uint32 open_day = 3;
+	uint32 scene_id = 10;
+	uint32 region_id = 13;
+	uint32 opened_chest_num = 12;
+	uint32 open_time = 1;
+	uint32 total_chest_num = 9;
+}

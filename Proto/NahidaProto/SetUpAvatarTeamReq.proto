@@ -1,8 +1,11 @@
 syntax = "proto3";
 
-// CmdID: 29624
+// Nahida
+// Proto
+
+// CmdID: 6316
 message SetUpAvatarTeamReq {
-  repeated uint64 avatar_team_guid_list = 2;
-  uint64 cur_avatar_guid = 8; // [(ys_custom).is_masked = true, (ys_custom).value_mask = "(val + 41090) ^ 1583", (ys_custom).value_unmask = "(val ^ 1583) - 41090"];
-  uint32 team_id = 11; // [(ys_custom).is_masked = true, (ys_custom).value_mask = "(val + 19529) ^ 63709", (ys_custom).value_unmask = "(val ^ 63709) - 19529"];
+	repeated uint64 avatar_team_guid_list = 8;
+	uint64 cur_avatar_guid = 5;
+	uint32 team_id = 9;
 }

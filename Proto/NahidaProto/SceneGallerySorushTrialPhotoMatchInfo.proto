@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message SceneGallerySorushTrialPhotoMatchInfo {
+	bool is_hide_time_end = 3;
+	bool is_change_stage = 11;
+}

@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+// CmdID: 25737
+message PlayerCookReq {
+	uint32 assist_avatar = 2;
+	uint32 qte_quality = 12;
+	uint32 cook_count = 15;
+	uint32 BGOPIILCNLM = 13;
+	uint32 recipe_id = 8;
+	uint32 GMHOJNECMDK = 5;
+}

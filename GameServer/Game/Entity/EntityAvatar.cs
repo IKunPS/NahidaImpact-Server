@@ -1,9 +1,12 @@
-using System;
+﻿using System;
 using NahidaImpact.Data;
 using NahidaImpact.Data.Binout;
 using NahidaImpact.Database.Avatar;
+using NahidaImpact.Database.Inventory;
 using NahidaImpact.Enums.Entity;
-using NahidaImpact.GameServer.Game.Player;
+using NahidaImpact.Enums.Item;
+using NahidaImpact.GameServer.Game.Event.Player;
+using NahidaImpact.GameServer.Game.Inventory;
 using NahidaImpact.GameServer.Game.Worlds;
 using NahidaImpact.Prop;
 using NahidaImpact.Util;
@@ -12,13 +15,21 @@ namespace NahidaImpact.GameServer.Game.Entity;
 
 public class EntityAvatar : BaseEntity
 {
-    public override ProtEntityType EntityType => ProtEntityType.ProtEntityAvatar;
+    public override ProtEntityType EntityType => ProtEntityType.Avatar;
 
     public AvatarDataInfo AvatarInfo { get; }
-    public PlayerInstance Player { get; set; }
 
     public uint LifeState { get; set; }
-    public uint WeaponEntityId => Player.WeaponEntityId;
+    public uint WeaponEntityId
+    {
+        get
+        {
+            var weapon = GetEquippedWeaponItem();
+            if (weapon != null && weapon.WeaponEntityId > 0)
+                return (uint)weapon.WeaponEntityId;
+            return 0;
+        }
+    }
     
     public override bool IsAlive()
     {
@@ -59,23 +70,54 @@ public class EntityAvatar : BaseEntity
         LifeState = 0;
     }
     
-    public EntityAvatar(PlayerInstance player, AvatarDataInfo avatarInfo) : base(player.Scene)
+    public EntityAvatar(Scene scene, AvatarDataInfo avatarInfo) : base(scene)
     {
-        Owner = player;
+        Owner = scene.GetHost()!;
         AvatarInfo = avatarInfo;
-        Player = player;
         Properties = avatarInfo.Properties;
         FightProperties = avatarInfo.FightProperties;
         LastMoveSceneTimeMs = 0;
         LastMoveReliableSeq = 0;
         LifeState = 1;
 
-        if (Player.World != null)
+        if (Scene?.World != null)
         {
-            Id = (uint)Player.World.GetNextEntityId(EntityIdTypeEnum.Avatar);
+            Id = (uint)Scene.World.GetNextEntityId(EntityIdTypeEnum.Avatar);
         }
 
         InitAbilities();
+        CreateWeaponEntity();
+    }
+
+    /// <summary>Create weapon entity in scene if the avatar has an equipped weapon with no valid entity.</summary>
+    private void CreateWeaponEntity()
+    {
+        var weapon = GetEquippedWeaponItem();
+        if (weapon == null || weapon.WeaponEntityId > 0) return;
+
+        var scene = Scene;
+        if (scene == null) return;
+
+        var gadgetId = (int)(weapon.GetItemData()?.GadgetId ?? 0);
+        if (gadgetId <= 0) return;
+
+        var weaponEntity = new EntityWeapon(scene, gadgetId)
+        {
+            ItemId = weapon.ItemId,
+            ItemGuid = weapon.Guid
+        };
+        weapon.WeaponEntityId = (int)weaponEntity.Id;
+        scene.WeaponEntities[(int)weaponEntity.Id] = weaponEntity;
+    }
+
+    /// <summary>Look up the equipped weapon ItemData from inventory.</summary>
+    private ItemData? GetEquippedWeaponItem()
+    {
+        if (Owner == null) return null;
+        var inventory = Owner.InventoryManager;
+        return inventory.Items.Values.FirstOrDefault(i =>
+            i.EquipCharacter == (int)AvatarInfo.AvatarId &&
+            i.ItemType == Enums.Item.ItemType.ITEM_WEAPON);
     }
     
     public void InitAbilities()
@@ -141,19 +183,19 @@ public class EntityAvatar : BaseEntity
     
     public override Position GetPosition()
     {
-        return Player.Position;
+        return Owner?.Position ?? new Position();
     }
     
     public override Position GetRotation()
     {
-        return Player.Rotation;
+        return Owner?.Rotation ?? new Position();
     }
 
     public override void Move(Position newPosition, Position rotation)
     {
         // Invoke player move event.
-        var evt = new Server.Event.Player.PlayerMoveEvent(
-            Player, Server.Event.Player.PlayerMoveEvent.MoveType.PLAYER, GetPosition(), newPosition);
+        var evt = new PlayerMoveEvent(
+            Owner, PlayerMoveEvent.MoveType.PLAYER, GetPosition(), newPosition);
         evt.Call();
 
         // Set position and rotation.
@@ -180,7 +222,7 @@ public class EntityAvatar : BaseEntity
             var entityInfo = new SceneEntityInfo
             {
                 EntityId = Id,
-                EntityType = ProtEntityType.ProtEntityAvatar,
+                EntityType = ProtEntityType.Avatar,
                 EntityAuthorityInfo = authority,
                 LastMoveSceneTimeMs = (uint)LastMoveSceneTimeMs,
                 LastMoveReliableSeq = (uint)LastMoveReliableSeq,
@@ -204,10 +246,10 @@ public class EntityAvatar : BaseEntity
                 });
             }
             
-            entityInfo.PropList.Add(new PropPair 
-            { 
-                Type = PlayerProp.PROP_LEVEL, 
-                PropValue = new PropValue { Type = PlayerProp.PROP_LEVEL, Ival = 1 }
+            entityInfo.PropList.Add(new PropPair
+            {
+                Type = PlayerProp.PROP_LEVEL,
+                PropValue = new PropValue { Type = PlayerProp.PROP_LEVEL, Ival = AvatarInfo.Level }
             });
             
             entityInfo.Avatar = GetSceneAvatarInfo();
@@ -223,7 +265,7 @@ public class EntityAvatar : BaseEntity
     public SceneAvatarInfo GetSceneAvatarInfo()
     {
         var avatarInfo = AvatarInfo;
-        var player = Player;
+        var player = Owner;
 
         var sceneAvatarInfo = new SceneAvatarInfo
         {
@@ -259,17 +301,29 @@ public class EntityAvatar : BaseEntity
             // For now, keep empty
         }
         
-        sceneAvatarInfo.Weapon = new SceneWeaponInfo
+        var weaponItem = GetEquippedWeaponItem();
+        if (weaponItem != null)
         {
-            EntityId = player.WeaponEntityId,
-            GadgetId = 50000000 + avatarInfo.WeaponId,
-            ItemId = avatarInfo.WeaponId,
-            Guid = avatarInfo.WeaponGuid,
-            Level = 1,
-            PromoteLevel = 0,
-            AbilityInfo = new AbilitySyncStateInfo()
-        };
-        
+            sceneAvatarInfo.Weapon = weaponItem.CreateSceneWeaponInfo(WeaponEntityId);
+            sceneAvatarInfo.Weapon.AbilityInfo = new AbilitySyncStateInfo
+            {
+                IsInited = weaponItem.Affixes.Count > 0
+            };
+        }
+        else
+        {
+            sceneAvatarInfo.Weapon = new SceneWeaponInfo
+            {
+                EntityId = player.WeaponEntityId,
+                GadgetId = 50000000 + avatarInfo.WeaponId,
+                ItemId = avatarInfo.WeaponId,
+                Guid = avatarInfo.WeaponGuid,
+                Level = 1,
+                PromoteLevel = 0,
+                AbilityInfo = new AbilitySyncStateInfo()
+            };
+        }
+
         sceneAvatarInfo.EquipIdList.Add(avatarInfo.WeaponId);
 
         // TODO: Add reliquary list when equipment system is implemented
@@ -355,7 +409,7 @@ public class EntityAvatar : BaseEntity
         // }
 
         // 6. Scene LevelEntity config abilities
-        var scene = Player.Scene;
+        var scene = Scene;
         if (scene != null)
         {
             var levelEntityConfig = scene.SceneData?.LevelEntityConfig;

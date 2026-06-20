@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "Vector.proto";
+
+message ParkourLevelInfo {
+	Vector pos = 15;
+	bool is_open = 14;
+	uint32 best_record = 7;
+	uint32 open_time = 10;
+}

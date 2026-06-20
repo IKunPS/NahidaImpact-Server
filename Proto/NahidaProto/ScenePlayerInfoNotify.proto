@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "ScenePlayerInfo.proto";
+
+// CmdID: 5005
+message ScenePlayerInfoNotify {
+	repeated ScenePlayerInfo player_info_list = 10;
+}

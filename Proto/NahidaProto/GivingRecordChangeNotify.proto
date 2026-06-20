@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "GivingRecord.proto";
+
+// CmdID: 29780
+message GivingRecordChangeNotify {
+	GivingRecord giving_record = 7;
+	bool is_deactive = 15;
+}

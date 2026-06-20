@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+// CmdID: 20146
+message AvatarFetterLevelRewardRsp {
+	repeated uint32 reward_id_list = 12;
+	int32 retcode = 10;
+	uint32 fetter_level = 13;
+	uint64 avatar_guid = 1;
+	uint32 reward_id = 3;
+}

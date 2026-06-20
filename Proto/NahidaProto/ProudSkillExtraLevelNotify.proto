@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+// CmdID: 7060
+message ProudSkillExtraLevelNotify {
+	uint32 talent_index = 8;
+	uint32 talent_type = 9;
+	uint32 extra_level = 14;
+	uint64 avatar_guid = 4;
+}

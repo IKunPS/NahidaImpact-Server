@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message GravenInnocencePhotoObjectInfo {
+	uint32 object_id = 11;
+	uint32 param = 5;
+	uint32 finish_time = 8;
+}

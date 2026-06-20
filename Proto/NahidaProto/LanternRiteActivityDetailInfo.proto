@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "LanternProjectionInfo.proto";
+import "LanternRiteFireworksInfo.proto";
+import "SalvageStageInfo.proto";
+
+message LanternRiteActivityDetailInfo {
+	LanternProjectionInfo projection_info = 6;
+	LanternRiteFireworksInfo fireworks_info = 11;
+	repeated SalvageStageInfo stage_info_list = 5;
+	bool is_mini_eldritch_dungeon_open = 7;
+	bool is_taken_skin_reward = 14;
+	bool is_content_closed = 8;
+}

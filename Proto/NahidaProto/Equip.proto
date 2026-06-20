@@ -1,12 +1,15 @@
-﻿syntax = "proto3";
+syntax = "proto3";
 
-import "Weapon.proto";
+// Nahida
+// Proto
+
 import "Reliquary.proto";
+import "Weapon.proto";
 
 message Equip {
-  bool is_locked = 3;
-  oneof detail {
-    Weapon weapon = 2;
-    Reliquary reliquary = 1;
-  }
+	bool is_locked = 3;
+	oneof detail {
+		Reliquary reliquary = 1;
+		Weapon weapon = 2;
+	}
 }

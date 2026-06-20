@@ -1,0 +1,23 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "BydPlayerDetailOnlineInfo.proto";
+
+message BeyondPlayerInfo {
+	enum GPIENKAEEAK {
+		GPIENKAEEAK_OFFLINE = 0;
+		GPIENKAEEAK_ONLINE = 1;
+	}
+	enum AAIAJELNPGF {
+		AAIAJELNPGF_TEYVAT = 0;
+		AAIAJELNPGF_BEYOND = 1;
+	}
+	// [obf] GPIENKAEEAK online_state = 2;
+	// [obf] AAIAJELNPGF world_type = 3;
+	uint32 uid = 1;
+	oneof detail {
+		BydPlayerDetailOnlineInfo byd_player_detail_online_info = 11;
+	}
+}

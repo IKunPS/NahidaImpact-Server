@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message SorushTrialDetailInfo {
+	repeated uint32 BMOPJBLHBMC = 4;
+	repeated uint32 ELMHLNKGPJI = 13;
+	map<uint32, uint32> kmflcegigcl = 1;
+	repeated uint32 FBNNFDEIBNG = 5;
+}

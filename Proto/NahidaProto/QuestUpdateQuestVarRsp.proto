@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+// CmdID: 29412
+message QuestUpdateQuestVarRsp {
+	uint32 quest_id = 1;
+	uint32 parent_quest_id = 13;
+	int32 retcode = 3;
+	uint32 parent_quest_var_seq = 4;
+}

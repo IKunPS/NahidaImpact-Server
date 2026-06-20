@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "MonsterChessCardDetail.proto";
+
+message MonsterChessRecordInfo {
+	repeated uint32 IMCJIGHPDPJ = 15;
+	repeated uint32 win_round_list = 3;
+	repeated MonsterChessCardDetail monster_list = 13;
+	uint32 timestamp = 6;
+}

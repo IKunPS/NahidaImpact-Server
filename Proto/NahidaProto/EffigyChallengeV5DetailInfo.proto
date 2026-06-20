@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message EffigyChallengeV5DetailInfo {
+	// [obf] repeated OIHFBCKPFPK level_info_list = 11;
+	bool PPNGFGBPIGF = 8;
+}

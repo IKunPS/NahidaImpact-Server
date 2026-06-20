@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+// CmdID: 21525
+message ShowClientGuideNotify {
+	string guide_name = 14;
+}

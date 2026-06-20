@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+// CmdID: 23735
+message AvatarChangeCostumeReq {
+	uint32 costume_id = 11;
+	uint64 avatar_guid = 7;
+}

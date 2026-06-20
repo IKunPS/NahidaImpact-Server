@@ -1,13 +1,16 @@
-﻿syntax = "proto3";
+syntax = "proto3";
 
-import "AbilitySyncStateInfo.proto";
+// Nahida
+// Proto
+
 import "AbilityControlBlock.proto";
+import "AbilitySyncStateInfo.proto";
 
 message TeamEnterSceneInfo {
-  AbilitySyncStateInfo team_ability_info = 9;
-  // repeated PIEGHMIIPBO NILPPIMHCCE = 15;
-  // KJLCAPIOBMP PCFMMLPNOGP = 10;
-  AbilityControlBlock ability_control_block = 13;
-  uint32 team_entity_id = 11;
-  float EIIEAOHKGDC = 14;
+	// [obf] KJLCAPIOBMP PCFMMLPNOGP = 11;
+	AbilityControlBlock ability_control_block = 5;
+	// [obf] repeated PIEGHMIIPBO NILPPIMHCCE = 10;
+	AbilitySyncStateInfo team_ability_info = 7;
+	uint32 team_entity_id = 15;
+	float EIIEAOHKGDC = 4;
 }

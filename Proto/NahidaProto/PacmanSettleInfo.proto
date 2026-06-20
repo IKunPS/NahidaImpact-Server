@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "PacmanDungeonStopReason.proto";
+
+message PacmanSettleInfo {
+	bool is_new_record = 11;
+	uint32 killed_monster_num = 2;
+	PacmanDungeonStopReason reason = 4;
+	uint32 final_score = 9;
+	uint32 coin_num = 6;
+}

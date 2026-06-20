@@ -1,8 +1,11 @@
 syntax = "proto3";
 
+// Nahida
+// Proto
+
 import "ChatInfo.proto";
 
-// CmdID: 29577
+// CmdID: 5051
 message PrivateChatNotify {
-  ChatInfo chat_info = 8;
+	ChatInfo chat_info = 11;
 }

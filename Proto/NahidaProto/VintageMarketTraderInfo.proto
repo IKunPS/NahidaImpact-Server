@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "ItemParam.proto";
+
+message VintageMarketTraderInfo {
+	repeated ItemParam available_item_list = 13;
+	uint32 trader_id = 12;
+}

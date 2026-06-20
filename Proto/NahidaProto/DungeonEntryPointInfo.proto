@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "DungeonEntryInfo.proto";
+
+message DungeonEntryPointInfo {
+	repeated DungeonEntryInfo dungeon_entry_list = 1;
+	uint32 point_id = 5;
+	uint32 recommend_dungeon_id = 11;
+	uint32 first_pass_reward_status = 2;
+	uint32 scene_id = 9;
+}

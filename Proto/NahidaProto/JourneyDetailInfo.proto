@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "JourneyGearInfo.proto";
+
+message JourneyDetailInfo {
+	JourneyGearInfo journey_gear_info = 2;
+	// [obf] KHOBHJCBPDK OOLOHDNCNAG = 7;
+	// [obf] BHJDFCOECPJ PCMHGBFKEKI = 5;
+	// [obf] GLNOMJINGEL KCOPDJHIHBN = 6;
+}

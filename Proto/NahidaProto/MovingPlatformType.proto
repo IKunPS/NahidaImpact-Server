@@ -1,5 +1,8 @@
 syntax = "proto3";
 
+// Nahida
+// Proto
+
 enum MovingPlatformType {
 	MOVING_PLATFORM_TYPE_NONE = 0;
 	MOVING_PLATFORM_TYPE_USE_CONFIG = 1;

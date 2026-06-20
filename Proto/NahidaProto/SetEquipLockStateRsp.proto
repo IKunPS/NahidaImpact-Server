@@ -1,8 +1,11 @@
 syntax = "proto3";
 
-// CmdID: 4504
+// Nahida
+// Proto
+
+// CmdID: 298
 message SetEquipLockStateRsp {
-  uint64 target_equip_guid = 5;
-  bool is_locked = 8;
-  int32 retcode = 13;
+	uint64 target_equip_guid = 5;
+	bool is_locked = 14;
+	int32 retcode = 8;
 }

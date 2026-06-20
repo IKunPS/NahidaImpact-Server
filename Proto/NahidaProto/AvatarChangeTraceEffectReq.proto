@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+// CmdID: 2434
+message AvatarChangeTraceEffectReq {
+	uint32 trace_effect_id = 13;
+	uint64 avatar_guid = 6;
+}

@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+// CmdID: 5866
+message QuestDelNotify {
+	uint32 quest_id = 10;
+}

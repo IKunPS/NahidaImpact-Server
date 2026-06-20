@@ -1,0 +1,8 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message BulletHellDetailInfo {
+	// [obf] repeated BGECDFOPDOJ level_info_list = 12;
+}

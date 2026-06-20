@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message ShortVideoLevelData {
+	repeated uint64 short_video_guid_list = 10;
+	uint32 level_id = 3;
+}

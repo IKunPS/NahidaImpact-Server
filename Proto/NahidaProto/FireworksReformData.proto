@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "FireworksReformParam.proto";
+
+message FireworksReformData {
+	repeated FireworksReformParam reform_param_list = 12;
+	uint32 id = 4;
+}

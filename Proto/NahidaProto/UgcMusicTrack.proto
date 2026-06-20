@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "UgcMusicNote.proto";
+
+message UgcMusicTrack {
+	repeated UgcMusicNote music_note_list = 6;
+}

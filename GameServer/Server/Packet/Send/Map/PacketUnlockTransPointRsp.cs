@@ -5,7 +5,7 @@ namespace NahidaImpact.GameServer.Server.Packet.Send.Map;
 
 public class PacketUnlockTransPointRsp : BasePacket
 {
-    public PacketUnlockTransPointRsp(int retcode = 0) : base(CmdIds.UnlockTransPointRsp)
+    public PacketUnlockTransPointRsp(int retcode) : base(CmdIds.UnlockTransPointRsp)
     {
         var proto = new UnlockTransPointRsp
         {

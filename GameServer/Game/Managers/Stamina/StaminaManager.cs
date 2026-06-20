@@ -16,89 +16,89 @@ public class StaminaManager : BasePlayerManager
     {
         ["CLIMB"] = new()
         {
-            MotionState.MotionClimb,
-            MotionState.MotionStandbyToClimb
+            MotionState.Climb,
+            MotionState.StandbyToClimb
         },
         ["DASH"] = new()
         {
-            MotionState.MotionDangerDash,
-            MotionState.MotionDash
+            MotionState.DangerDash,
+            MotionState.Dash
         },
         ["FLY"] = new()
         {
-            MotionState.MotionFly,
-            MotionState.MotionFlyFast,
-            MotionState.MotionFlySlow,
-            MotionState.MotionPoweredFly
+            MotionState.Fly,
+            MotionState.FlyFast,
+            MotionState.FlySlow,
+            MotionState.PoweredFly
         },
         ["RUN"] = new()
         {
-            MotionState.MotionDangerRun,
-            MotionState.MotionRun
+            MotionState.DangerRun,
+            MotionState.Run
         },
         ["SKIFF"] = new()
         {
-            MotionState.MotionSkiffNormal,
-            MotionState.MotionSkiffDash,
-            MotionState.MotionSkiffPoweredDash
+            MotionState.SkiffNormal,
+            MotionState.SkiffDash,
+            MotionState.SkiffPoweredDash
         },
         ["STANDBY"] = new()
         {
-            MotionState.MotionDangerStandbyMove,
-            MotionState.MotionDangerStandby,
-            MotionState.MotionLadderToStandby,
-            MotionState.MotionStandbyMove,
-            MotionState.MotionStandby
+            MotionState.DangerStandbyMove,
+            MotionState.DangerStandby,
+            MotionState.LadderToStandby,
+            MotionState.StandbyMove,
+            MotionState.Standby
         },
         ["SWIM"] = new()
         {
-            MotionState.MotionSwimIdle,
-            MotionState.MotionSwimDash,
-            MotionState.MotionSwimJump,
-            MotionState.MotionSwimMove
+            MotionState.SwimIdle,
+            MotionState.SwimDash,
+            MotionState.SwimJump,
+            MotionState.SwimMove
         },
         ["WALK"] = new()
         {
-            MotionState.MotionDangerWalk,
-            MotionState.MotionWalk
+            MotionState.DangerWalk,
+            MotionState.Walk
         },
         ["OTHER"] = new()
         {
-            MotionState.MotionClimbJump,
-            MotionState.MotionDashBeforeShake,
-            MotionState.MotionFight,
-            MotionState.MotionJumpUpWallForStandby,
-            MotionState.MotionNotify,
-            MotionState.MotionSitIdle,
-            MotionState.MotionJump
+            MotionState.ClimbJump,
+            MotionState.DashBeforeShake,
+            MotionState.Fight,
+            MotionState.JumpUpWallForStandby,
+            MotionState.Notify,
+            MotionState.SitIdle,
+            MotionState.Jump
         },
         ["NOCOST_NORECOVER"] = new()
         {
-            MotionState.MotionLadderSlip,
-            MotionState.MotionSlip,
-            MotionState.MotionFlyIdle
+            MotionState.LadderSlip,
+            MotionState.Slip,
+            MotionState.FlyIdle
         },
         ["IGNORE"] = new()
         {
-            MotionState.MotionCrouchIdle,
-            MotionState.MotionCrouchMove,
-            MotionState.MotionCrouchRoll,
-            MotionState.MotionDestroyVehicle,
-            MotionState.MotionFallOnGround,
-            MotionState.MotionFollowRoute,
-            MotionState.MotionForceSetPos,
-            MotionState.MotionGoUpstairs,
-            MotionState.MotionJumpOffWall,
-            MotionState.MotionLadderIdle,
-            MotionState.MotionLadderMove,
-            MotionState.MotionLandSpeed,
-            MotionState.MotionMoveFailAck,
-            MotionState.MotionNone,
-            MotionState.MotionNum,
-            MotionState.MotionQuestForceDrag,
-            MotionState.MotionReset,
-            MotionState.MotionStandbyToLadder,
-            MotionState.MotionWaterfall
+            MotionState.CrouchIdle,
+            MotionState.CrouchMove,
+            MotionState.CrouchRoll,
+            MotionState.DestroyVehicle,
+            MotionState.FallOnGround,
+            MotionState.FollowRoute,
+            MotionState.ForceSetPos,
+            MotionState.GoUpstairs,
+            MotionState.JumpOffWall,
+            MotionState.LadderIdle,
+            MotionState.LadderMove,
+            MotionState.LandSpeed,
+            MotionState.MoveFailAck,
+            MotionState.None,
+            MotionState.Num,
+            MotionState.QuestForceDrag,
+            MotionState.Reset,
+            MotionState.StandbyToLadder,
+            MotionState.Waterfall
         }
     };
 
@@ -124,8 +124,8 @@ public class StaminaManager : BasePlayerManager
     private readonly Dictionary<string, AfterUpdateStaminaListener> _afterUpdateStaminaListeners = new();
     private Position _currentCoordinates = new(0, 0, 0);
     private Position _previousCoordinates = new(0, 0, 0);
-    private MotionState _currentState = MotionState.MotionStandby;
-    private MotionState _previousState = MotionState.MotionStandby;
+    private MotionState _currentState = MotionState.Standby;
+    private MotionState _previousState = MotionState.Standby;
     private Timer _staminaHandlerTimer;
     private bool _staminaHandlerRunning;
     private readonly object _handlerLock = new();
@@ -261,12 +261,7 @@ public class StaminaManager : BasePlayerManager
 
     public int SetStamina(string reason, int newStamina, bool isCharacterStamina)
     {
-        // If stamina usage is disabled or player has unlimited stamina, keep max
-        // TODO: Check GAME_OPTIONS.staminaUsage and Player.IsUnlimitedStamina()
-        if (false) // Placeholder for config check
-        {
-            newStamina = GetMaxCharacterStamina();
-        }
+        // TODO: Implement unlimited stamina config check (e.g., GameOptions.StaminaUsage)
 
         if (isCharacterStamina)
         {
@@ -494,16 +489,16 @@ public class StaminaManager : BasePlayerManager
 
         switch (motionState)
         {
-            case MotionState.MotionClimb:
+            case MotionState.Climb:
                 UpdateStaminaRelative(new Consumption(ConsumptionType.CLIMB_START), true);
                 break;
-            case MotionState.MotionDashBeforeShake:
+            case MotionState.DashBeforeShake:
                 UpdateStaminaRelative(new Consumption(ConsumptionType.SPRINT), true);
                 break;
-            case MotionState.MotionClimbJump:
+            case MotionState.ClimbJump:
                 UpdateStaminaRelative(new Consumption(ConsumptionType.CLIMB_JUMP), true);
                 break;
-            case MotionState.MotionSwimDash:
+            case MotionState.SwimDash:
                 {
                     long currentTime = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
                     if (currentTime - _lastSwimDashTime >= SWIM_DASH_COOLDOWN)
@@ -534,7 +529,7 @@ public class StaminaManager : BasePlayerManager
         if (stamina < 10)
         {
             _logger.Debug($"{GetCurrentCharacterStamina()}/{GetMaxCharacterStamina()}\t{_currentState}");
-            if (_currentState != MotionState.MotionSwimIdle)
+            if (_currentState != MotionState.SwimIdle)
             {
                 KillAvatar(_cachedEntity, 0); // PLAYER_DIE_TYPE_DRAWN = 0 placeholder
             }
@@ -556,7 +551,7 @@ public class StaminaManager : BasePlayerManager
     private Consumption GetClimbConsumption()
     {
         Consumption consumption = new();
-        if (_currentState == MotionState.MotionClimb && IsPlayerMoving())
+        if (_currentState == MotionState.Climb && IsPlayerMoving())
         {
             consumption.Type = ConsumptionType.CLIMBING;
             consumption.Amount = (int)ConsumptionType.CLIMBING;
@@ -570,19 +565,19 @@ public class StaminaManager : BasePlayerManager
     {
         HandleDrowning();
         Consumption consumption = new();
-        if (_currentState == MotionState.MotionSwimMove)
+        if (_currentState == MotionState.SwimMove)
         {
             consumption.Type = ConsumptionType.SWIMMING;
             consumption.Amount = (int)ConsumptionType.SWIMMING;
         }
-        if (_currentState == MotionState.MotionSwimDash)
+        if (_currentState == MotionState.SwimDash)
         {
             consumption.Type = ConsumptionType.SWIM_DASH;
             consumption.Amount = (int)ConsumptionType.SWIM_DASH;
 
             // Skip sustained cost if just switched to SWIM_DASH
             // (handleImmediateStamina already handled SWIM_DASH_START)
-            if (_previousState != MotionState.MotionSwimDash)
+            if (_previousState != MotionState.SwimDash)
             {
                 consumption.Amount = 0;
             }
@@ -595,7 +590,7 @@ public class StaminaManager : BasePlayerManager
     private Consumption GetDashConsumption()
     {
         Consumption consumption = new();
-        if (_currentState == MotionState.MotionDash)
+        if (_currentState == MotionState.Dash)
         {
             consumption.Type = ConsumptionType.DASH;
             consumption.Amount = (int)ConsumptionType.DASH;
@@ -606,7 +601,7 @@ public class StaminaManager : BasePlayerManager
 
     private Consumption GetFlyConsumption()
     {
-        if (_currentState == MotionState.MotionPoweredFly)
+        if (_currentState == MotionState.PoweredFly)
         {
             return new Consumption(ConsumptionType.POWERED_FLY);
         }
@@ -620,9 +615,9 @@ public class StaminaManager : BasePlayerManager
     {
         return _currentState switch
         {
-            MotionState.MotionSkiffDash => new Consumption(ConsumptionType.SKIFF_DASH),
-            MotionState.MotionSkiffPoweredDash => new Consumption(ConsumptionType.POWERED_SKIFF),
-            MotionState.MotionSkiffNormal => new Consumption(ConsumptionType.SKIFF),
+            MotionState.SkiffDash => new Consumption(ConsumptionType.SKIFF_DASH),
+            MotionState.SkiffPoweredDash => new Consumption(ConsumptionType.POWERED_SKIFF),
+            MotionState.SkiffNormal => new Consumption(ConsumptionType.SKIFF),
             _ => new Consumption()
         };
     }
@@ -631,7 +626,7 @@ public class StaminaManager : BasePlayerManager
     {
         return _currentState switch
         {
-            MotionState.MotionFight => new Consumption(ConsumptionType.FIGHT, 500),
+            MotionState.Fight => new Consumption(ConsumptionType.FIGHT, 500),
             _ => new Consumption()
         };
     }

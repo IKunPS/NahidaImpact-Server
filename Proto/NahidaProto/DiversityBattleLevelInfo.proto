@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "DiversityBattleSocialBrief.proto";
+
+message DiversityBattleLevelInfo {
+	// [obf] repeated NIEFDEMPLJD team_list = 6;
+	DiversityBattleSocialBrief record_social_brief = 10;
+}

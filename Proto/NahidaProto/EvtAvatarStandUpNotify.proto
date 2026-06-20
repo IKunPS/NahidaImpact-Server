@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+// CmdID: 5646
+message EvtAvatarStandUpNotify {
+	uint64 chair_id = 13;
+	int32 perform_id = 14;
+	int32 direction = 6;
+	uint32 entity_id = 11;
+}

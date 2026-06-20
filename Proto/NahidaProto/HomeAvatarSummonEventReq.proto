@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+// CmdID: 26638
+message HomeAvatarSummonEventReq {
+	uint32 guid = 13;
+	uint32 suit_id = 9;
+	uint32 avatar_id = 11;
+}

@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "TowerCurLevelRecord.proto";
+
+// CmdID: 3120
+message TowerCurLevelRecordChangeNotify {
+	TowerCurLevelRecord cur_level_record = 5;
+}

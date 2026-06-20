@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "ItemParam.proto";
+
+// CmdID: 7565
+message TakeDailyTaskScoreRewardRsp {
+	repeated uint32 DEDLCNKHBNO = 10;
+	repeated ItemParam item_list = 7;
+	repeated uint32 IDEHDANIGGA = 6;
+	bool is_claim_daily_attendance = 12;
+	int32 retcode = 1;
+}

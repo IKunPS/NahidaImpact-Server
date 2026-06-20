@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "FleurFairV2PhotoInfo.proto";
+
+message FleurFairV2DetailInfo {
+	// [obf] GALKPEFCDGI LEFEKEDBKME = 7;
+	// [obf] OEENPMDALKF OMNECKFGGMI = 5;
+	FleurFairV2PhotoInfo photo_info = 3;
+}

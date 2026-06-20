@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "ItemParam.proto";
+
+message BeyondGachaTransferItem {
+	ItemParam item_param = 14;
+	bool DHCMPBPOODC = 12;
+}

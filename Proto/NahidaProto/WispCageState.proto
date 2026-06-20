@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+enum WispCageState {
+	WispCageState_WISP_CAGE_STATE_NOT_EXIST = 0;
+	WispCageState_WISP_CAGE_STATE_CREATED = 1;
+	WispCageState_WISP_CAGE_STATE_MATERIAL_DELIVERED = 2;
+	WispCageState_WISP_CAGE_STATE_NOT_TAKE_REWARD = 3;
+}

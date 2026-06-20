@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "SceneEntityInfo.proto";
+
+// CmdID: 222
+message AvatarChangeCostumeNotify {
+	SceneEntityInfo entity_info = 6;
+	// [obf] PGBKHJPDCAG PIGPIKNHMEC = 3;
+}

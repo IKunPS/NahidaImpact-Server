@@ -39,6 +39,8 @@ public class PacketSceneTeamUpdateNotify : BasePacket
 
                 var activeTeam = p.TeamManager?.GetActiveTeam(true);
 
+                var currentEntity = p.TeamManager?.GetCurrentAvatarEntity();
+
                 foreach (var entityAvatar in activeTeam)
                 {
                     if (entityAvatar == null) continue;
@@ -49,6 +51,8 @@ public class PacketSceneTeamUpdateNotify : BasePacket
                     if (MoonAvatars.Contains(avatarId))
                         moonPhaseCount++;
 
+                    bool isCurrent = entityAvatar == currentEntity;
+
                     var sceneTeamAvatar = new SceneTeamAvatar
                     {
                         PlayerUid = (uint)p.Uid,
@@ -58,7 +62,11 @@ public class PacketSceneTeamUpdateNotify : BasePacket
                         SceneEntityInfo = entityAvatar.ToProto(),
                         WeaponGuid = entityAvatar.AvatarInfo.WeaponGuid,
                         WeaponEntityId = entityAvatar.WeaponEntityId,
-                        AbilityControlBlock = entityAvatar.GetAbilityControlBlock()
+                        AbilityControlBlock = entityAvatar.GetAbilityControlBlock(),
+                        IsPlayerCurAvatar = isCurrent,
+                        IsOnScene = isCurrent,
+                        AvatarAbilityInfo = new AbilitySyncStateInfo(),
+                        WeaponAbilityInfo = new AbilitySyncStateInfo()
                     };
 
                     proto.SceneTeamAvatarList.Add(sceneTeamAvatar);

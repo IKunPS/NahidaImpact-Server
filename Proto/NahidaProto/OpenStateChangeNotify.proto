@@ -1,6 +1,9 @@
 syntax = "proto3";
 
-// CmdID: 1811
+// Nahida
+// Proto
+
+// CmdID: 709
 message OpenStateChangeNotify {
-  map<uint32, uint32> open_state_map = 13;
+	map<uint32, uint32> open_state_map = 8;
 }

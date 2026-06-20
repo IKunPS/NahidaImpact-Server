@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message ActivityWatcherInfo {
+	uint32 total_progress = 13;
+	uint32 watcher_id = 1;
+	bool is_taken_reward = 3;
+	uint32 cur_progress = 9;
+}

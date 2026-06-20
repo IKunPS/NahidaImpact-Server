@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "DealAddFriendResultType.proto";
+
+// CmdID: 4202
+message DealAddFriendRsp {
+	DealAddFriendResultType deal_add_friend_result = 4;
+	uint32 target_uid = 13;
+	int32 retcode = 9;
+}

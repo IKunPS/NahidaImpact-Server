@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+// CmdID: 8554
+message ForgeStartReq {
+	uint32 avatar_id = 12;
+	uint32 forge_count = 13;
+	uint32 forge_id = 3;
+}

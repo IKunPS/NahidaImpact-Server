@@ -1,8 +1,11 @@
-﻿syntax = "proto3";
+syntax = "proto3";
+
+// Nahida
+// Proto
 
 message AbilityString {
-  oneof type {
-    string str = 1;
-    uint32 hash = 2;
-  }
+	oneof type {
+		uint32 hash = 2;
+		string str = 1;
+	}
 }

@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+// CmdID: 20114
+message ChangeGameTimeReq {
+	bool is_force_set = 7;
+	uint32 game_time = 12;
+	uint32 extra_days = 10;
+}

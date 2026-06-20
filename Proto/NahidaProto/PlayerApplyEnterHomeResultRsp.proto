@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+// CmdID: 8333
+message PlayerApplyEnterHomeResultRsp {
+	int32 retcode = 14;
+	uint32 apply_uid = 9;
+	bool is_agreed = 2;
+	uint32 param = 6;
+}

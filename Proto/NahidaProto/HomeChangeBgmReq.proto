@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+// CmdID: 1010
+message HomeChangeBgmReq {
+	uint32 bgm_id = 15;
+}

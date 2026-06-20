@@ -27,13 +27,4 @@ public abstract class AbilityActionHandler
     }
 }
 
-[System.AttributeUsage(System.AttributeTargets.Class, Inherited = false, AllowMultiple = false)]
-public sealed class AbilityActionAttribute : System.Attribute
-{
-    public string ActionType { get; }
-
-    public AbilityActionAttribute(string actionType)
-    {
-        ActionType = actionType;
-    }
-}
+// AbilityActionAttribute moved to AbilityActionAttribute.cs

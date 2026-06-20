@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "InterOpType.proto";
+import "InteractType.proto";
+
+// CmdID: 894
+message GadgetInteractRsp {
+	int32 retcode = 3;
+	InterOpType op_type = 9;
+	uint32 CDIGFADDFDI = 5;
+	InteractType interact_type = 4;
+	uint32 gadget_id = 11;
+	uint32 gadget_entity_id = 6;
+}

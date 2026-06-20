@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message FungusFighterV2SettleInfo {
+	uint32 HHLLNDAPMOI = 2;
+	uint32 defeated_tower_count = 10;
+	bool is_new_record = 11;
+	uint32 defeated_tower_count_dup1 = 5;
+	uint32 cost_time = 13;
+	uint32 level_id = 3;
+}

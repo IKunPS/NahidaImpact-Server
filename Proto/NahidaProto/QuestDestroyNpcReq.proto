@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+// CmdID: 5071
+message QuestDestroyNpcReq {
+	uint32 parent_quest_id = 9;
+	uint32 npc_id = 4;
+}

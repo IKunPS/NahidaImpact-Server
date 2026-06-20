@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message FairyTalesCombatSettleInfo {
+	// [obf] HHEOIBNKOHI EPELKGMABAN = 5;
+	uint32 level_id = 12;
+	uint32 difficulty = 13;
+	bool is_new_record = 7;
+	uint32 total_score = 10;
+}

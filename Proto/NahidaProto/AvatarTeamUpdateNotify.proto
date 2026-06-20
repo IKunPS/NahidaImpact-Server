@@ -1,9 +1,12 @@
 syntax = "proto3";
 
+// Nahida
+// Proto
+
 import "AvatarTeam.proto";
 
-// CmdID: 29089
+// CmdID: 1256
 message AvatarTeamUpdateNotify {
-  repeated uint64 temp_avatar_guid_list = 7;
-  map<uint32, AvatarTeam> avatar_team_map = 1;
+	repeated uint64 temp_avatar_guid_list = 13;
+	map<uint32, AvatarTeam> avatar_team_map = 7;
 }

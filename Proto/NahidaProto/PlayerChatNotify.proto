@@ -1,9 +1,12 @@
-﻿syntax = "proto3";
+syntax = "proto3";
+
+// Nahida
+// Proto
 
 import "ChatInfo.proto";
 
-// CmdID: 20871
+// CmdID: 527
 message PlayerChatNotify {
-  ChatInfo chat_info = 12;
-  uint32 channel_id = 1;
+	ChatInfo chat_info = 14;
+	uint32 channel_id = 2;
 }

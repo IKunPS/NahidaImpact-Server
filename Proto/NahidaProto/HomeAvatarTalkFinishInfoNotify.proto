@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "HomeAvatarTalkFinishInfo.proto";
+
+// CmdID: 26306
+message HomeAvatarTalkFinishInfoNotify {
+	repeated HomeAvatarTalkFinishInfo avatar_talk_info_list = 6;
+}

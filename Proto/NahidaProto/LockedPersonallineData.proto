@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message LockedPersonallineData {
+	enum LockReason {
+		LOCK_REASON_LEVEL = 0;
+		LOCK_REASON_QUEST = 1;
+	}
+	message QuestParam {
+		uint32 chapter_id = 11;
+		uint32 quest_id = 10;
+	}
+	LockReason lock_reason = 10;
+	uint32 personal_line_id = 1;
+	oneof param {
+		uint32 chapter_id = 15;
+		QuestParam quest_param = 7;
+		uint32 level = 8;
+	}
+}

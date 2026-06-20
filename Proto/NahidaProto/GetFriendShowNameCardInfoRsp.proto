@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+// CmdID: 9926
+message GetFriendShowNameCardInfoRsp {
+	repeated uint32 show_name_card_id_list = 7;
+	uint32 uid = 13;
+	int32 retcode = 4;
+}

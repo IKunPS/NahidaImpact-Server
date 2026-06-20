@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "Vector.proto";
+
+message PlaceInfo {
+	Vector rot = 2;
+	Vector pos = 1;
+}

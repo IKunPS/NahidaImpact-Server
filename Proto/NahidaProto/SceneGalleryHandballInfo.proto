@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "PlaceInfo.proto";
+
+message SceneGalleryHandballInfo {
+	PlaceInfo ball_place_info = 14;
+	bool is_have_ball = 9;
+}

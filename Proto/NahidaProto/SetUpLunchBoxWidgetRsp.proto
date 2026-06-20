@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "LunchBoxData.proto";
+
+// CmdID: 29580
+message SetUpLunchBoxWidgetRsp {
+	LunchBoxData lunch_box_data = 2;
+	int32 retcode = 13;
+}

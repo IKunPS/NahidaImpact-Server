@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message CoopReward {
+	enum State {
+		State_CLOSE = 0;
+		State_COND_NOT_MEET = 1;
+		State_COND_MEET = 2;
+	}
+	State state = 7;
+	uint32 id = 6;
+}

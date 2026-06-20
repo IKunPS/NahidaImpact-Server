@@ -34,14 +34,14 @@ public static class ConfigManager
 
             Logger.Info("Current Language is " + Config.ServerOption.Language);
             SaveData(Config, ConfigFilePath);
+            return; // Fresh config written, no need to re-read
         }
 
-        using (var stream = file.Open(FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
-        using (var reader = new StreamReader(stream))
-        {
-            var json = reader.ReadToEnd();
-            Config = JsonConvert.DeserializeObject<ConfigContainer>(json)!;
-        }
+        using var stream = file.Open(FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+        using var reader = new StreamReader(stream);
+        var json = reader.ReadToEnd();
+        Config = JsonConvert.DeserializeObject<ConfigContainer>(json)
+                  ?? throw new InvalidOperationException("Config file is empty or corrupt.");
 
         SaveData(Config, ConfigFilePath);
     }
@@ -50,7 +50,6 @@ public static class ConfigManager
     {
         var file = new FileInfo(HotfixFilePath);
 
-        // Generate all necessary versions
         var verList = Extensions.Extensions.GetSupportVersions();
 
         Logger.Info(I18NManager.Translate("Server.ServerInfo.CurrentVersion",
@@ -60,15 +59,14 @@ public static class ConfigManager
         {
             Hotfix = new HotfixContainer();
             SaveData(Hotfix, HotfixFilePath);
-            file.Refresh();
+            return; // Fresh hotfix written, no need to re-read
         }
 
-        using (var stream = file.Open(FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
-        using (var reader = new StreamReader(stream))
-        {
-            var json = reader.ReadToEnd();
-            Hotfix = JsonConvert.DeserializeObject<HotfixContainer>(json)!;
-        }
+        using var stream = file.Open(FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+        using var reader = new StreamReader(stream);
+        var json = reader.ReadToEnd();
+        Hotfix = JsonConvert.DeserializeObject<HotfixContainer>(json)
+                 ?? new HotfixContainer();
 
         foreach (var version in verList)
             if (!Hotfix.Hotfixes.TryGetValue(version, out var _))
@@ -79,6 +77,10 @@ public static class ConfigManager
 
     private static void SaveData(object data, string path)
     {
+        var dir = Path.GetDirectoryName(path);
+        if (!string.IsNullOrEmpty(dir) && !Directory.Exists(dir))
+            Directory.CreateDirectory(dir);
+
         var json = JsonConvert.SerializeObject(data, Formatting.Indented);
         using var stream = new FileStream(path, FileMode.Create, FileAccess.Write, FileShare.ReadWrite);
         using var writer = new StreamWriter(stream);

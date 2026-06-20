@@ -1,0 +1,8 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message AcrobaticsBattleDetailInfo {
+	// [obf] repeated LBJMEKFOFAB stage_info_list = 10;
+}

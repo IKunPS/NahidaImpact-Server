@@ -1,28 +1,44 @@
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using NahidaImpact.Data;
-using NahidaImpact.Data.Excel;
+using NahidaImpact.Database.Avatar;
 using NahidaImpact.Database.Inventory;
-using NahidaImpact.Enums;
 using NahidaImpact.Enums.Item;
 using NahidaImpact.Enums.Player;
+using NahidaImpact.GameServer.Server.Packet.Send.Avatar;
 using NahidaImpact.GameServer.Server.Packet.Send.Inventory;
+using NahidaImpact.GameServer.Server.Packet.Send.Team;
 using NahidaImpact.Internationalization;
+using NahidaImpact.Util;
 
 namespace NahidaImpact.GameServer.Command.Commands;
 
 [CommandInfo("giveall", "Game.Command.GiveAll.Desc", "Game.Command.GiveAll.Usage", ["ga"], [PermEnum.Admin])]
-public class CommandGiveall : ICommands
+public class CommandGiveAll : ICommand
 {
-    // Common Genshin material IDs for fast-add essentials
+    private const int ItemsPerBatch = 200;
+
     private static readonly int[] Essentials =
     [
-        201,  // Primogem
-        202,  // Mora
-        203,  // Genesis Crystal
-        221,  // Intertwined Fate
-        222,  // Acquaint Fate
-        223,  // Starglitter
-        224,  // Stardust
+        201, // Primogem
+        202, // Mora
+        203, // Genesis Crystal
+        204, // Home Coin
+        106, // Resin
+        221, // Intertwined Fate
+        222, // Acquaint Fate
+        223, // Starglitter
+        224, // Stardust
     ];
+
+    // Weapon ID range: 11101-16504 (all extant weapons)
+    private static bool IsValidWeaponId(int id) => id >= 11101 && id <= 16504;
+
+    // Reliquary ID range
+    private static bool IsValidRelicId(int id) => id >= 20002 && id <= 99999;
+
+    // Meaningful material items start above this
+    private const int MinMaterialId = 100_000;
 
     [CommandDefault]
     public static async ValueTask Execute(CommandArg arg)
@@ -46,22 +62,32 @@ public class CommandGiveall : ICommands
         {
             case "avatars":
             case "ava":
+            case "av":
                 await GiveAllAvatars(player, arg);
                 break;
 
             case "mats":
             case "materials":
-                await GiveAllByType(player, ItemType.ITEM_MATERIAL, amount, arg, "Game.Command.GiveAll.MaterialsGiven");
+            case "mat":
+                await GiveAllByType(player, ItemType.ITEM_MATERIAL, amount, arg);
                 break;
 
             case "weapons":
             case "wep":
-                await GiveAllByType(player, ItemType.ITEM_WEAPON, 1, arg, "Game.Command.GiveAll.WeaponsGiven");
+            case "w":
+                await GiveAllByType(player, ItemType.ITEM_WEAPON, amount, arg);
                 break;
 
             case "relics":
             case "rel":
-                await GiveAllByType(player, ItemType.ITEM_RELIQUARY, 1, arg, "Game.Command.GiveAll.RelicsGiven");
+            case "r":
+                await GiveAllByType(player, ItemType.ITEM_RELIQUARY, 1, arg);
+                break;
+
+            case "furniture":
+            case "furn":
+            case "f":
+                await GiveAllByType(player, ItemType.ITEM_FURNITURE, amount, arg);
                 break;
 
             case "essentials":
@@ -70,11 +96,7 @@ public class CommandGiveall : ICommands
                 break;
 
             case "all":
-                await GiveAllAvatars(player, arg);
-                await GiveAllByType(player, ItemType.ITEM_WEAPON, 1, arg, "Game.Command.GiveAll.WeaponsGiven");
-                await GiveAllByType(player, ItemType.ITEM_RELIQUARY, 1, arg, "Game.Command.GiveAll.RelicsGiven");
-                await GiveAllByType(player, ItemType.ITEM_MATERIAL, 9999, arg, "Game.Command.GiveAll.MaterialsGiven");
-                await GiveEssentials(player, 9999, arg);
+                await GiveAll(player, amount, arg);
                 break;
 
             default:
@@ -83,71 +105,162 @@ public class CommandGiveall : ICommands
         }
     }
 
+    #region Give All Avatars
+
     private static async ValueTask GiveAllAvatars(Game.Player.PlayerInstance player, CommandArg arg)
     {
-        int added = 0;
+        var addedAvatars = new List<AvatarDataInfo>();
+
         foreach (var avatarId in GameData.AvatarData.Keys)
         {
+            if (IsExcludedAvatar(avatarId)) continue;
             if (player.AvatarManager.HasAvatar(avatarId)) continue;
-            var result = await player.AddAvatar(avatarId, false);
-            if (result != null) added++;
+
+            try
+            {
+                var avatar = await player.AddAvatar(avatarId, false);
+                if (avatar == null) continue;
+
+                player.AvatarManager.MaxOutAvatar(avatar);
+                await player.SendPacket(new PacketAvatarAddNotify(avatar, false));
+                addedAvatars.Add(avatar);
+            }
+            catch
+            {
+                // Skip invalid avatars (missing skillDepot, etc.)
+            }
         }
+
+        if (addedAvatars.Count > 0)
+        {
+            await player.SendPacket(new PacketAvatarDataNotify(player));
+            await player.SendPacket(new PacketAvatarTeamAllDataNotify(player));
+        }
+
         await arg.SendMsg(I18NManager.Translate("Game.Command.GiveAll.AvatarsGiven",
-            added.ToString(), player.Uid.ToString()));
+            addedAvatars.Count.ToString(), player.Uid.ToString()));
     }
 
+    private static bool IsExcludedAvatar(int avatarId)
+        => avatarId < 10000002
+        || avatarId >= 11000000
+        || (avatarId <= 10000910 && avatarId >= 10000900)
+        || avatarId == GameConstants.MAIN_CHARACTER_MALE
+        || avatarId == GameConstants.MAIN_CHARACTER_FEMALE;
+
+    #endregion
+
+    #region Give All By Type
+
     private static async ValueTask GiveAllByType(Game.Player.PlayerInstance player, ItemType targetType,
-        int amount, CommandArg arg, string i18nKey)
+        int amount, CommandArg arg)
     {
         var items = new List<ItemData>();
-        int count = 0;
+        int created = 0;
+        int addedTotal = 0;
 
         foreach (var (itemId, itemData) in GameData.ItemData)
         {
             if (itemData.ItemType != targetType) continue;
-            if (itemData.UseOnGain) continue; // Skip auto-use items (avatar cards, etc.)
+            if (itemData.UseOnGain) continue;
 
-            var item = new ItemData
-            {
-                ItemId = itemId,
-                Count = targetType == ItemType.ITEM_MATERIAL
-                    ? Math.Min(amount, (int)itemData.StackLimit)
-                    : 1,
-                Level = 1,
-                Refinement = 1
-            };
+            if (targetType == ItemType.ITEM_WEAPON && !IsValidWeaponId(itemId))
+                continue;
+            if (targetType == ItemType.ITEM_RELIQUARY && !IsValidRelicId(itemId))
+                continue;
+            if (targetType == ItemType.ITEM_MATERIAL && itemId < MinMaterialId)
+                continue;
 
-            // Set weapon affixes
-            if (targetType == ItemType.ITEM_WEAPON && itemData.SkillAffix.Count > 0)
+            try
             {
-                foreach (var affix in itemData.SkillAffix)
+                var item = new ItemData { ItemId = itemId };
+
+                switch (targetType)
                 {
-                    if (affix > 0) item.Affixes.Add(affix);
+                    case ItemType.ITEM_WEAPON:
+                        item.Count = 1;
+                        item.Level = Math.Max(1, amount);
+                        item.PromoteLevel = ItemData.GetMinPromoteLevel(item.Level);
+                        item.InitWeaponAffixes();
+                        break;
+
+                    case ItemType.ITEM_RELIQUARY:
+                        item.Count = 1;
+                        item.Level = 1;
+                        break;
+
+                    case ItemType.ITEM_MATERIAL:
+                    case ItemType.ITEM_FURNITURE:
+                        item.Count = Math.Min(amount, (int)itemData.StackLimit);
+                        break;
                 }
+
+                items.Add(item);
+                created++;
+            }
+            catch
+            {
+                // Skip items that fail to construct
             }
 
-            items.Add(item);
-            count++;
+            if (items.Count >= ItemsPerBatch)
+            {
+                addedTotal += player.InventoryManager.AddItems(items, ActionReason.Gm);
+                items.Clear();
+            }
         }
 
         if (items.Count > 0)
-            player.InventoryManager.AddItems(items);
+            addedTotal += player.InventoryManager.AddItems(items, ActionReason.Gm);
 
-        // Send bulk hint
-        if (items.Count > 0 && items.Count <= 100)
-            _ = player.SendPacket(new PacketItemAddHintNotify(items, 0));
+        var i18nKey = targetType switch
+        {
+            ItemType.ITEM_WEAPON => "Game.Command.GiveAll.WeaponsGiven",
+            ItemType.ITEM_RELIQUARY => "Game.Command.GiveAll.RelicsGiven",
+            ItemType.ITEM_MATERIAL => "Game.Command.GiveAll.MaterialsGiven",
+            ItemType.ITEM_FURNITURE => "Game.Command.GiveAll.FurnitureGiven",
+            _ => "Game.Command.GiveAll.ItemsGiven"
+        };
+
+        // Report both created and actually-added counts for diagnosis
+        if (addedTotal < created)
+        {
+            Logger.GetByClassName().Warn(
+                $"giveall {targetType}: created {created}, only {addedTotal} added (capacity/validation rejected {created - addedTotal})");
+        }
 
         await arg.SendMsg(I18NManager.Translate(i18nKey,
-            count.ToString(), amount.ToString(), player.Uid.ToString()));
+            addedTotal.ToString(), amount.ToString(), player.Uid.ToString()));
     }
+
+    #endregion
+
+    #region Give Essentials
 
     private static async ValueTask GiveEssentials(Game.Player.PlayerInstance player, int amount, CommandArg arg)
     {
         foreach (var itemId in Essentials)
-        {
-            player.InventoryManager.AddItem(itemId, amount);
-        }
+            player.InventoryManager.AddItem(itemId, amount, ActionReason.Gm);
+
         await arg.SendMsg(I18NManager.Translate("Game.Command.GiveAll.EssentialsGiven",
             Essentials.Length.ToString(), amount.ToString(), player.Uid.ToString()));
     }
+
+    #endregion
+
+    #region Give All
+
+    private static async ValueTask GiveAll(Game.Player.PlayerInstance player, int amount, CommandArg arg)
+    {
+        await GiveAllAvatars(player, arg);
+        await GiveAllByType(player, ItemType.ITEM_WEAPON, Math.Max(1, amount), arg);
+        await GiveAllByType(player, ItemType.ITEM_RELIQUARY, 1, arg);
+        await GiveAllByType(player, ItemType.ITEM_FURNITURE, Math.Min(amount, 9999), arg);
+        await GiveAllByType(player, ItemType.ITEM_MATERIAL, Math.Min(amount, 9999), arg);
+        await GiveEssentials(player, Math.Min(amount, 9999), arg);
+
+        await arg.SendMsg(I18NManager.Translate("Game.Command.GiveAll.AllGiven", player.Uid.ToString()));
+    }
+
+    #endregion
 }

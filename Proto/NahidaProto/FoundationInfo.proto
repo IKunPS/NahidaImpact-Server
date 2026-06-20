@@ -1,10 +1,13 @@
 syntax = "proto3";
- 
+
+// Nahida
+// Proto
+
 import "FoundationStatus.proto";
 
 message FoundationInfo {
-	uint32 current_building_id = 3;
-	uint32 locked_by_uid = 4;
-	FoundationStatus status = 1;
 	repeated uint32 uid_list = 2;
+	uint32 current_building_id = 3;
+	FoundationStatus status = 1;
+	uint32 locked_by_uid = 4;
 }

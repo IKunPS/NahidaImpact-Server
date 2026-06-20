@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "WidgetCreateLocationInfo.proto";
+import "WidgetCreatorInfo.proto";
+
+// CmdID: 24738
+message WidgetDoBagReq {
+	uint32 material_id = 10;
+	oneof op_info {
+		WidgetCreatorInfo widget_creator_info = 1863;
+		WidgetCreateLocationInfo location_info = 1067;
+	}
+}

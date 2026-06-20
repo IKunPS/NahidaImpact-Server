@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "PropValue.proto";
+
+// CmdID: 4508
+message WorldDataNotify {
+	map<uint32, PropValue> world_prop_map = 3;
+}

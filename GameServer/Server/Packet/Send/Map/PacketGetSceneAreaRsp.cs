@@ -27,7 +27,7 @@ public class PacketGetSceneAreaRsp : BasePacket
         }
 
         // Add city info for cities 1-5 (Mondstadt, Liyue, Inazuma, Sumeru, Fontaine)
-        // TODO: Use player.SotSManager.GetCityInfo() when implemented
+        // TODO: Use player.StatueOfTheSevenManager.GetCityInfo() when implemented
         for (uint i = 1; i <= 5; i++)
         {
             proto.CityInfoList.Add(new CityInfo { CityId = i, Level = 10, CrystalNum = 0 });

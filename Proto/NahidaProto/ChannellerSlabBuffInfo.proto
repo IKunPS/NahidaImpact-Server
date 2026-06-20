@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "ChannellerSlabAssistInfo.proto";
+
+message ChannellerSlabBuffInfo {
+	repeated ChannellerSlabAssistInfo assist_info_list = 13;
+	repeated uint32 buff_id_list = 14;
+	// [obf] CLPIDNHMLAO KECBGCPJGLD = 3;
+	// [obf] CLPIDNHMLAO NPDDCNDBLPA = 8;
+}

@@ -50,7 +50,7 @@ internal static class ThrowHelper
 
     public static Exception NewTransportClosedForStreamException()
     {
-        throw new IOException("The underlying transport is closed.");
+        return new IOException("The underlying transport is closed.");
     }
 
     public static Exception NewOperationCanceledExceptionForCancelPendingSend(Exception? innerException,

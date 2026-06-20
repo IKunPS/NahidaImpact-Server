@@ -1,0 +1,8 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message LimitedRegionInfo {
+	repeated uint32 limited_region_list = 8;
+}

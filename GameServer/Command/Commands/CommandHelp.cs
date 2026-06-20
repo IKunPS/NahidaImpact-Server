@@ -5,7 +5,7 @@ using NahidaImpact.Util.Extensions;
 namespace NahidaImpact.GameServer.Command.Commands;
 
 [CommandInfo("help", "Game.Command.Help.Desc", "Game.Command.Help.Usage", ["h"], [PermEnum.Support, PermEnum.Trial])]
-public class CommandHelp : ICommands
+public class CommandHelp : ICommand
 {
     [CommandDefault]
     public static async ValueTask Help(CommandArg arg)

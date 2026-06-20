@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "PlatformInfo.proto";
+
+// CmdID: 29747
+message PlatformChangeRouteNotify {
+	PlatformInfo platform = 15;
+	uint32 scene_time = 2;
+	uint32 entity_id = 8;
+}

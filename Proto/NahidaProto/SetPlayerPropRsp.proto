@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+// CmdID: 3154
+message SetPlayerPropRsp {
+	int32 retcode = 2;
+}

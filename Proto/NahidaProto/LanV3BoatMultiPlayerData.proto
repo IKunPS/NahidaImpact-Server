@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message LanV3BoatMultiPlayerData {
+	uint32 uid = 15;
+	uint32 accumulate_coin_num = 5;
+}

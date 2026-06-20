@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "EquipParam.proto";
+import "ItemHint.proto";
+
+// CmdID: 2768
+message GetMailItemRsp {
+	repeated EquipParam item_list = 9;
+	repeated ItemHint beyond_item_hint = 12;
+	repeated uint32 mail_id_list = 4;
+	int32 retcode = 14;
+}

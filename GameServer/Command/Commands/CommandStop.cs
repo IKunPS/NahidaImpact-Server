@@ -4,7 +4,7 @@ using NahidaImpact.Internationalization;
 namespace NahidaImpact.GameServer.Command.Commands;
 
 [CommandInfo("stop", "Game.Command.Stop.Desc", "Game.Command.Stop.Usage", ["shutdown", "exit"], [PermEnum.Admin])]
-public class CommandStop : ICommands
+public class CommandStop : ICommand
 {
     [CommandDefault]
     public static async ValueTask Execute(CommandArg arg)

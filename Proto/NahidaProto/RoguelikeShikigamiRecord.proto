@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message RoguelikeShikigamiRecord {
+	uint32 id = 3;
+	uint32 level = 9;
+}

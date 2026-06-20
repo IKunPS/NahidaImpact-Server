@@ -12,7 +12,7 @@ public static class CommandExecutor
         OnRunCommand?.Invoke(sender, cmd);
     }
 
-    public static void ConsoleExcuteCommand(string input)
+    public static void ConsoleExecuteCommand(string input)
     {
         _ = CommandManager.HandleCommand(input, new ConsoleCommandSender(CommandManager.Logger));
     }

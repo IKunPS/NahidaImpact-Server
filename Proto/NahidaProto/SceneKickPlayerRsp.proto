@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+// CmdID: 1221
+message SceneKickPlayerRsp {
+	int32 retcode = 6;
+	uint32 target_uid = 1;
+}

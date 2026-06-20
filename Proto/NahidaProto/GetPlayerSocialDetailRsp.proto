@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "SocialDetail.proto";
+
+// CmdID: 20887
+message GetPlayerSocialDetailRsp {
+	SocialDetail detail_data = 4;
+	uint32 param = 3;
+	int32 retcode = 11;
+}

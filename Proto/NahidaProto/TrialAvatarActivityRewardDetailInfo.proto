@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message TrialAvatarActivityRewardDetailInfo {
+	repeated uint32 available_training_step_list = 5;
+	repeated uint32 passed_training_step_list = 12;
+	uint32 trial_avatar_index_id = 9;
+	bool is_avatar_owned = 15;
+	bool passed_dungeon = 6;
+	bool received_reward = 4;
+	bool is_skip_training = 8;
+	bool is_can_take_reward = 13;
+	uint32 reward_id = 11;
+}

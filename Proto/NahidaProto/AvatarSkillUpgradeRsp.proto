@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+// CmdID: 9601
+message AvatarSkillUpgradeRsp {
+	uint32 avatar_skill_id = 8;
+	uint32 cur_level = 9;
+	int32 retcode = 15;
+	uint32 old_level = 14;
+	uint64 avatar_guid = 1;
+}

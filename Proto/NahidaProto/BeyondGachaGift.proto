@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "BeyondGachaItem.proto";
+
+message BeyondGachaGift {
+	repeated BeyondGachaItem beyond_gacha_item_list = 9;
+	uint32 beyond_gacha_type = 1;
+}

@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "UgcType.proto";
+
+// CmdID: 9921
+message CheckUgcUpdateRsp {
+	repeated uint64 update_ugc_guid_list = 12;
+	UgcType ugc_type = 14;
+	int32 retcode = 1;
+}

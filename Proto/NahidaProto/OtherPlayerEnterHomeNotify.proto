@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+// CmdID: 26928
+message OtherPlayerEnterHomeNotify {
+	enum Reason {
+		Reason_INVALID = 0;
+		Reason_ENTER = 1;
+		Reason_LEAVE = 2;
+	}
+	string nickname = 13;
+	Reason reason = 12;
+}

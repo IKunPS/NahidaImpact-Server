@@ -1,0 +1,8 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message SumeruAdventureTrainingDetailInfo {
+	uint32 JMALFKFNMFC = 13;
+}

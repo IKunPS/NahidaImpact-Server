@@ -1,0 +1,8 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message TowerDefenseDetailInfo {
+	repeated uint32 unlocked_skill_id_list = 2;
+}

@@ -1,5 +1,8 @@
-﻿syntax = "proto3";
+syntax = "proto3";
+
+// Nahida
+// Proto
 
 message Furniture {
-  uint32 count = 1;
+	uint32 count = 1;
 }

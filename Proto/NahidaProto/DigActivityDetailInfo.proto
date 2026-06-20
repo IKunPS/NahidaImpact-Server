@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "DigMarkPoint.proto";
+
+message DigActivityDetailInfo {
+	repeated uint32 stage_id_list = 9;
+	repeated DigMarkPoint dig_mark_point_list = 10;
+	uint32 stage_id = 7;
+}

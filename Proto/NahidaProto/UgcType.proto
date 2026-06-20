@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+enum UgcType {
+	UgcType_NONE = 0;
+	UgcType_MUSIC_GAME = 1;
+	UgcType_LAN_V5_CARD_GAME = 2;
+	UGC_TYPE_SHORT_VIDEO = 3;
+}

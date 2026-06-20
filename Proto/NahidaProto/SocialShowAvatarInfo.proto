@@ -1,9 +1,12 @@
-﻿syntax = "proto3";
+syntax = "proto3";
+
+// Nahida
+// Proto
 
 message SocialShowAvatarInfo {
-  uint32 costume_id = 3;
-  uint32 level = 2;
-  uint32 avatar_id = 1;
-  uint32 avatar_element_type = 5;
-  uint32 talent_level = 4;
+	uint32 talent_level = 4;
+	uint32 avatar_id = 1;
+	uint32 level = 2;
+	uint32 avatar_element_type = 5;
+	uint32 costume_id = 3;
 }

@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+// CmdID: 5989
+message DelMailReq {
+	repeated uint32 mail_id_list = 1;
+}

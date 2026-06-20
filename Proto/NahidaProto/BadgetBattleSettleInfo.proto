@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message BadgetBattleSettleInfo {
+	repeated uint32 HIALHEHFPHO = 9;
+	uint32 level_id = 3;
+	uint32 score = 8;
+	bool is_new_record = 13;
+	uint32 difficulty = 11;
+}

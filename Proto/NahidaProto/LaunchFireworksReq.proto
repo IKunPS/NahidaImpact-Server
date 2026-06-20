@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "FireworksLaunchSchemeData.proto";
+
+// CmdID: 27723
+message LaunchFireworksReq {
+	FireworksLaunchSchemeData scheme_data = 4;
+}

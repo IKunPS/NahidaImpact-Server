@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+// CmdID: 21702
+message CanUseSkillNotify {
+	bool is_can_use_skill = 14;
+}

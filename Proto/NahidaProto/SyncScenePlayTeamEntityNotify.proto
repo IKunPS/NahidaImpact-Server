@@ -1,9 +1,12 @@
 syntax = "proto3";
 
+// Nahida
+// Proto
+
 import "PlayTeamEntityInfo.proto";
 
-// CmdID: 21451
+// CmdID: 22166
 message SyncScenePlayTeamEntityNotify {
-  repeated PlayTeamEntityInfo entity_info_list = 15;
-  uint32 scene_id = 11;
+	repeated PlayTeamEntityInfo entity_info_list = 10;
+	uint32 scene_id = 6;
 }

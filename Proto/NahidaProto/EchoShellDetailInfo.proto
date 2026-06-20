@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "SummerTimeDungeonInfo.proto";
+
+message EchoShellDetailInfo {
+	repeated uint32 shell_list = 10;
+	repeated uint32 taken_reward_list = 11;
+	repeated SummerTimeDungeonInfo summer_time_dungeon_list = 12;
+	repeated uint32 pass_dungeon_list = 14;
+}

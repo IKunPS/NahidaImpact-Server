@@ -1,10 +1,13 @@
 syntax = "proto3";
 
+// Nahida
+// Proto
+
 message AnimatorParameterValueInfo {
 	uint32 para_type = 1;
-	oneof MPIJAJOFDOJ {
-		float float_val = 3;
-		int32 int_val = 2;
+	oneof para_val {
 		bool bool_val = 4;
+		int32 int_val = 2;
+		float float_val = 3;
 	}
 }

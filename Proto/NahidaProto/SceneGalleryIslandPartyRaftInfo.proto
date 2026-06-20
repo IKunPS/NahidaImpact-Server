@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "GalleryStartSource.proto";
+
+message SceneGalleryIslandPartyRaftInfo {
+	uint32 fuel = 15;
+	uint32 point_id = 14;
+	GalleryStartSource start_source = 4;
+	uint32 coin = 10;
+	uint32 component = 9;
+	uint32 raft_entity_id = 5;
+}

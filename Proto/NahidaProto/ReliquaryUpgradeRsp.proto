@@ -1,12 +1,15 @@
 syntax = "proto3";
 
-// CmdID: 28013
+// Nahida
+// Proto
+
+// CmdID: 22562
 message ReliquaryUpgradeRsp {
-  uint64 target_reliquary_guid = 11;
-  uint32 old_level = 4;
-  uint32 cur_level = 1;
-  uint32 power_up_rate = 15;
-  repeated uint32 old_append_prop_list = 8;
-  repeated uint32 cur_append_prop_list = 12;
-  int32 retcode = 7;
+	repeated uint32 old_append_prop_list = 13;
+	repeated uint32 cur_append_prop_list = 14;
+	uint32 old_level = 2;
+	uint32 power_up_rate = 9;
+	uint64 target_reliquary_guid = 8;
+	int32 retcode = 6;
+	uint32 cur_level = 7;
 }

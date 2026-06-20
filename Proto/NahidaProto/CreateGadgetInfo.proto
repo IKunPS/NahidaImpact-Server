@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "GadgetBornType.proto";
+
+message CreateGadgetInfo {
+	message Chest {
+		uint32 chest_drop_id = 1;
+		bool is_show_cutscene = 2;
+	}
+	Chest chest = 2;
+	GadgetBornType born_type = 1;
+}

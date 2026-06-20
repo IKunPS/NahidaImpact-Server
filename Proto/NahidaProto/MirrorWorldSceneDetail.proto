@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "MapLayerInfo.proto";
+
+message MirrorWorldSceneDetail {
+	repeated uint32 scene_tag_id_list = 6;
+	MapLayerInfo map_layer_info = 4;
+	uint32 mirrored_scene_id = 3;
+}

@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message ThemeParkParkourSettleInfo {
+	uint32 level_id = 6;
+	bool PFGDKNIPEKG = 1;
+}

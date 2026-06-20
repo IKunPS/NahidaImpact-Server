@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message NatlanDrillBattleSettleInfo {
+	repeated uint32 AMIJEKPAFJM = 4;
+	uint32 level_id = 7;
+	uint32 HHELCCJDLAK = 14;
+	uint32 difficulty = 8;
+	uint32 cost_time = 11;
+	bool is_new_record = 15;
+}

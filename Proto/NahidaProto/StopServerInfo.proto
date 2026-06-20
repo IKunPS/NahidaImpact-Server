@@ -1,8 +1,11 @@
-﻿syntax = "proto3";
+syntax = "proto3";
+
+// Nahida
+// Proto
 
 message StopServerInfo {
-  string content_msg = 4;
-  string url = 3;
-  uint32 stop_begin_time = 1;
-  uint32 stop_end_time = 2;
+	string url = 3;
+	string content_msg = 4;
+	uint32 stop_begin_time = 1;
+	uint32 stop_end_time = 2;
 }

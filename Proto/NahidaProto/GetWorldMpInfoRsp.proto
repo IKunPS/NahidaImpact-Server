@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+// CmdID: 3391
+message GetWorldMpInfoRsp {
+	uint32 quit_mp_valid_time = 2;
+	int32 retcode = 6;
+	bool is_in_mp_mode = 1;
+}

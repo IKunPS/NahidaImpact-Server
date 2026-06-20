@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message SceneGalleryMuqadasPotionInfo {
+	uint32 skill_use_limit = 13;
+	uint32 capture_weakness_count = 8;
+	uint32 skill_energy = 15;
+	uint32 score = 3;
+}

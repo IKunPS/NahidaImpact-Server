@@ -1,9 +1,12 @@
 syntax = "proto3";
 
-// CmdID: 29840
+// Nahida
+// Proto
+
+// CmdID: 29984
 message WeaponPromoteRsp {
-  uint64 target_weapon_guid = 14;
-  uint32 old_promote_level = 6;
-  uint32 cur_promote_level = 12;
-  int32 retcode = 9;
+	uint32 cur_promote_level = 2;
+	uint64 target_weapon_guid = 7;
+	int32 retcode = 4;
+	uint32 old_promote_level = 14;
 }

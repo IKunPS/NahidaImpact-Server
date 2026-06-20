@@ -1,19 +1,22 @@
-﻿syntax = "proto3";
+syntax = "proto3";
+
+// Nahida
+// Proto
 
 import "AvatarInfo.proto";
-import "AvatarTeam.proto";
 import "AvatarRenameInfo.proto";
+import "AvatarTeam.proto";
 
-// CmdID: 20773
+// CmdID: 21044
 message AvatarDataNotify {
-  repeated uint32 owned_trace_effect_list = 8;
-  repeated uint32 owned_flycloak_list = 11;
-  repeated uint32 owned_costume_list = 14;
-  repeated AvatarRenameInfo avatar_rename_list = 6;
-  repeated AvatarInfo avatar_list = 15;
-  repeated uint64 temp_avatar_guid_list = 12;
-  repeated uint32 backup_avatar_team_order_list = 10;
-  map<uint32, AvatarTeam> avatar_team_map = 9;
-  uint64 choose_avatar_guid = 2;
-  uint32 cur_avatar_team_id = 4;
+	map<uint32, AvatarTeam> avatar_team_map = 7;
+	repeated AvatarInfo avatar_list = 3;
+	repeated AvatarRenameInfo avatar_rename_list = 9;
+	repeated uint32 owned_flycloak_list = 10;
+	repeated uint32 backup_avatar_team_order_list = 13;
+	repeated uint32 owned_trace_effect_list = 2;
+	repeated uint64 temp_avatar_guid_list = 1;
+	repeated uint32 owned_costume_list = 14;
+	uint32 cur_avatar_team_id = 11;
+	uint64 choose_avatar_guid = 4;
 }

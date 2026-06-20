@@ -1,8 +1,11 @@
 syntax = "proto3";
 
-// CmdID: 28243
+// Nahida
+// Proto
+
+// CmdID: 24564
 message ServerGlobalValueChangeNotify {
-  uint32 key_hash = 8;
-  float value = 12;
-  uint32 entity_id = 14;
+	float value = 5;
+	uint32 entity_id = 7;
+	uint32 key_hash = 13;
 }

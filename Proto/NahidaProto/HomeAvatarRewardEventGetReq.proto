@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+// CmdID: 20823
+message HomeAvatarRewardEventGetReq {
+	uint32 avatar_id = 5;
+	uint32 event_id = 10;
+}

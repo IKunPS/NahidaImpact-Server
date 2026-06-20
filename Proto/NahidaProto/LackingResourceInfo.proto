@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message LackingResourceInfo {
+	map<uint32, uint32> PGLADLAKBLN = 11;
+	repeated uint32 KPEAFFKDMDJ = 5;
+	map<uint32, uint32> IELFJABNFGO = 6;
+	map<uint32, uint32> lacked_npc_map = 2;
+	repeated uint32 focused_parent_quest_id_list = 9;
+	repeated uint32 OFCKJLBIPCD = 8;
+	repeated uint32 lacked_npc_list = 1;
+	map<uint32, uint32> lacked_place_map = 4;
+	repeated uint32 OGHPOOEOCEF = 7;
+	repeated uint32 lacked_place_list = 3;
+	uint32 MJBMDALJBIF = 10;
+}

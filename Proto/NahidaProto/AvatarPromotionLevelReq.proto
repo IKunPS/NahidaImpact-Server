@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+// // Nahida
+// Proto
+
+// CmdID: 22532
+message AvatarPromotionLevelReq {
+	uint32 DIEHHONNEHI = 11;
+	uint64 avatar_guid = 6;
+}

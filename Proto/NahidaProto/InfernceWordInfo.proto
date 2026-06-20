@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+message InfernceWordInfo {
+	uint32 associate_word_id = 6;
+	uint32 word_id = 3;
+	uint32 unlock_by_word_id = 2;
+	bool is_interpret = 10;
+	bool is_submit = 5;
+	bool is_associate = 14;
+}

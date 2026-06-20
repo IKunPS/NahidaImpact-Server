@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "SummerTimeSprintBoatInfo.proto";
+import "SummerTimeStageInfo.proto";
+
+message SummerTimeDetailInfo {
+	map<uint32, SummerTimeStageInfo> stage_map = 10;
+	SummerTimeSprintBoatInfo sprint_boat_info = 7;
+	bool is_content_closed = 8;
+	uint32 content_close_time = 4;
+}

@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "ElectroherculesBattleStageInfo.proto";
+
+message ElectroherculesBattleDetailInfo {
+	repeated ElectroherculesBattleStageInfo stage_info_list = 6;
+	bool is_pass_all_stage = 2;
+}

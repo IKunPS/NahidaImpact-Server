@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "ActivityScheduleInfo.proto";
+
+// CmdID: 21412
+message ActivityScheduleInfoNotify {
+	repeated ActivityScheduleInfo activity_schedule_list = 14;
+	uint32 remain_fly_sea_lamp_num = 1;
+}

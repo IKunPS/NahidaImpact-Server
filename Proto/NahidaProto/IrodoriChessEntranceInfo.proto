@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+// Nahida
+// Proto
+
+import "IrodoriChessMonsterInfo.proto";
+
+message IrodoriChessEntranceInfo {
+	repeated IrodoriChessMonsterInfo monster_info_list = 12;
+	uint32 entrance_point_id = 10;
+}
