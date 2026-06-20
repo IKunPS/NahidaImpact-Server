@@ -1,7 +1,8 @@
-﻿using NahidaImpact.Models.Sdk;
+﻿using Microsoft.AspNetCore.Mvc;
 using NahidaImpact.Database.Account;
+using NahidaImpact.Internationalization;
+using NahidaImpact.Models.Sdk;
 using NahidaImpact.Util;
-using Microsoft.AspNetCore.Mvc;
 
 namespace NahidaImpact.SdkServer.Handlers.Sdk;
 
@@ -11,25 +12,33 @@ public class MdkController : Controller
     [HttpPost("/{productName}/mdk/shield/api/login")]
     public async Task<IActionResult> MdkShieldLogin(string productName, [FromBody] MdkShieldLoginRequest request)
     {
-        var account = AccountData.GetAccountByUserName(request.Account!);
+        var account = AccountData.GetAccountByUserName(request.Account ?? string.Empty);
 
-        if (account == null && !ConfigManager.Config.ServerOption.AutoCreateUser) 
+        if (account == null && !ConfigManager.Config.ServerOption.AutoCreateUser)
         {
             return Ok(new ResponseBase
             {
                 Retcode = -101,
                 Success = false,
-                Message = "Account not found"
+                Message = I18NManager.Translate("Server.Web.AccountNotFound")
             });
-        };
+        }
 
-        // Make new account
         if (account == null && ConfigManager.Config.ServerOption.AutoCreateUser)
         {
-            AccountData.CreateAccount(request.Account!, 0, request.Password!);
+            AccountData.CreateAccount(request.Account ?? string.Empty, 0, request.Password ?? string.Empty);
+            account = AccountData.GetAccountByUserName(request.Account ?? string.Empty);
+        }
 
-            account = AccountData.GetAccountByUserName(request.Account!)!;
-        };
+        if (account == null)
+        {
+            return Ok(new ResponseBase
+            {
+                Retcode = -101,
+                Success = false,
+                Message = I18NManager.Translate("Server.Web.AccountNotFound")
+            });
+        }
 
         return Ok(new MdkShieldResponse
         {
@@ -42,7 +51,7 @@ public class MdkController : Controller
                     Name = account.Username,
                     Realname = account.Username,
                     IsEmailVerify = "0",
-                    Email = $"{account!.Username}@neonteam.dev",
+                    Email = $"{account.Username}@neonteam.dev",
                     AreaCode = "**",
                     Country = "US",
                 },
@@ -53,22 +62,17 @@ public class MdkController : Controller
     [HttpPost("/{productName}/mdk/shield/api/verify")]
     public async Task<IActionResult> MdkShieldVerify(string productName, [FromBody] MdkShieldVerifyRequest request)
     {
-        int accountUid;
-        try
-        {
-            accountUid = int.Parse(request.Uid!);
-        }
-        catch
+        if (request.Uid == null || !int.TryParse(request.Uid, out var accountUid))
         {
             return Ok(new ResponseBase
             {
                 Retcode = -101,
                 Success = false,
-                Message = "Account cache error"
+                Message = I18NManager.Translate("Server.Web.CacheError")
             });
         }
 
-        var account = AccountData.GetAccountByUid(accountUid,true);
+        var account = AccountData.GetAccountByUid(accountUid, true);
 
         if (account == null)
         {
@@ -76,7 +80,7 @@ public class MdkController : Controller
             {
                 Retcode = -101,
                 Success = false,
-                Message = "Account cache error"
+                Message = I18NManager.Translate("Server.Web.CacheError")
             });
         }
 
@@ -86,7 +90,7 @@ public class MdkController : Controller
             {
                 Retcode = -101,
                 Success = false,
-                Message = "For account safety, please log in again"
+                Message = I18NManager.Translate("Server.Web.Relogin")
             });
         }
 
@@ -101,7 +105,7 @@ public class MdkController : Controller
                     Name = account.Username,
                     Realname = account.Username,
                     IsEmailVerify = "0",
-                    Email = $"{account!.Username}@neonteam.dev",
+                    Email = $"{account.Username}@neonteam.dev",
                     AreaCode = "**",
                     Country = "US",
                 },
@@ -141,16 +145,8 @@ public class MdkController : Controller
                 enable_ps_bind_account = false,
                 thirdparty_login_configs = new
                 {
-                    tw = new
-                    {
-                        token_type = "TK_GAME_TOKEN",
-                        game_token_expires_in = "604800"
-                    },
-                    fb = new
-                    {
-                        token_type = "TK_GAME_TOKEN",
-                        game_token_expires_in = "604800"
-                    }
+                    tw = new { token_type = "TK_GAME_TOKEN", game_token_expires_in = "604800" },
+                    fb = new { token_type = "TK_GAME_TOKEN", game_token_expires_in = "604800" }
                 }
             }
         });

@@ -178,7 +178,7 @@ public class AbilityManager
             var valueChange = AbilityScalarValueEntry.Parser.ParseFrom(invoke.AbilityData);
             SetAbilityOverrideValue(ability, valueChange);
         }
-        catch (Exception) { }
+        catch (Exception ex) { _logger.Debug($"HandleOverrideParam failed: {ex.Message}"); }
     }
 
     private static void HandleReinitOverrideMap(AbilityInvokeEntry invoke, BaseEntity entity)
@@ -199,7 +199,7 @@ public class AbilityManager
                 SetAbilityOverrideValue(ability, varChange);
             }
         }
-        catch (Exception) { }
+        catch (Exception ex) { _logger.Debug($"HandleOverrideParam failed: {ex.Message}"); }
     }
 
     private void OnPossibleElementalBurst(Ability ability, AbilityModifier modifier, int entityId)
@@ -230,7 +230,7 @@ public class AbilityManager
         {
             modChange = AbilityMetaModifierChange.Parser.ParseFrom(invoke.AbilityData);
         }
-        catch (Exception) { return; }
+        catch (Exception ex) { _logger.Debug($"HandleModifierChange parse failed: {ex.Message}"); return; }
 
         var head = invoke.Head;
         if (head == null) return;
@@ -326,7 +326,7 @@ public class AbilityManager
 
             entity.OnAbilityValueUpdate();
         }
-        catch (Exception) { }
+        catch (Exception ex) { _logger.Debug($"HandleGlobalFloatValue failed: {ex.Message}"); }
     }
 
     private static void HandleClearGlobalFloatValue(AbilityInvokeEntry invoke, BaseEntity entity)
@@ -345,7 +345,7 @@ public class AbilityManager
             entity.GlobalAbilityValues.Remove(key);
             entity.OnAbilityValueUpdate();
         }
-        catch (Exception) { }
+        catch (Exception ex) { _logger.Debug($"HandleClearGlobalFloatValue failed: {ex.Message}"); }
     }
 
     // ===== Add New Ability =====
@@ -366,7 +366,7 @@ public class AbilityManager
             entity.InstancedAbilities.Add(new Ability(abilityData, entity, _player));
             _logger.Debug($"Ability added to entity {entity.Id} at index {entity.InstancedAbilities.Count}.");
         }
-        catch (Exception) { }
+        catch (Exception ex) { _logger.Debug($"HandleAddNewAbility failed: {ex.Message}"); }
     }
 
     private static void HandleKillState(AbilityInvokeEntry invoke, BaseEntity entity)

@@ -95,7 +95,7 @@ public class ChatSystem
         player.SendPacket(new PacketPullRecentChatRsp(messages));
     }
 
-    public async void SendPrivateMessageFromServer(int targetUid, string message)
+    public async Task SendPrivateMessageFromServer(int targetUid, string message)
     {
         if (string.IsNullOrEmpty(message)) return;
 
@@ -108,7 +108,7 @@ public class ChatSystem
         await target.SendPacket(packet);
     }
 
-    public async void SendPrivateMessageFromServer(int targetUid, int emote)
+    public async Task SendPrivateMessageFromServer(int targetUid, int emote)
     {
         var target = PlayerInstance.GetPlayerInstanceByUid((uint)targetUid);
         if (target == null) return;
@@ -119,7 +119,7 @@ public class ChatSystem
         await target.SendPacket(packet);
     }
 
-    public async void SendPrivateMessage(PlayerInstance player, int targetUid, string message)
+    public async Task SendPrivateMessage(PlayerInstance player, int targetUid, string message)
     {
         if (string.IsNullOrEmpty(message)) return;
 
@@ -161,7 +161,7 @@ public class ChatSystem
         }
     }
     
-    public async void SendPrivateMessage(PlayerInstance player, int targetUid, int emote)
+    public async Task SendPrivateMessage(PlayerInstance player, int targetUid, int emote)
     {
         // Get target
         var target = PlayerInstance.GetPlayerInstanceByUid((uint)targetUid);
@@ -198,7 +198,7 @@ public class ChatSystem
         }
     }
 
-    public async void SendTeamMessage(PlayerInstance player, int channel, string message)
+    public async Task SendTeamMessage(PlayerInstance player, int channel, string message)
     {
         if (string.IsNullOrEmpty(message)) return;
 
@@ -222,7 +222,7 @@ public class ChatSystem
         await System.Threading.Tasks.Task.CompletedTask;
     }
 
-    public async void SendTeamMessage(PlayerInstance player, int channel, int icon)
+    public async Task SendTeamMessage(PlayerInstance player, int channel, int icon)
     {
         // Invoke chat event
         var chatEvent = new PlayerChatEvent(player, icon, channel);
@@ -246,12 +246,12 @@ public class ChatSystem
         if (WelcomeEmotes is { Length: > 0 })
         {
             var random = new Random();
-            SendPrivateMessageFromServer(player.Uid, WelcomeEmotes[random.Next(WelcomeEmotes.Length)]);
+            _ = SendPrivateMessageFromServer(player.Uid, WelcomeEmotes[random.Next(WelcomeEmotes.Length)]);
         }
 
         if (!string.IsNullOrEmpty(WelcomeMessage))
         {
-            SendPrivateMessageFromServer(player.Uid, WelcomeMessage);
+            _ = SendPrivateMessageFromServer(player.Uid, WelcomeMessage);
         }
     }
 }

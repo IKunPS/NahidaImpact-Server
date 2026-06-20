@@ -22,7 +22,7 @@ public class EntityMonster : BaseEntity
     private uint MonsterId => MonsterData.Id;
 
     public override Position GetPosition() => position;
-    public override Position GetRotation() => position;
+    public override Position GetRotation() => rotation;
     
     public int Level { get; }
     public Position BornPos { get; }
@@ -38,6 +38,7 @@ public class EntityMonster : BaseEntity
         Owner = scene.GetHost()!;
         Id = (uint)scene.World.GetNextEntityId(EntityIdTypeEnum.Monster);
         position = new Position(pos);
+        rotation = new Position(rot ?? pos);
         BornPos = pos.Clone();
 
         FightProperties = new List<FightPropPair>

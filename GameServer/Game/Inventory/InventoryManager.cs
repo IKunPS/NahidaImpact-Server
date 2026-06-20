@@ -453,11 +453,15 @@ public class InventoryManager : BasePlayerManager
 
         var data = item.GetItemData();
         if (data != null && data.IsEquip)
+        {
             item.Count = 0;
+        }
         else
-            item.Count -= count;
-
-        var removeCount = Math.Min(count, item.Count >= 0 ? count : count + item.Count);
+        {
+            var actualRemove = Math.Min(count, item.Count);
+            item.Count -= actualRemove;
+            count = actualRemove;
+        }
 
         if (item.Count <= 0)
         {
@@ -469,7 +473,7 @@ public class InventoryManager : BasePlayerManager
             _ = Player.SendPacket(new PacketStoreItemChangeNotify(item));
         }
 
-        TriggerRemItemEvents(item, removeCount);
+        TriggerRemItemEvents(item, count);
         Save();
         return true;
     }

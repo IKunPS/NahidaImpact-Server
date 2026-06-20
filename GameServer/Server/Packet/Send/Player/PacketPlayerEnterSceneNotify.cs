@@ -26,10 +26,10 @@ public class PacketPlayerEnterSceneNotify : BasePacket
             SceneBeginTime = ((ulong)now ^ 27843) + 16749,
             Type = EnterType.Self,
             TargetUid = (uint)((uid - 30259) ^ 4145),
-            EnterSceneToken = (uint)((player.EnterToken ^ 57361) - 22665),
+            EnterSceneToken = ((player.EnterToken ^ 57361) - 22665),
             WorldLevel = (uint)((player.Data.WorldLevel ^ 31579) + 19873),
-            EnterReason = (uint)(((int)EnterReason.Login ^ 43962) + 40350),
-            WorldType = (uint)((1 + 30022) ^ 64981),
+            EnterReason = (((int)EnterReason.Login ^ 43962) + 40350),
+            WorldType = 1,
             SceneTransaction = $"{sceneId}-{uid}-{(int)(now / 1000)}-18402",
             IsFirstLoginEnterScene = player.IsFirstLoginEnterScene
         };
@@ -49,7 +49,7 @@ public class PacketPlayerEnterSceneNotify : BasePacket
 
     // Teleport — all scene transitions route through TeleportProperties.
     public PacketPlayerEnterSceneNotify(PlayerInstance player, TeleportProperties props,
-        int prevSceneId, Position prevPos, uint worldType = 1, int transactionId = 18402)
+        int prevSceneId, Position prevPos)
         : base(CmdIds.PlayerEnterSceneNotify)
     {
         player.SceneLoadState = SceneLoadState.Loading;
@@ -67,8 +67,8 @@ public class PacketPlayerEnterSceneNotify : BasePacket
             EnterSceneToken = (uint)((player.EnterToken ^ 57361) - 22665),
             WorldLevel = (uint)((player.Data.WorldLevel ^ 31579) + 19873),
             EnterReason = (uint)(((int)props.EnterReason ^ 43962) + 40350),
-            WorldType = worldType,
-            SceneTransaction = $"{props.SceneId}-{uid}-{(int)(now / 1000)}-{transactionId}",
+            WorldType = 1,
+            SceneTransaction = $"{props.SceneId}-{uid}-{(int)(now / 1000)}-{18402}",
             PrevSceneId = (uint)((prevSceneId ^ 39512) - 40922),
             PrevPos = prevPos.ToProto()
         };

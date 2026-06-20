@@ -43,21 +43,17 @@ public class WordTextCHS
 {
     public string Config => "配置文件";
     public string Language => "语言";
-    public string Log => "日志";
     public string GameData => "游戏数据";
-    public string Cache => "资源缓存";
     public string CustomData => "自定义数据";
     public string Database => "数据库";
     public string Command => "命令";
-    public string SdkServer => "Web服务器";
-    public string Handler => "包处理程序";
     public string Dispatch => "全局分发";
     public string Game => "游戏";
     public string Handbook => "手册";
     public string NotFound => "未找到";
     public string Error => "错误";
     public string DatabaseAccount => "数据库账号";
-    public string Tutorial => "教程";
+    public string Resource => "资源";
 }
 
 #endregion
@@ -70,6 +66,16 @@ public class WordTextCHS
 public class WebTextCHS
 {
     public string Maintain => "服务器正在维护，请稍后再试。";
+    public string AccountNotFound => "账号未找到";
+    public string PasswordIncorrect => "密码错误";
+    public string LoginFailed => "账号登录失败";
+    public string DecryptionFailed => "账号名解密失败";
+    public string CreateAccountFailed => "创建账号失败";
+    public string TokenError => "账号令牌错误";
+    public string Relogin => "为了账号安全，请重新登录";
+    public string OK => "OK";
+    public string CacheError => "账号缓存错误";
+    public string ConnectionFailed => "连接失败！";
 }
 
 /// <summary>
@@ -81,13 +87,10 @@ public class ServerInfoTextCHS
     public string CancelKeyPressed => "已按下取消键 (Ctrl + C)，服务器即将关闭…";
     public string StartingServer => "正在启动 NahidaImpact";
     public string CurrentVersion => "当前服务端支持的版本: {0}";
-    public string InvalidVersion => "当前为不受支持的游戏版本 {0}\n请更新游戏到 {1}";
     public string LoadingItem => "正在加载 {0}…";
     public string GeneratingItem => "正在生成 {0}…";
-    public string WaitingItem => "正在等待进程 {0} 完成…";
     public string RegisterItem => "注册了 {0} 个 {1}。";
     public string FailedToLoadItem => "加载 {0} 失败。";
-    public string NewClientSecretKey => "客户端密钥不存在，正在生成新的客户端密钥。";
     public string FailedToInitializeItem => "初始化 {0} 失败。";
     public string FailedToReadItem => "读取 {0} 失败，文件{1}";
     public string GeneratedItem => "已生成 {0}。";
@@ -95,14 +98,16 @@ public class ServerInfoTextCHS
     public string LoadedItems => "已加载 {0} 个 {1}。";
     public string ServerRunning => "{0} 服务器正在监听 {1}";
     public string ServerStarted => "启动完成！用时 {0}s，输入 'help' 来获取命令帮助";
-    public string MissionEnabled => "任务系统已启用，此功能仍在开发中。";
-    public string KeyStoreError => "SSL证书不存在，已关闭SSL功能。";
-    public string CacheLoadSkip => "已跳过缓存加载。";
     public string ConfigMissing => "{0} 缺失，请检查你的资源文件夹: {1}，{2} 可能不能使用。";
-    public string UnloadedItems => "卸载了所有 {0}。";
     public string SaveDatabase => "已保存数据库，用时 {0}s";
     public string WaitForAllDone => "现在还不可以进入游戏，请等待所有项目加载完成后再试";
     public string UnhandledException => "发生未经处理的异常: {0}";
+    public string DirNotFound => "{0} 目录未找到: {1}";
+    public string FailedToLoadData => "加载 {0} 数据失败。";
+    public string FailedToLoadFile => "加载 {0} 失败: {1}";
+    public string LoadedCountInDir => "已从 {2} 加载 {0} 个 {1}";
+    public string LoadedScenePoints => "已加载 {0} 个场景传送点，覆盖 {1} 个场景";
+    public string FileNotFound => "{0} 文件未找到: {1}";
 }
 
 /// <summary>
@@ -115,21 +120,10 @@ public class CommandTextCHS
     public GiveTextCHS Give { get; } = new();
     public GiveAllTextCHS GiveAll { get; } = new();
     public TeleportTextCHS Teleport { get; } = new();
-    public HealTextCHS Heal { get; } = new();
-    public ClearTextCHS Clear { get; } = new();
     public AccountTextCHS Account { get; } = new();
-    public PermissionTextCHS Permission { get; } = new();
     public KickTextCHS Kick { get; } = new();
-    public ListTextCHS List { get; } = new();
-    public SetPropTextCHS SetProp { get; } = new();
-    public UnlockAllTextCHS UnlockAll { get; } = new();
     public SpawnTextCHS Spawn { get; } = new();
-    public KillAllTextCHS KillAll { get; } = new();
-    public MapAreaTextCHS MapArea { get; } = new();
-    public WeatherTextCHS Weather { get; } = new();
-    public PositionTextCHS Position { get; } = new();
     public StopTextCHS Stop { get; } = new();
-    public AvatarTextCHS Avatar { get; } = new();
 }
 
 #endregion
@@ -142,13 +136,9 @@ public class CommandTextCHS
 public class NoticeTextCHS
 {
     public string PlayerNotFound => "未找到玩家！";
-    public string PlayerNotInit => "玩家未初始化。";
     public string InvalidArguments => "无效的参数！";
     public string NoPermission => "你没有权限这么做！";
     public string CommandNotFound => "未找到命令！输入 '/help' 来获取帮助";
-    public string TargetOffline => "目标 {0}({1}) 离线了！";
-    public string TargetFound => "找到目标 {0}({1})。";
-    public string TargetNotFound => "未找到目标 {0}！";
     public string InternalError => "在处理命令时发生了内部错误: {0}！";
 }
 
@@ -183,12 +173,13 @@ public class GiveAllTextCHS
 {
     public string Desc => "给予玩家全部指定类型的物品";
     public string Usage => "用法: /giveall <avatars|weapons|relics|materials|essentials|all> [数量]";
-    public string GiveAllItems => "已给予所有 {0} x{1}。";
     public string AvatarsGiven => "已给予玩家 {1} {0} 个角色。";
     public string MaterialsGiven => "已给予玩家 {2} {0} 种材料 x{1}。";
     public string WeaponsGiven => "已给予玩家 {1} {0} 把武器。";
     public string RelicsGiven => "已给予玩家 {1} {0} 件圣遗物。";
     public string EssentialsGiven => "已给予玩家 {2} {0} 种必备物品 x{1}。";
+    public string FurnitureGiven => "已给予玩家 {2} {0} 件摆设 x{1}。";
+    public string ItemsGiven => "已给予玩家 {2} {0} 个物品 x{1}。";
 }
 
 /// <summary>
@@ -204,29 +195,6 @@ public class TeleportTextCHS
 }
 
 /// <summary>
-///     path: Game.Command.Heal
-/// </summary>
-public class HealTextCHS
-{
-    public string Desc => "治愈当前队伍所有角色";
-    public string Usage => "用法: /heal";
-    public string NoTeam => "玩家没有队伍。";
-    public string Success => "已治愈玩家 {0} 的所有角色。";
-}
-
-/// <summary>
-///     path: Game.Command.Clear
-/// </summary>
-public class ClearTextCHS
-{
-    public string Desc => "清除玩家背包";
-    public string Usage => "用法: /clear <weapons|materials|all>";
-    public string ClearedAll => "已清除玩家 {0} 的所有物品。";
-    public string ClearedMaterials => "已清除玩家 {0} 的所有材料。";
-    public string ClearedWeapons => "已清除玩家 {0} 的所有武器。";
-}
-
-/// <summary>
 ///     path: Game.Command.Account
 /// </summary>
 public class AccountTextCHS
@@ -239,21 +207,6 @@ public class AccountTextCHS
 }
 
 /// <summary>
-///     path: Game.Command.Permission
-/// </summary>
-public class PermissionTextCHS
-{
-    public string Desc => "管理玩家权限";
-    public string Usage => "用法: /perm <add|remove|clear|list> [permission]";
-    public string AccountNotFound => "未找到账号。";
-    public string InvalidPerm => "无效的权限。有效值: {0}";
-    public string Added => "已为 UID {1} 添加权限 '{0}'。";
-    public string Removed => "已从 UID {1} 移除权限 '{0}'。";
-    public string Cleared => "已清除 UID {0} 的所有权限。";
-    public string List => "UID {0} 的权限: {1}";
-}
-
-/// <summary>
 ///     path: Game.Command.Kick
 /// </summary>
 public class KickTextCHS
@@ -262,41 +215,6 @@ public class KickTextCHS
     public string Usage => "用法: /kick @<uid>";
     public string PlayerKicked => "玩家 {0} 已被踢出！";
     public string KickMessage => "你已被服务器踢出。";
-}
-
-/// <summary>
-///     path: Game.Command.List
-/// </summary>
-public class ListTextCHS
-{
-    public string Desc => "列出在线玩家";
-    public string Usage => "用法: /list";
-    public string Header => "在线玩家 ({0}):";
-    public string Entry => "  UID: {0} | 名称: {1} | 场景: {2} | 位置: ({3:F0}, {4:F0}, {5:F0})";
-}
-
-/// <summary>
-///     path: Game.Command.SetProp
-/// </summary>
-public class SetPropTextCHS
-{
-    public string Desc => "设定玩家属性";
-    public string Usage => "用法: /setprop <worldLevel|exp|name|signature> <value>";
-    public string WorldLevel => "已将玩家 {1} 的世界等级设为 {0}。";
-    public string Exp => "已将玩家 {1} 的经验设为 {0}。";
-    public string Name => "已将玩家 {1} 的名称设为 '{0}'。";
-    public string Signature => "已将玩家 {1} 的签名设为 '{0}'。";
-    public string Unknown => "未知属性: {0}";
-}
-
-/// <summary>
-///     path: Game.Command.UnlockAll
-/// </summary>
-public class UnlockAllTextCHS
-{
-    public string Desc => "解锁所有场景传送点";
-    public string Usage => "用法: /unlockall";
-    public string Success => "已为玩家 {1} 解锁 {0} 个场景传送点 (场景 {2})。";
 }
 
 /// <summary>
@@ -312,60 +230,6 @@ public class SpawnTextCHS
 }
 
 /// <summary>
-///     path: Game.Command.KillAll
-/// </summary>
-public class KillAllTextCHS
-{
-    public string Desc => "击杀场景内所有怪物";
-    public string Usage => "用法: /killall";
-    public string Success => "已击杀玩家 {0} 当前场景内所有怪物。";
-}
-
-/// <summary>
-/// <summary>
-///     path: Game.Command.MapArea
-/// </summary>
-public class MapAreaTextCHS
-{
-    public string Desc => "管理地图区域";
-    public string Usage => "用法: /maparea <give|remove|isopen> ...";
-    public string Unknown => "未知子命令: {0}";
-    public string GiveUsage => "用法: /maparea give <id|all> [isOpen]";
-    public string GiveAll => "已给予玩家 {0} 所有地图区域 (isOpen={1})";
-    public string GiveOne => "已给予玩家 {1} 地图区域 {0} (isOpen={2})";
-    public string RemoveUsage => "用法: /maparea remove <id>";
-    public string RemoveSuccess => "已从玩家 {1} 移除地图区域 {0}";
-    public string SetOpenUsage => "用法: /maparea isopen <id> <true|false>";
-    public string SetOpenSuccess => "已设置地图区域 {0} isOpen={1} 给玩家 {2}";
-    public string InvalidId => "无效的地图区域ID: {0}";
-    public string NotFound => "玩家 {1} 未找到地图区域 {0}";
-    public string InvalidArgs => "无效参数: id={0}, isOpen={1}";
-}
-
-/// <summary>
-///     path: Game.Command.Weather
-/// </summary>
-public class WeatherTextCHS
-{
-    public string Desc => "更改场景天气";
-    public string Usage => "用法: /weather <0-5>";
-    public string Invalid => "无效的天气类型。范围: 0-5";
-    public string Success => "已将玩家 {1} 的天气设为类型 {0}。";
-}
-
-/// <summary>
-///     path: Game.Command.Position
-/// </summary>
-public class PositionTextCHS
-{
-    public string Desc => "显示当前位置";
-    public string Usage => "用法: /pos";
-    public string PlayerInfo => "玩家: {0} | 场景: {1}";
-    public string PositionInfo => "位置: X={0:F1} Y={1:F1} Z={2:F1}";
-    public string RotationInfo => "旋转: X={0:F1} Y={1:F1} Z={2:F1}";
-}
-
-/// <summary>
 ///     path: Game.Command.Stop
 /// </summary>
 public class StopTextCHS
@@ -373,21 +237,6 @@ public class StopTextCHS
     public string Desc => "关闭服务器";
     public string Usage => "用法: /stop";
     public string ShuttingDown => "服务器正在关闭…";
-}
-
-/// <summary>
-///     path: Game.Command.Avatar
-/// </summary>
-public class AvatarTextCHS
-{
-    public string Desc => "添加或管理角色";
-    public string Usage => "用法: /avatar add <id> [level] [ascension] [talent]";
-    public string InvalidId => "无效的角色ID。";
-    public string NotFound => "角色 {0} 不存在于游戏数据中。";
-    public string CannotAdd => "无法添加主角或试用角色。";
-    public string AlreadyOwned => "玩家已拥有角色 {0} (uid: {1})。";
-    public string AddSuccess => "已将角色 {0} (等级 {1}) 添加至玩家 {2}。";
-    public string Failed => "添加角色 {0} 失败。";
 }
 
 #endregion
@@ -401,10 +250,10 @@ public class ConnectionInfoTextCHS
     public string PacketTooLarge => "数据包过大";
     public string FailedToReceive => "接收数据包失败";
     public string ParseError => "数据包解析错误";
-    public string BadDataPackage => "收到坏数据包: got 0x{0}, expect 0x4567";
-    public string InvalidFooter => "收到无效的数据包尾部: got 0x{0}, expected 0x89AB";
+    public string BadDataPackage => "收到损坏数据包: 包头为 0x{0}，期望 0x4567";
+    public string InvalidFooter => "收到无效数据包尾: 包尾为 0x{0}，期望 0x89AB";
     public string DummySend => "[Dummy] 发送 Dummy {0}";
-    public string NoHandlerFound => "未找到 {0}({1}) 的处理程序";
+    public string NoHandlerFound => "未找到数据包 {0} 的处理程序 (0x{1})";
     public string RegionCacheError => "初始化区域缓存时出错！";
 }
 

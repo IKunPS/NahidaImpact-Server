@@ -261,12 +261,7 @@ public class StaminaManager : BasePlayerManager
 
     public int SetStamina(string reason, int newStamina, bool isCharacterStamina)
     {
-        // If stamina usage is disabled or player has unlimited stamina, keep max
-        // TODO: Check GAME_OPTIONS.staminaUsage and Player.IsUnlimitedStamina()
-        if (false) // Placeholder for config check
-        {
-            newStamina = GetMaxCharacterStamina();
-        }
+        // TODO: Implement unlimited stamina config check (e.g., GameOptions.StaminaUsage)
 
         if (isCharacterStamina)
         {

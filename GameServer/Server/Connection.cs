@@ -108,22 +108,22 @@ public class Connection(KcpConversation conversation, IPEndPoint remote) : KcpCo
                 var headMagic = br.ReadUInt16BE();
                 if (headMagic != 0x4567)
                 {
-                    Logger.Error(I18NManager.Translate("Server.ConnectionInfo.BadDataPackage", $"0x{headMagic:X}"));
-                    return; // Bad packet
+                    Logger.Error(I18NManager.Translate("Server.ConnectionInfo.BadDataPackage", headMagic.ToString("X")));
+                    return;
                 }
-                
+
                 var CmdId = br.ReadUInt16BE();
                 var HeaderLength = br.ReadUInt16BE();
                 var BodyLength = br.ReadUInt32BE();
-    
+
                 // Data
                 var header = br.ReadBytes(HeaderLength);
                 var Body = br.ReadBytes((int)BodyLength);
-                
+
                 var tail = br.ReadUInt16BE();
                 if (tail != 0x89AB)
                 {
-                    Logger.Error(I18NManager.Translate("Server.ConnectionInfo.InvalidFooter", $"0x{tail:X}"));
+                    Logger.Error(I18NManager.Translate("Server.ConnectionInfo.InvalidFooter", tail.ToString("X")));
                     return;
                 }
                 
@@ -196,7 +196,8 @@ public class Connection(KcpConversation conversation, IPEndPoint remote) : KcpCo
 
         if (ConfigManager.Config.ServerOption.EnableDebug &&
                  ConfigManager.Config.ServerOption.DebugNoHandlerPacket)
-            Logger.Error(I18NManager.Translate("Server.ConnectionInfo.NoHandlerFound", packetName ?? opcode.ToString(), opcode.ToString()));
+            Logger.Error(I18NManager.Translate("Server.ConnectionInfo.NoHandlerFound",
+                packetName ?? "opcode", opcode.ToString("X")));
     }
 
     private async Task SendDummy(string packetName)

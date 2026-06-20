@@ -11,7 +11,8 @@ public class HandlerSceneInitFinishReq : Handler
 {
     public override async Task OnHandle(Connection connection, byte[] header, byte[] data)
     {
-        var player = connection.Player!;
+        if (connection.Player == null) return;
+        var player = connection.Player;
 
         await connection.SendPacket(new PacketServerTimeNotify());
         await connection.SendPacket(new PacketSceneTimeNotify(player));

@@ -11,8 +11,9 @@ public class HandlerSceneTransToPointReq : Handler
 {
     public override async Task OnHandle(Connection connection, byte[] header, byte[] data)
     {
+        if (connection.Player == null) return;
         var req = SceneTransToPointReq.Parser.ParseFrom(data);
-        var player = connection.Player!;
+        var player = connection.Player;
 
         // Resolve the teleport waypoint from game data.
         var entry = GameData.GetScenePointEntryById((int)req.SceneId, (int)req.PointId);

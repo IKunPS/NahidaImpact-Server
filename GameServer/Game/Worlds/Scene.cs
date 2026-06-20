@@ -204,11 +204,16 @@ public class Scene
             }
         }
         
-        // Limit character index in case it's out of bounds
+        // Clamp character index when team size changed
         var currentIndex = teamManager.GetCurrentCharacterIndex();
-        if (currentIndex >= teamManager.GetActiveTeam().Count || currentIndex < 0)
+        var teamCount = teamManager.GetActiveTeam().Count;
+        if (teamCount == 0)
         {
-            teamManager.SetCurrentCharacterIndex(currentIndex - 1);
+            teamManager.SetCurrentCharacterIndex(0);
+        }
+        else if (currentIndex >= teamCount || currentIndex < 0)
+        {
+            teamManager.SetCurrentCharacterIndex(teamCount - 1);
         }
     }
     
@@ -286,13 +291,23 @@ public class Scene
     
     public void BroadcastPacket(BasePacket packet)
     {
-        foreach (var player in _players)
+        List<PlayerInstance> snapshot;
+        lock (_playerListLock)
+        {
+            snapshot = _players.ToList();
+        }
+        foreach (var player in snapshot)
             _ = player.SendPacket(packet);
     }
-    
+
     public void BroadcastPacketToOthers(PlayerInstance excludedPlayer, BasePacket packet)
     {
-        foreach (var player in _players)
+        List<PlayerInstance> snapshot;
+        lock (_playerListLock)
+        {
+            snapshot = _players.ToList();
+        }
+        foreach (var player in snapshot)
         {
             if (player == excludedPlayer)
                 continue;
@@ -311,8 +326,13 @@ public class Scene
 
         _tickCount++;
 
-        // Flush combat invoke entries for all players in scene
-        foreach (var player in _players)
+        // Snapshot to avoid collection-modified-during-enumeration
+        List<PlayerInstance> snapshot;
+        lock (_playerListLock)
+        {
+            snapshot = _players.ToList();
+        }
+        foreach (var player in snapshot)
         {
             player.CombatInvokeHandler?.Send();
         }

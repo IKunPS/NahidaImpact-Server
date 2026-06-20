@@ -302,8 +302,6 @@ public class AvatarDataInfo
         }
     }
 
-
-
     public AvatarInfo ToProto()
     {
         var proto = new AvatarInfo

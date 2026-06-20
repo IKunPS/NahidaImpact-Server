@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System.Text.RegularExpressions;
+using NahidaImpact.Internationalization;
 using NahidaImpact.Models.Dispatch;
 using NahidaImpact.Enums.Player;
 using NahidaImpact.Util;
@@ -136,8 +137,8 @@ public class RegionController : ControllerBase
     {
         bool updateClient = string.Compare(GameConstants.GAME_VERSION, clientVersionClean, StringComparison.Ordinal) > 0;
         string contentMsg = updateClient
-            ? $"\n版本不匹配 过时的客户端! \n\nServer version: {GameConstants.GAME_VERSION}\nClient version: {clientVersionClean}"
-            : $"\n版本不匹配 过时的服务器! \n\nServer version: {GameConstants.GAME_VERSION}\nClient version: {clientVersionClean}";
+            ? I18NManager.Translate("Server.ServerInfo.InvalidVersion", clientVersionClean, GameConstants.GAME_VERSION)
+            : I18NManager.Translate("Server.ServerInfo.InvalidVersion", clientVersionClean, GameConstants.GAME_VERSION);
 
         long now = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
         var stopServer = new StopServerInfo
@@ -151,7 +152,7 @@ public class RegionController : ControllerBase
         var rsp = new QueryCurrRegionHttpRsp
         {
             Retcode = (int)Retcode.RetStopServer,
-            Msg = "Connection Failed!",
+            Msg = I18NManager.Translate("Server.Web.ConnectionFailed"),
             RegionInfo = new RegionInfo(),
             StopServer = stopServer
         };

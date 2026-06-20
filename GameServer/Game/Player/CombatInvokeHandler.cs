@@ -1,9 +1,11 @@
 using NahidaImpact.GameServer.Server.Packet.Send.Ability;
+using NahidaImpact.Util;
 
 namespace NahidaImpact.GameServer.Game.Player;
 
 public class CombatInvokeHandler
 {
+    private static readonly Logger Logger = new("CombatInvoke");
     private readonly PlayerInstance _player;
     private readonly List<CombatInvokeEntry> _entryListForwardAll = new();
     private readonly List<CombatInvokeEntry> _entryListForwardAllExceptCur = new();
@@ -71,9 +73,9 @@ public class CombatInvokeHandler
                     _entryListForwardHost.Clear();
                 }
             }
-            catch
+            catch (Exception ex)
             {
-                // Logging handled by caller
+                Logger.Debug($"CombatInvoke send failed: {ex.Message}");
             }
         }
     }

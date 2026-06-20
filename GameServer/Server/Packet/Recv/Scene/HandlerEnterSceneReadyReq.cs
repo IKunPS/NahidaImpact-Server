@@ -8,8 +8,9 @@ public class HandlerEnterSceneReadyReq : Handler
 {
     public override async Task OnHandle(Connection connection, byte[] header, byte[] data)
     {
-        await connection.SendPacket(new PacketEnterSceneReadyRsp(connection.Player!));
-        await connection.SendPacket(new PacketEnterScenePeerNotify(connection.Player!));
+        if (connection.Player == null) return;
+        await connection.SendPacket(new PacketEnterSceneReadyRsp(connection.Player));
+        await connection.SendPacket(new PacketEnterScenePeerNotify(connection.Player));
     }
     
 }

@@ -22,7 +22,7 @@ public static class GameConstants
     public const int DEFAULT_WEAPON_REFINEMENT = 0;
 
     // Player defaults
-    public const int START_SCENE_ID = 3;
+    public const int START_SCENE_ID = 3; // FU**
     public const int START_REGION_ID = 1;
     public const int DEFAULT_PLAYER_LEVEL = 1;
     public const int DEFAULT_WORLD_LEVEL = 0;
@@ -70,7 +70,6 @@ public static class GameConstants
     {
         "TeamAbility_Reset_Crystal_Mark",
         "Team_TeamChargeMark",
-        "TeamAbility_Reset_Crystal_Mark",
         "TeamAbility_Reset_MoonOvergrow",
         "TeamAbility_MoonPhase",
         "Ability_Avatar_Dive_Team",

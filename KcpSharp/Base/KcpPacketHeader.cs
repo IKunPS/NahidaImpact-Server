@@ -66,7 +66,6 @@ internal readonly struct KcpPacketHeader : IEquatable<KcpPacketHeader>
 
     internal void EncodeHeader(ulong? conversationId, int payloadLength, Span<byte> destination, out int bytesWritten)
     {
-        Debug.Assert(destination.Length >= KcpGlobalVars.HEADER_LENGTH_WITHOUT_CONVID);
         if (conversationId.HasValue)
         {
             BinaryPrimitives.WriteUInt64BigEndian(destination, conversationId.GetValueOrDefault());
@@ -78,7 +77,6 @@ internal readonly struct KcpPacketHeader : IEquatable<KcpPacketHeader>
             bytesWritten = KcpGlobalVars.HEADER_LENGTH_WITHOUT_CONVID;
         }
 
-        Debug.Assert(destination.Length >= KcpGlobalVars.HEADER_LENGTH_WITHOUT_CONVID);
         destination[1] = Fragment;
         destination[0] = (byte)Command;
         BinaryPrimitives.WriteUInt16LittleEndian(destination.Slice(2), WindowSize);

@@ -8,10 +8,13 @@ public class HandlerEnterSceneDoneReq : Handler
 {
     public override async Task OnHandle(Connection connection, byte[] header, byte[] data)
     {
+        var player = connection.Player;
+        if (player?.Scene == null) return;
+
         // Spawn player in world
-        connection.Player.Scene.SpawnPlayer(connection.Player);
-        
-        await connection.SendPacket(new PacketEnterSceneDoneRsp(connection.Player));
+        player.Scene.SpawnPlayer(player);
+
+        await connection.SendPacket(new PacketEnterSceneDoneRsp(player));
     }
 
 }

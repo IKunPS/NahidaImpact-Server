@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using NahidaImpact.Models.Sdk;
 using NahidaImpact.Database.Account;
+using NahidaImpact.Internationalization;
+using NahidaImpact.Models.Sdk;
 using NahidaImpact.Util;
 
 namespace NahidaImpact.SdkServer.Handlers.Sdk;
@@ -11,32 +12,25 @@ public class ComboGranterController : Controller
     [HttpPost("/{productName}/combo/granter/login/v2/login")]
     public async Task<IActionResult> ComboLoginV2(string productName, [FromBody] ComboGranterRequest request)
     {
-        // TODO: Reuse this logic with MDK Controller Verify Token
-
-        int accountUid;
-        try
-        {
-            accountUid = int.Parse(request.Data?.Uid!);
-        }
-        catch
+        if (request.Data?.Uid == null || !int.TryParse(request.Data.Uid, out var accountUid))
         {
             return Ok(new ResponseBase
             {
                 Retcode = -101,
                 Success = false,
-                Message = "Account token error"
+                Message = I18NManager.Translate("Server.Web.TokenError")
             });
         }
 
-        var account = AccountData.GetAccountByUid(accountUid,true);
+        var account = AccountData.GetAccountByUid(accountUid, true);
 
-        if (account == null || account!.ComboToken != request.Data!.Token)
+        if (account == null || account.ComboToken != request.Data?.Token)
         {
             return Ok(new ResponseBase
             {
                 Retcode = -101,
                 Success = false,
-                Message = "Account token error"
+                Message = I18NManager.Translate("Server.Web.TokenError")
             });
         }
 
@@ -47,8 +41,8 @@ public class ComboGranterController : Controller
                 AccountType = 1,
                 Data = "{\"guest\": false}",
                 Heartbeat = false,
-                OpenId = account!.Uid.ToString(),
-                ComboToken = account!.ComboToken,
+                OpenId = account.Uid.ToString(),
+                ComboToken = account.ComboToken,
             },
         });
     }
