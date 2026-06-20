@@ -250,7 +250,7 @@ public class AvatarDataInfo
         SetFightProp(FightProp.FIGHT_PROP_CRITICAL, (float)AvatarExcel.Critical);
         SetFightProp(FightProp.FIGHT_PROP_CRITICAL_HURT, (float)AvatarExcel.CriticalHurt);
 
-        foreach (var prop in EnergyProps)
+        foreach (var prop in FightProp.EnergyProps)
             SetFightProp(prop, 100f);
 
         // Apply avatar promotion stat bonuses
@@ -293,29 +293,15 @@ public class AvatarDataInfo
 
     private void ComputeCompoundStats()
     {
-        foreach (var (baseProp, flatProp, percentProp, resultProp) in CompoundPropMap)
+        foreach (var (resultId, compound) in FightProp.CompoundProperties)
         {
-            float b = GetFightProp(baseProp);
-            float p = GetFightProp(percentProp);
-            float f = GetFightProp(flatProp);
-            SetFightProp(resultProp, b * (1f + p) + f);
+            float b = GetFightProp(compound.Base);
+            float p = GetFightProp(compound.Percent);
+            float f = GetFightProp(compound.Flat);
+            SetFightProp(resultId, b * (1f + p) + f);
         }
     }
 
-    private static readonly uint[] EnergyProps =
-    [
-        FightProp.FIGHT_PROP_MAX_FIRE_ENERGY, FightProp.FIGHT_PROP_MAX_ELEC_ENERGY,
-        FightProp.FIGHT_PROP_MAX_WATER_ENERGY, FightProp.FIGHT_PROP_MAX_GRASS_ENERGY,
-        FightProp.FIGHT_PROP_MAX_WIND_ENERGY, FightProp.FIGHT_PROP_MAX_ICE_ENERGY,
-        FightProp.FIGHT_PROP_MAX_ROCK_ENERGY
-    ];
-
-    private static readonly (uint Base, uint Flat, uint Percent, uint Result)[] CompoundPropMap =
-    [
-        (FightProp.FIGHT_PROP_BASE_ATTACK, FightProp.FIGHT_PROP_ATTACK, FightProp.FIGHT_PROP_ATTACK_PERCENT, FightProp.FIGHT_PROP_CUR_ATTACK),
-        (FightProp.FIGHT_PROP_BASE_DEFENSE, FightProp.FIGHT_PROP_DEFENSE, FightProp.FIGHT_PROP_DEFENSE_PERCENT, FightProp.FIGHT_PROP_CUR_DEFENSE),
-        (FightProp.FIGHT_PROP_BASE_HP, FightProp.FIGHT_PROP_HP, FightProp.FIGHT_PROP_HP_PERCENT, FightProp.FIGHT_PROP_MAX_HP),
-    ];
 
 
     public AvatarInfo ToProto()
