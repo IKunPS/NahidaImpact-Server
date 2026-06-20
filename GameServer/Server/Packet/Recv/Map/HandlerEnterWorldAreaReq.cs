@@ -4,10 +4,6 @@ using NahidaImpact.Util;
 
 namespace NahidaImpact.GameServer.Server.Packet.Recv.Map;
 
-/// <summary>
-/// Handles EnterWorldAreaReq - player entering a world area.
-/// Ported from Java HandlerEnterWorldAreaReq.
-/// </summary>
 [Opcode(CmdIds.EnterWorldAreaReq)]
 public class HandlerEnterWorldAreaReq : Handler
 {

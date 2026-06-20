@@ -134,8 +134,6 @@ public class CmdIds
     public const int DelTeamEntityNotify = 1;
     public const int SyncTeamEntityNotify = 24216;
     public const int SyncScenePlayTeamEntityNotify = 22166;
-    public const int TowerTeamSelectReq = 1;
-    public const int TowerTeamSelectRsp = 1;
 
     // Avatar Change/Death
     public const int ChangeAvatarReq = 3754;

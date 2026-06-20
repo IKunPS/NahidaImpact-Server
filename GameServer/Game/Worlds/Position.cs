@@ -197,7 +197,6 @@ public class Position
 
     private static float RandomFloatRange(float min, float max)
     {
-        Random random = new Random();
-        return (float)(random.NextDouble() * (max - min) + min);
+        return (float)(Random.Shared.NextDouble() * (max - min) + min);
     }
 }

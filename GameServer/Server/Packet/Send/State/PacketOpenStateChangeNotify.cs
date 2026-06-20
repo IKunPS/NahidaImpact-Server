@@ -3,10 +3,6 @@ using NahidaImpact.Proto;
 
 namespace NahidaImpact.GameServer.Server.Packet.Send.State;
 
-/// <summary>
-/// Notifies the client that one or more open states have changed.
-/// Ported from Java PacketOpenStateChangeNotify.
-/// </summary>
 public class PacketOpenStateChangeNotify : BasePacket
 {
     public PacketOpenStateChangeNotify(int openState, int value) : base(CmdIds.OpenStateChangeNotify)
