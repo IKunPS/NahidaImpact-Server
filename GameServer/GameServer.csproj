@@ -15,7 +15,6 @@
     <ProjectReference Include="..\Common\Common.csproj" />
     <ProjectReference Include="..\KcpSharp\KcpSharp.csproj" />
     <ProjectReference Include="..\Proto\Proto.csproj" />
-    <PackageReference Include="System.IO.Pipelines" Version="9.0.0" />
   </ItemGroup>
 
   <ItemGroup>

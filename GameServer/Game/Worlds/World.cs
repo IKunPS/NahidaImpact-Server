@@ -306,7 +306,7 @@ public class World
                 player.Position.Set(props.TeleportTo);
             if (props.TeleportRot != null)
                 player.Rotation.Set(props.TeleportRot);
-            player.SendPacket(new PacketSceneEntityAppearNotify(player));
+            _ = player.SendPacket(new PacketSceneEntityAppearNotify(player));
             return true;
         }
 
@@ -344,7 +344,7 @@ public class World
         player.SetPrevPos(prevPos);
 
         // Send enter-scene notify with saved previous scene/position.
-        player.SendPacket(new PacketPlayerEnterSceneNotify(player, props, prevSceneId, prevPos));
+        _ = player.SendPacket(new PacketPlayerEnterSceneNotify(player, props, prevSceneId, prevPos));
 
         return true;
     }

@@ -76,12 +76,12 @@ public class PacketSceneTeamUpdateNotify : BasePacket
                 var entity = p.TeamManager?.Entity;
                 if (entity != null)
                 {
-                    p.SendPacket(new PacketServerGlobalValueChangeNotify(
+                    _ = p.SendPacket(new PacketServerGlobalValueChangeNotify(
                         entity.Id,
                         "SGV_HexenzirkelLevel",
                         hexenzirkelCount
                     ));
-                    p.SendPacket(new PacketServerGlobalValueChangeNotify(
+                    _ = p.SendPacket(new PacketServerGlobalValueChangeNotify(
                         entity.Id,
                         "SGV_MoonPhaseLevel",
                         moonPhaseCount
