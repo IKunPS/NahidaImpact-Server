@@ -20,16 +20,6 @@ public class NahidaImpact
 
     public static async Task Main()
     {
-        // Check if running as administrator
-        if (!IsRunningAsAdministrator())
-        {
-            Console.WriteLine("This application requires administrator privileges to run.");
-            Console.WriteLine("Please run the application as an administrator.");
-            Console.WriteLine("Press any key to exit...");
-            Console.ReadKey();
-            return;
-        }
-
         var time = DateTime.Now;
         RegisterExitEvent();
         ConsoleManager.InitConsole();
@@ -56,19 +46,6 @@ public class NahidaImpact
         var elapsed = DateTime.Now - time;
         Logger.Info(I18NManager.Translate("Server.ServerInfo.ServerStarted",
             Math.Round(elapsed.TotalSeconds, 2).ToString(CultureInfo.InvariantCulture)));
-    }
-
-    private static bool IsRunningAsAdministrator()
-    {
-        if (OperatingSystem.IsWindows())
-        {
-            using var identity = System.Security.Principal.WindowsIdentity.GetCurrent();
-            var principal = new System.Security.Principal.WindowsPrincipal(identity);
-            return principal.IsInRole(System.Security.Principal.WindowsBuiltInRole.Administrator);
-        }
-
-        // On Linux/macOS, check if running as root
-        return Environment.UserName == "root";
     }
 
     # region Exit

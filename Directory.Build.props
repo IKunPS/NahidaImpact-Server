@@ -1,0 +1,37 @@
+<Project>
+
+  <!--
+    Solution-wide build settings.
+
+    Nullable reference-type analysis stays enabled (<Nullable>enable</Nullable> in each
+    project), but the advisory nullable warnings below are suppressed in bulk. They are
+    pervasive in this codebase and do not affect runtime behavior; genuine issues are
+    fixed case-by-case rather than silenced here.
+
+    Suppressed:
+      CS8600  converting null literal / possible null to non-nullable type
+      CS8601  possible null reference assignment
+      CS8602  dereference of a possibly null reference
+      CS8603  possible null reference return
+      CS8604  possible null reference argument
+      CS8618  non-nullable member uninitialized when leaving constructor
+      CS8625  cannot convert null literal to non-nullable reference type
+      CS8764  nullability of return type does not match overridden member
+      CS9107  primary-constructor parameter also captured by base constructor
+  -->
+  <PropertyGroup>
+    <NoWarn>$(NoWarn);CS8600;CS8601;CS8602;CS8603;CS8604;CS8618;CS8625;CS8764;CS9107</NoWarn>
+  </PropertyGroup>
+
+  <!--
+    NU1903 / CVE-2025-6965: SQLitePCLRaw.lib.e_sqlite3 bundles a SQLite native library
+    older than 3.50.2 (memory-corruption flaw). As of now NO patched version of the
+    package exists (2.1.11 is the latest and is still flagged). We already pin the newest
+    available version. Suppress only this specific advisory so the rest of the NuGet
+    security audit stays active. REMOVE this entry once SQLitePCLRaw ships a fixed build.
+  -->
+  <ItemGroup>
+    <NuGetAuditSuppress Include="https://github.com/advisories/GHSA-2m69-gcr7-jv3q" />
+  </ItemGroup>
+
+</Project>

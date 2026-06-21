@@ -16,10 +16,10 @@ public class HandlerPlayerChatReq : Handler
         switch (req.ChatInfo.ContentCase)
         {
             case ChatInfo.ContentOneofCase.Text:
-                ChatSystem.Instance.SendTeamMessage(player, (int)req.ChannelId, req.ChatInfo.Text);
+                _ = ChatSystem.Instance.SendTeamMessage(player, (int)req.ChannelId, req.ChatInfo.Text);
                 break;
             case ChatInfo.ContentOneofCase.Icon:
-                ChatSystem.Instance.SendTeamMessage(player, (int)req.ChannelId, (int)req.ChatInfo.Icon);
+                _ = ChatSystem.Instance.SendTeamMessage(player, (int)req.ChannelId, (int)req.ChatInfo.Icon);
                 break;
         }
 

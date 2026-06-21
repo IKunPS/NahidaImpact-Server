@@ -15,10 +15,10 @@ public class HandlerPrivateChatReq : Handler
         switch (req.ContentCase)
         {
             case PrivateChatReq.ContentOneofCase.Text:
-                ChatSystem.Instance.SendPrivateMessage(player, (int)req.TargetUid, req.Text);
+                _ = ChatSystem.Instance.SendPrivateMessage(player, (int)req.TargetUid, req.Text);
                 break;
             case PrivateChatReq.ContentOneofCase.Icon:
-                ChatSystem.Instance.SendPrivateMessage(player, (int)req.TargetUid, (int)req.Icon);
+                _ = ChatSystem.Instance.SendPrivateMessage(player, (int)req.TargetUid, (int)req.Icon);
                 break;
         }
 

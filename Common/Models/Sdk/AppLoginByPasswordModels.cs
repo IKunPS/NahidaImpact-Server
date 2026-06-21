@@ -2,7 +2,7 @@
 
 public class AppLoginByPasswordResponse : ResponseBase
 {
-    public AppLoginByPasswordAccountData Data { get; set; } = new();
+    public new AppLoginByPasswordAccountData Data { get; set; } = new();
 
     public class AppLoginByPasswordAccountData
     {

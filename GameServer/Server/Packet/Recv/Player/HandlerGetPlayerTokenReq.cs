@@ -67,7 +67,7 @@ public class HandlerGetPlayerTokenReq : Handler
                 // Set session state
                 connection.UseSecretKey = true;
             }
-            catch (Exception ignore)
+            catch (Exception)
             {
                 // Only UA Patch users will have exception
                 byte[] clientBytes = Convert.FromBase64String(req.ClientRandKey);

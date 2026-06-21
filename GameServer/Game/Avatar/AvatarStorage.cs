@@ -7,7 +7,7 @@ namespace NahidaImpact.GameServer.Game.Avatar;
 
 public class AvatarStorage : BasePlayerManager, IEnumerable<AvatarDataInfo>
 {
-    public PlayerInstance Player { get; set; }
+    public new PlayerInstance Player { get; set; }
     
     private readonly Dictionary<uint, AvatarDataInfo> avatars = new();
     private readonly Dictionary<ulong, AvatarDataInfo> avatarsGuid = new();

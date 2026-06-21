@@ -368,3 +368,6 @@ FodyWeavers.xsd
 /SdkServer/Properties
 /GameServer/OriginalProto
 *.rar
+
+# Game resources (large, cloned separately from IKunPS/Resources)
+/Resources/

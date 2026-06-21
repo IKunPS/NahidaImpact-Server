@@ -71,7 +71,7 @@ public class ChatSystem
             partnerMap[partnerUid] = chatHistory;
         }
 
-        player.SendPacket(new PacketPullPrivateChatRsp(chatHistory));
+        _ = player.SendPacket(new PacketPullPrivateChatRsp(chatHistory));
     }
 
     public void HandlePullRecentChatReq(PlayerInstance player)
@@ -92,7 +92,7 @@ public class ChatSystem
         var serverMessages = partnerMap.GetValueOrDefault(GameConstants.SERVER_CONSOLE_UID, new List<ChatInfo>());
         int historyLength = serverMessages.Count;
         var messages = serverMessages.Skip(Math.Max(historyLength - 3, 0)).Take(3).ToList();
-        player.SendPacket(new PacketPullRecentChatRsp(messages));
+        _ = player.SendPacket(new PacketPullRecentChatRsp(messages));
     }
 
     public async Task SendPrivateMessageFromServer(int targetUid, string message)

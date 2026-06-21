@@ -59,7 +59,7 @@ public class MapMarksManager
             // TODO: Save to database
         }
 
-        _player.SendPacket(new PacketMarkMapRsp(GetMapMarks()));
+        _ = _player.SendPacket(new PacketMarkMapRsp(GetMapMarks()));
     }
 
     public static string GetMapMarkKey(Position position)
