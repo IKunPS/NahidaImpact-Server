@@ -209,57 +209,50 @@ public class EntityAvatar : BaseEntity
     
     public override SceneEntityInfo ToProto()
     {
-        try
+        var authority = new EntityAuthorityInfo
         {
-            var authority = new EntityAuthorityInfo
-            {
-                AbilityInfo = new AbilitySyncStateInfo(),
-                RendererChangedInfo = new EntityRendererChangedInfo(),
-                AiInfo = new SceneEntityAiInfo(),
-                BornPos = new Vector()
-            };
-            
-            var entityInfo = new SceneEntityInfo
-            {
-                EntityId = Id,
-                EntityType = ProtEntityType.Avatar,
-                EntityAuthorityInfo = authority,
-                LastMoveSceneTimeMs = (uint)LastMoveSceneTimeMs,
-                LastMoveReliableSeq = (uint)LastMoveReliableSeq,
-                LifeState = LifeState,
-                EntityClientData = new EntityClientData()
-            };
-            
-            entityInfo.AnimatorParaList.Add(new AnimatorParameterValueInfoPair());
-            
-            if (Scene != null)
-            {
-                entityInfo.MotionInfo = GetMotionInfo();
-            }
+            AbilityInfo = new AbilitySyncStateInfo(),
+            RendererChangedInfo = new EntityRendererChangedInfo(),
+            AiInfo = new SceneEntityAiInfo(),
+            BornPos = new Vector()
+        };
 
-            foreach (var fightProp in FightProperties)
+        var entityInfo = new SceneEntityInfo
+        {
+            EntityId = Id,
+            EntityType = ProtEntityType.Avatar,
+            EntityAuthorityInfo = authority,
+            LastMoveSceneTimeMs = (uint)LastMoveSceneTimeMs,
+            LastMoveReliableSeq = (uint)LastMoveReliableSeq,
+            LifeState = LifeState,
+            EntityClientData = new EntityClientData()
+        };
+
+        entityInfo.AnimatorParaList.Add(new AnimatorParameterValueInfoPair());
+
+        if (Scene != null)
+        {
+            entityInfo.MotionInfo = GetMotionInfo();
+        }
+
+        foreach (var fightProp in FightProperties)
+        {
+            entityInfo.FightPropList.Add(new FightPropPair
             {
-                entityInfo.FightPropList.Add(new FightPropPair
-                {
-                    PropType = fightProp.PropType,
-                    PropValue = fightProp.PropValue
-                });
-            }
-            
-            entityInfo.PropList.Add(new PropPair
-            {
-                Type = PlayerProp.PROP_LEVEL,
-                PropValue = new PropValue { Type = PlayerProp.PROP_LEVEL, Ival = AvatarInfo.Level }
+                PropType = fightProp.PropType,
+                PropValue = fightProp.PropValue
             });
-            
-            entityInfo.Avatar = GetSceneAvatarInfo();
+        }
 
-            return entityInfo;
-        }
-        catch (Exception ex)
+        entityInfo.PropList.Add(new PropPair
         {
-            throw new InvalidOperationException("Failed to convert EntityAvatar to proto", ex);
-        }
+            Type = PlayerProp.PROP_LEVEL,
+            PropValue = new PropValue { Type = PlayerProp.PROP_LEVEL, Ival = AvatarInfo.Level }
+        });
+
+        entityInfo.Avatar = GetSceneAvatarInfo();
+
+        return entityInfo;
     }
 
     public SceneAvatarInfo GetSceneAvatarInfo()

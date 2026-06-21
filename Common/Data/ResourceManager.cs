@@ -27,8 +27,8 @@ public class ResourceManager
         LoadConfigLevelEntityData();
         LoadGlobalCombatConfig();
         LoadMonsterConfigData();
-        LoadExcel();
         LoadScenePoints();
+        LoadExcel();
     }
 
     public static void LoadExcel()
@@ -229,8 +229,8 @@ public class ResourceManager
                 GameData.ScenePointsPerScene[sceneId] = scenePoints;
             }
 
-            Logger.Info(I18NManager.Translate("Server.ServerInfo.LoadedScenePoints",
-                GameData.ScenePointEntry.Count.ToString(), GameData.ScenePointsPerScene.Count.ToString()));
+            Logger.Info(I18NManager.Translate("Server.ServerInfo.LoadedItems",
+                GameData.ScenePointEntry.Count.ToString(), "scene points"));
         }
         catch (Exception ex)
         {

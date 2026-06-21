@@ -124,17 +124,18 @@ public class KcpConnection
         try
         {
             Crypto.Xor(packet, UseSecretKey ? SecretKey : Crypto.DISPATCH_KEY);
-            _ = await Conversation.SendAsync(packet, CancelToken.Token);
+            var sent = await Conversation.SendAsync(packet, CancelToken.Token);
+            if (!sent)
+                Logger.Debug($"SendPacket: SendAsync returned false for {packet.Length} bytes");
         }
-        catch
+        catch (Exception ex)
         {
-            // ignore
+            Logger.Debug($"SendPacket failed ({packet.Length} bytes): {ex.Message}");
         }
     }
 
     public async Task SendPacket(BasePacket packet)
     {
-        // Test
         if (packet.CmdId <= 0)
         {
             Logger.Debug("Tried to send packet with missing cmd id!");
@@ -144,17 +145,8 @@ public class KcpConnection
         // DO NOT REMOVE (unless we find a way to validate code before sending to client which I don't think we can)
         if (BannedPackets.Contains(packet.CmdId)) return;
         LogPacket("Send", packet.CmdId, packet.Payload);
-        // Header
         var packetBytes = packet.BuildPacket();
-
-        try
-        {
-            await SendPacket(packetBytes);
-        }
-        catch
-        {
-            // ignore
-        }
+        await SendPacket(packetBytes);
     }
 
     public async Task SendPacket(int cmdId)

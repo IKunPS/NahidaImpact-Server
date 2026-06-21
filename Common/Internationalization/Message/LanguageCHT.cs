@@ -95,6 +95,7 @@ public class ServerInfoTextCHT
     public string FailedToReadItem => "讀取 {0} 失敗，文件{1}";
     public string GeneratedItem => "已生成 {0}。";
 
+    public string LoadedItem => "已加載 {0}。";
     public string LoadedItems => "已加載 {0} 個 {1}。";
     public string ServerRunning => "{0} 服務器正在監聽 {1}";
     public string ServerStarted => "啟動完成！用時 {0}s，輸入 『help』 來獲取命令幫助";

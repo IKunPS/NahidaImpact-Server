@@ -95,6 +95,7 @@ public class ServerInfoTextCHS
     public string FailedToReadItem => "读取 {0} 失败，文件{1}";
     public string GeneratedItem => "已生成 {0}。";
 
+    public string LoadedItem => "已加载 {0}。";
     public string LoadedItems => "已加载 {0} 个 {1}。";
     public string ServerRunning => "{0} 服务器正在监听 {1}";
     public string ServerStarted => "启动完成！用时 {0}s，输入 'help' 来获取命令帮助";

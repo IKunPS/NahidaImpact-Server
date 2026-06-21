@@ -11,7 +11,6 @@ public class HandlerChooseCurAvatarTeamReq : Handler
         var req = ChooseCurAvatarTeamReq.Parser.ParseFrom(data);
 
         connection.Player?.TeamManager.SetCurrentTeam((int)req.TeamId);
-
         await Task.CompletedTask;
     }
 }

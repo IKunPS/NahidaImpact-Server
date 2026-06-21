@@ -74,7 +74,6 @@ public class CommandSpawn : ICommand
         }
         else
         {
-            // Treat as gadget
             for (int i = 0; i < amount; i++)
             {
                 var spread = SpreadPos(pos, i, amount);

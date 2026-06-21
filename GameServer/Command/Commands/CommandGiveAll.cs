@@ -15,8 +15,6 @@ namespace NahidaImpact.GameServer.Command.Commands;
 [CommandInfo("give", "Game.Command.GiveAll.Desc", "Game.Command.GiveAll.Usage", ["g", "item"], [PermEnum.Admin])]
 public class CommandGiveAll : ICommand
 {
-    private const int ItemsPerBatch = 200;
-
     private static bool IsValidWeaponId(int id) => id is >= 11101 and <= 19999;
     private static bool IsValidRelicId(int id) => id is >= 20002 and <= 29999;
     private const int MinMaterialId = 100_000;
@@ -183,12 +181,6 @@ public class CommandGiveAll : ICommand
                 created++;
             }
             catch { /* skip */ }
-
-            if (items.Count >= ItemsPerBatch)
-            {
-                player.InventoryManager.AddItems(items, ActionReason.Gm);
-                items.Clear();
-            }
         }
 
         if (items.Count > 0)

@@ -271,8 +271,12 @@ public class Scene
     
     public void ReplaceEntity(BaseEntity oldEntity, BaseEntity newEntity)
     {
-        RemoveEntity(oldEntity, VisionType.Replace);
-        AddEntity(newEntity);
+        if (_entities.TryRemove((int)oldEntity.Id, out var removed))
+            removed.OnRemoved();
+        _entities[(int)newEntity.Id] = newEntity;
+        newEntity.OnCreate();
+        BroadcastPacket(new PacketSceneEntityDisappearNotify(oldEntity, VisionType.Replace));
+        BroadcastPacket(new PacketSceneEntityAppearNotify(newEntity, VisionType.Replace, (int)oldEntity.Id));
     }
 
     public void RemoveEntities(IEnumerable<BaseEntity> entities, VisionType visionType = VisionType.Die)

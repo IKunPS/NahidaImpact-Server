@@ -95,6 +95,7 @@ public class ServerInfoTextEN
     public string FailedToReadItem => "Failed to read {0}, file {1}";
     public string GeneratedItem => "Generated {0}.";
 
+    public string LoadedItem => "Loaded {0}.";
     public string LoadedItems => "Loaded {0} {1}(s).";
     public string ServerRunning => "{0} server listening on {1}";
     public string ServerStarted => "Startup complete! Took {0}s. Type 'help' for command help";

@@ -19,14 +19,15 @@ public class CommandAccount : ICommand
         switch (arg.Args[0].ToLower())
         {
             case "create":
-                if (arg.Args.Count < 2)
+                if (arg.Args.Count < 3)
                 {
                     await arg.SendMsg(I18NManager.Translate("Game.Command.Account.Usage"));
                     return;
                 }
                 var username = arg.Args[1];
-                int uid = arg.Args.Count >= 3 ? arg.GetInt(2) : 0;
-                AccountData.CreateAccount(username, uid, "");
+                var password = arg.Args[2];
+                int uid = arg.Args.Count >= 4 ? arg.GetInt(3) : 0;
+                AccountData.CreateAccount(username, uid, password);
                 await arg.SendMsg(I18NManager.Translate("Game.Command.Account.CreateSuccess", username, (uid > 0 ? uid.ToString() : "auto")));
                 break;
 
