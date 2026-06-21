@@ -1,4 +1,4 @@
-﻿using System.Text.Json.Serialization;
+using Newtonsoft.Json;
 using NahidaImpact.Data.Common;
 using NahidaImpact.Prop;
 
@@ -7,25 +7,25 @@ namespace NahidaImpact.Data.Excel;
 [ResourceEntity("WeaponPromoteExcelConfigData.json")]
 public class WeaponPromoteDataExcel : ExcelResource
 {
-    [JsonPropertyName("weaponPromoteId")]
+    [JsonProperty("weaponPromoteId")]
     public int WeaponPromoteId { get; set; }
 
-    [JsonPropertyName("promoteLevel")]
+    [JsonProperty("promoteLevel")]
     public int PromoteLevel { get; set; }
 
-    [JsonPropertyName("coinCost")]
+    [JsonProperty("coinCost")]
     public int CoinCost { get; set; }
 
-    [JsonPropertyName("costItems")]
+    [JsonProperty("costItems")]
     public List<ItemParamData> CostItems { get; set; } = [];
 
-    [JsonPropertyName("addProps")]
+    [JsonProperty("addProps")]
     public FightPropData[] AddProps { get; set; } = [];
 
-    [JsonPropertyName("unlockMaxLevel")]
+    [JsonProperty("unlockMaxLevel")]
     public int UnlockMaxLevel { get; set; }
 
-    [JsonPropertyName("requiredPlayerLevel")]
+    [JsonProperty("requiredPlayerLevel")]
     public int RequiredPlayerLevel { get; set; }
 
     public override uint GetId() => (uint)WeaponPromoteId;

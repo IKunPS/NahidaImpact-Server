@@ -1,4 +1,6 @@
-﻿namespace NahidaImpact.Data;
+﻿using System.Linq;
+
+namespace NahidaImpact.Data;
 
 [AttributeUsage(AttributeTargets.Class, Inherited = false)]
 public class ResourceEntity : Attribute
@@ -7,7 +9,7 @@ public class ResourceEntity : Attribute
     public ResourceEntity(string fileName, bool isCritical = false, bool isMultifile = false)
     {
         if (isMultifile)
-            FileName = new List<string>(fileName.Split(','));
+            FileName = fileName.Split(',').Select(f => f.Trim()).ToList();
         else
             FileName = [fileName];
         IsCritical = isCritical;
@@ -17,7 +19,7 @@ public class ResourceEntity : Attribute
     public ResourceEntity(string fileName, bool isMultifile = false)
     {
         if (isMultifile)
-            FileName = new List<string>(fileName.Split(','));
+            FileName = fileName.Split(',').Select(f => f.Trim()).ToList();
         else
             FileName = [fileName];
     }

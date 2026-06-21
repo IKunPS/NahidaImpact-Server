@@ -1,4 +1,4 @@
-using System.Text.Json.Serialization;
+using Newtonsoft.Json;
 using NahidaImpact.Data.Common;
 
 namespace NahidaImpact.Data.Excel;
@@ -6,8 +6,8 @@ namespace NahidaImpact.Data.Excel;
 [ResourceEntity("AvatarCurveExcelConfigData.json")]
 public class AvatarCurveDataExcel : ExcelResource
 {
-    [JsonPropertyName("level")] public int Level { get; set; }
-    [JsonPropertyName("curveInfos")] public List<CurveInfo> CurveInfos { get; set; } = [];
+    [JsonProperty("level")] public int Level { get; set; }
+    [JsonProperty("curveInfos")] public List<CurveInfo> CurveInfos { get; set; } = [];
 
     public override uint GetId() => (uint)Level;
 

@@ -1,51 +1,51 @@
+using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.Json.Serialization;
 using NahidaImpact.Data.Common;
 using NahidaImpact.Enums.Item;
 
 namespace NahidaImpact.Data.Excel;
 
-[ResourceEntity("MaterialExcelConfigData.json")]
+[ResourceEntity("MaterialExcelConfigData.json, WeaponExcelConfigData.json, ReliquaryExcelConfigData.json, HomeWorldFurnitureExcelConfigData.json", isMultifile: true)]
 public class ItemDataExcel : ExcelResource
 {
-    [JsonPropertyName("id")] public uint Id { get; set; }
-    [JsonPropertyName("itemType")] public string ItemTypeStr { get; set; } = "ITEM_NONE";
-    [JsonPropertyName("materialType")] public string MaterialTypeStr { get; set; } = "MATERIAL_NONE";
-    [JsonPropertyName("stackLimit")] public uint StackLimit { get; set; } = 99999;
-    [JsonPropertyName("useOnGain")] public bool UseOnGain { get; set; }
-    [JsonPropertyName("useTarget")] public string UseTarget { get; set; } = "";
-    [JsonPropertyName("gadgetId")] public uint GadgetId { get; set; }
-    [JsonPropertyName("equipType")] public string EquipTypeStr { get; set; } = "EQUIP_NONE";
-    [JsonPropertyName("icon")] public string Icon { get; set; } = "";
-    [JsonPropertyName("rankLevel")] public uint RankLevel { get; set; }
-    [JsonPropertyName("weaponPromoteId")] public uint WeaponPromoteId { get; set; }
-    [JsonPropertyName("weaponBaseExp")] public uint WeaponBaseExp { get; set; }
-    [JsonPropertyName("skillAffix")] public List<int> SkillAffix { get; set; } = [];
-    [JsonPropertyName("mainPropDepotId")] public int MainPropDepotId { get; set; }
-    [JsonPropertyName("appendPropDepotId")] public int AppendPropDepotId { get; set; }
-    [JsonPropertyName("appendPropNum")] public int AppendPropNum { get; set; }
-    [JsonPropertyName("maxLevel")] public int MaxLevel { get; set; } = 90;
-    [JsonPropertyName("awakenMaterial")] public uint AwakenMaterial { get; set; }
-    [JsonPropertyName("awakenCosts")] public List<uint> AwakenCosts { get; set; } = [];
-    [JsonPropertyName("itemUse")] public List<ItemUseActionData> ItemUseActions { get; set; } = [];
+    [JsonProperty("id")] public uint Id { get; set; }
+    [JsonProperty("itemType")] public string ItemTypeStr { get; set; } = "ITEM_NONE";
+    [JsonProperty("materialType")] public string MaterialTypeStr { get; set; } = "MATERIAL_NONE";
+    [JsonProperty("stackLimit")] public uint StackLimit { get; set; } = 99999;
+    [JsonProperty("useOnGain")] public bool UseOnGain { get; set; }
+    [JsonProperty("useTarget")] public string UseTarget { get; set; } = "";
+    [JsonProperty("gadgetId")] public uint GadgetId { get; set; }
+    [JsonProperty("equipType")] public string EquipTypeStr { get; set; } = "EQUIP_NONE";
+    [JsonProperty("icon")] public string Icon { get; set; } = "";
+    [JsonProperty("rankLevel")] public uint RankLevel { get; set; }
+    [JsonProperty("weaponPromoteId")] public uint WeaponPromoteId { get; set; }
+    [JsonProperty("weaponBaseExp")] public uint WeaponBaseExp { get; set; }
+    [JsonProperty("skillAffix")] public List<int> SkillAffix { get; set; } = [];
+    [JsonProperty("mainPropDepotId")] public int MainPropDepotId { get; set; }
+    [JsonProperty("appendPropDepotId")] public int AppendPropDepotId { get; set; }
+    [JsonProperty("appendPropNum")] public int AppendPropNum { get; set; }
+    [JsonProperty("maxLevel")] public int MaxLevel { get; set; } = 90;
+    [JsonProperty("awakenMaterial")] public uint AwakenMaterial { get; set; }
+    [JsonProperty("awakenCosts")] public List<uint> AwakenCosts { get; set; } = [];
+    [JsonProperty("itemUse")] public List<ItemUseActionData> ItemUseActions { get; set; } = [];
 
     // Destroy return materials (for material deletion refund)
-    [JsonPropertyName("destroyReturnMaterial")] public List<int> DestroyReturnMaterial { get; set; } = [];
-    [JsonPropertyName("destroyReturnMaterialCount")] public List<int> DestroyReturnMaterialCount { get; set; } = [];
+    [JsonProperty("destroyReturnMaterial")] public List<int> DestroyReturnMaterial { get; set; } = [];
+    [JsonProperty("destroyReturnMaterialCount")] public List<int> DestroyReturnMaterialCount { get; set; } = [];
 
     // Relic upgrade
-    [JsonPropertyName("baseConvExp")] public int BaseConvExp { get; set; }
-    [JsonPropertyName("addPropLevels")] public List<int> AddPropLevels { get; set; } = [];
+    [JsonProperty("baseConvExp")] public int BaseConvExp { get; set; }
+    [JsonProperty("addPropLevels")] public List<int> AddPropLevels { get; set; } = [];
 
     // Food
-    [JsonPropertyName("satiationParams")] public List<int> SatiationParams { get; set; } = [];
+    [JsonProperty("satiationParams")] public List<int> SatiationParams { get; set; } = [];
 
     // Relic set
-    [JsonPropertyName("setId")] public int SetId { get; set; }
+    [JsonProperty("setId")] public int SetId { get; set; }
 
     // Furniture
-    [JsonPropertyName("comfort")] public int Comfort { get; set; }
+    [JsonProperty("comfort")] public int Comfort { get; set; }
 
     [JsonIgnore] public HashSet<int>? AddPropLevelSet { get; private set; }
 

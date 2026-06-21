@@ -1,24 +1,24 @@
+using Newtonsoft.Json;
 using System.Collections.Generic;
-using System.Text.Json.Serialization;
 
 namespace NahidaImpact.Data.Excel;
 
 [ResourceEntity("SceneTagConfigData.json")]
 public class SceneTagDataExcel : ExcelResource
 {
-    [JsonPropertyName("id")]
+    [JsonProperty("id")]
     public uint Id { get; set; }
 
-    [JsonPropertyName("sceneId")]
+    [JsonProperty("sceneId")]
     public int SceneId { get; set; }
 
-    [JsonPropertyName("isDefaultValid")]
+    [JsonProperty("isDefaultValid")]
     public bool IsDefaultValid { get; set; }
 
-    [JsonPropertyName("sceneTagName")]
+    [JsonProperty("sceneTagName")]
     public string SceneTagName { get; set; } = string.Empty;
 
-    [JsonPropertyName("cond")]
+    [JsonProperty("cond")]
     public List<SceneTagCondition> Cond { get; set; } = [];
 
     public override uint GetId() => Id;
@@ -36,13 +36,13 @@ public class SceneTagDataExcel : ExcelResource
 
 public class SceneTagCondition
 {
-    [JsonPropertyName("condType")]
+    [JsonProperty("condType")]
     public SceneTagCondType CondType { get; set; }
 
-    [JsonPropertyName("param1")]
+    [JsonProperty("param1")]
     public int Param1 { get; set; }
 
-    [JsonPropertyName("param2")]
+    [JsonProperty("param2")]
     public int Param2 { get; set; }
 }
 

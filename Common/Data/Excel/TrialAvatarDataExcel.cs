@@ -1,4 +1,4 @@
-using System.Text.Json.Serialization;
+using Newtonsoft.Json;
 
 namespace NahidaImpact.Data.Excel;
 
@@ -9,10 +9,10 @@ namespace NahidaImpact.Data.Excel;
 [ResourceEntity("TrialAvatarExcelConfigData.json")]
 public class TrialAvatarDataExcel : ExcelResource
 {
-    [JsonPropertyName("trialAvatarId")]
+    [JsonProperty("trialAvatarId")]
     public uint TrialAvatarId { get; set; }
 
-    [JsonPropertyName("trialAvatarParamList")]
+    [JsonProperty("trialAvatarParamList")]
     public List<int> TrialAvatarParamList { get; set; } = [];
 
     public override uint GetId() => TrialAvatarId;

@@ -188,10 +188,12 @@ public class InventoryManager : BasePlayerManager
     public bool AddItem(ItemData item, ActionReason? reason)
     {
         EnsureTabsInitialized();
-        var result = PutItem(item);
+        var result = PutItem(item, deferSave: false);
 
         if (result != null)
         {
+            Logger.GetByClassName().Info(
+                $"AddItem: stored itemId={result.ItemId}, guid={result.Guid}, type={result.ItemType}, sending CmdID={CmdIds.StoreItemChangeNotify}");
             TriggerAddItemEvents(result);
             _ = Player.SendPacket(new PacketStoreItemChangeNotify(result));
             if (reason != null)
@@ -199,6 +201,7 @@ public class InventoryManager : BasePlayerManager
             return true;
         }
 
+        Logger.GetByClassName().Warn($"AddItem: FAILED to store itemId={item.ItemId}, type={item.GetItemData()?.ItemType}");
         return false;
     }
 
@@ -220,7 +223,7 @@ public class InventoryManager : BasePlayerManager
         foreach (var item in items)
         {
             if (item.ItemId == 0) continue;
-            var result = PutItem(item);
+            var result = PutItem(item, deferSave: true);
             if (result != null)
             {
                 TriggerAddItemEvents(result);
@@ -229,9 +232,11 @@ public class InventoryManager : BasePlayerManager
         }
         if (changed.Count > 0)
         {
+            Save();
+            Logger.GetByClassName().Info(
+                $"AddItems: sending StoreItemChangeNotify with {changed.Count} items, CmdID={CmdIds.StoreItemChangeNotify}");
             _ = Player.SendPacket(new PacketStoreItemChangeNotify(changed));
 
-            // Send hint notify in batches to avoid oversized packets
             if (reason != null)
             {
                 const int hintBatchSize = 100;
@@ -260,10 +265,14 @@ public class InventoryManager : BasePlayerManager
     #region PutItem
 
     /// <summary>Core placement logic - dispatches by item type, manages stacking and tab capacity.</summary>
-    private ItemData? PutItem(ItemData item)
+    private ItemData? PutItem(ItemData item, bool deferSave = false)
     {
         var data = item.GetItemData();
-        if (data == null) return null;
+        if (data == null)
+        {
+            Logger.GetByClassName().Warn($"PutItem: no ItemData for itemId={item.ItemId}");
+            return null;
+        }
 
         // Track item obtain history
         try { Player.ProgressManager?.AddItemObtainedHistory(item.ItemId, item.Count); }
@@ -288,7 +297,7 @@ public class InventoryManager : BasePlayerManager
                 item.Level = item.Level > 0 ? item.Level : 1;
                 if (type == ItemType.ITEM_WEAPON && item.Affixes.Count == 0)
                     item.InitWeaponAffixes();
-                PutNewItem(item, tab);
+                PutNewItem(item, tab, deferSave);
                 return item;
 
             case ItemType.ITEM_VIRTUAL:
@@ -314,7 +323,7 @@ public class InventoryManager : BasePlayerManager
                 {
                     if (tab.Size >= tab.MaxCapacity)
                         return null;
-                    PutNewItem(item, tab);
+                    PutNewItem(item, tab, deferSave);
                     return item;
                 }
                 else
@@ -322,25 +331,24 @@ public class InventoryManager : BasePlayerManager
                     if (existing.Count >= data.StackLimit)
                         return null;
                     existing.Count = Math.Min(existing.Count + item.Count, (int)data.StackLimit);
-                    Save();
+                    if (!deferSave) Save();
                     return existing;
                 }
         }
     }
 
-    private void PutNewItem(ItemData item, IInventoryTab? tab)
+    private void PutNewItem(ItemData item, IInventoryTab? tab, bool deferSave = false)
     {
         item.OwnerId = Player.Uid;
         item.Guid = Player.GetNextGameGuid();
 
-        // Mark as new if no other stack of this item exists
         if (tab != null && tab.GetItemById(item.ItemId) == null)
             item.IsNew = true;
 
         _store[item.Guid] = item;
         tab?.OnAddItem(item);
         Data.Items.Add(item);
-        Save();
+        if (!deferSave) Save();
     }
 
     /// <summary>Direct-load item from DB at login - bypasses runtime checks.</summary>
@@ -691,6 +699,9 @@ public class InventoryManager : BasePlayerManager
     public void LoadFromDatabase()
     {
         EnsureTabsInitialized();
+
+        Logger.GetByClassName().Info(
+            $"LoadFromDatabase: Data.Items has {Data.Items.Count} items");
 
         foreach (var item in Data.Items)
         {

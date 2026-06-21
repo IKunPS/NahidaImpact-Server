@@ -1,4 +1,4 @@
-using System.Text.Json.Serialization;
+using Newtonsoft.Json;
 using NahidaImpact.Data.Common;
 using NahidaImpact.Prop;
 
@@ -7,13 +7,13 @@ namespace NahidaImpact.Data.Excel;
 [ResourceEntity("AvatarPromoteExcelConfigData.json")]
 public class AvatarPromoteDataExcel : ExcelResource
 {
-    [JsonPropertyName("avatarPromoteId")] public int AvatarPromoteId { get; set; }
-    [JsonPropertyName("promoteLevel")] public int PromoteLevel { get; set; }
-    [JsonPropertyName("scoinCost")] public int CoinCost { get; set; }
-    [JsonPropertyName("costItems")] public List<ItemParamData> CostItems { get; set; } = [];
-    [JsonPropertyName("addProps")] public List<FightPropData> AddProps { get; set; } = [];
-    [JsonPropertyName("unlockMaxLevel")] public int UnlockMaxLevel { get; set; }
-    [JsonPropertyName("requiredPlayerLevel")] public int RequiredPlayerLevel { get; set; }
+    [JsonProperty("avatarPromoteId")] public int AvatarPromoteId { get; set; }
+    [JsonProperty("promoteLevel")] public int PromoteLevel { get; set; }
+    [JsonProperty("scoinCost")] public int CoinCost { get; set; }
+    [JsonProperty("costItems")] public List<ItemParamData> CostItems { get; set; } = [];
+    [JsonProperty("addProps")] public List<FightPropData> AddProps { get; set; } = [];
+    [JsonProperty("unlockMaxLevel")] public int UnlockMaxLevel { get; set; }
+    [JsonProperty("requiredPlayerLevel")] public int RequiredPlayerLevel { get; set; }
 
     public override uint GetId() => (uint)AvatarPromoteId;
 

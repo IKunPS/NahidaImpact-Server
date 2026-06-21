@@ -27,7 +27,7 @@ public static class I18NManager
         var language = Activator.CreateInstance(languageType) ?? throw new Exception("Language not found");
         Language = language;
 
-        Logger.Info(Translate("Server.ServerInfo.LoadedItem", Translate("Word.Language")));
+        Logger.Info(Translate("Server.ServerInfo.LoadedItems", "1", Translate("Word.Language")));
     }
 
     public static void LoadPluginLanguage(Dictionary<string, List<Type>> pluginAssemblies)

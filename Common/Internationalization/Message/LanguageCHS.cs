@@ -94,7 +94,7 @@ public class ServerInfoTextCHS
     public string FailedToInitializeItem => "初始化 {0} 失败。";
     public string FailedToReadItem => "读取 {0} 失败，文件{1}";
     public string GeneratedItem => "已生成 {0}。";
-    public string LoadedItem => "已加载 {0}。";
+
     public string LoadedItems => "已加载 {0} 个 {1}。";
     public string ServerRunning => "{0} 服务器正在监听 {1}";
     public string ServerStarted => "启动完成！用时 {0}s，输入 'help' 来获取命令帮助";
@@ -105,7 +105,7 @@ public class ServerInfoTextCHS
     public string DirNotFound => "{0} 目录未找到: {1}";
     public string FailedToLoadData => "加载 {0} 数据失败。";
     public string FailedToLoadFile => "加载 {0} 失败: {1}";
-    public string LoadedCountInDir => "已从 {2} 加载 {0} 个 {1}";
+
     public string LoadedScenePoints => "已加载 {0} 个场景传送点，覆盖 {1} 个场景";
     public string FileNotFound => "{0} 文件未找到: {1}";
 }
@@ -172,14 +172,14 @@ public class GiveTextCHS
 public class GiveAllTextCHS
 {
     public string Desc => "给予玩家全部指定类型的物品";
-    public string Usage => "用法: /giveall <avatars|weapons|relics|materials|essentials|all> [数量]";
-    public string AvatarsGiven => "已给予玩家 {1} {0} 个角色。";
-    public string MaterialsGiven => "已给予玩家 {2} {0} 种材料 x{1}。";
-    public string WeaponsGiven => "已给予玩家 {1} {0} 把武器。";
-    public string RelicsGiven => "已给予玩家 {1} {0} 件圣遗物。";
-    public string EssentialsGiven => "已给予玩家 {2} {0} 种必备物品 x{1}。";
-    public string FurnitureGiven => "已给予玩家 {2} {0} 件摆设 x{1}。";
-    public string ItemsGiven => "已给予玩家 {2} {0} 个物品 x{1}。";
+    public string Usage => "用法: /give <all|weapons|relics|mats|furniture|avatars> [lv<等级>] [x<数量>] [r<精炼>]";
+    public string AvatarsGiven => "已给予 {0} 个角色 (UID {1})。";
+    public string WeaponsGiven => "已给予 {0} 把武器 (UID {3})。";
+    public string RelicsGiven => "已给予 {0} 件圣遗物 (UID {3})。";
+    public string MaterialsGiven => "已给予 {0} 种材料 x{1} (UID {3})。";
+    public string FurnitureGiven => "已给予 {0} 件摆设 x{1} (UID {3})。";
+    public string ItemsGiven => "已给予 {0} 个物品 (UID {3})。";
+    public string AllGiven => "全部物品已给予 UID {0}。";
 }
 
 /// <summary>
@@ -222,11 +222,11 @@ public class KickTextCHS
 /// </summary>
 public class SpawnTextCHS
 {
-    public string Desc => "生成怪物或物件";
-    public string Usage => "用法: /spawn <monster|gadget> <id> [数量] [等级]";
+    public string Desc => "生成实体";
+    public string Usage => "用法: /spawn <id> [x<数量>] [lv<等级>] [state<状态>] [ai<aiId>] [<x> <y> <z>]";
     public string InvalidEntityId => "无效的实体ID。";
     public string NoScene => "玩家不在场景中。";
-    public string Success => "已在玩家 {4} 附近生成 {0} 个 {1} (ID: {2}, Lv: {3})。";
+    public string Success => "已生成 {0} 个 {1} (ID: {2}, Lv: {3}) (UID {4})。";
 }
 
 /// <summary>

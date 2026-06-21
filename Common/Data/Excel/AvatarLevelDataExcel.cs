@@ -1,12 +1,12 @@
-using System.Text.Json.Serialization;
+using Newtonsoft.Json;
 
 namespace NahidaImpact.Data.Excel;
 
 [ResourceEntity("AvatarLevelExcelConfigData.json")]
 public class AvatarLevelDataExcel : ExcelResource
 {
-    [JsonPropertyName("level")] public int Level { get; set; }
-    [JsonPropertyName("exp")] public int Exp { get; set; }
+    [JsonProperty("level")] public int Level { get; set; }
+    [JsonProperty("exp")] public int Exp { get; set; }
 
     public override uint GetId() => (uint)Level;
 

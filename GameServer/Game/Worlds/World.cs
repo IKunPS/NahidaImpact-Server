@@ -265,7 +265,7 @@ public class World
             props.EnterType = EnterType.Goto;
         }
         else if (GameData.SceneData.TryGetValue(sceneId, out var sceneData)
-                 && sceneData.SceneType == SceneTypeEnum.SceneHomeWorld)
+                 && sceneData.SceneType == SceneTypeEnum.SCENE_HOME_WORLD)
         {
             props.EnterType = EnterType.SelfHome;
             props.EnterReason = EnterReason.EnterHome;

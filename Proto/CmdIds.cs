@@ -169,40 +169,40 @@ public class CmdIds
     public const int UnlockAvatarTalentReq = 7839;
     public const int UnlockAvatarTalentRsp = 29364;
 
-    // Inventory
-    public const int StoreItemChangeNotify = 27681;
-    public const int StoreItemDelNotify = 8176;
-    public const int PlayerStoreNotify = 24081;
-    public const int ItemAddHintNotify = 1931;
+    // Inventory — verified against OSRELWin6.6.0
+    public const int StoreItemChangeNotify = 20559;
+    public const int StoreItemDelNotify = 3814;
+    public const int PlayerStoreNotify = 24051;
+    public const int ItemAddHintNotify = 24603;
     public const int ItemCdGroupTimeNotify = 2210;
-    public const int DropItemReq = 28166;
-    public const int DropItemRsp = 4794;
-    public const int WearEquipReq = 20553;
-    public const int WearEquipRsp = 22987;
-    public const int TakeoffEquipReq = 3700;
-    public const int TakeoffEquipRsp = 28745;
-    public const int SetEquipLockStateReq = 21501;
-    public const int SetEquipLockStateRsp = 4504;
-    public const int WeaponUpgradeReq = 4010;
-    public const int WeaponUpgradeRsp = 2053;
-    public const int WeaponPromoteReq = 23264;
-    public const int WeaponPromoteRsp = 29840;
-    public const int WeaponAwakenReq = 3041;
-    public const int WeaponAwakenRsp = 849;
-    public const int ReliquaryUpgradeReq = 6817;
-    public const int ReliquaryUpgradeRsp = 28013;
-    public const int ReliquaryPromoteReq = 3645;
-    public const int ReliquaryPromoteRsp = 21845;
-    public const int ReliquaryDecomposeReq = 26691;
-    public const int ReliquaryDecomposeRsp = 8828;
-    public const int DestroyMaterialReq = 5054;
-    public const int DestroyMaterialRsp = 23522;
-    public const int UseItemReq = 4800;
-    public const int UseItemRsp = 29891;
+    public const int DropItemReq = 23788;
+    public const int DropItemRsp = 9269;
+    public const int WearEquipReq = 25796;
+    public const int WearEquipRsp = 29365;
+    public const int TakeoffEquipReq = 26585;
+    public const int TakeoffEquipRsp = 24019;
+    public const int SetEquipLockStateReq = 38;
+    public const int SetEquipLockStateRsp = 298;
+    public const int WeaponUpgradeReq = 8208;
+    public const int WeaponUpgradeRsp = 26318;
+    public const int WeaponPromoteReq = 28926;
+    public const int WeaponPromoteRsp = 29984;
+    public const int WeaponAwakenReq = 6051;
+    public const int WeaponAwakenRsp = 1084;
+    public const int ReliquaryUpgradeReq = 22964;
+    public const int ReliquaryUpgradeRsp = 22562;
+    public const int ReliquaryPromoteReq = 28437;
+    public const int ReliquaryPromoteRsp = 6019;
+    public const int ReliquaryDecomposeReq = 2545;
+    public const int ReliquaryDecomposeRsp = 4930;
+    public const int DestroyMaterialReq = 2800;
+    public const int DestroyMaterialRsp = 28016;
+    public const int UseItemReq = 4733;
+    public const int UseItemRsp = 22767;
     public const int CalcWeaponUpgradeReturnItemsReq = 3748;
-    public const int CalcWeaponUpgradeReturnItemsRsp = 1588;
-    public const int AvatarEquipChangeNotify = 1605;
-    
+    public const int CalcWeaponUpgradeReturnItemsRsp = 542;
+    public const int AvatarEquipChangeNotify = 23985;
+
     // Gadget
-    public const int GadgetInteractReq = 143;
+    public const int GadgetInteractReq = 20321;
 }

@@ -1,4 +1,4 @@
-﻿using System.Text.Json.Serialization;
+using Newtonsoft.Json;
 using NahidaImpact.Data.Common;
 using NahidaImpact.Prop;
 
@@ -7,20 +7,20 @@ namespace NahidaImpact.Data.Excel;
 [ResourceEntity("ProudSkillExcelConfigData.json")]
 public class ProudSkillDataExcel : ExcelResource
 {
-    [JsonPropertyName("proudSkillId")] public int ProudSkillId { get; set; }
-    [JsonPropertyName("proudSkillGroupId")] public int ProudSkillGroupId { get; set; }
-    [JsonPropertyName("level")] public int Level { get; set; }
-    [JsonPropertyName("coinCost")] public int CoinCost { get; set; }
-    [JsonPropertyName("breakLevel")] public int BreakLevel { get; set; }
-    [JsonPropertyName("proudSkillType")] public int ProudSkillType { get; set; }
-    [JsonPropertyName("openConfig")] public string OpenConfig { get; set; } = "";
-    [JsonPropertyName("costItems")] public List<ItemParamData> CostItems { get; set; } = [];
-    [JsonPropertyName("filterConds")] public List<string> FilterConds { get; set; } = [];
-    [JsonPropertyName("lifeEffectParams")] public List<string> LifeEffectParams { get; set; } = [];
-    [JsonPropertyName("addProps")] public FightPropData[] AddProps { get; set; } = [];
-    [JsonPropertyName("paramList")] public float[] ParamList { get; set; } = [];
-    [JsonPropertyName("paramDescList")] public long[] ParamDescList { get; set; } = [];
-    [JsonPropertyName("nameTextMapHash")] public long NameTextMapHash { get; set; }
+    [JsonProperty("proudSkillId")] public int ProudSkillId { get; set; }
+    [JsonProperty("proudSkillGroupId")] public int ProudSkillGroupId { get; set; }
+    [JsonProperty("level")] public int Level { get; set; }
+    [JsonProperty("coinCost")] public int CoinCost { get; set; }
+    [JsonProperty("breakLevel")] public int BreakLevel { get; set; }
+    [JsonProperty("proudSkillType")] public int ProudSkillType { get; set; }
+    [JsonProperty("openConfig")] public string OpenConfig { get; set; } = "";
+    [JsonProperty("costItems")] public List<ItemParamData> CostItems { get; set; } = [];
+    [JsonProperty("filterConds")] public List<string> FilterConds { get; set; } = [];
+    [JsonProperty("lifeEffectParams")] public List<string> LifeEffectParams { get; set; } = [];
+    [JsonProperty("addProps")] public FightPropData[] AddProps { get; set; } = [];
+    [JsonProperty("paramList")] public float[] ParamList { get; set; } = [];
+    [JsonProperty("paramDescList")] public long[] ParamDescList { get; set; } = [];
+    [JsonProperty("nameTextMapHash")] public long NameTextMapHash { get; set; }
 
     public override uint GetId() => (uint)ProudSkillId;
 

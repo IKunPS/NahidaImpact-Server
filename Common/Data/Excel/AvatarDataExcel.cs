@@ -1,4 +1,4 @@
-﻿using System.Text.Json.Serialization;
+using Newtonsoft.Json;
 using NahidaImpact.Data.Common;
 using NahidaImpact.Util;
 
@@ -7,20 +7,20 @@ namespace NahidaImpact.Data.Excel;
 [ResourceEntity("AvatarExcelConfigData.json")]
 public class AvatarDataExcel : ExcelResource
 {
-    [JsonPropertyName("id")] public uint Id { get; set; }
-    [JsonPropertyName("skillDepotId")] public uint SkillDepotId { get; set; }
-    [JsonPropertyName("nameTextMapHash")] public long NameTextMapHash { get; set; } = new();
-    [JsonPropertyName("iconName")] public string IconName { get; set; } = "";
-    [JsonPropertyName("hpBase")] public double HpBase { get; set; }
-    [JsonPropertyName("attackBase")] public double AttackBase { get; set; }
-    [JsonPropertyName("defenseBase")] public double DefenseBase { get; set; }
-    [JsonPropertyName("chargeEfficiency")] public double ChargeEfficiency { get; set; }
-    [JsonPropertyName("critical")] public double Critical { get; set; }
-    [JsonPropertyName("criticalHurt")] public double CriticalHurt { get; set; }
-    [JsonPropertyName("initialWeapon")] public uint InitialWeapon { get; set; }
-    [JsonPropertyName("avatarPromoteId")] public int AvatarPromoteId { get; set; }
+    [JsonProperty("id")] public uint Id { get; set; }
+    [JsonProperty("skillDepotId")] public uint SkillDepotId { get; set; }
+    [JsonProperty("nameTextMapHash")] public long NameTextMapHash { get; set; } = new();
+    [JsonProperty("iconName")] public string IconName { get; set; } = "";
+    [JsonProperty("hpBase")] public double HpBase { get; set; }
+    [JsonProperty("attackBase")] public double AttackBase { get; set; }
+    [JsonProperty("defenseBase")] public double DefenseBase { get; set; }
+    [JsonProperty("chargeEfficiency")] public double ChargeEfficiency { get; set; }
+    [JsonProperty("critical")] public double Critical { get; set; }
+    [JsonProperty("criticalHurt")] public double CriticalHurt { get; set; }
+    [JsonProperty("initialWeapon")] public uint InitialWeapon { get; set; }
+    [JsonProperty("avatarPromoteId")] public int AvatarPromoteId { get; set; }
 
-    [JsonPropertyName("propGrowCurves")] public List<PropGrowCurveData> PropGrowCurves { get; set; } = [];
+    [JsonProperty("propGrowCurves")] public List<PropGrowCurveData> PropGrowCurves { get; set; } = [];
 
     [JsonIgnore] public float[] HpGrowthCurve { get; private set; } = [];
     [JsonIgnore] public float[] AtkGrowthCurve { get; private set; } = [];

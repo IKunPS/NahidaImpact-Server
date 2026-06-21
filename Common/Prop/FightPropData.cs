@@ -1,13 +1,13 @@
-﻿using System.Text.Json.Serialization;
+using Newtonsoft.Json;
 
 namespace NahidaImpact.Prop;
 
 public class FightPropData
 {
-    [JsonPropertyName("propType")]
+    [JsonProperty("propType")]
     public string PropType { get; set; } = "";
 
-    [JsonPropertyName("value")]
+    [JsonProperty("value")]
     public float Value { get; set; }
 
     public void OnLoad()

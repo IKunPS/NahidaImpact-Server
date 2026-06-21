@@ -1,4 +1,4 @@
-using System.Text.Json.Serialization;
+using Newtonsoft.Json;
 using NahidaImpact.Util;
 
 namespace NahidaImpact.Data.Excel;
@@ -10,40 +10,40 @@ namespace NahidaImpact.Data.Excel;
 [ResourceEntity("AvatarSkillDepotExcelConfigData.json")]
 public class AvatarSkillDepotDataExcel : ExcelResource
 {
-    [JsonPropertyName("id")]
+    [JsonProperty("id")]
     public uint Id { get; set; }
 
-    [JsonPropertyName("energySkill")]
+    [JsonProperty("energySkill")]
     public uint EnergySkill { get; set; }
 
-    [JsonPropertyName("attackModeSkill")]
+    [JsonProperty("attackModeSkill")]
     public uint AttackModeSkill { get; set; }
 
-    [JsonPropertyName("skills")]
+    [JsonProperty("skills")]
     public List<uint> Skills { get; set; } = [];
 
-    [JsonPropertyName("subSkills")]
+    [JsonProperty("subSkills")]
     public List<uint> SubSkills { get; set; } = [];
 
-    [JsonPropertyName("extraAbilities")]
+    [JsonProperty("extraAbilities")]
     public List<string> ExtraAbilities { get; set; } = [];
 
     /// <summary>Ability hash list computed from skill depot ability group. Matches Java getAbilities().</summary>
     public List<uint> AbilityHashes { get; set; } = [];
 
-    [JsonPropertyName("talents")]
+    [JsonProperty("talents")]
     public List<uint> Talents { get; set; } = [];
 
-    [JsonPropertyName("talentStarName")]
+    [JsonProperty("talentStarName")]
     public string TalentStarName { get; set; } = "";
 
-    [JsonPropertyName("skillDepotAbilityGroup")]
+    [JsonProperty("skillDepotAbilityGroup")]
     public string SkillDepotAbilityGroup { get; set; } = "";
 
-    [JsonPropertyName("inherentProudSkillOpens")]
+    [JsonProperty("inherentProudSkillOpens")]
     public List<InherentProudSkillOpen> InherentProudSkillOpens { get; set; } = [];
 
-    [JsonPropertyName("specialProudSkillOpens")]
+    [JsonProperty("specialProudSkillOpens")]
     public List<SpecialProudSkillOpen> SpecialProudSkillOpens { get; set; } = [];
 
     /// <summary>Element type resolved from energy skill data. 0=None, 1=Fire, 2=Water, etc.</summary>
@@ -103,12 +103,12 @@ public class AvatarSkillDepotDataExcel : ExcelResource
 
     public class InherentProudSkillOpen
     {
-        [JsonPropertyName("proudSkillGroupId")] public int ProudSkillGroupId { get; set; }
-        [JsonPropertyName("needAvatarPromoteLevel")] public int NeedAvatarPromoteLevel { get; set; }
+        [JsonProperty("proudSkillGroupId")] public int ProudSkillGroupId { get; set; }
+        [JsonProperty("needAvatarPromoteLevel")] public int NeedAvatarPromoteLevel { get; set; }
     }
 
     public class SpecialProudSkillOpen
     {
-        [JsonPropertyName("proudSkillGroupId")] public int ProudSkillGroupId { get; set; }
+        [JsonProperty("proudSkillGroupId")] public int ProudSkillGroupId { get; set; }
     }
 }

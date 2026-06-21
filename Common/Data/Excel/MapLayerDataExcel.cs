@@ -1,14 +1,14 @@
-using System.Text.Json.Serialization;
+using Newtonsoft.Json;
 
 namespace NahidaImpact.Data.Excel;
 
 [ResourceEntity("MapLayerExcelConfigData.json")]
 public class MapLayerDataExcel : ExcelResource
 {
-    [JsonPropertyName("id")]
+    [JsonProperty("id")]
     public uint Id { get; set; }
 
-    [JsonPropertyName("level")]
+    [JsonProperty("level")]
     public float Level { get; set; }
 
     public override uint GetId() => Id;

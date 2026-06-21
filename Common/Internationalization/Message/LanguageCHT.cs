@@ -94,7 +94,7 @@ public class ServerInfoTextCHT
     public string FailedToInitializeItem => "初始化 {0} 失敗。";
     public string FailedToReadItem => "讀取 {0} 失敗，文件{1}";
     public string GeneratedItem => "已生成 {0}。";
-    public string LoadedItem => "已加載 {0}。";
+
     public string LoadedItems => "已加載 {0} 個 {1}。";
     public string ServerRunning => "{0} 服務器正在監聽 {1}";
     public string ServerStarted => "啟動完成！用時 {0}s，輸入 『help』 來獲取命令幫助";
@@ -105,7 +105,7 @@ public class ServerInfoTextCHT
     public string DirNotFound => "{0} 目錄未找到: {1}";
     public string FailedToLoadData => "加載 {0} 數據失敗。";
     public string FailedToLoadFile => "加載 {0} 失敗: {1}";
-    public string LoadedCountInDir => "已從 {2} 加載 {0} 個 {1}";
+
     public string LoadedScenePoints => "已加載 {0} 個場景傳送點，覆蓋 {1} 個場景";
     public string FileNotFound => "{0} 文件未找到: {1}";
 }
@@ -172,14 +172,14 @@ public class GiveTextCHT
 public class GiveAllTextCHT
 {
     public string Desc => "給予玩家全部指定類型的物品";
-    public string Usage => "用法: /giveall <avatars|weapons|relics|materials|essentials|all> [數量]";
-    public string AvatarsGiven => "已給予玩家 {1} {0} 個角色。";
-    public string MaterialsGiven => "已給予玩家 {2} {0} 種材料 x{1}。";
-    public string WeaponsGiven => "已給予玩家 {1} {0} 把武器。";
-    public string RelicsGiven => "已給予玩家 {1} {0} 件聖遺物。";
-    public string EssentialsGiven => "已給予玩家 {2} {0} 種必備物品 x{1}。";
-    public string FurnitureGiven => "已給予玩家 {2} {0} 件擺設 x{1}。";
-    public string ItemsGiven => "已給予玩家 {2} {0} 個物品 x{1}。";
+    public string Usage => "用法: /give <all|weapons|relics|mats|furniture|avatars> [lv<等級>] [x<數量>] [r<精煉>]";
+    public string AvatarsGiven => "已給予 {0} 個角色 (UID {1})。";
+    public string WeaponsGiven => "已給予 {0} 把武器 (UID {3})。";
+    public string RelicsGiven => "已給予 {0} 件聖遺物 (UID {3})。";
+    public string MaterialsGiven => "已給予 {0} 種材料 x{1} (UID {3})。";
+    public string FurnitureGiven => "已給予 {0} 件擺設 x{1} (UID {3})。";
+    public string ItemsGiven => "已給予 {0} 個物品 (UID {3})。";
+    public string AllGiven => "全部物品已給予 UID {0}。";
 }
 
 /// <summary>
@@ -222,11 +222,11 @@ public class KickTextCHT
 /// </summary>
 public class SpawnTextCHT
 {
-    public string Desc => "生成怪物或物件";
-    public string Usage => "用法: /spawn <monster|gadget> <id> [數量] [等級]";
+    public string Desc => "生成實體";
+    public string Usage => "用法: /spawn <id> [x<數量>] [lv<等級>] [state<狀態>] [ai<aiId>] [<x> <y> <z>]";
     public string InvalidEntityId => "無效的實體ID。";
     public string NoScene => "玩家不在場景中。";
-    public string Success => "已在玩家 {4} 附近生成 {0} 個 {1} (ID: {2}, Lv: {3})。";
+    public string Success => "已生成 {0} 個 {1} (ID: {2}, Lv: {3}) (UID {4})。";
 }
 
 /// <summary>

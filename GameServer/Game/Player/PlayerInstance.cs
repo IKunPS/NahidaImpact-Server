@@ -243,7 +243,15 @@ public class PlayerInstance
     }
     public async ValueTask SendPacket(BasePacket packet)
     {
-        if (Connection?.IsOnline == true) await Connection.SendPacket(packet);
+        if (Connection?.IsOnline == true)
+        {
+            await Connection.SendPacket(packet);
+        }
+        else
+        {
+            Logger.GetByClassName().Warn(
+                $"SendPacket: dropped CmdID={packet.CmdId}, Connection.IsOnline={Connection?.IsOnline}");
+        }
     }
 
     #endregion
@@ -333,21 +341,13 @@ public class PlayerInstance
         // TODO: Send PacketPlayerPropNotify to client
     }
 
-    public List<int> GetFlyCloakList()
-    {
-        // Return default flycloak
-        return new List<int> { 340005 };
-    }
+    public List<int> GetFlyCloakList() => FlyCloakList;
 
-    public List<int> GetCostumeList()
-    {
-        return new List<int>();
-    }
+    private List<int> _costumeList = [];
+    public List<int> GetCostumeList() => _costumeList;
 
-    public List<int> GetTraceEffectList()
-    {
-        return new List<int>();
-    }
+    private List<int> _traceEffectList = [];
+    public List<int> GetTraceEffectList() => _traceEffectList;
 
     public int GetMainCharacterId()
     {
