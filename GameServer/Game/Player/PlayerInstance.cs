@@ -320,6 +320,7 @@ public class PlayerInstance
 
     /// <summary>Player property map (MAX_STAMINA, CUR_PERSIST_STAMINA, etc.)</summary>
     private readonly Dictionary<uint, int> _playerProperties = new();
+    public IReadOnlyDictionary<uint, int> Properties => _playerProperties;
 
     public int GetProperty(uint propType)
     {

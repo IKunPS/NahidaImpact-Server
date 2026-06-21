@@ -245,8 +245,7 @@ public class ChatSystem
     {
         if (WelcomeEmotes is { Length: > 0 })
         {
-            var random = new Random();
-            _ = SendPrivateMessageFromServer(player.Uid, WelcomeEmotes[random.Next(WelcomeEmotes.Length)]);
+            _ = SendPrivateMessageFromServer(player.Uid, WelcomeEmotes[Random.Shared.Next(WelcomeEmotes.Length)]);
         }
 
         if (!string.IsNullOrEmpty(WelcomeMessage))

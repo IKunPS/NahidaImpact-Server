@@ -9,22 +9,13 @@ public class HandlerClientAbilityChangeNotify : Handler
 {
     public override async Task OnHandle(Connection connection, byte[] header, byte[] data)
     {
-        if (connection.Player == null)
+        if (connection.Player == null) return;
+        var notify = ClientAbilityChangeNotify.Parser.ParseFrom(data);
+        foreach (var invoke in notify.Invokes)
         {
-            connection.Stop();
-            return;
+            connection.Player.AbilityManager.OnAbilityInvoke(invoke);
+            connection.Player.AbilityManager.AbilityInvokeHandler.AddEntry(invoke);
         }
-        
-        try
-        {
-            var notify = ClientAbilityChangeNotify.Parser.ParseFrom(data);
-            foreach (var invoke in notify.Invokes)
-            {
-                connection.Player.AbilityManager.OnAbilityInvoke(invoke);
-                connection.Player.AbilityManager.AbilityInvokeHandler.AddEntry(invoke);
-            }
-        }
-        catch { }
 
         await Task.CompletedTask;
     }

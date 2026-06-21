@@ -19,11 +19,7 @@ public class HandlerCombatInvocationsNotify : Handler
 
     public override async Task OnHandle(Connection connection, byte[] header, byte[] data)
     {
-        if (connection.Player == null)
-        {
-            connection.Stop();
-            return;
-        }
+        if (connection.Player == null) return;
 
         var player = connection.Player;
         var notify = CombatInvocationsNotify.Parser.ParseFrom(data);
