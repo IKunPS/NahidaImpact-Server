@@ -18,7 +18,7 @@ public class SdkServer
             {
                 webBuilder.UseStartup<Startup>()
                     .ConfigureLogging((_, logging) => { logging.ClearProviders(); })
-                    .UseUrls(ConfigManager.Config.HttpServer.GetBindDisplayAddress());
+                    .UseUrls(ConfigManager.Config.HttpServer.BindDisplayAddress);
             });
 
         return builder.Build();

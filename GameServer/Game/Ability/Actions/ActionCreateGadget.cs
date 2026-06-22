@@ -14,8 +14,8 @@ public class ActionCreateGadget : AbilityActionHandler
         var owner = ability.Owner;
         if (owner?.Scene == null) return Task.FromResult(false);
 
-        var pos = owner.GetPosition().Clone();
-        var rot = owner.GetRotation().Clone();
+        var pos = owner.Position.Clone();
+        var rot = owner.Rotation.Clone();
 
         // TODO: Create EntityGadget with proper constructor and config
         // owner.Scene.AddEntity(entityCreated);

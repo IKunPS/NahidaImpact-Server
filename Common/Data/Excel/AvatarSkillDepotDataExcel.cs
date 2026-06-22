@@ -49,7 +49,7 @@ public class AvatarSkillDepotDataExcel : ExcelResource
     /// <summary>Element type resolved from energy skill data. 0=None, 1=Fire, 2=Water, etc.</summary>
     public int ElementType { get; set; }
 
-    /// <summary>命座消耗道具ID，从第一个talent解析</summary>
+    /// <summary>Constellation talent cost item id, parsed from the first talent.</summary>
     public int TalentCostItemId { get; set; }
 
     public override uint GetId() => Id;
@@ -85,14 +85,14 @@ public class AvatarSkillDepotDataExcel : ExcelResource
                 AbilityHashes.Add(Utils.AbilityHash(ab));
         }
 
-        // 从第一个talent解析命座消耗道具ID
+        // Parse constellation talent cost item id from the first talent.
         if (Talents.Count > 0 && GameData.AvatarTalentData.TryGetValue((int)Talents[0], out var talentData))
         {
             TalentCostItemId = talentData.MainCostItemId;
         }
     }
 
-    /// <summary>获取所有技能+能量技能的ID列表</summary>
+    /// <summary>Skill ids plus the energy skill id.</summary>
     public IEnumerable<uint> GetSkillsAndEnergySkill()
     {
         foreach (var skillId in Skills)

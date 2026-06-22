@@ -265,7 +265,7 @@ public class AvatarDataInfo
         // Apply weapon promotion stat bonuses
         if (weaponItem != null)
         {
-            var itemData = weaponItem.GetItemData();
+            var itemData = weaponItem.ItemDataExcel;
             if (itemData != null)
             {
                 int wpnPromoteId = (int)itemData.WeaponPromoteId;

@@ -74,7 +74,7 @@ public class World
             _players.Add(player);
         }
         
-        player.PeerId = GetNextPeerId();
+        player.PeerId = NextPeerId;
         
         if (_isMultiplayer)
         {
@@ -82,8 +82,8 @@ public class World
             if (teamManager != null)
             {
                 var mpTeam = teamManager.MpTeam;
-                var singlePlayerTeam = teamManager.GetCurrentSinglePlayerTeamInfo();
-                var maxTeamSize = teamManager.GetMaxTeamSize();
+                var singlePlayerTeam = teamManager.CurrentSinglePlayerTeamInfo;
+                var maxTeamSize = teamManager.MaxTeamSize;
                 if (mpTeam != null && singlePlayerTeam != null)
                 {
                     mpTeam.CopyFrom(singlePlayerTeam, maxTeamSize);
@@ -108,9 +108,9 @@ public class World
             scene.AddPlayer(player);
         }
         
-        if (player.Scene != null)
+        if (player.Scene != null && player.TeamManager != null)
         {
-            player.TeamManager?.SetEntity(new EntityTeam(player.Scene));
+            player.TeamManager.Entity = new EntityTeam(player.Scene);
         }
         
         if (_players.Count > 1)
@@ -200,28 +200,32 @@ public class World
             }
         }
     }
-    
-    public PlayerInstance? GetHost() => Host;
 
-    public List<PlayerInstance> GetPlayers()
+    public List<PlayerInstance> Players
     {
-        lock (_playerListLock) return _players.ToList();
+        get
+        {
+            lock (_playerListLock) return _players.ToList();
+        }
     }
 
-    public int GetPlayerCount()
+    public int PlayerCount
     {
-        lock (_playerListLock) return _players.Count;
+        get
+        {
+            lock (_playerListLock) return _players.Count;
+        }
     }
 
-    public bool IsMultiplayer() => _isMultiplayer;
+    public bool IsMultiplayer => _isMultiplayer;
 
-    public uint GetHostPeerId() => Host?.PeerId ?? 0;
+    public uint HostPeerId => Host?.PeerId ?? 0;
 
     public int GetNextEntityId(EntityIdTypeEnum idType) => ((int)idType << 21) + ++_nextEntityId;
 
-    public uint getLevelEntityId() => Entity.Id;
+    public uint LevelEntityId => Entity.Id;
 
-    public uint GetNextPeerId() => ++_nextPeerId;
+    public uint NextPeerId => ++_nextPeerId;
     
     // Simple teleport to a scene/position.
     public bool TransferPlayerToScene(PlayerInstance player, int sceneId, Position pos)
@@ -314,7 +318,7 @@ public class World
         if (oldScene != null)
         {
             if (oldScene == newScene)
-                oldScene.SetDontDestroyWhenEmpty(true);
+                oldScene.DontDestroyWhenEmpty = true;
             oldScene.RemovePlayer(player);
         }
 
@@ -336,8 +340,8 @@ public class World
         // Track previous scene for cross-scene transitions.
         if (oldScene != null && newScene != null && newScene != oldScene)
         {
-            newScene.SetPrevScenePoint(oldScene.GetPrevScenePoint());
-            oldScene.SetDontDestroyWhenEmpty(false);
+            newScene.PrevScenePoint = oldScene.PrevScenePoint;
+            oldScene.DontDestroyWhenEmpty = false;
         }
 
         player.PrevScene = prevSceneId;

@@ -58,10 +58,10 @@ public class EntityAvatar : BaseEntity
 
     private uint _killedType = 0;
     private int _killedBy = 0;
-    
-    public uint GetKilledType() => _killedType;
-    
-    public int GetKilledBy() => _killedBy;
+
+    public uint KilledType => _killedType;
+
+    public int KilledBy => _killedBy;
 
     public void SetKilled(uint dieType, int killerId)
     {
@@ -72,7 +72,7 @@ public class EntityAvatar : BaseEntity
     
     public EntityAvatar(Scene scene, AvatarDataInfo avatarInfo) : base(scene)
     {
-        Owner = scene.GetHost()!;
+        Owner = scene.Host!;
         AvatarInfo = avatarInfo;
         Properties = avatarInfo.Properties;
         FightProperties = avatarInfo.FightProperties;
@@ -98,7 +98,7 @@ public class EntityAvatar : BaseEntity
         var scene = Scene;
         if (scene == null) return;
 
-        var gadgetId = (int)(weapon.GetItemData()?.GadgetId ?? 0);
+        var gadgetId = (int)(weapon.ItemDataExcel?.GadgetId ?? 0);
         if (gadgetId <= 0) return;
 
         var weaponEntity = new EntityWeapon(scene, gadgetId)
@@ -181,31 +181,22 @@ public class EntityAvatar : BaseEntity
         // Player.AvatarManager?.GetAvatarById(AvatarInfo.AvatarId)?.RecalcStats(true);
     }
     
-    public override Position GetPosition()
-    {
-        return Owner?.Position ?? new Position();
-    }
-    
-    public override Position GetRotation()
-    {
-        return Owner?.Rotation ?? new Position();
-    }
+    public override Position Position => Owner?.Position ?? new Position();
+
+    public override Position Rotation => Owner?.Rotation ?? new Position();
 
     public override void Move(Position newPosition, Position rotation)
     {
         // Invoke player move event.
         var evt = new PlayerMoveEvent(
-            Owner, PlayerMoveEvent.MoveType.PLAYER, GetPosition(), newPosition);
+            Owner, PlayerMoveEvent.MoveType.PLAYER, Position, newPosition);
         evt.Call();
 
         // Set position and rotation.
-        base.Move(evt.GetDestination(), rotation);
+        base.Move(evt.To, rotation);
     }
 
-    public override uint getEntityTypeId()
-    {
-        return (uint)EntityIdTypeEnum.Avatar;
-    }
+    public override uint EntityTypeId => (uint)EntityIdTypeEnum.Avatar;
     
     public override SceneEntityInfo ToProto()
     {

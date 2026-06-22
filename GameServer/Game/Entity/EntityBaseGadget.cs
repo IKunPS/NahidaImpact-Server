@@ -9,27 +9,17 @@ public abstract class EntityBaseGadget : BaseEntity
     protected readonly Position rotation;
     private readonly int campId;
     private readonly int campType;
-    
-    public EntityBaseGadget(Scene scene) : this(scene, null, null) {
-    }
-    
-    public EntityBaseGadget(Scene scene, Position position, Position rotation) : this(scene, position, rotation, 0, 0) {
-        
-    }
-    
-    public EntityBaseGadget(
-        Scene scene, Position position, Position rotation, int campId, int campType) : base(scene) {
-        this.position = position != null ? position.Clone() : new Position();
-        this.rotation = rotation != null ? rotation.Clone() : new Position();
+
+    public EntityBaseGadget(Scene scene, Position? position = null, Position? rotation = null, int campId = 0, int campType = 0) : base(scene)
+    {
+        this.position = position?.Clone() ?? new Position();
+        this.rotation = rotation?.Clone() ?? new Position();
         this.campId = campId;
         this.campType = campType;
     }
-    
-    public override Position GetPosition() => position;
-    public override Position GetRotation() => rotation;
 
-    public override uint getEntityTypeId()
-    {
-        return (uint)EntityIdTypeEnum.Gadget;
-    }
+    public override Position Position => position;
+    public override Position Rotation => rotation;
+
+    public override uint EntityTypeId => (uint)EntityIdTypeEnum.Gadget;
 }

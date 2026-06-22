@@ -37,7 +37,7 @@ public class AbilityManager
         }
     }
 
-    public PlayerInstance GetPlayer() => _player;
+    public PlayerInstance Player => _player;
 
     public void RemovePendingEnergyClear()
     {

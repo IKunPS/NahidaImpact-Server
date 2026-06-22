@@ -45,7 +45,7 @@ public class KcpListener
         KCPTransport = KcpSocketTransport.CreateMultiplexConnection(UDPClient, 1400);
         KCPTransport.Start();
         Logger.Info(I18NManager.Translate("Server.ServerInfo.ServerRunning", I18NManager.Translate("Word.Game"),
-            ConfigManager.Config.GameServer.GetDisplayAddress()));
+            ConfigManager.Config.GameServer.DisplayAddress));
     }
 
     private static void RegisterConnection(KcpConnection con)

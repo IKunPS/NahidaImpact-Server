@@ -30,8 +30,6 @@ public class PlayerMoveEvent
         IsCancelled = true;
     }
 
-    public Position GetDestination() => To;
-
     public bool Call()
     {
         return !IsCancelled;

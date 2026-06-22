@@ -1,6 +1,6 @@
 namespace NahidaImpact.GameServer.Game.Managers.Stamina;
 
-public interface AfterUpdateStaminaListener
+public interface IAfterUpdateStaminaListener
 {
     void OnAfterUpdateStamina(string reason, int newStamina, bool isCharacterStamina);
 }

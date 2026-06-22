@@ -23,8 +23,6 @@ public class TeamManager : BasePlayerManager
 
     public EntityTeam? Entity { get; set; }
 
-    public void SetEntity(EntityTeam entity) => Entity = entity;
-
     public TeamInfo MpTeam { get; set; } = new();
 
     public bool UsingTrialTeam { get; set; }
@@ -62,20 +60,23 @@ public class TeamManager : BasePlayerManager
         TeamData.SaveTeamData(_teamData);
     }
 
-    public TeamInfo GetCurrentTeamInfo()
+    public TeamInfo CurrentTeamInfo
     {
-        if (UsingTrialTeam && TrialAvatarTeam.AvatarGuidList.Count > 0)
-            return TrialAvatarTeam;
-        return _teams.GetValueOrDefault(CurrentTeamIndex, new TeamInfo { Index =CurrentTeamIndex });
+        get
+        {
+            if (UsingTrialTeam && TrialAvatarTeam.AvatarGuidList.Count > 0)
+                return TrialAvatarTeam;
+            return _teams.GetValueOrDefault(CurrentTeamIndex, new TeamInfo { Index = CurrentTeamIndex });
+        }
     }
 
-    public TeamInfo GetCurrentSinglePlayerTeamInfo()
+    public TeamInfo CurrentSinglePlayerTeamInfo
         => _teams.GetValueOrDefault(CurrentTeamIndex, new TeamInfo { Index = CurrentTeamIndex });
 
     /// <summary>Add main character avatar to team 1 during first login.</summary>
     public void SetMainCharacter(int avatarId, ulong avatarGuid)
     {
-        var team = GetCurrentSinglePlayerTeamInfo();
+        var team = CurrentSinglePlayerTeamInfo;
         if (!team.AvatarGuidList.Contains(avatarGuid))
             team.AvatarGuidList.Add(avatarGuid);
     }
@@ -106,16 +107,12 @@ public class TeamManager : BasePlayerManager
     public ulong GetCurrentCharacterGuid()
         => GetCurrentAvatarEntity()?.AvatarInfo.Guid ?? 0;
 
-    public int GetCurrentCharacterIndex() => CurrentCharacterIndex;
     public void SetCurrentCharacterIndex(int index) => CurrentCharacterIndex = Math.Max(0, index);
 
-    public bool IsUsingTrialTeam() => UsingTrialTeam;
-
-    public int GetMaxTeamSize()
-        => GameConstants.MAX_AVATARS_IN_TEAM;
+    public int MaxTeamSize => GameConstants.MAX_AVATARS_IN_TEAM;
 
     public bool CanAddAvatarToCurrentTeam()
-        => GetCurrentTeamInfo().AvatarGuidList.Count < GetMaxTeamSize();
+        => CurrentTeamInfo.AvatarGuidList.Count < MaxTeamSize;
     
     public void SetCurrentTeam(int teamId)
     {
@@ -136,7 +133,7 @@ public class TeamManager : BasePlayerManager
 
     public void SetupAvatarTeam(int teamId, List<ulong> guidList)
     {
-        if (guidList.Count == 0 || guidList.Count > GetMaxTeamSize())
+        if (guidList.Count == 0 || guidList.Count > MaxTeamSize)
             return;
 
         if (!_teams.TryGetValue(teamId, out var team))
@@ -164,7 +161,7 @@ public class TeamManager : BasePlayerManager
 
     public void SetupMpTeam(List<ulong> guidList)
     {
-        if (guidList.Count == 0 || guidList.Count > GetMaxTeamSize())
+        if (guidList.Count == 0 || guidList.Count > MaxTeamSize)
             return;
 
         var validGuids = new List<ulong>();
@@ -228,7 +225,7 @@ public class TeamManager : BasePlayerManager
     /// <summary>Rebuild active team entities and broadcast changes. All sends fire-and-forget.</summary>
     public void UpdateTeamEntities(BasePacket? responsePacket = null)
     {
-        var teamInfo = GetCurrentTeamInfo();
+        var teamInfo = CurrentTeamInfo;
         if (teamInfo.AvatarGuidList.Count == 0) return;
 
         var currentEntity = GetCurrentAvatarEntity();
@@ -353,8 +350,8 @@ public class TeamManager : BasePlayerManager
 
     public void AddAvatarToCurrentTeam(ulong guid)
     {
-        var teamInfo = GetCurrentTeamInfo();
-        if (teamInfo.AvatarGuidList.Count >= GetMaxTeamSize()) return;
+        var teamInfo = CurrentTeamInfo;
+        if (teamInfo.AvatarGuidList.Count >= MaxTeamSize) return;
         if (teamInfo.AvatarGuidList.Contains(guid)) return;
         teamInfo.AvatarGuidList.Add(guid);
         Save();

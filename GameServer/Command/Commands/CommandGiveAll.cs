@@ -18,15 +18,15 @@ public class CommandGive : ICommand
 {
     private sealed record GiveParams
     {
-        public GiveAllType Type = GiveAllType.None;
-        public int ItemId;
-        public int Level = 1;
-        public int Amount = 1;
-        public int Refinement = 1;
-        public int Constellation = -1;
-        public int SkillLevel = 1;
-        public int MainPropId = -1;
-        public List<int>? AppendPropIdList;
+        public GiveAllType Type { get; set; } = GiveAllType.None;
+        public int ItemId { get; set; }
+        public int Level { get; set; } = 1;
+        public int Amount { get; set; } = 1;
+        public int Refinement { get; set; } = 1;
+        public int Constellation { get; set; } = -1;
+        public int SkillLevel { get; set; } = 1;
+        public int MainPropId { get; set; } = -1;
+        public List<int>? AppendPropIdList { get; set; }
     }
 
     private enum GiveAllType { None, All, Weapons, Relics, Materials, Furniture, Avatars }

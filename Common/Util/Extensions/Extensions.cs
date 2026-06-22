@@ -9,8 +9,6 @@ namespace NahidaImpact.Util.Extensions;
 
 public static partial class Extensions
 {
-    #region Regex
-
     [GeneratedRegex(@"CN|OS|BETA|PROD|CECREATION|Android|Win|iOS")]
     public static partial Regex VersionRegex();
 
@@ -23,30 +21,34 @@ public static partial class Extensions
     [GeneratedRegex(@"coin(\d+)tier")]
     public static partial Regex ProductRegex();
 
-    #endregion
-
-    public static string GetCurrentLanguage()
+    public static string CurrentLanguage
     {
-        var uiCulture = CultureInfo.CurrentUICulture;
-        return uiCulture.Name switch
+        get
         {
-            "zh-CN" => "CHS",
-            "zh-TW" => "CHT",
-            "ja-JP" => "JP",
-            _ => "EN"
-        };
+            var uiCulture = CultureInfo.CurrentUICulture;
+            return uiCulture.Name switch
+            {
+                "zh-CN" => "CHS",
+                "zh-TW" => "CHT",
+                "ja-JP" => "JP",
+                _ => "EN"
+            };
+        }
     }
 
-    public static List<string> GetSupportVersions()
+    public static List<string> SupportVersions
     {
-        var verList = new List<string>();
-        if (GameConstants.GAME_VERSION[^1] == '5')
-            for (var i = 1; i < 6; i++)
-                verList.Add(GameConstants.GAME_VERSION + i.ToString());
-        else
-            verList.Add(GameConstants.GAME_VERSION);
+        get
+        {
+            var verList = new List<string>();
+            if (GameConstants.GAME_VERSION[^1] == '5')
+                for (var i = 1; i < 6; i++)
+                    verList.Add(GameConstants.GAME_VERSION + i.ToString());
+            else
+                verList.Add(GameConstants.GAME_VERSION);
 
-        return verList;
+            return verList;
+        }
     }
 
     public static T RandomElement<T>(this List<T> values)
@@ -76,10 +78,7 @@ public static partial class Extensions
 
     public static string GetSha256Hash(string input)
     {
-        byte[] bytes = SHA256.HashData(Encoding.UTF8.GetBytes(input));
-        var builder = new StringBuilder();
-        for (int i = 0; i < bytes.Length; i++) builder.Append(bytes[i].ToString("x2"));
-        return builder.ToString();
+        return Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes(input))).ToLowerInvariant();
     }
 
     public static void SafeAdd<T>(this List<T> list, T item)
@@ -92,20 +91,14 @@ public static partial class Extensions
         foreach (var i in item) list.SafeAdd(i);
     }
 
-    public static long GetUnixSec()
-    {
-        return DateTimeOffset.UtcNow.ToUnixTimeSeconds();
-    }
+    public static long UnixSec => DateTimeOffset.UtcNow.ToUnixTimeSeconds();
 
     public static long ToUnixSec(this DateTime dt)
     {
         return new DateTimeOffset(dt).ToUnixTimeSeconds();
     }
 
-    public static long GetUnixMs()
-    {
-        return DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
-    }
+    public static long UnixMs => DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
 
     public static string ToArrayString<T>(this List<T> list)
     {
@@ -120,7 +113,7 @@ public static partial class Extensions
     public static byte[] StringToByteArray(string hex)
     {
         if (hex.Length % 2 == 1)
-            throw new Exception("The binary key cannot have an odd number of digits");
+            throw new ArgumentException("The binary key cannot have an odd number of digits", nameof(hex));
 
         byte[] arr = new byte[hex.Length >> 1];
 
@@ -132,18 +125,12 @@ public static partial class Extensions
         return arr;
     }
 
+    // Hex char value for 0-9, A-F, a-f.
     public static int GetHexVal(char hex)
     {
         int val = (int)hex;
-        //For uppercase A-F letters:
-        //return val - (val < 58 ? 48 : 55);
-        //For lowercase a-f letters:
-        //return val - (val < 58 ? 48 : 87);
-        //Or the two combined, but a bit slower:
         return val - (val < 58 ? 48 : (val < 97 ? 55 : 87));
     }
-
-    #region Kcp Utils
 
     public static string JoinFormat<T>(this IEnumerable<T> list, string separator,
         string formatString)
@@ -155,7 +142,6 @@ public static partial class Extensions
 
     public static void WriteConvID(this BinaryWriter bw, long convId)
     {
-        //bw.Write(convId);
         bw.Write((int)(convId >> 32));
         bw.Write((int)(convId & 0xFFFFFFFF));
     }
@@ -225,6 +211,4 @@ public static partial class Extensions
         BinaryPrimitives.WriteUInt64BigEndian(data, value);
         bw.Write(data);
     }
-
-    #endregion
 }

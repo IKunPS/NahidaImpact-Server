@@ -17,8 +17,8 @@ public class ActionSummon : AbilityActionHandler
             return Task.FromResult(false);
 
         // TODO: Parse position/rotation from proto
-        var pos = owner.GetPosition().Clone();
-        var rot = owner.GetRotation().Clone();
+        var pos = owner.Position.Clone();
+        var rot = owner.Rotation.Clone();
 
         var monster = new EntityMonster(owner.Scene, monsterData, pos, rot, 1);
 

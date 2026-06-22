@@ -206,7 +206,7 @@ public class PlayerInstance
     {
         PlayerInstances.Add(this);
 
-        Data.LastActiveTime = Extensions.GetUnixSec();
+        Data.LastActiveTime = Extensions.UnixSec;
         Profile.LastActiveTime = Data.LastActiveTime;
 
         World = new World(this);
@@ -284,8 +284,6 @@ public class PlayerInstance
         AreaType = areaType;
     }
 
-    public Dictionary<int, MapAreaInfo> GetMapAreas() => MapAreas;
-
     #endregion
 
     #region Helpers
@@ -302,26 +300,16 @@ public class PlayerInstance
         return false;
     }
 
-    public float GetPhlogistonValue()
+    public float PhlogistonValue
     {
-        return _phlogistonValue;
+        get => _phlogistonValue;
+        set => _phlogistonValue = System.Math.Max(0, System.Math.Min(100, value));
     }
-
-    public void SetPhlogistonValue(float value)
-    {
-        _phlogistonValue = System.Math.Max(0, System.Math.Min(100, value));
-    }
-
 
     public SatiationManager? GetSatiationManager()
     {
         // TODO: Implement satiation system
         return null;
-    }
-
-    public Managers.Stamina.StaminaManager GetStaminaManager()
-    {
-        return StaminaManager;
     }
 
     /// <summary>Player property map (MAX_STAMINA, CUR_PERSIST_STAMINA, etc.)</summary>
@@ -339,13 +327,11 @@ public class PlayerInstance
         // TODO: Send PacketPlayerPropNotify to client
     }
 
-    public List<int> GetFlyCloakList() => FlyCloakList;
-
     private List<int> _costumeList = [];
-    public List<int> GetCostumeList() => _costumeList;
+    public List<int> CostumeList => _costumeList;
 
     private List<int> _traceEffectList = [];
-    public List<int> GetTraceEffectList() => _traceEffectList;
+    public List<int> TraceEffectList => _traceEffectList;
 
     public int GetMainCharacterId()
     {

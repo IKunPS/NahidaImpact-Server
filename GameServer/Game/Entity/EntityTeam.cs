@@ -9,7 +9,7 @@ public class EntityTeam : BaseEntity
 
     public EntityTeam(Scene scene) : base(scene)
     {
-        Owner = scene.GetHost()!;
+        Owner = scene.Host!;
         Id = (uint)scene.World.GetNextEntityId(EntityIdTypeEnum.Team);
 
         InitAbilities();
@@ -18,7 +18,7 @@ public class EntityTeam : BaseEntity
     public void InitAbilities()
     {
         // Load abilities from levelElementAbilities
-        var defaultAbilities = Data.GameData.GetConfigGlobalCombat()?.DefaultAbilities;
+        var defaultAbilities = Data.GameData.ConfigGlobalCombat?.DefaultAbilities;
         if (defaultAbilities?.DefaultTeamAbilities != null)
         {
             foreach (var ability in defaultAbilities.DefaultTeamAbilities)
@@ -30,10 +30,7 @@ public class EntityTeam : BaseEntity
         }
     }
 
-    public override uint getEntityTypeId()
-    {
-        return (uint)EntityIdTypeEnum.Team;
-    }
+    public override uint EntityTypeId => (uint)EntityIdTypeEnum.Team;
 
     public override Dictionary<int, float> GetFightProperties()
     {
@@ -41,15 +38,9 @@ public class EntityTeam : BaseEntity
         return new Dictionary<int, float>();
     }
 
-    public override Position GetPosition()
-    {
-        return new Position { X = 0, Y = 0, Z = 0 };
-    }
+    public override Position Position => new() { X = 0, Y = 0, Z = 0 };
 
-    public override Position GetRotation()
-    {
-        return new Position { X = 0, Y = 0, Z = 0 };
-    }
+    public override Position Rotation => new() { X = 0, Y = 0, Z = 0 };
 
     public override SceneEntityInfo? ToProto()
     {

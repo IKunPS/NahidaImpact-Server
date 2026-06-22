@@ -201,7 +201,7 @@ public class InventoryManager : BasePlayerManager
             return true;
         }
 
-        Logger.GetByClassName().Warn($"AddItem: FAILED to store itemId={item.ItemId}, type={item.GetItemData()?.ItemType}");
+        Logger.GetByClassName().Warn($"AddItem: FAILED to store itemId={item.ItemId}, type={item.ItemDataExcel?.ItemType}");
         return false;
     }
 
@@ -296,7 +296,7 @@ public class InventoryManager : BasePlayerManager
     /// <summary>Core placement logic - dispatches by item type, manages stacking and tab capacity.</summary>
     private ItemData? PutItem(ItemData item, bool deferSave = false)
     {
-        var data = item.GetItemData();
+        var data = item.ItemDataExcel;
         if (data == null)
         {
             Logger.GetByClassName().Warn($"PutItem: no ItemData for itemId={item.ItemId}");
@@ -384,7 +384,7 @@ public class InventoryManager : BasePlayerManager
     public void LoadItem(ItemData item)
     {
         EnsureTabsInitialized();
-        if (item.GetItemData() == null) return;
+        if (item.ItemDataExcel == null) return;
 
         var tab = GetInventoryTab(item.ItemType);
         item.OwnerId = Player.Uid;
@@ -434,7 +434,7 @@ public class InventoryManager : BasePlayerManager
                 case "ITEM_USE_GAIN_COSTUME":
                     if (action.UseParam.Count > 0 && int.TryParse(action.UseParam[0], out var costumeId))
                     {
-                        var costumes = Player.GetCostumeList();
+                        var costumes = Player.CostumeList;
                         if (!costumes.Contains(costumeId))
                             costumes.Add(costumeId);
                     }
@@ -488,7 +488,7 @@ public class InventoryManager : BasePlayerManager
     {
         if (count <= 0 || item == null) return false;
 
-        var data = item.GetItemData();
+        var data = item.ItemDataExcel;
         if (data != null && data.IsEquip)
         {
             item.Count = 0;
@@ -551,7 +551,7 @@ public class InventoryManager : BasePlayerManager
         Data.Items.Remove(item);
 
         IInventoryTab? tab = null;
-        if (item.GetItemData() != null)
+        if (item.ItemDataExcel != null)
             tab = GetInventoryTab(item.ItemType);
         tab?.OnRemoveItem(item);
     }
@@ -610,7 +610,7 @@ public class InventoryManager : BasePlayerManager
         if (avatar == null || item == null) return false;
 
         var itemType = item.ItemType;
-        var equipSlot = item.GetEquipSlot();
+        var equipSlot = item.EquipSlot;
 
         if (equipSlot > 0)
             UnequipSlotFromAvatar(avatar, equipSlot);
@@ -631,7 +631,7 @@ public class InventoryManager : BasePlayerManager
             var scene = Player.Scene;
             if (scene != null)
             {
-                var gadgetId = (int)(item.GetItemData()?.GadgetId ?? 0);
+                var gadgetId = (int)(item.ItemDataExcel?.GadgetId ?? 0);
                 if (gadgetId > 0)
                 {
                     var weaponEntity = new EntityWeapon(scene, gadgetId)
@@ -669,7 +669,7 @@ public class InventoryManager : BasePlayerManager
         }
 
         var equippedItem = _store.Values.FirstOrDefault(i =>
-            i.EquipCharacter == (int)avatar.AvatarId && i.GetEquipSlot() == (int)slot);
+            i.EquipCharacter == (int)avatar.AvatarId && i.EquipSlot == (int)slot);
 
         if (equippedItem == null) return false;
         return UnequipSlotFromAvatar(avatar, (int)slot);
@@ -683,7 +683,7 @@ public class InventoryManager : BasePlayerManager
                 i.EquipCharacter == (int)avatar.AvatarId && i.ItemType == ItemType.ITEM_WEAPON);
         else
             item = _store.Values.FirstOrDefault(i =>
-                i.EquipCharacter == (int)avatar.AvatarId && i.GetEquipSlot() == equipSlot);
+                i.EquipCharacter == (int)avatar.AvatarId && i.EquipSlot == equipSlot);
 
         if (item == null) return false;
 
@@ -736,7 +736,7 @@ public class InventoryManager : BasePlayerManager
         {
             if (item.Guid == 0) continue;
 
-            var itemData = item.GetItemData();
+            var itemData = item.ItemDataExcel;
             if (itemData == null) continue;
 
             LoadItem(item);
@@ -764,7 +764,7 @@ public class InventoryManager : BasePlayerManager
         var scene = Player.Scene;
         if (scene == null) return;
 
-        var gadgetId = (int)(item.GetItemData()?.GadgetId ?? 0);
+        var gadgetId = (int)(item.ItemDataExcel?.GadgetId ?? 0);
         if (gadgetId <= 0) return;
 
         item.WeaponEntityId = (int)scene.World.GetNextEntityId(EntityIdTypeEnum.Weapon);
@@ -783,7 +783,7 @@ public class InventoryManager : BasePlayerManager
         RemoveItem(item, removeAmount);
 
         // Return destroy materials
-        var data = item.GetItemData();
+        var data = item.ItemDataExcel;
         if (data?.DestroyReturnMaterial is { Count: > 0 })
         {
             for (int i = 0; i < data.DestroyReturnMaterial.Count; i++)
@@ -803,7 +803,7 @@ public class InventoryManager : BasePlayerManager
         var item = GetItemByGuid(guid);
         if (item == null) return;
 
-        var itemData = item.GetItemData();
+        var itemData = item.ItemDataExcel;
         if (itemData == null) return;
         if (item.Count < count) return;
 
@@ -886,7 +886,7 @@ public class InventoryManager : BasePlayerManager
             var food = GetItemByGuid(guid);
             if (food == null || !food.IsDestroyable) continue;
 
-            int foodExp = food.GetItemData()?.BaseConvExp ?? 0;
+            int foodExp = food.ItemDataExcel?.BaseConvExp ?? 0;
             moraCost += foodExp;
             expGain += foodExp;
             if (food.TotalExp > 0)
@@ -931,7 +931,7 @@ public class InventoryManager : BasePlayerManager
         else if (boost <= 9) rate = 2;
         expGain *= rate;
 
-        var relicData = relic.GetItemData();
+        var relicData = relic.ItemDataExcel;
         int level = relic.Level;
         int oldLevel = level;
         int exp = relic.Exp;

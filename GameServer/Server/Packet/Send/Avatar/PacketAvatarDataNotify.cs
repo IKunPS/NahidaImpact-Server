@@ -16,9 +16,9 @@ public class PacketAvatarDataNotify : BasePacket
             ChooseAvatarGuid = player.TeamManager?.GetCurrentCharacterGuid() ?? 0,
         };
         
-        proto.OwnedFlycloakList.AddRange(player.GetFlyCloakList().Select(x => (uint)x));                                                                                                                          
-        proto.OwnedCostumeList.AddRange(player.GetCostumeList().Select(x => (uint)x));                                                                                                                            
-        proto.OwnedTraceEffectList.AddRange(player.GetTraceEffectList().Select(x => (uint)x)); 
+        proto.OwnedFlycloakList.AddRange(player.FlyCloakList.Select(x => (uint)x));                                                                                                                          
+        proto.OwnedCostumeList.AddRange(player.CostumeList.Select(x => (uint)x));                                                                                                                            
+        proto.OwnedTraceEffectList.AddRange(player.TraceEffectList.Select(x => (uint)x)); 
 
         foreach (var avatar in player.Avatars)
         {

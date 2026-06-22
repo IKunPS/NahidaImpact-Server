@@ -31,7 +31,7 @@ public class ProudSkillDataExcel : ExcelResource
 
     public override void AfterAllDone()
     {
-        // 过滤无效的addProps
+        // Filter out invalid addProps.
         var parsed = new List<FightPropData>();
         foreach (var prop in AddProps)
         {

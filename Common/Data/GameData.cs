@@ -60,10 +60,6 @@ public static class GameData
     public static Dictionary<int, AvatarCurveDataExcel> AvatarCurveData { get; private set; } = [];
     public static Dictionary<int, AvatarPromoteDataExcel> AvatarPromoteData { get; private set; } = [];
 
-    public static Dictionary<string, ConfigLevelEntity> GetConfigLevelEntityDataMap() => ConfigLevelEntityDataMap;
-
-    public static ConfigGlobalCombat? GetConfigGlobalCombat() => ConfigGlobalCombat;
-
     public static AbilityData? GetAbilityData(string abilityName)
     {
         AbilityData.TryGetValue(abilityName, out var data);
@@ -85,8 +81,6 @@ public static class GameData
     {
         return GetAbilityNameByHash((uint)hash);
     }
-
-    public static Dictionary<int, TrialAvatarDataExcel> GetTrialAvatarDataMap() => TrialAvatarDataMap;
 
     public static ConfigScenePointEntry? GetScenePointEntryById(int sceneId, int pointId)
     {

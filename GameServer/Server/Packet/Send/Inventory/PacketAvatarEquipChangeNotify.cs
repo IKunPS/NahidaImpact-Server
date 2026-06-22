@@ -15,7 +15,7 @@ public class PacketAvatarEquipChangeNotify : BasePacket
             AvatarGuid = avatarGuid,
             EquipGuid = item.Guid,
             ItemId = (uint)item.ItemId,
-            EquipType = (uint)item.GetEquipSlot()
+            EquipType = (uint)item.EquipSlot
         };
 
         if (item.ItemType == Enums.Item.ItemType.ITEM_WEAPON)

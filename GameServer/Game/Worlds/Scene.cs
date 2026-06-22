@@ -34,8 +34,6 @@ public class Scene
     private int _tickCount = 0;
     private bool _isPaused = false;
     private readonly long _sceneStartTime = DateTimeOffset.Now.ToUnixTimeMilliseconds();
-    private bool _dontDestroyWhenEmpty = false;
-    private int _prevScenePoint = 0;
 
     /// <summary>Elapsed time in milliseconds since this scene started.</summary>
     public long SceneTime => DateTimeOffset.Now.ToUnixTimeMilliseconds() - _sceneStartTime;
@@ -50,30 +48,34 @@ public class Scene
     }
 
     // Prevents scene from being cleaned up when empty, used during same-scene teleport.
-    public void SetDontDestroyWhenEmpty(bool value) => _dontDestroyWhenEmpty = value;
-    public bool GetDontDestroyWhenEmpty() => _dontDestroyWhenEmpty;
+    public bool DontDestroyWhenEmpty { get; set; }
 
     // Tracks the previous scene point for cross-scene transition logic.
-    public void SetPrevScenePoint(int point) => _prevScenePoint = point;
-    public int GetPrevScenePoint() => _prevScenePoint;
-    
+    public int PrevScenePoint { get; set; }
+
     #region Player Management
-    
-    public int GetPlayerCount()
+
+    public int PlayerCount
     {
-        lock (_playerListLock)
+        get
         {
-            return _players.Count;
+            lock (_playerListLock)
+            {
+                return _players.Count;
+            }
         }
     }
-    
-    public PlayerInstance? GetHost() => World.GetHost();
-    
-    public IReadOnlyList<PlayerInstance> GetPlayers()
+
+    public PlayerInstance? Host => World.Host;
+
+    public IReadOnlyList<PlayerInstance> Players
     {
-        lock (_playerListLock)
+        get
         {
-            return _players.ToList().AsReadOnly();
+            lock (_playerListLock)
+            {
+                return _players.ToList().AsReadOnly();
+            }
         }
     }
     
@@ -138,7 +140,7 @@ public class Scene
         // Remove player avatars outside lock to minimize lock time
         RemovePlayerAvatars(player);
         
-        if (GetPlayerCount() == 0 && !_dontDestroyWhenEmpty)
+        if (PlayerCount == 0 && !DontDestroyWhenEmpty)
             World.DeregisterScene(this);
     }
     
@@ -177,13 +179,13 @@ public class Scene
         teamManager.GetActiveTeam().Clear();
         
         // Add new entities for player
-        var teamInfo = teamManager.GetCurrentSinglePlayerTeamInfo();
+        var teamInfo = teamManager.CurrentSinglePlayerTeamInfo;
         foreach (var avatarGuid in teamInfo.AvatarGuidList)
         {
             var avatar = player.AvatarManager.GetAvatarByGuid(avatarGuid);
             if (avatar == null)
             {
-                if (teamManager.IsUsingTrialTeam())
+                if (teamManager.UsingTrialTeam)
                 {
                     // In trial team, we need to find avatar by ID from trial avatars
                     // Since we have GUIDs in the team, we can try to get by GUID first
@@ -205,7 +207,7 @@ public class Scene
         }
         
         // Clamp character index when team size changed
-        var currentIndex = teamManager.GetCurrentCharacterIndex();
+        var currentIndex = teamManager.CurrentCharacterIndex;
         var teamCount = teamManager.GetActiveTeam().Count;
         if (teamCount == 0)
         {

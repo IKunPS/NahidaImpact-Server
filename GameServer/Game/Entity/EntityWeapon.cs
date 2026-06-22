@@ -24,7 +24,7 @@ public class EntityWeapon : EntityBaseGadget
         Id = (uint)scene.World.GetNextEntityId(EntityIdTypeEnum.Weapon);
     }
 
-    public override uint getEntityTypeId() => (uint)GadgetId;
+    public override uint EntityTypeId => (uint)GadgetId;
 
     public override Dictionary<int, float> GetFightProperties()
     {

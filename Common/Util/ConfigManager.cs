@@ -28,7 +28,7 @@ public static class ConfigManager
             {
                 ServerOption =
                 {
-                    Language = Extensions.Extensions.GetCurrentLanguage()
+                    Language = Extensions.Extensions.CurrentLanguage
                 }
             };
 
@@ -50,7 +50,7 @@ public static class ConfigManager
     {
         var file = new FileInfo(HotfixFilePath);
 
-        var verList = Extensions.Extensions.GetSupportVersions();
+        var verList = Extensions.Extensions.SupportVersions;
 
         Logger.Info(I18NManager.Translate("Server.ServerInfo.CurrentVersion",
             verList.Aggregate((current, next) => $"{current}, {next}")));

@@ -15,7 +15,7 @@ public class PlayerData : BaseDatabaseDataHelper
     public int Exp { get; set; } = 0;
     public int BirthDay { get; set; } = 0;
     [SugarColumn(IsNullable = true)] public long LastActiveTime { get; set; }
-    public long RegisterTime { get; set; } = Extensions.GetUnixSec();
+    public long RegisterTime { get; set; } = Extensions.UnixSec;
 
     public static PlayerData? GetPlayerByUid(long uid)
     {

@@ -42,12 +42,12 @@ public class PlayerChatEvent
         ChannelId = channelId;
     }
     
-    public int GetTargetUid() => Target?.Uid ?? -1;
+    public int TargetUid => Target?.Uid ?? -1;
 
     public int GetMessageAsInt()
     {
         return int.TryParse(Message, out var v) ? v : -1;
     }
-    
-    public int GetChannel() => ChannelId ?? -1;
+
+    public int Channel => ChannelId ?? -1;
 }

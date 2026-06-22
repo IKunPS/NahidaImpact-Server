@@ -33,7 +33,7 @@ public class PacketSceneTeamUpdateNotify : BasePacket
 
         if (player.World != null)
         {
-            foreach (var p in player.World.GetPlayers())
+            foreach (var p in player.World.Players)
             {
                 int hexenzirkelCount = 0;
                 int moonPhaseCount = 0;

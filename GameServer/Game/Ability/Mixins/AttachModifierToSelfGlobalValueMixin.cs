@@ -33,7 +33,7 @@ public class AttachModifierToSelfGlobalValueMixin : AbilityMixinHandler
 
         if (modifierName == null && mixinData.ModifierName != null)
         {
-            var names = mixinData.GetModifierNames();
+            var names = mixinData.ModifierNames;
             modifierName = names.FirstOrDefault();
         }
 
