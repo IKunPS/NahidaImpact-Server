@@ -1,6 +1,7 @@
 using NahidaImpact.Enums.Player;
 using NahidaImpact.GameServer.Server.Packet.Send.Player;
 using NahidaImpact.GameServer.Server.Packet.Send.Scene;
+using NahidaImpact.GameServer.Server.Packet.Send.Team;
 using NahidaImpact.GameServer.Server.Packet.Send.Time;
 using NahidaImpact.Proto;
 
@@ -18,6 +19,8 @@ public class HandlerSceneInitFinishReq : Handler
         await connection.SendPacket(new PacketSceneTimeNotify(player));
         await connection.SendPacket(new PacketPlayerEnterSceneInfoNotify(player));
         await connection.SendPacket(new PacketSceneTeamUpdateNotify(player));
+        await connection.SendPacket(new PacketSyncTeamEntityNotify(player));
+        await connection.SendPacket(new PacketSyncScenePlayTeamEntityNotify(player));
 
         player.SceneLoadState = SceneLoadState.Init;
         await connection.SendPacket(new PacketSceneInitFinishRsp(player));

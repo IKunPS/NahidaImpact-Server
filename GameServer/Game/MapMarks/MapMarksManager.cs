@@ -103,7 +103,6 @@ public class MapMarksManager
             mapMark.SceneId,
             new Position(pos.X, y, pos.Z));
 
-        if (player.EntityAvatar != null)
-            player.Scene?.BroadcastPacket(new PacketSceneEntityAppearNotify(player.EntityAvatar));
+        player.Scene?.BroadcastPacket(new PacketSceneEntityAppearNotify(player));
     }
 }

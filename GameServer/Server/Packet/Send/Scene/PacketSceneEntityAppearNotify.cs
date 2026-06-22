@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using NahidaImpact.GameServer.Game.Entity;
@@ -21,18 +22,6 @@ public class PacketSceneEntityAppearNotify : BasePacket
         SetData(proto);
     }
 
-    // Single entity with vision type
-    public PacketSceneEntityAppearNotify(BaseEntity entity, VisionType visionType) : base(CmdIds.SceneEntityAppearNotify)
-    {
-        var proto = new SceneEntityAppearNotify
-        {
-            AppearType = visionType,
-            EntityList = { entity.ToProto() },
-        };
-
-        SetData(proto);
-    }
-
     // Single entity with vision type and param (mirrors Java: (GameEntity, VisionType, int))
     public PacketSceneEntityAppearNotify(BaseEntity entity, VisionType visionType, int param) : base(CmdIds.SceneEntityAppearNotify)
     {
@@ -47,20 +36,10 @@ public class PacketSceneEntityAppearNotify : BasePacket
     }
 
     // Player constructor — delegates to current avatar entity (mirrors Java: (Player))
-    public PacketSceneEntityAppearNotify(PlayerInstance player) : base(CmdIds.SceneEntityAppearNotify)
+    public PacketSceneEntityAppearNotify(PlayerInstance player)
+        : this(player.TeamManager?.GetCurrentAvatarEntity()
+            ?? throw new InvalidOperationException("Player has no current avatar entity"))
     {
-        var currentAvatar = player.TeamManager?.GetCurrentAvatarEntity();
-        var proto = new SceneEntityAppearNotify
-        {
-            AppearType = VisionType.Born,
-        };
-
-        if (currentAvatar != null)
-        {
-            proto.EntityList.Add(currentAvatar.ToProto());
-        }
-
-        SetData(proto);
     }
 
     // Batch constructor — multiple entities (mirrors Java: (Collection<GameEntity>, VisionType))

@@ -160,11 +160,17 @@ public class HelpTextEN
 /// </summary>
 public class GiveTextEN
 {
-    public string Desc => "Give items to a player";
-    public string Usage => "Usage: /give <itemId> [amount] [level]";
+    public string Desc => "Give items or avatars to a player";
+    public string Usage => "Usage: /give <itemId|avatarId> [lv<level>] [x<amount>] [r<refinement>] [c<constellation>] [sl<skillLevel>]\n" +
+                           "       /give <artifactId> [lv<level>] [x<amount>] [<mainPropId>] [<appendPropId[,times]>]...\n" +
+                           "       /give <all|weapons|mats|furniture|avatars> [lv<level>] [x<amount>] [r<refinement>]";
     public string InvalidItemId => "Invalid item ID.";
-    public string Success => "Gave {0}x item {1} (level {2}) to player {3}.";
-    public string Failed => "Failed to give item {0}. Item type may not be supported yet.";
+    public string InvalidAmount => "Invalid amount.";
+    public string GivenItem => "Gave {0}x item {1} to player {2}.";
+    public string GivenWeapon => "Gave {0}x weapon {1} (level {2}, refinement {3}) to player {4}.";
+    public string GivenRelic => "Gave {0}x relic {1} (level {2}) to player {3}.";
+    public string GivenAvatar => "Gave avatar {0} (level {1}) to player {2}.";
+    public string Failed => "Failed to give item {0}.";
 }
 
 /// <summary>

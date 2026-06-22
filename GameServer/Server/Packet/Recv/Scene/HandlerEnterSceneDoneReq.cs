@@ -14,6 +14,9 @@ public class HandlerEnterSceneDoneReq : Handler
         // Spawn player in world
         player.Scene.SpawnPlayer(player);
 
+        // Show other entities already in the scene to this player.
+        player.Scene.ShowOtherEntities(player);
+
         await connection.SendPacket(new PacketEnterSceneDoneRsp(player));
     }
 

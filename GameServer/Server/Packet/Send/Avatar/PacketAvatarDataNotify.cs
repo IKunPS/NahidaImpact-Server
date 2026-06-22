@@ -16,18 +16,15 @@ public class PacketAvatarDataNotify : BasePacket
             ChooseAvatarGuid = player.TeamManager?.GetCurrentCharacterGuid() ?? 0,
         };
         
-        // Add owned flycloak, costume, trace effect lists                                                                                                                                                        
         proto.OwnedFlycloakList.AddRange(player.GetFlyCloakList().Select(x => (uint)x));                                                                                                                          
         proto.OwnedCostumeList.AddRange(player.GetCostumeList().Select(x => (uint)x));                                                                                                                            
         proto.OwnedTraceEffectList.AddRange(player.GetTraceEffectList().Select(x => (uint)x)); 
 
-        // Avatar list
         foreach (var avatar in player.Avatars)
         {
             proto.AvatarList.Add(avatar.ToProto());
         }
 
-        // Team data
         foreach (var kv in player.TeamManager?.Teams ?? new Dictionary<int, Database.Team.TeamInfo>())
         {
             proto.AvatarTeamMap[(uint)kv.Key] = kv.Value.ToProto();
@@ -37,7 +34,6 @@ public class PacketAvatarDataNotify : BasePacket
             }
         }
 
-        // Set main character as choose avatar if available
         var mainCharacter = player.AvatarManager.GetAvatar(player.GetMainCharacterId());
         if (mainCharacter != null)
         {

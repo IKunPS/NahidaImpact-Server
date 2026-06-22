@@ -64,23 +64,25 @@ public class CommandSpawn : ICommand
         if (isMonster)
         {
             var data = GameData.MonsterData[entityId];
+            var monsters = new List<EntityMonster>(amount);
             for (int i = 0; i < amount; i++)
             {
                 var spread = SpreadPos(pos, i, amount);
-                var monster = new EntityMonster(scene, data, spread, null, lv) { AiId = ai };
-                scene.AddEntity(monster);
-                spawned++;
+                monsters.Add(new EntityMonster(scene, data, spread, null, lv) { AiId = ai });
             }
+            scene.AddEntities(monsters);
+            spawned = monsters.Count;
         }
         else
         {
+            var gadgets = new List<EntityGadget>(amount);
             for (int i = 0; i < amount; i++)
             {
                 var spread = SpreadPos(pos, i, amount);
-                var gadget = new EntityGadget(scene, entityId, spread) { GadgetState = state };
-                scene.AddEntity(gadget);
-                spawned++;
+                gadgets.Add(new EntityGadget(scene, entityId, spread) { GadgetState = state });
             }
+            scene.AddEntities(gadgets);
+            spawned = gadgets.Count;
         }
 
         var type = isMonster ? "monster" : "gadget";

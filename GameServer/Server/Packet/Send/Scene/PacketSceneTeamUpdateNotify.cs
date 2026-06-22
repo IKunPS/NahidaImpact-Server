@@ -5,6 +5,7 @@ using NahidaImpact.GameServer.Game.Entity;
 using NahidaImpact.GameServer.Server.Packet.Send.State;
 using NahidaImpact.KcpSharp;
 using NahidaImpact.Proto;
+using NahidaImpact.Util;
 
 namespace NahidaImpact.GameServer.Server.Packet.Send.Scene;
 

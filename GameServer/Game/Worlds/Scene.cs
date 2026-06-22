@@ -255,6 +255,26 @@ public class Scene
         _entities[(int)entity.Id] = entity;
         entity.OnCreate();
     }
+
+    // Add multiple entities and broadcast a single appear notify per chunk (mirrors Java addEntities).
+    public void AddEntities(IEnumerable<BaseEntity> entities, VisionType visionType = VisionType.Born)
+    {
+        var list = entities.ToList();
+        if (list.Count == 0) return;
+
+        foreach (var entity in list)
+            AddEntityDirectly(entity);
+
+        // Chunk to avoid oversized packets; matches Java's 100-entity batch limit.
+        foreach (var chunk in Chunk(list, 100))
+            BroadcastPacket(new PacketSceneEntityAppearNotify(chunk, visionType));
+    }
+
+    private static IEnumerable<List<T>> Chunk<T>(List<T> source, int size)
+    {
+        for (int i = 0; i < source.Count; i += size)
+            yield return source.GetRange(i, Math.Min(size, source.Count - i));
+    }
     
     public void RemoveEntity(BaseEntity entity, VisionType visionType = VisionType.Die)
     {
@@ -287,6 +307,19 @@ public class Scene
     public void UpdateEntity(BaseEntity entity)
     {
         // TODO: Broadcast entity update packet
+    }
+
+    // Show all scene entities (except the player's current avatar) to a player on scene enter.
+    // Mirrors Java showOtherEntities; Rebornable CD filter omitted (no such entities yet).
+    public void ShowOtherEntities(PlayerInstance player)
+    {
+        var currentEntity = player.TeamManager?.GetCurrentAvatarEntity();
+        var entities = _entities.Values.ToArray()
+            .Where(e => e != currentEntity)
+            .ToList();
+
+        if (entities.Count == 0) return;
+        _ = player.SendPacket(new PacketSceneEntityAppearNotify(entities, VisionType.Meet));
     }
     
     #endregion

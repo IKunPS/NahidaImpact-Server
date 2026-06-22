@@ -160,11 +160,17 @@ public class HelpTextCHS
 /// </summary>
 public class GiveTextCHS
 {
-    public string Desc => "给予玩家物品";
-    public string Usage => "用法: /give <itemId> [amount] [level]";
+    public string Desc => "给予玩家物品或角色";
+    public string Usage => "用法: /give <itemId|avatarId> [lv<等级>] [x<数量>] [r<精炼>] [c<命座>] [sl<天赋>]\n" +
+                           "       /give <artifactId> [lv<等级>] [x<数量>] [<主属性ID>] [<副属性ID[,次数]>]...\n" +
+                           "       /give <all|weapons|mats|furniture|avatars> [lv<等级>] [x<数量>] [r<精炼>]";
     public string InvalidItemId => "无效的物品ID。";
-    public string Success => "已给予 {0}x 物品 {1} (等级 {2}) 给玩家 {3}。";
-    public string Failed => "无法给予物品 {0}，可能尚不支持该物品类型。";
+    public string InvalidAmount => "无效的数量。";
+    public string GivenItem => "已给予 {0}x 物品 {1} 给玩家 {2}。";
+    public string GivenWeapon => "已给予 {0}x 武器 {1} (等级 {2}, 精炼 {3}) 给玩家 {4}。";
+    public string GivenRelic => "已给予 {0}x 圣遗物 {1} (等级 {2}) 给玩家 {3}。";
+    public string GivenAvatar => "已给予角色 {0} (等级 {1}) 给玩家 {2}。";
+    public string Failed => "无法给予物品 {0}。";
 }
 
 /// <summary>

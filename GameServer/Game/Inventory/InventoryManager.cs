@@ -215,6 +215,35 @@ public class InventoryManager : BasePlayerManager
 
     public int AddItems(List<ItemData> items) => AddItems(items, null);
 
+    public async ValueTask<int> AddItemsChunked(List<ItemData> items, ActionReason? reason, int batchSize = 100)
+    {
+        EnsureTabsInitialized();
+        var allChanged = new List<ItemData>();
+        foreach (var item in items)
+        {
+            if (item.ItemId == 0) continue;
+            var result = PutItem(item, deferSave: true);
+            if (result != null)
+            {
+                TriggerAddItemEvents(result);
+                allChanged.Add(result);
+            }
+        }
+        Save();
+        for (int i = 0; i < allChanged.Count; i += batchSize)
+        {
+            var batch = allChanged.Skip(i).Take(batchSize).ToList();
+            Logger.GetByClassName().Info(
+                $"AddItemsChunked: batch {i / batchSize + 1} with {batch.Count} items, CmdID={CmdIds.StoreItemChangeNotify}");
+            await Player.SendPacket(new PacketStoreItemChangeNotify(batch));
+            if (reason != null)
+                await Player.SendPacket(new PacketItemAddHintNotify(batch, (uint)reason.Value));
+            if (i + batchSize < allChanged.Count)
+                await Task.Delay(50);
+        }
+        return allChanged.Count;
+    }
+
     /// <returns>Number of items actually added to inventory.</returns>
     public int AddItems(List<ItemData> items, ActionReason? reason)
     {

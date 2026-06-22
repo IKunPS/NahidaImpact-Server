@@ -38,7 +38,7 @@ public class EntityMonster : BaseEntity
         Owner = scene.GetHost()!;
         Id = (uint)scene.World.GetNextEntityId(EntityIdTypeEnum.Monster);
         position = new Position(pos);
-        rotation = new Position(rot ?? pos);
+        rotation = rot != null ? new Position(rot) : new Position();
         BornPos = pos.Clone();
 
         FightProperties = new List<FightPropPair>

@@ -216,8 +216,6 @@ public class PlayerInstance
         ApplyStartingSceneTags();
         await SendPacket(new PacketPlayerWorldSceneInfoListNotify(this));
 
-        await TeamManager.UpdateTeamEntitiesAsync();
-
         await SendPacket(new PacketPlayerEnterSceneNotify(this));
         await SendPacket(new PacketPlayerDataNotify(this));
         HasSentLoginPackets = true;

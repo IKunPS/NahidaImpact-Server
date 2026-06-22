@@ -131,7 +131,7 @@ public class TeamManager : BasePlayerManager
         if (!_teams.TryGetValue(teamId, out var team)) return;
         team.Name = teamName;
         Save();
-        // TODO: Send PacketChangeTeamNameRsp(teamId, teamName)
+        _ = Player.SendPacket(new PacketChangeTeamNameRsp(teamId, teamName));
     }
 
     public void SetupAvatarTeam(int teamId, List<ulong> guidList)
@@ -177,12 +177,16 @@ public class TeamManager : BasePlayerManager
         }
 
         MpTeam.AvatarGuidList = validGuids;
-        // TODO: MP team update packet
+        UpdateTeamEntities(new PacketChangeMpTeamAvatarRsp(Player, MpTeam));
     }
 
     public void AddNewCustomTeam()
     {
-        if (_teams.Count >= GameConstants.MAX_TEAMS) return;
+        if (_teams.Count >= GameConstants.MAX_TEAMS)
+        {
+            _ = Player.SendPacket(new PacketAddBackupAvatarTeamRsp(1)); // RET_FAIL
+            return;
+        }
 
         // Find lowest available ID starting from 5
         int id = -1;
@@ -194,19 +198,31 @@ public class TeamManager : BasePlayerManager
                 break;
             }
         }
-        if (id < 0) return;
+        if (id < 0)
+        {
+            _ = Player.SendPacket(new PacketAddBackupAvatarTeamRsp(1)); // RET_FAIL
+            return;
+        }
 
-        _teams[id] = new TeamInfo { Index =id };
+        _teams[id] = new TeamInfo { Index = id };
         Save();
-        // TODO: Send PacketAvatarTeamAllDataNotify, PacketAddBackupAvatarTeamRsp
+
+        _ = Player.SendPacket(new PacketAvatarTeamAllDataNotify(Player));
+        _ = Player.SendPacket(new PacketAddBackupAvatarTeamRsp());
     }
 
     public void RemoveCustomTeam(int id)
     {
-        if (id <= GameConstants.DEFAULT_TEAMS || !_teams.ContainsKey(id)) return;
+        if (id <= GameConstants.DEFAULT_TEAMS || !_teams.ContainsKey(id))
+        {
+            _ = Player.SendPacket(new PacketDelBackupAvatarTeamRsp(1, id)); // RET_FAIL
+            return;
+        }
         _teams.Remove(id);
         Save();
-        // TODO: Send PacketAvatarTeamAllDataNotify, PacketDelBackupAvatarTeamRsp
+
+        _ = Player.SendPacket(new PacketAvatarTeamAllDataNotify(Player));
+        _ = Player.SendPacket(new PacketDelBackupAvatarTeamRsp(id));
     }
 
     /// <summary>Rebuild active team entities and broadcast changes. All sends fire-and-forget.</summary>
