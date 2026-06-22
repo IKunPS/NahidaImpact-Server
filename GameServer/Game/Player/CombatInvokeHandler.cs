@@ -69,7 +69,7 @@ public class CombatInvokeHandler
                 if (_entryListForwardHost.Count > 0)
                 {
                     var packet = new PacketCombatInvocationsNotify(_entryListForwardHost);
-                    _player.World.GetHost()?.SendPacket(packet);
+                    _player.World.Host?.SendPacket(packet);
                     _entryListForwardHost.Clear();
                 }
             }

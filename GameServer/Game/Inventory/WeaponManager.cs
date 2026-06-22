@@ -20,7 +20,7 @@ public class WeaponManager(PlayerInstance player) : BasePlayerManager(player)
         if (weapon == null || weapon.ItemType != Enums.Item.ItemType.ITEM_WEAPON)
             return WeaponUpgradeResult.Fail(Retcode.RetItemNotExist);
 
-        var itemData = weapon.GetItemData();
+        var itemData = weapon.ItemDataExcel;
         if (itemData == null)
             return WeaponUpgradeResult.Fail(Retcode.RetItemNotExist);
 
@@ -70,7 +70,7 @@ public class WeaponManager(PlayerInstance player) : BasePlayerManager(player)
         if (weapon == null || weapon.ItemType != Enums.Item.ItemType.ITEM_WEAPON)
             return WeaponPromoteResult.Fail(Retcode.RetItemNotExist);
 
-        var itemData = weapon.GetItemData();
+        var itemData = weapon.ItemDataExcel;
         if (itemData == null)
             return WeaponPromoteResult.Fail(Retcode.RetItemNotExist);
 
@@ -115,7 +115,7 @@ public class WeaponManager(PlayerInstance player) : BasePlayerManager(player)
         if (weapon == null || weapon.ItemType != Enums.Item.ItemType.ITEM_WEAPON)
             return WeaponAwakenResult.Fail(Retcode.RetItemNotExist);
 
-        var itemData = weapon.GetItemData();
+        var itemData = weapon.ItemDataExcel;
         if (itemData == null)
             return WeaponAwakenResult.Fail(Retcode.RetItemNotExist);
 
@@ -181,7 +181,7 @@ public class WeaponManager(PlayerInstance player) : BasePlayerManager(player)
         {
             var item = Inventory.GetItemByGuid(guid);
             if (item == null) continue;
-            var data = item.GetItemData();
+            var data = item.ItemDataExcel;
             if (data == null) continue;
             total += (int)(data.WeaponBaseExp * item.Count);
         }
@@ -191,7 +191,7 @@ public class WeaponManager(PlayerInstance player) : BasePlayerManager(player)
     private List<ItemParam> CalculateReturnItems(ItemData weapon, List<ulong> foodGuids)
     {
         var returnItems = new List<ItemParam>();
-        var itemData = weapon.GetItemData();
+        var itemData = weapon.ItemDataExcel;
         if (itemData == null) return returnItems;
 
         int maxLevel = GetMaxLevelByPromote(weapon.PromoteLevel);

@@ -1,11 +1,11 @@
-using System.Text.Json.Serialization;
+using Newtonsoft.Json;
 
 namespace NahidaImpact.Data.Common;
 
 public class ItemUseActionData
 {
-    [JsonPropertyName("useOp")] public string UseOp { get; set; } = "";
-    [JsonPropertyName("useParam")] public List<string> UseParam { get; set; } = [];
+    [JsonProperty("useOp")] public string UseOp { get; set; } = "";
+    [JsonProperty("useParam")] public List<string> UseParam { get; set; } = [];
 
     /// <summary>First useParam parsed as float.</summary>
     [JsonIgnore]

@@ -1,4 +1,4 @@
-using System.Text.Json.Serialization;
+using Newtonsoft.Json;
 
 namespace NahidaImpact.Data.Excel;
 
@@ -9,26 +9,26 @@ namespace NahidaImpact.Data.Excel;
 [ResourceEntity("AvatarSkillExcelConfigData.json")]
 public class AvatarSkillDataExcel : ExcelResource
 {
-    [JsonPropertyName("id")]
+    [JsonProperty("id")]
     public uint Id { get; set; }
 
     /// <summary>Element type as string (e.g. "Fire", "Electric"). Converted via ElementTypeValue.</summary>
-    [JsonPropertyName("costElemType")]
+    [JsonProperty("costElemType")]
     public string CostElemType { get; set; } = "";
 
-    [JsonPropertyName("costElemVal")]
+    [JsonProperty("costElemVal")]
     public float CostElemVal { get; set; }
 
-    [JsonPropertyName("maxChargeNum")]
+    [JsonProperty("maxChargeNum")]
     public int MaxChargeNum { get; set; }
 
-    [JsonPropertyName("triggerID")]
+    [JsonProperty("triggerID")]
     public uint TriggerId { get; set; }
 
-    [JsonPropertyName("cdTime")]
+    [JsonProperty("cdTime")]
     public float CdTime { get; set; }
 
-    [JsonPropertyName("proudSkillGroupId")]
+    [JsonProperty("proudSkillGroupId")]
     public int ProudSkillGroupId { get; set; }
 
     /// <summary>Parsed element type: 1=Fire, 2=Water, 3=Wind, 4=Electric, 5=Grass, 6=Ice, 7=Rock.</summary>

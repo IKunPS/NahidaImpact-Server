@@ -99,7 +99,7 @@ public class LoaderManager : NahidaImpact
 
         SdkServer.SdkServer.Main([]);
         Logger.Info(I18NManager.Translate("Server.ServerInfo.ServerRunning", I18NManager.Translate("Word.Dispatch"),
-            ConfigManager.Config.HttpServer.GetDisplayAddress()));
+            ConfigManager.Config.HttpServer.DisplayAddress));
 
         KcpListener.BaseConnection = typeof(Connection);
         KcpListener.StartListener();

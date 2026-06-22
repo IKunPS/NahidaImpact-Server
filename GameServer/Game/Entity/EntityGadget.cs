@@ -11,50 +11,21 @@ public class EntityGadget : EntityBaseGadget
 
     public int GadgetId { get; }
     public int GadgetState { get; set; }
-    
-    public EntityGadget(Scene scene, int gadgetId, Position pos) : this(scene, gadgetId, pos, null, null) {
-        
-    }
-    
-    public EntityGadget(Scene scene, int gadgetId, Position pos, Position rot) : this(scene, gadgetId, pos, rot, null) {
-        
-    }
 
-    public EntityGadget(
-        Scene scene, int gadgetId, Position pos, Position rot, int campId, int campType) : this(scene, gadgetId, pos,
-        rot, null, campId, campType)
+    public EntityGadget(Scene scene, int gadgetId, Position? pos = null, Position? rot = null, GadgetContent? content = null, int campId = 0, int campType = 0) : base(scene, pos, rot, campId, campType)
     {
-        
-    }
+        _ = content; // reserved for future gadget content wiring
+        GadgetId = gadgetId;
+        Owner = scene.Host!;
+        Id = (uint)scene.World.GetNextEntityId(EntityIdTypeEnum.Gadget);
 
-    public EntityGadget(
-        Scene scene, int gadgetId, Position pos, Position rot, GadgetContent content) : this(scene, gadgetId, pos, rot,
-        content, 0, 0)
-    {
-        
-    }
-
-    public EntityGadget(
-        Scene scene,
-        int gadgetId,
-        Position pos,
-        Position rot,
-        GadgetContent content,
-        int campId,
-        int campType) : base(scene, pos, rot, campId, campType) {
+        Properties = new List<PropValue>
         {
-            GadgetId = gadgetId;
-            Owner = scene.GetHost()!;
-            Id = (uint)scene.World.GetNextEntityId(EntityIdTypeEnum.Gadget);
-
-            Properties = new List<PropValue>
-            {
-                new() { Type = (uint)PlayerProp.PROP_LEVEL, Ival = 1 }
-            };
-        }
+            new() { Type = PlayerProp.PROP_LEVEL, Ival = 1 }
+        };
     }
-    
-    public override uint getEntityTypeId() => (uint)GadgetId;
+
+    public override uint EntityTypeId => (uint)GadgetId;
 
     public override Dictionary<int, float> GetFightProperties()
     {
@@ -84,8 +55,8 @@ public class EntityGadget : EntityBaseGadget
         entityInfo.AnimatorParaList.Add(new AnimatorParameterValueInfoPair());
         entityInfo.PropList.Add(new PropPair
         {
-            Type = (uint)PlayerProp.PROP_LEVEL,
-            PropValue = new PropValue { Type = (uint)PlayerProp.PROP_LEVEL, Ival = 1 }
+            Type = PlayerProp.PROP_LEVEL,
+            PropValue = new PropValue { Type = PlayerProp.PROP_LEVEL, Ival = 1 }
         });
 
         entityInfo.Gadget = new SceneGadgetInfo

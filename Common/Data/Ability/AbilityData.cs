@@ -1,4 +1,4 @@
-using System.Text.Json.Serialization;
+using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -6,58 +6,58 @@ namespace NahidaImpact.Data.Ability;
 
 public class AbilityData
 {
-    [JsonPropertyName("abilityName")]
+    [JsonProperty("abilityName")]
     public string AbilityName { get; set; } = string.Empty;
 
-    [JsonPropertyName("modifiers")]
+    [JsonProperty("modifiers")]
     public Dictionary<string, AbilityModifier> Modifiers { get; set; } = new();
 
-    [JsonPropertyName("isDynamicAbility")]
+    [JsonProperty("isDynamicAbility")]
     public bool IsDynamicAbility { get; set; }
 
-    [JsonPropertyName("abilitySpecials")]
+    [JsonProperty("abilitySpecials")]
     public Dictionary<string, float> AbilitySpecials { get; set; } = new();
 
-    [JsonPropertyName("onAdded")]
+    [JsonProperty("onAdded")]
     public AbilityModifierAction[] OnAdded { get; set; } = [];
 
-    [JsonPropertyName("onRemoved")]
+    [JsonProperty("onRemoved")]
     public AbilityModifierAction[] OnRemoved { get; set; } = [];
 
-    [JsonPropertyName("onAbilityStart")]
+    [JsonProperty("onAbilityStart")]
     public AbilityModifierAction[] OnAbilityStart { get; set; } = [];
 
-    [JsonPropertyName("onKill")]
+    [JsonProperty("onKill")]
     public AbilityModifierAction[] OnKill { get; set; } = [];
 
-    [JsonPropertyName("onFieldEnter")]
+    [JsonProperty("onFieldEnter")]
     public AbilityModifierAction[] OnFieldEnter { get; set; } = [];
 
-    [JsonPropertyName("onExit")]
+    [JsonProperty("onExit")]
     public AbilityModifierAction[] OnExit { get; set; } = [];
 
-    [JsonPropertyName("onAttach")]
+    [JsonProperty("onAttach")]
     public AbilityModifierAction[] OnAttach { get; set; } = [];
 
-    [JsonPropertyName("onDetach")]
+    [JsonProperty("onDetach")]
     public AbilityModifierAction[] OnDetach { get; set; } = [];
 
-    [JsonPropertyName("onAvatarIn")]
+    [JsonProperty("onAvatarIn")]
     public AbilityModifierAction[] OnAvatarIn { get; set; } = [];
 
-    [JsonPropertyName("onAvatarOut")]
+    [JsonProperty("onAvatarOut")]
     public AbilityModifierAction[] OnAvatarOut { get; set; } = [];
 
-    [JsonPropertyName("onTriggerAvatarRay")]
+    [JsonProperty("onTriggerAvatarRay")]
     public AbilityModifierAction[] OnTriggerAvatarRay { get; set; } = [];
 
-    [JsonPropertyName("onVehicleIn")]
+    [JsonProperty("onVehicleIn")]
     public AbilityModifierAction[] OnVehicleIn { get; set; } = [];
 
-    [JsonPropertyName("onVehicleOut")]
+    [JsonProperty("onVehicleOut")]
     public AbilityModifierAction[] OnVehicleOut { get; set; } = [];
 
-    [JsonPropertyName("abilityMixins")]
+    [JsonProperty("abilityMixins")]
     public AbilityMixinData[] AbilityMixins { get; set; } = [];
 
     [JsonIgnore]

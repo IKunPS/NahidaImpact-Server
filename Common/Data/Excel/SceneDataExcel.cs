@@ -1,5 +1,5 @@
+using Newtonsoft.Json;
 using System.Collections.Generic;
-using System.Text.Json.Serialization;
 using NahidaImpact.Enums.Scene;
 
 namespace NahidaImpact.Data.Excel;
@@ -7,19 +7,19 @@ namespace NahidaImpact.Data.Excel;
 [ResourceEntity("SceneExcelConfigData.json")]
 public class SceneDataExcel : ExcelResource
 {
-    [JsonPropertyName("id")]
+    [JsonProperty("id")]
     public uint Id { get; set; }
     
-    [JsonPropertyName("type")]
+    [JsonProperty("type")]
     public SceneTypeEnum SceneType { get; set; }
     
-    [JsonPropertyName("scriptData")]
+    [JsonProperty("scriptData")]
     public string ScriptData { get; set; } = string.Empty;
     
-    [JsonPropertyName("levelEntityConfig")]
+    [JsonProperty("levelEntityConfig")]
     public string LevelEntityConfig { get; set; } = string.Empty;
     
-    [JsonPropertyName("specifiedAvatarList")]
+    [JsonProperty("specifiedAvatarList")]
     public List<int> SpecifiedAvatarList { get; set; } = [];
     
     public override uint GetId()

@@ -206,7 +206,7 @@ public class PlayerInstance
     {
         PlayerInstances.Add(this);
 
-        Data.LastActiveTime = Extensions.GetUnixSec();
+        Data.LastActiveTime = Extensions.UnixSec;
         Profile.LastActiveTime = Data.LastActiveTime;
 
         World = new World(this);
@@ -215,8 +215,6 @@ public class PlayerInstance
         ProgressManager.OnPlayerLogin();
         ApplyStartingSceneTags();
         await SendPacket(new PacketPlayerWorldSceneInfoListNotify(this));
-
-        await TeamManager.UpdateTeamEntitiesAsync();
 
         await SendPacket(new PacketPlayerEnterSceneNotify(this));
         await SendPacket(new PacketPlayerDataNotify(this));
@@ -243,7 +241,15 @@ public class PlayerInstance
     }
     public async ValueTask SendPacket(BasePacket packet)
     {
-        if (Connection?.IsOnline == true) await Connection.SendPacket(packet);
+        if (Connection?.IsOnline == true)
+        {
+            await Connection.SendPacket(packet);
+        }
+        else
+        {
+            Logger.GetByClassName().Warn(
+                $"SendPacket: dropped CmdID={packet.CmdId}, Connection.IsOnline={Connection?.IsOnline}");
+        }
     }
 
     #endregion
@@ -278,8 +284,6 @@ public class PlayerInstance
         AreaType = areaType;
     }
 
-    public Dictionary<int, MapAreaInfo> GetMapAreas() => MapAreas;
-
     #endregion
 
     #region Helpers
@@ -296,26 +300,16 @@ public class PlayerInstance
         return false;
     }
 
-    public float GetPhlogistonValue()
+    public float PhlogistonValue
     {
-        return _phlogistonValue;
+        get => _phlogistonValue;
+        set => _phlogistonValue = System.Math.Max(0, System.Math.Min(100, value));
     }
-
-    public void SetPhlogistonValue(float value)
-    {
-        _phlogistonValue = System.Math.Max(0, System.Math.Min(100, value));
-    }
-
 
     public SatiationManager? GetSatiationManager()
     {
         // TODO: Implement satiation system
         return null;
-    }
-
-    public Managers.Stamina.StaminaManager GetStaminaManager()
-    {
-        return StaminaManager;
     }
 
     /// <summary>Player property map (MAX_STAMINA, CUR_PERSIST_STAMINA, etc.)</summary>
@@ -333,21 +327,11 @@ public class PlayerInstance
         // TODO: Send PacketPlayerPropNotify to client
     }
 
-    public List<int> GetFlyCloakList()
-    {
-        // Return default flycloak
-        return new List<int> { 340005 };
-    }
+    private List<int> _costumeList = [];
+    public List<int> CostumeList => _costumeList;
 
-    public List<int> GetCostumeList()
-    {
-        return new List<int>();
-    }
-
-    public List<int> GetTraceEffectList()
-    {
-        return new List<int>();
-    }
+    private List<int> _traceEffectList = [];
+    public List<int> TraceEffectList => _traceEffectList;
 
     public int GetMainCharacterId()
     {

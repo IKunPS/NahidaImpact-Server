@@ -44,7 +44,7 @@ public class AbilityMixinData
     [JsonProperty("$type")]
     public MixinType Type { get; set; }
 
-    /// <summary>Can be a string or array of strings. Handled by GetModifierNames().</summary>
+    /// <summary>Can be a string or array of strings. Handled by ModifierNames.</summary>
     [JsonProperty("modifierName")]
     public JToken? ModifierName { get; set; }
 
@@ -66,11 +66,14 @@ public class AbilityMixinData
 
     public List<string> ModifierNameSteps { get; set; } = [];
 
-    public List<string> GetModifierNames()
+    public List<string> ModifierNames
     {
-        if (ModifierName == null) return new List<string>();
-        if (ModifierName.Type == JTokenType.Array)
-            return ModifierName.ToObject<List<string>>() ?? new List<string>();
-        return new List<string> { ModifierName.ToString() };
+        get
+        {
+            if (ModifierName == null) return new List<string>();
+            if (ModifierName.Type == JTokenType.Array)
+                return ModifierName.ToObject<List<string>>() ?? new List<string>();
+            return new List<string> { ModifierName.ToString() };
+        }
     }
 }

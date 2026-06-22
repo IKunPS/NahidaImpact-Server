@@ -45,15 +45,18 @@ public class ItemData
     {
         get
         {
-            var data = GetItemData();
+            var data = ItemDataExcel;
             return data?.ItemType ?? ItemType.ITEM_NONE;
         }
     }
 
-    public ItemDataExcel? GetItemData()
+    public ItemDataExcel? ItemDataExcel
     {
-        GameData.ItemData.TryGetValue(ItemId, out var data);
-        return data;
+        get
+        {
+            GameData.ItemData.TryGetValue(ItemId, out var data);
+            return data;
+        }
     }
 
     public static int GetMinPromoteLevel(int level)
@@ -67,25 +70,28 @@ public class ItemData
         return 0;
     }
 
-    public int GetEquipSlot()
+    public int EquipSlot
     {
-        var data = GetItemData();
-        return data?.EquipTypeStr switch
+        get
         {
-            "EQUIP_BRACER" => 1,
-            "EQUIP_NECKLACE" => 2,
-            "EQUIP_SHOES" => 3,
-            "EQUIP_RING" => 4,
-            "EQUIP_DRESS" => 5,
-            "EQUIP_WEAPON" => 6,
-            _ => 0
-        };
+            var data = ItemDataExcel;
+            return data?.EquipTypeStr switch
+            {
+                "EQUIP_BRACER" => 1,
+                "EQUIP_NECKLACE" => 2,
+                "EQUIP_SHOES" => 3,
+                "EQUIP_RING" => 4,
+                "EQUIP_DRESS" => 5,
+                "EQUIP_WEAPON" => 6,
+                _ => 0
+            };
+        }
     }
 
     /// <summary>Generate initial random affixes from item data's skillAffix list.</summary>
     public void InitWeaponAffixes()
     {
-        var data = GetItemData();
+        var data = ItemDataExcel;
         if (data?.SkillAffix == null) return;
         Affixes = data.SkillAffix.Where(a => a > 0).ToList();
     }

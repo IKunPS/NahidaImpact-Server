@@ -34,8 +34,6 @@ public class Scene
     private int _tickCount = 0;
     private bool _isPaused = false;
     private readonly long _sceneStartTime = DateTimeOffset.Now.ToUnixTimeMilliseconds();
-    private bool _dontDestroyWhenEmpty = false;
-    private int _prevScenePoint = 0;
 
     /// <summary>Elapsed time in milliseconds since this scene started.</summary>
     public long SceneTime => DateTimeOffset.Now.ToUnixTimeMilliseconds() - _sceneStartTime;
@@ -50,30 +48,34 @@ public class Scene
     }
 
     // Prevents scene from being cleaned up when empty, used during same-scene teleport.
-    public void SetDontDestroyWhenEmpty(bool value) => _dontDestroyWhenEmpty = value;
-    public bool GetDontDestroyWhenEmpty() => _dontDestroyWhenEmpty;
+    public bool DontDestroyWhenEmpty { get; set; }
 
     // Tracks the previous scene point for cross-scene transition logic.
-    public void SetPrevScenePoint(int point) => _prevScenePoint = point;
-    public int GetPrevScenePoint() => _prevScenePoint;
-    
+    public int PrevScenePoint { get; set; }
+
     #region Player Management
-    
-    public int GetPlayerCount()
+
+    public int PlayerCount
     {
-        lock (_playerListLock)
+        get
         {
-            return _players.Count;
+            lock (_playerListLock)
+            {
+                return _players.Count;
+            }
         }
     }
-    
-    public PlayerInstance? GetHost() => World.GetHost();
-    
-    public IReadOnlyList<PlayerInstance> GetPlayers()
+
+    public PlayerInstance? Host => World.Host;
+
+    public IReadOnlyList<PlayerInstance> Players
     {
-        lock (_playerListLock)
+        get
         {
-            return _players.ToList().AsReadOnly();
+            lock (_playerListLock)
+            {
+                return _players.ToList().AsReadOnly();
+            }
         }
     }
     
@@ -138,7 +140,7 @@ public class Scene
         // Remove player avatars outside lock to minimize lock time
         RemovePlayerAvatars(player);
         
-        if (GetPlayerCount() == 0 && !_dontDestroyWhenEmpty)
+        if (PlayerCount == 0 && !DontDestroyWhenEmpty)
             World.DeregisterScene(this);
     }
     
@@ -177,13 +179,13 @@ public class Scene
         teamManager.GetActiveTeam().Clear();
         
         // Add new entities for player
-        var teamInfo = teamManager.GetCurrentSinglePlayerTeamInfo();
+        var teamInfo = teamManager.CurrentSinglePlayerTeamInfo;
         foreach (var avatarGuid in teamInfo.AvatarGuidList)
         {
             var avatar = player.AvatarManager.GetAvatarByGuid(avatarGuid);
             if (avatar == null)
             {
-                if (teamManager.IsUsingTrialTeam())
+                if (teamManager.UsingTrialTeam)
                 {
                     // In trial team, we need to find avatar by ID from trial avatars
                     // Since we have GUIDs in the team, we can try to get by GUID first
@@ -205,7 +207,7 @@ public class Scene
         }
         
         // Clamp character index when team size changed
-        var currentIndex = teamManager.GetCurrentCharacterIndex();
+        var currentIndex = teamManager.CurrentCharacterIndex;
         var teamCount = teamManager.GetActiveTeam().Count;
         if (teamCount == 0)
         {
@@ -255,6 +257,26 @@ public class Scene
         _entities[(int)entity.Id] = entity;
         entity.OnCreate();
     }
+
+    // Add multiple entities and broadcast a single appear notify per chunk (mirrors Java addEntities).
+    public void AddEntities(IEnumerable<BaseEntity> entities, VisionType visionType = VisionType.Born)
+    {
+        var list = entities.ToList();
+        if (list.Count == 0) return;
+
+        foreach (var entity in list)
+            AddEntityDirectly(entity);
+
+        // Chunk to avoid oversized packets; matches Java's 100-entity batch limit.
+        foreach (var chunk in Chunk(list, 100))
+            BroadcastPacket(new PacketSceneEntityAppearNotify(chunk, visionType));
+    }
+
+    private static IEnumerable<List<T>> Chunk<T>(List<T> source, int size)
+    {
+        for (int i = 0; i < source.Count; i += size)
+            yield return source.GetRange(i, Math.Min(size, source.Count - i));
+    }
     
     public void RemoveEntity(BaseEntity entity, VisionType visionType = VisionType.Die)
     {
@@ -271,8 +293,12 @@ public class Scene
     
     public void ReplaceEntity(BaseEntity oldEntity, BaseEntity newEntity)
     {
-        RemoveEntity(oldEntity, VisionType.Replace);
-        AddEntity(newEntity);
+        if (_entities.TryRemove((int)oldEntity.Id, out var removed))
+            removed.OnRemoved();
+        _entities[(int)newEntity.Id] = newEntity;
+        newEntity.OnCreate();
+        BroadcastPacket(new PacketSceneEntityDisappearNotify(oldEntity, VisionType.Replace));
+        BroadcastPacket(new PacketSceneEntityAppearNotify(newEntity, VisionType.Replace, (int)oldEntity.Id));
     }
 
     public void RemoveEntities(IEnumerable<BaseEntity> entities, VisionType visionType = VisionType.Die)
@@ -283,6 +309,19 @@ public class Scene
     public void UpdateEntity(BaseEntity entity)
     {
         // TODO: Broadcast entity update packet
+    }
+
+    // Show all scene entities (except the player's current avatar) to a player on scene enter.
+    // Mirrors Java showOtherEntities; Rebornable CD filter omitted (no such entities yet).
+    public void ShowOtherEntities(PlayerInstance player)
+    {
+        var currentEntity = player.TeamManager?.GetCurrentAvatarEntity();
+        var entities = _entities.Values.ToArray()
+            .Where(e => e != currentEntity)
+            .ToList();
+
+        if (entities.Count == 0) return;
+        _ = player.SendPacket(new PacketSceneEntityAppearNotify(entities, VisionType.Meet));
     }
     
     #endregion

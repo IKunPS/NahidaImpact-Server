@@ -35,7 +35,7 @@ public class RegionController : ControllerBase
         };
         Regions = regions;
         
-        var dispatchDomain = ConfigManager.Config.HttpServer.GetDisplayAddress();
+        var dispatchDomain = ConfigManager.Config.HttpServer.DisplayAddress;
         var servers = GetRegionServerList(dispatchDomain);
 
         var osConfig = GetRegionClientConfig(BaseRegionEnum.OS);

@@ -14,7 +14,7 @@ public class AttachToStateIDMixin : AbilityMixinHandler
         if (mixinData.StateIDs == null || mixinData.StateIDs.Count == 0)
             return Task.FromResult(false);
 
-        var modifierNames = mixinData.GetModifierNames();
+        var modifierNames = mixinData.ModifierNames;
         if (modifierNames.Count == 0) return Task.FromResult(false);
 
         foreach (var stateId in mixinData.StateIDs)

@@ -43,8 +43,8 @@ public abstract class BaseEntity
     private bool _limbo;
     private float _limboHpThreshold;
 
-    public abstract Position GetPosition();
-    public abstract Position GetRotation();
+    public abstract Position Position { get; }
+    public abstract Position Rotation { get; }
 
     public BaseEntity(Scene scene)
     {
@@ -54,7 +54,7 @@ public abstract class BaseEntity
         FightProperties = new();
     }
 
-    public abstract uint getEntityTypeId();
+    public abstract uint EntityTypeId { get; }
     public abstract SceneEntityInfo ToProto();
     
     public abstract Dictionary<int, float> GetFightProperties();
@@ -63,8 +63,8 @@ public abstract class BaseEntity
     {
         var motionInfo = new MotionInfo
         {
-            Pos = GetPosition().ToProto(),
-            Rot = GetRotation().ToProto(),
+            Pos = Position.ToProto(),
+            Rot = Rotation.ToProto(),
             Speed = new Vector(),
             State = MotionState
         };
@@ -73,8 +73,8 @@ public abstract class BaseEntity
 
     public virtual void Move(Position position, Position rotation)
     {
-        GetPosition().Set(position);
-        GetRotation().Set(rotation);
+        Position.Set(position);
+        Rotation.Set(rotation);
     }
 
     public virtual void OnCreate() { }
@@ -112,17 +112,7 @@ public abstract class BaseEntity
         return !IsDead;
     }
 
-    public uint GetLifeState()
-    {
-        return IsAlive() ? 1u : 0u;
-    }
-
-    public float GetNyxValue()
-    {
-        if (GlobalAbilityValues.TryGetValue("NyxValue", out var val))
-            return val;
-        return 0f;
-    }
+    public float NyxValue => GlobalAbilityValues.TryGetValue("NyxValue", out var val) ? val : 0f;
 
     public void ClearLimbo()
     {

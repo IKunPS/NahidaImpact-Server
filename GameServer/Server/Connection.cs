@@ -30,12 +30,18 @@ public class Connection(KcpConversation conversation, IPEndPoint remote) : KcpCo
     {
         Logger.Info(I18NManager.Translate("Server.ConnectionInfo.NewConnection", RemoteEndPoint.ToString()));
         State = SessionStateEnum.WAITING_FOR_TOKEN;
-        await ReceiveLoop();
+        try
+        {
+            await ReceiveLoop();
+        }
+        catch (Exception ex)
+        {
+            Logger.Error($"ReceiveLoop crashed: {ex}");
+        }
     }
 
-    public override async void Stop(bool isServerStop = false)
+    public override void Stop(bool isServerStop = false)
     {
-        //if (isServerStop) await Player!.SendPacket(new PacketPlayerKickOutScNotify(KickType.KickLoginWhiteTimeout));
         Player?.OnLogoutAsync();
         KcpListener.UnregisterConnection(this);
         base.Stop(isServerStop);
@@ -50,14 +56,6 @@ public class Connection(KcpConversation conversation, IPEndPoint remote) : KcpCo
             if (result.TransportClosed)
             {
                 Logger.Debug(I18NManager.Translate("Server.ConnectionInfo.ConnectionClosed"));
-                break;
-            }
-            
-            if (result.BytesReceived > KcpListener.MAX_MSG_SIZE)
-            {
-                // The message is too large.
-                Logger.Error(I18NManager.Translate("Server.ConnectionInfo.PacketTooLarge"));
-                Conversation.SetTransportClosed();
                 break;
             }
     
@@ -112,13 +110,13 @@ public class Connection(KcpConversation conversation, IPEndPoint remote) : KcpCo
                     return;
                 }
 
-                var CmdId = br.ReadUInt16BE();
-                var HeaderLength = br.ReadUInt16BE();
-                var BodyLength = br.ReadUInt32BE();
+                var cmdId = br.ReadUInt16BE();
+                var headerLength = br.ReadUInt16BE();
+                var bodyLength = br.ReadUInt32BE();
 
                 // Data
-                var header = br.ReadBytes(HeaderLength);
-                var Body = br.ReadBytes((int)BodyLength);
+                var header = br.ReadBytes(headerLength);
+                var body = br.ReadBytes((int)bodyLength);
 
                 var tail = br.ReadUInt16BE();
                 if (tail != 0x89AB)
@@ -126,9 +124,9 @@ public class Connection(KcpConversation conversation, IPEndPoint remote) : KcpCo
                     Logger.Error(I18NManager.Translate("Server.ConnectionInfo.InvalidFooter", tail.ToString("X")));
                     return;
                 }
-                
-                LogPacket("Recv", CmdId, Body);
-                await HandlePacket(CmdId, header, Body);
+
+                LogPacket("Recv", cmdId, body);
+                await HandlePacket(cmdId, header, body);
             }
         }
         catch (Exception e)

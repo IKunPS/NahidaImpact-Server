@@ -14,7 +14,6 @@ public class HandlerSetUpAvatarTeamReq : Handler
         long curAvatarGuid = ((long)req.CurAvatarGuid ^ 1583L) - 41090L;
 
         connection.Player?.TeamManager.SetupAvatarTeam(teamId, req.AvatarTeamGuidList.ToList());
-
         await Task.CompletedTask;
     }
 }

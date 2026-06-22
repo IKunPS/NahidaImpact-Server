@@ -1,4 +1,4 @@
-using System.Text.Json.Serialization;
+using Newtonsoft.Json;
 using NahidaImpact.Util;
 
 namespace NahidaImpact.Data.Excel;
@@ -10,46 +10,46 @@ namespace NahidaImpact.Data.Excel;
 [ResourceEntity("AvatarSkillDepotExcelConfigData.json")]
 public class AvatarSkillDepotDataExcel : ExcelResource
 {
-    [JsonPropertyName("id")]
+    [JsonProperty("id")]
     public uint Id { get; set; }
 
-    [JsonPropertyName("energySkill")]
+    [JsonProperty("energySkill")]
     public uint EnergySkill { get; set; }
 
-    [JsonPropertyName("attackModeSkill")]
+    [JsonProperty("attackModeSkill")]
     public uint AttackModeSkill { get; set; }
 
-    [JsonPropertyName("skills")]
+    [JsonProperty("skills")]
     public List<uint> Skills { get; set; } = [];
 
-    [JsonPropertyName("subSkills")]
+    [JsonProperty("subSkills")]
     public List<uint> SubSkills { get; set; } = [];
 
-    [JsonPropertyName("extraAbilities")]
+    [JsonProperty("extraAbilities")]
     public List<string> ExtraAbilities { get; set; } = [];
 
     /// <summary>Ability hash list computed from skill depot ability group. Matches Java getAbilities().</summary>
     public List<uint> AbilityHashes { get; set; } = [];
 
-    [JsonPropertyName("talents")]
+    [JsonProperty("talents")]
     public List<uint> Talents { get; set; } = [];
 
-    [JsonPropertyName("talentStarName")]
+    [JsonProperty("talentStarName")]
     public string TalentStarName { get; set; } = "";
 
-    [JsonPropertyName("skillDepotAbilityGroup")]
+    [JsonProperty("skillDepotAbilityGroup")]
     public string SkillDepotAbilityGroup { get; set; } = "";
 
-    [JsonPropertyName("inherentProudSkillOpens")]
+    [JsonProperty("inherentProudSkillOpens")]
     public List<InherentProudSkillOpen> InherentProudSkillOpens { get; set; } = [];
 
-    [JsonPropertyName("specialProudSkillOpens")]
+    [JsonProperty("specialProudSkillOpens")]
     public List<SpecialProudSkillOpen> SpecialProudSkillOpens { get; set; } = [];
 
     /// <summary>Element type resolved from energy skill data. 0=None, 1=Fire, 2=Water, etc.</summary>
     public int ElementType { get; set; }
 
-    /// <summary>命座消耗道具ID，从第一个talent解析</summary>
+    /// <summary>Constellation talent cost item id, parsed from the first talent.</summary>
     public int TalentCostItemId { get; set; }
 
     public override uint GetId() => Id;
@@ -85,14 +85,14 @@ public class AvatarSkillDepotDataExcel : ExcelResource
                 AbilityHashes.Add(Utils.AbilityHash(ab));
         }
 
-        // 从第一个talent解析命座消耗道具ID
+        // Parse constellation talent cost item id from the first talent.
         if (Talents.Count > 0 && GameData.AvatarTalentData.TryGetValue((int)Talents[0], out var talentData))
         {
             TalentCostItemId = talentData.MainCostItemId;
         }
     }
 
-    /// <summary>获取所有技能+能量技能的ID列表</summary>
+    /// <summary>Skill ids plus the energy skill id.</summary>
     public IEnumerable<uint> GetSkillsAndEnergySkill()
     {
         foreach (var skillId in Skills)
@@ -103,12 +103,12 @@ public class AvatarSkillDepotDataExcel : ExcelResource
 
     public class InherentProudSkillOpen
     {
-        [JsonPropertyName("proudSkillGroupId")] public int ProudSkillGroupId { get; set; }
-        [JsonPropertyName("needAvatarPromoteLevel")] public int NeedAvatarPromoteLevel { get; set; }
+        [JsonProperty("proudSkillGroupId")] public int ProudSkillGroupId { get; set; }
+        [JsonProperty("needAvatarPromoteLevel")] public int NeedAvatarPromoteLevel { get; set; }
     }
 
     public class SpecialProudSkillOpen
     {
-        [JsonPropertyName("proudSkillGroupId")] public int ProudSkillGroupId { get; set; }
+        [JsonProperty("proudSkillGroupId")] public int ProudSkillGroupId { get; set; }
     }
 }

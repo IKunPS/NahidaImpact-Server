@@ -9,7 +9,6 @@ namespace NahidaImpact.KcpSharp;
 
 public class KcpListener
 {
-    public const int MAX_MSG_SIZE = 16384;
     private static UdpClient? UDPClient;
     private static IPEndPoint? ListenAddress;
     private static IKcpTransport<IKcpMultiplexConnection>? KCPTransport;
@@ -46,7 +45,7 @@ public class KcpListener
         KCPTransport = KcpSocketTransport.CreateMultiplexConnection(UDPClient, 1400);
         KCPTransport.Start();
         Logger.Info(I18NManager.Translate("Server.ServerInfo.ServerRunning", I18NManager.Translate("Word.Game"),
-            ConfigManager.Config.GameServer.GetDisplayAddress()));
+            ConfigManager.Config.GameServer.DisplayAddress));
     }
 
     private static void RegisterConnection(KcpConnection con)

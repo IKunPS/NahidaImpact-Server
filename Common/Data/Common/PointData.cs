@@ -1,49 +1,49 @@
-using System.Text.Json.Serialization;
+using Newtonsoft.Json;
 
 namespace NahidaImpact.Data.Common;
 
 public class PointData
 {
-    [JsonPropertyName("id")]
+    [JsonProperty("id")]
     public int Id { get; set; }
 
-    [JsonPropertyName("areaId")]
+    [JsonProperty("areaId")]
     public int AreaId { get; set; }
 
-    [JsonPropertyName("$type")]
+    [JsonProperty("$type")]
     public string Type { get; set; } = string.Empty;
 
-    [JsonPropertyName("tranPos")]
+    [JsonProperty("tranPos")]
     public PointPosition? TranPos { get; set; }
 
-    [JsonPropertyName("pos")]
+    [JsonProperty("pos")]
     public PointPosition? Pos { get; set; }
 
-    [JsonPropertyName("rot")]
+    [JsonProperty("rot")]
     public PointPosition? Rot { get; set; }
 
-    [JsonPropertyName("size")]
+    [JsonProperty("size")]
     public PointPosition? Size { get; set; }
 
-    [JsonPropertyName("forbidSimpleUnlock")]
+    [JsonProperty("forbidSimpleUnlock")]
     public bool ForbidSimpleUnlock { get; set; }
 
-    [JsonPropertyName("unlocked")]
+    [JsonProperty("unlocked")]
     public bool Unlocked { get; set; }
 
-    [JsonPropertyName("groupLimit")]
+    [JsonProperty("groupLimit")]
     public bool GroupLimit { get; set; }
 
-    [JsonPropertyName("dungeonIds")]
+    [JsonProperty("dungeonIds")]
     public int[]? DungeonIds { get; set; }
 
-    [JsonPropertyName("dungeonRandomList")]
+    [JsonProperty("dungeonRandomList")]
     public int[]? DungeonRandomList { get; set; }
 
-    [JsonPropertyName("groupIDs")]
+    [JsonProperty("groupIDs")]
     public int[]? GroupIDs { get; set; }
 
-    [JsonPropertyName("tranSceneId")]
+    [JsonProperty("tranSceneId")]
     public int TranSceneId { get; set; }
 
     /// <summary>
@@ -74,12 +74,12 @@ public class PointData
 /// </summary>
 public class PointPosition
 {
-    [JsonPropertyName("x")]
+    [JsonProperty("x")]
     public float X { get; set; }
 
-    [JsonPropertyName("y")]
+    [JsonProperty("y")]
     public float Y { get; set; }
 
-    [JsonPropertyName("z")]
+    [JsonProperty("z")]
     public float Z { get; set; }
 }

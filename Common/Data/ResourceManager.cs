@@ -14,6 +14,11 @@ public class ResourceManager
     public static Logger Logger { get; } = new("ResourceManager");
     public static bool IsLoaded { get; set; }
 
+    private static readonly JsonSerializerSettings ExcelSettings = new()
+    {
+        MissingMemberHandling = MissingMemberHandling.Ignore
+    };
+
     public static void LoadGameData()
     {
         LoadAbilityModifiers();
@@ -22,8 +27,8 @@ public class ResourceManager
         LoadConfigLevelEntityData();
         LoadGlobalCombatConfig();
         LoadMonsterConfigData();
-        LoadExcel();
         LoadScenePoints();
+        LoadExcel();
     }
 
     public static void LoadExcel()
@@ -78,10 +83,13 @@ public class ResourceManager
                                 var jArray = JArray.Parse(json);
                                 foreach (var item in jArray)
                                 {
-                                    var res = JsonConvert.DeserializeObject(item.ToString(), cls);
-                                    resList.Add((ExcelResource)res!);
-                                    ((ExcelResource?)res)?.Loaded();
-                                    count++;
+                                    var res = JsonConvert.DeserializeObject(item.ToString(), cls, ExcelSettings);
+                                    if (res != null)
+                                    {
+                                        resList.Add((ExcelResource)res);
+                                        ((ExcelResource)res).Loaded();
+                                        count++;
+                                    }
                                 }
 
                                 break;
@@ -91,7 +99,7 @@ public class ResourceManager
                                 var jObject = JObject.Parse(json);
                                 foreach (var (_, obj) in jObject)
                                 {
-                                    var instance = JsonConvert.DeserializeObject(obj!.ToString(), cls);
+                                    var instance = JsonConvert.DeserializeObject(obj!.ToString(), cls, ExcelSettings);
 
                                     if (instance == null || ((ExcelResource)instance).GetId() == 0)
                                     {
@@ -99,7 +107,7 @@ public class ResourceManager
                                         foreach (var nestedItem in nestedObject ?? [])
                                         {
                                             var nestedInstance =
-                                                JsonConvert.DeserializeObject(nestedItem.Value!.ToString(), cls);
+                                                JsonConvert.DeserializeObject(nestedItem.Value!.ToString(), cls, ExcelSettings);
                                             if (nestedInstance != null)
                                             {
                                                 resList.Add((ExcelResource)nestedInstance);
@@ -153,7 +161,7 @@ public class ResourceManager
             using var reader = file.OpenRead();
             using StreamReader reader2 = new(reader);
             var text = reader2.ReadToEnd();
-            var json = JsonConvert.DeserializeObject<T>(text);
+            var json = JsonConvert.DeserializeObject<T>(text, ExcelSettings);
             customFile = json;
         }
         catch (Exception ex)
@@ -171,7 +179,7 @@ public class ResourceManager
                 Logger.Info(I18NManager.Translate("Server.ServerInfo.LoadedItems", di.Count.ToString(), type));
                 break;
             default:
-                Logger.Info(I18NManager.Translate("Server.ServerInfo.LoadedItem", filetype));
+                Logger.Info(I18NManager.Translate("Server.ServerInfo.LoadedItems", "1", type));
                 break;
         }
 
@@ -221,8 +229,8 @@ public class ResourceManager
                 GameData.ScenePointsPerScene[sceneId] = scenePoints;
             }
 
-            Logger.Info(I18NManager.Translate("Server.ServerInfo.LoadedScenePoints",
-                GameData.ScenePointEntry.Count.ToString(), GameData.ScenePointsPerScene.Count.ToString()));
+            Logger.Info(I18NManager.Translate("Server.ServerInfo.LoadedItems",
+                GameData.ScenePointEntry.Count.ToString(), "scene points"));
         }
         catch (Exception ex)
         {
@@ -265,8 +273,8 @@ public class ResourceManager
                 }
             }
 
-            Logger.Info(I18NManager.Translate("Server.ServerInfo.LoadedCountInDir",
-                count.ToString(), "ConfigLevelEntity", levelEntityDir));
+            Logger.Info(I18NManager.Translate("Server.ServerInfo.LoadedItems",
+                count.ToString(), "ConfigLevelEntity"));
         }
         catch (Exception ex)
         {
@@ -288,7 +296,7 @@ public class ResourceManager
         {
             var json = File.ReadAllText(filePath);
             GameData.ConfigGlobalCombat = JsonConvert.DeserializeObject<ConfigGlobalCombat>(json);
-            Logger.Info(I18NManager.Translate("Server.ServerInfo.LoadedItem", "ConfigGlobalCombat"));
+            Logger.Info(I18NManager.Translate("Server.ServerInfo.LoadedItems", "1", "ConfigGlobalCombat"));
         }
         catch (Exception ex)
         {
@@ -347,8 +355,8 @@ public class ResourceManager
                 }
             }
 
-            Logger.Info(I18NManager.Translate("Server.ServerInfo.LoadedCountInDir",
-                count.ToString(), "ability modifier", abilityDir));
+            Logger.Info(I18NManager.Translate("Server.ServerInfo.LoadedItems",
+                count.ToString(), "ability modifier"));
         }
         catch (Exception ex)
         {
@@ -394,8 +402,8 @@ public class ResourceManager
                 }
             }
 
-            Logger.Info(I18NManager.Translate("Server.ServerInfo.LoadedCountInDir",
-                count.ToString(), "avatar config", avatarDir));
+            Logger.Info(I18NManager.Translate("Server.ServerInfo.LoadedItems",
+                count.ToString(), "avatar config"));
         }
         catch (Exception ex)
         {
@@ -473,8 +481,8 @@ public class ResourceManager
                 }
             }
 
-            Logger.Info(I18NManager.Translate("Server.ServerInfo.LoadedCountInDir",
-                count.ToString(), "player ability group", abilityGroupDir));
+            Logger.Info(I18NManager.Translate("Server.ServerInfo.LoadedItems",
+                count.ToString(), "player ability group"));
         }
         catch (Exception ex)
         {
@@ -514,8 +522,8 @@ public class ResourceManager
                         word, Path.GetFileName(filePath) + " - " + ex.Message));
                 }
             }
-            Logger.Info(I18NManager.Translate("Server.ServerInfo.LoadedCountInDir",
-                count.ToString(), "monster config", monsterDir));
+            Logger.Info(I18NManager.Translate("Server.ServerInfo.LoadedItems",
+                count.ToString(), "monster config"));
         }
         catch (Exception ex)
         {

@@ -5,6 +5,7 @@ using NahidaImpact.GameServer.Game.Entity;
 using NahidaImpact.GameServer.Server.Packet.Send.State;
 using NahidaImpact.KcpSharp;
 using NahidaImpact.Proto;
+using NahidaImpact.Util;
 
 namespace NahidaImpact.GameServer.Server.Packet.Send.Scene;
 
@@ -32,7 +33,7 @@ public class PacketSceneTeamUpdateNotify : BasePacket
 
         if (player.World != null)
         {
-            foreach (var p in player.World.GetPlayers())
+            foreach (var p in player.World.Players)
             {
                 int hexenzirkelCount = 0;
                 int moonPhaseCount = 0;

@@ -7,7 +7,6 @@ using NahidaImpact.GameServer.Server.Packet.Send.Team;
 using NahidaImpact.GameServer.Server.Packet.Send.Scene;
 using NahidaImpact.GameServer.Server.Packet.Send.Avatar;
 using NahidaImpact.KcpSharp;
-using NahidaImpact.Proto;
 using NahidaImpact.Util;
 
 namespace NahidaImpact.GameServer.Game.Player.Team;
@@ -23,8 +22,6 @@ public class TeamManager : BasePlayerManager
     private readonly List<EntityAvatar> _activeTeam = [];
 
     public EntityTeam? Entity { get; set; }
-
-    public void SetEntity(EntityTeam entity) => Entity = entity;
 
     public TeamInfo MpTeam { get; set; } = new();
 
@@ -63,20 +60,23 @@ public class TeamManager : BasePlayerManager
         TeamData.SaveTeamData(_teamData);
     }
 
-    public TeamInfo GetCurrentTeamInfo()
+    public TeamInfo CurrentTeamInfo
     {
-        if (UsingTrialTeam && TrialAvatarTeam.AvatarGuidList.Count > 0)
-            return TrialAvatarTeam;
-        return _teams.GetValueOrDefault(CurrentTeamIndex, new TeamInfo { Index =CurrentTeamIndex });
+        get
+        {
+            if (UsingTrialTeam && TrialAvatarTeam.AvatarGuidList.Count > 0)
+                return TrialAvatarTeam;
+            return _teams.GetValueOrDefault(CurrentTeamIndex, new TeamInfo { Index = CurrentTeamIndex });
+        }
     }
 
-    public TeamInfo GetCurrentSinglePlayerTeamInfo()
+    public TeamInfo CurrentSinglePlayerTeamInfo
         => _teams.GetValueOrDefault(CurrentTeamIndex, new TeamInfo { Index = CurrentTeamIndex });
 
     /// <summary>Add main character avatar to team 1 during first login.</summary>
     public void SetMainCharacter(int avatarId, ulong avatarGuid)
     {
-        var team = GetCurrentSinglePlayerTeamInfo();
+        var team = CurrentSinglePlayerTeamInfo;
         if (!team.AvatarGuidList.Contains(avatarGuid))
             team.AvatarGuidList.Add(avatarGuid);
     }
@@ -107,16 +107,12 @@ public class TeamManager : BasePlayerManager
     public ulong GetCurrentCharacterGuid()
         => GetCurrentAvatarEntity()?.AvatarInfo.Guid ?? 0;
 
-    public int GetCurrentCharacterIndex() => CurrentCharacterIndex;
     public void SetCurrentCharacterIndex(int index) => CurrentCharacterIndex = Math.Max(0, index);
 
-    public bool IsUsingTrialTeam() => UsingTrialTeam;
-
-    public int GetMaxTeamSize()
-        => GameConstants.MAX_AVATARS_IN_TEAM;
+    public int MaxTeamSize => GameConstants.MAX_AVATARS_IN_TEAM;
 
     public bool CanAddAvatarToCurrentTeam()
-        => GetCurrentTeamInfo().AvatarGuidList.Count < GetMaxTeamSize();
+        => CurrentTeamInfo.AvatarGuidList.Count < MaxTeamSize;
     
     public void SetCurrentTeam(int teamId)
     {
@@ -124,7 +120,7 @@ public class TeamManager : BasePlayerManager
         if (_teams[teamId].AvatarGuidList.Count == 0) return;
 
         CurrentTeamIndex = teamId;
-        _ = UpdateTeamEntitiesAsync(new PacketChooseCurAvatarTeamRsp(teamId));
+        UpdateTeamEntities(new PacketChooseCurAvatarTeamRsp(teamId));
     }
 
     public void SetTeamName(int teamId, string teamName)
@@ -132,18 +128,17 @@ public class TeamManager : BasePlayerManager
         if (!_teams.TryGetValue(teamId, out var team)) return;
         team.Name = teamName;
         Save();
-        // TODO: Send PacketChangeTeamNameRsp(teamId, teamName)
+        _ = Player.SendPacket(new PacketChangeTeamNameRsp(teamId, teamName));
     }
 
     public void SetupAvatarTeam(int teamId, List<ulong> guidList)
     {
-        if (guidList.Count == 0 || guidList.Count > GetMaxTeamSize())
+        if (guidList.Count == 0 || guidList.Count > MaxTeamSize)
             return;
 
         if (!_teams.TryGetValue(teamId, out var team))
             return;
 
-        // Validate all GUIDs belong to player
         var validGuids = new List<ulong>();
         foreach (var guid in guidList)
         {
@@ -156,19 +151,17 @@ public class TeamManager : BasePlayerManager
         team.AvatarGuidList = validGuids;
         Save();
 
-        // Send team update notify to client
         _ = Player.SendPacket(new PacketAvatarTeamUpdateNotify(Player));
 
-        // If updating current team, rebuild entities and send response
         if (teamId == CurrentTeamIndex)
-            _ = UpdateTeamEntitiesAsync(new PacketSetUpAvatarTeamRsp(Player, teamId, team));
+            UpdateTeamEntities(new PacketSetUpAvatarTeamRsp(Player, teamId, team));
         else
             _ = Player.SendPacket(new PacketSetUpAvatarTeamRsp(Player, teamId, team));
     }
 
     public void SetupMpTeam(List<ulong> guidList)
     {
-        if (guidList.Count == 0 || guidList.Count > GetMaxTeamSize())
+        if (guidList.Count == 0 || guidList.Count > MaxTeamSize)
             return;
 
         var validGuids = new List<ulong>();
@@ -181,12 +174,16 @@ public class TeamManager : BasePlayerManager
         }
 
         MpTeam.AvatarGuidList = validGuids;
-        // TODO: MP team update packet
+        UpdateTeamEntities(new PacketChangeMpTeamAvatarRsp(Player, MpTeam));
     }
 
     public void AddNewCustomTeam()
     {
-        if (_teams.Count >= GameConstants.MAX_TEAMS) return;
+        if (_teams.Count >= GameConstants.MAX_TEAMS)
+        {
+            _ = Player.SendPacket(new PacketAddBackupAvatarTeamRsp(1)); // RET_FAIL
+            return;
+        }
 
         // Find lowest available ID starting from 5
         int id = -1;
@@ -198,24 +195,37 @@ public class TeamManager : BasePlayerManager
                 break;
             }
         }
-        if (id < 0) return;
+        if (id < 0)
+        {
+            _ = Player.SendPacket(new PacketAddBackupAvatarTeamRsp(1)); // RET_FAIL
+            return;
+        }
 
-        _teams[id] = new TeamInfo { Index =id };
+        _teams[id] = new TeamInfo { Index = id };
         Save();
-        // TODO: Send PacketAvatarTeamAllDataNotify, PacketAddBackupAvatarTeamRsp
+
+        _ = Player.SendPacket(new PacketAvatarTeamAllDataNotify(Player));
+        _ = Player.SendPacket(new PacketAddBackupAvatarTeamRsp());
     }
 
     public void RemoveCustomTeam(int id)
     {
-        if (id <= GameConstants.DEFAULT_TEAMS || !_teams.ContainsKey(id)) return;
+        if (id <= GameConstants.DEFAULT_TEAMS || !_teams.ContainsKey(id))
+        {
+            _ = Player.SendPacket(new PacketDelBackupAvatarTeamRsp(1, id)); // RET_FAIL
+            return;
+        }
         _teams.Remove(id);
         Save();
-        // TODO: Send PacketAvatarTeamAllDataNotify, PacketDelBackupAvatarTeamRsp
+
+        _ = Player.SendPacket(new PacketAvatarTeamAllDataNotify(Player));
+        _ = Player.SendPacket(new PacketDelBackupAvatarTeamRsp(id));
     }
 
-    public async ValueTask UpdateTeamEntitiesAsync(BasePacket? responsePacket = null)
+    /// <summary>Rebuild active team entities and broadcast changes. All sends fire-and-forget.</summary>
+    public void UpdateTeamEntities(BasePacket? responsePacket = null)
     {
-        var teamInfo = GetCurrentTeamInfo();
+        var teamInfo = CurrentTeamInfo;
         if (teamInfo.AvatarGuidList.Count == 0) return;
 
         var currentEntity = GetCurrentAvatarEntity();
@@ -246,49 +256,68 @@ public class TeamManager : BasePlayerManager
                     [typeof(Scene), typeof(AvatarDataInfo)],
                     [Player.Scene, avatarInfo]);
                 if (entity == null) continue;
-                // Add new entity to scene
-                Player.Scene?.AddEntityDirectly(entity);
             }
             _activeTeam.Add(entity);
         }
 
-        // Remove old entities no longer in team — use VisionType.Replace, not Die
         foreach (var removed in existing.Values)
-        {
-            Player.Scene?.RemoveEntity(removed, VisionType.Replace);
-        }
+            removed.Scene?.RemoveEntity(removed, VisionType.Replace);
 
         if (prevSelectedIndex < 0)
             prevSelectedIndex = Math.Min(CurrentCharacterIndex, _activeTeam.Count - 1);
         CurrentCharacterIndex = prevSelectedIndex;
 
         if (responsePacket != null)
-            await Player.SendPacket(responsePacket);
+            _ = Player.SendPacket(responsePacket);
 
         UpdateTeamProperties();
 
-        // Broadcast full team appear for the new entities
-        if (_activeTeam.Count > 0)
-        {
-            var newEntities = _activeTeam
-                .Where(e => e.Scene != null)
-                .ToList();
-            if (newEntities.Count > 0)
-                Player.Scene?.BroadcastPacket(
-                    new PacketSceneEntityAppearNotify(newEntities, VisionType.Replace));
-        }
+        CheckCurrentAvatarIsAlive(currentEntity);
+    }
 
+    /// <summary>Async wrapper for login flow compatibility.</summary>
+    public async ValueTask UpdateTeamEntitiesAsync()
+    {
+        UpdateTeamEntities(null);
         await Task.CompletedTask;
     }
 
-    /// <summary>Broadcast team entity info to all players in world (mirrors Java updateTeamProperties).</summary>
+    private void CheckCurrentAvatarIsAlive(EntityAvatar? currentEntity)
+    {
+        currentEntity ??= GetCurrentAvatarEntity();
+        if (currentEntity == null || _activeTeam.Count == 0) return;
+
+        if (CurrentCharacterIndex >= _activeTeam.Count)
+            CurrentCharacterIndex = 0;
+
+        if (!_activeTeam[CurrentCharacterIndex].IsAlive())
+        {
+            var replaceIndex = GetDeadAvatarReplacement();
+            if (replaceIndex >= 0 && replaceIndex < _activeTeam.Count)
+                CurrentCharacterIndex = replaceIndex;
+            else
+                CurrentCharacterIndex = 0;
+        }
+
+        var newEntity = GetCurrentAvatarEntity();
+        if (newEntity != null && currentEntity != newEntity)
+            Player.Scene?.ReplaceEntity(currentEntity, newEntity);
+    }
+
+    private int GetDeadAvatarReplacement()
+    {
+        for (int i = 0; i < _activeTeam.Count; i++)
+        {
+            if (_activeTeam[i].IsAlive())
+                return i;
+        }
+        return -1;
+    }
+
     private void UpdateTeamProperties()
     {
         Player.World?.BroadcastPacket(new PacketSceneTeamUpdateNotify(Player));
     }
-
-    public async ValueTask UpdateTeamEntitiesAsync()
-        => await UpdateTeamEntitiesAsync(null);
 
     public void ChangeAvatar(ulong guid)
     {
@@ -309,34 +338,26 @@ public class TeamManager : BasePlayerManager
 
         if (index < 0 || newEntity == oldEntity) return;
 
-        // Set old entity to standby before swapping
         oldEntity.SetMotionState(MotionState.Standby);
-
         CurrentCharacterIndex = index;
 
-        // Replace in scene — use replace vision type for appear too
         var scene = Player.Scene;
         if (scene != null)
-        {
-            scene.RemoveEntity(oldEntity, VisionType.Replace);
-            scene.AddEntityDirectly(newEntity);
-            scene.BroadcastPacket(
-                new PacketSceneEntityAppearNotify(newEntity, VisionType.Replace));
-        }
+            scene.ReplaceEntity(oldEntity, newEntity);
 
         _ = Player.SendPacket(new PacketChangeAvatarRsp(guid));
     }
 
     public void AddAvatarToCurrentTeam(ulong guid)
     {
-        var teamInfo = GetCurrentTeamInfo();
-        if (teamInfo.AvatarGuidList.Count >= GetMaxTeamSize()) return;
+        var teamInfo = CurrentTeamInfo;
+        if (teamInfo.AvatarGuidList.Count >= MaxTeamSize) return;
         if (teamInfo.AvatarGuidList.Contains(guid)) return;
         teamInfo.AvatarGuidList.Add(guid);
         Save();
 
         _ = Player.SendPacket(new PacketAvatarTeamUpdateNotify(Player));
-        _ = UpdateTeamEntitiesAsync();
+        UpdateTeamEntities();
     }
 
     public void OnAvatarDie(ulong dieGuid)

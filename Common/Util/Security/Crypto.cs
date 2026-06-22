@@ -112,8 +112,8 @@ public class Crypto
         if (CUR_SIGNING_KEY == null)
             throw new InvalidOperationException("Signing key has not been initialized");
         
-        // 分块加密
-        const int chunkSize = 245; // 256 - 11
+        // RSA chunked encryption (245B per chunk to fit PKCS1 padding)
+        const int chunkSize = 245;
         int dataLength = regionInfo.Length;
         int numChunks = (int)Math.Ceiling(dataLength / (double)chunkSize);
         
@@ -130,7 +130,7 @@ public class Crypto
             encryptedStream.Write(encryptedChunk);
         }
         
-        // 创建签名
+        // Sign the payload
         byte[] signature = CUR_SIGNING_KEY.SignData(
             regionInfo, HashAlgorithmName.SHA256, RSASignaturePadding.Pkcs1);
         

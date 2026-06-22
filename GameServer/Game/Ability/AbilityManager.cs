@@ -37,7 +37,7 @@ public class AbilityManager
         }
     }
 
-    public PlayerInstance GetPlayer() => _player;
+    public PlayerInstance Player => _player;
 
     public void RemovePendingEnergyClear()
     {
@@ -297,9 +297,6 @@ public class AbilityManager
 
             var modifier = new AbilityModifierController(instancedAbility!, instancedAbilityData, modifierData);
             entity.InstancedModifiers[(int)head.InstancedModifierId] = modifier;
-
-            _logger.Debug($"Added entity {(int)invoke.EntityId} modifier id {head.InstancedModifierId} " +
-                $"with ability {instancedAbilityData.AbilityName}");
         }
         else if (modChange.Action == ModifierAction.Removed)
         {
@@ -364,7 +361,6 @@ public class AbilityManager
             }
 
             entity.InstancedAbilities.Add(new Ability(abilityData, entity, _player));
-            _logger.Debug($"Ability added to entity {entity.Id} at index {entity.InstancedAbilities.Count}.");
         }
         catch (Exception ex) { _logger.Debug($"HandleAddNewAbility failed: {ex.Message}"); }
     }

@@ -1,10 +1,10 @@
-using System.Text.Json.Serialization;
+using Newtonsoft.Json;
 
 namespace NahidaImpact.Data.Common;
 
 public class CurveInfo
 {
-    [JsonPropertyName("type")] public string Type { get; set; } = "";
-    [JsonPropertyName("arith")] public string Arith { get; set; } = "ARITH_MULTI";
-    [JsonPropertyName("value")] public float Value { get; set; }
+    [JsonProperty("type")] public string Type { get; set; } = "";
+    [JsonProperty("arith")] public string Arith { get; set; } = "ARITH_MULTI";
+    [JsonProperty("value")] public float Value { get; set; }
 }

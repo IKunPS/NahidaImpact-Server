@@ -40,7 +40,7 @@ public class NahidaImpact
         await LoaderManager.InitResource();
         ResourceManager.IsLoaded = true;
 
-        HandbookGenerator.GenerateAll();
+        _ = Task.Run(HandbookGenerator.GenerateAll);
         LoaderManager.InitCommand();
 
         var elapsed = DateTime.Now - time;

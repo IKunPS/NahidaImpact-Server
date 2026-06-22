@@ -1,14 +1,14 @@
-﻿using System.Text.Json.Serialization;
+using Newtonsoft.Json;
 
 namespace NahidaImpact.Data.Excel;
 
 [ResourceEntity("MonsterExcelConfigData.json")]
 public class MonsterDataExcel: ExcelResource
 {
-    [JsonPropertyName("id")]
+    [JsonProperty("id")]
     public uint Id { get; set; }
 
-    [JsonPropertyName("affix")] 
+    [JsonProperty("affix")] 
     public List<int> Affix { get; set; } = [];
     
     public override uint GetId() => Id;

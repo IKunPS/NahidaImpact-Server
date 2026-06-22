@@ -43,7 +43,7 @@ public class AbilityLocalIdGenerator
         {
             _actionIndex++;
 
-            var id = GetLocalId();
+            var id = LocalId;
             localIdToAction[(int)id] = actions[i];
 
             if (actions[i].Actions != null && actions[i].Actions.Length > 0)
@@ -68,7 +68,7 @@ public class AbilityLocalIdGenerator
         MixinIndex = 0;
         foreach (var mixin in mixins)
         {
-            var id = GetLocalId();
+            var id = LocalId;
             localIdToMixin[(int)id] = mixin;
 
             MixinIndex++;
@@ -77,25 +77,28 @@ public class AbilityLocalIdGenerator
         MixinIndex = 0;
     }
 
-    public long GetLocalId()
+    public long LocalId
     {
-        switch (Type)
+        get
         {
-            case ConfigAbilitySubContainerType.ACTION:
-                return (long)Type + (ConfigIndex << 3) + (_actionIndex << 9);
-            case ConfigAbilitySubContainerType.MIXIN:
-                return (long)Type + (MixinIndex << 3) + (ConfigIndex << 9) + (_actionIndex << 15);
-            case ConfigAbilitySubContainerType.MODIFIER_ACTION:
-                return (long)Type + (ModifierIndex << 3) + (ConfigIndex << 9) + (_actionIndex << 15);
-            case ConfigAbilitySubContainerType.MODIFIER_MIXIN:
-                return (long)Type
-                    + (ModifierIndex << 3)
-                    + (MixinIndex << 9)
-                    + (ConfigIndex << 15)
-                    + (_actionIndex << 21);
-            case ConfigAbilitySubContainerType.NONE:
-            default:
-                return -1;
+            switch (Type)
+            {
+                case ConfigAbilitySubContainerType.ACTION:
+                    return (long)Type + (ConfigIndex << 3) + (_actionIndex << 9);
+                case ConfigAbilitySubContainerType.MIXIN:
+                    return (long)Type + (MixinIndex << 3) + (ConfigIndex << 9) + (_actionIndex << 15);
+                case ConfigAbilitySubContainerType.MODIFIER_ACTION:
+                    return (long)Type + (ModifierIndex << 3) + (ConfigIndex << 9) + (_actionIndex << 15);
+                case ConfigAbilitySubContainerType.MODIFIER_MIXIN:
+                    return (long)Type
+                        + (ModifierIndex << 3)
+                        + (MixinIndex << 9)
+                        + (ConfigIndex << 15)
+                        + (_actionIndex << 21);
+                case ConfigAbilitySubContainerType.NONE:
+                default:
+                    return -1;
+            }
         }
     }
 }

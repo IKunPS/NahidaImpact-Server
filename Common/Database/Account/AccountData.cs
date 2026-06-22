@@ -53,7 +53,6 @@ public class AccountData : BaseDatabaseDataHelper
         {
             Uid = newUid,
             Username = username,
-            Password = "",
             Permissions = [.. ConfigManager.Config.ServerOption.DefaultPermissions
                 .Select(perm => Enum.TryParse(perm, out PermEnum result) ? result : (PermEnum?)null)
                 .Where(result => result.HasValue).Select(result => result!.Value)]
@@ -71,10 +70,7 @@ public class AccountData : BaseDatabaseDataHelper
 
     public static void SetPassword(AccountData account, string password)
     {
-        if (password.Length > 0)
-            account.Password = Extensions.GetSha256Hash(password);
-        else
-            account.Password = "";
+        account.Password = Extensions.GetSha256Hash(password);
     }
 
     public static bool VerifyPassword(AccountData account, string password)

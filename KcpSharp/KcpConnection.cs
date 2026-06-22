@@ -134,7 +134,6 @@ public class KcpConnection
 
     public async Task SendPacket(BasePacket packet)
     {
-        // Test
         if (packet.CmdId <= 0)
         {
             Logger.Debug("Tried to send packet with missing cmd id!");
@@ -144,7 +143,6 @@ public class KcpConnection
         // DO NOT REMOVE (unless we find a way to validate code before sending to client which I don't think we can)
         if (BannedPackets.Contains(packet.CmdId)) return;
         LogPacket("Send", packet.CmdId, packet.Payload);
-        // Header
         var packetBytes = packet.BuildPacket();
 
         try

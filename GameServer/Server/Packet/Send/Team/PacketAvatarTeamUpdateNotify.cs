@@ -11,7 +11,7 @@ public class PacketAvatarTeamUpdateNotify : BasePacket
         var proto = new AvatarTeamUpdateNotify();
         var teamManager = player.TeamManager;
 
-        if (teamManager.IsUsingTrialTeam())
+        if (teamManager.UsingTrialTeam)
         {
             foreach (var entity in teamManager.GetActiveTeam())
             {

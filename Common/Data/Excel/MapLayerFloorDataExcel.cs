@@ -1,14 +1,14 @@
-using System.Text.Json.Serialization;
+using Newtonsoft.Json;
 
 namespace NahidaImpact.Data.Excel;
 
 [ResourceEntity("MapLayerFloorExcelConfigData.json")]
 public class MapLayerFloorDataExcel : ExcelResource
 {
-    [JsonPropertyName("id")]
+    [JsonProperty("id")]
     public uint Id { get; set; }
 
-    [JsonPropertyName("floorNameTextMapHash")]
+    [JsonProperty("floorNameTextMapHash")]
     public long FloorNameTextMapHash { get; set; }
 
     public override uint GetId() => Id;

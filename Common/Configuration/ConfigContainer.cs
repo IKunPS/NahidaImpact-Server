@@ -19,15 +19,9 @@ public class HttpServerConfig
     public string PublicAddress { get; set; } = "127.0.0.1";
     public int Port { get; set; } = 1145;
 
-    public string GetDisplayAddress()
-    {
-        return "http" + "://" + PublicAddress + ":" + Port;
-    }
+    public string DisplayAddress => $"http://{PublicAddress}:{Port}";
 
-    public string GetBindDisplayAddress()
-    {
-        return "http" + "://" + BindAddress + ":" + Port;
-    }
+    public string BindDisplayAddress => $"http://{BindAddress}:{Port}";
 }
 
 public class GameServerConfig
@@ -40,10 +34,7 @@ public class GameServerConfig
     public string GameServer { get; set; } = "NahidaImpact";
     public string GameServerName { get; set; } = "NahidaImpact";
     
-    public string GetDisplayAddress()
-    {
-        return PublicAddress + ":" + Port;
-    }
+    public string DisplayAddress => $"{PublicAddress}:{Port}";
 }
 
 public class PathConfig

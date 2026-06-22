@@ -120,8 +120,8 @@ public class StaminaManager : BasePlayerManager
     };
 
     private readonly Logger _logger = new("StaminaManager");
-    private readonly Dictionary<string, BeforeUpdateStaminaListener> _beforeUpdateStaminaListeners = new();
-    private readonly Dictionary<string, AfterUpdateStaminaListener> _afterUpdateStaminaListeners = new();
+    private readonly Dictionary<string, IBeforeUpdateStaminaListener> _beforeUpdateStaminaListeners = new();
+    private readonly Dictionary<string, IAfterUpdateStaminaListener> _afterUpdateStaminaListeners = new();
     private Position _currentCoordinates = new(0, 0, 0);
     private Position _previousCoordinates = new(0, 0, 0);
     private MotionState _currentState = MotionState.Standby;
@@ -132,7 +132,6 @@ public class StaminaManager : BasePlayerManager
     private PlayerInstance _cachedPlayer;
     private BaseEntity _cachedEntity;
     public int StaminaRecoverDelay = 0;
-    private long _lastCostStaminaTime = 0;
     private int _lastSkillId = 0;
     private int _lastSkillCasterId = 0;
     private bool _lastSkillFirstTick = true;
@@ -152,31 +151,20 @@ public class StaminaManager : BasePlayerManager
         _lastSkillCasterId = skillCasterId;
     }
 
-    public int GetMaxCharacterStamina()
-    {
-        return Player.GetProperty(PlayerProp.PROP_MAX_STAMINA);
-    }
+    public int MaxCharacterStamina => Player.GetProperty(PlayerProp.PROP_MAX_STAMINA);
 
-    public int GetCurrentCharacterStamina()
-    {
-        return Player.GetProperty(PlayerProp.PROP_CUR_PERSIST_STAMINA);
-    }
+    public int CurrentCharacterStamina => Player.GetProperty(PlayerProp.PROP_CUR_PERSIST_STAMINA);
 
-    public int GetMaxVehicleStamina() => GlobalVehicleMaxStamina;
+    public int MaxVehicleStamina => GlobalVehicleMaxStamina;
 
-    public int GetCurrentVehicleStamina() => _vehicleStamina;
+    public int CurrentVehicleStamina => _vehicleStamina;
 
-    public long GetLastCostStaminaTime() => _lastCostStaminaTime;
-
-    public void SetLastCostStaminaTime(long time)
-    {
-        _lastCostStaminaTime = time;
-    }
+    public long LastCostStaminaTime { get; set; }
 
     public bool AddCurrentStamina(int amount)
     {
-        var cur = GetCurrentCharacterStamina();
-        var max = GetMaxCharacterStamina();
+        var cur = CurrentCharacterStamina;
+        var max = MaxCharacterStamina;
         if (cur >= max) return false;
         var value = cur + amount;
         if (value > max) value = max;
@@ -184,7 +172,7 @@ public class StaminaManager : BasePlayerManager
         return true;
     }
 
-    public bool RegisterBeforeUpdateStaminaListener(string listenerName, BeforeUpdateStaminaListener listener)
+    public bool RegisterBeforeUpdateStaminaListener(string listenerName, IBeforeUpdateStaminaListener listener)
     {
         return _beforeUpdateStaminaListeners.TryAdd(listenerName, listener);
     }
@@ -194,7 +182,7 @@ public class StaminaManager : BasePlayerManager
         return _beforeUpdateStaminaListeners.Remove(listenerName);
     }
 
-    public bool RegisterAfterUpdateStaminaListener(string listenerName, AfterUpdateStaminaListener listener)
+    public bool RegisterAfterUpdateStaminaListener(string listenerName, IAfterUpdateStaminaListener listener)
     {
         return _afterUpdateStaminaListeners.TryAdd(listenerName, listener);
     }
@@ -214,7 +202,7 @@ public class StaminaManager : BasePlayerManager
 
     public int UpdateStaminaRelative(Consumption consumption, bool isCharacterStamina)
     {
-        int currentStamina = isCharacterStamina ? GetCurrentCharacterStamina() : GetCurrentVehicleStamina();
+        int currentStamina = isCharacterStamina ? CurrentCharacterStamina : CurrentVehicleStamina;
         if (consumption.Amount == 0) return currentStamina;
 
         // Notify listeners
@@ -228,7 +216,7 @@ public class StaminaManager : BasePlayerManager
             }
         }
 
-        int maxStamina = isCharacterStamina ? GetMaxCharacterStamina() : GetMaxVehicleStamina();
+        int maxStamina = isCharacterStamina ? MaxCharacterStamina : MaxVehicleStamina;
         _logger.Debug($"{(isCharacterStamina ? "C" : "V")} {currentStamina}/{maxStamina}\t{_currentState}\t{(IsPlayerMoving() ? "moving" : "      ")}\t({consumption.Type},{consumption.Amount})");
 
         int newStamina = currentStamina + consumption.Amount;
@@ -240,7 +228,7 @@ public class StaminaManager : BasePlayerManager
 
     public int UpdateStaminaAbsolute(string reason, int newStamina, bool isCharacterStamina)
     {
-        int currentStamina = isCharacterStamina ? GetCurrentCharacterStamina() : GetCurrentVehicleStamina();
+        int currentStamina = isCharacterStamina ? CurrentCharacterStamina : CurrentVehicleStamina;
 
         foreach (var listener in _beforeUpdateStaminaListeners.Values)
         {
@@ -252,7 +240,7 @@ public class StaminaManager : BasePlayerManager
             }
         }
 
-        int maxStamina = isCharacterStamina ? GetMaxCharacterStamina() : GetMaxVehicleStamina();
+        int maxStamina = isCharacterStamina ? MaxCharacterStamina : MaxVehicleStamina;
         if (newStamina < 0) newStamina = 0;
         else if (newStamina > maxStamina) newStamina = maxStamina;
 
@@ -340,10 +328,10 @@ public class StaminaManager : BasePlayerManager
         try
         {
             bool moving = IsPlayerMoving();
-            int currentCharacterStamina = GetCurrentCharacterStamina();
-            int maxCharacterStamina = GetMaxCharacterStamina();
-            int currentVehicleStamina = GetCurrentVehicleStamina();
-            int maxVehicleStamina = GetMaxVehicleStamina();
+            int currentCharacterStamina = CurrentCharacterStamina;
+            int maxCharacterStamina = MaxCharacterStamina;
+            int currentVehicleStamina = CurrentVehicleStamina;
+            int maxVehicleStamina = MaxVehicleStamina;
 
             if (moving || (currentCharacterStamina < maxCharacterStamina) || (currentVehicleStamina < maxVehicleStamina))
             {
@@ -454,8 +442,8 @@ public class StaminaManager : BasePlayerManager
         if (vehicleInteractType == 0)
         {
             _vehicleId = vehicleId;
-            UpdateStaminaAbsolute("board vehicle", GetMaxCharacterStamina(), true);
-            UpdateStaminaAbsolute("board vehicle", GetMaxVehicleStamina(), false);
+            UpdateStaminaAbsolute("board vehicle", MaxCharacterStamina, true);
+            UpdateStaminaAbsolute("board vehicle", MaxVehicleStamina, false);
         }
         else
         {
@@ -525,10 +513,10 @@ public class StaminaManager : BasePlayerManager
 
     private void HandleDrowning()
     {
-        int stamina = GetCurrentCharacterStamina();
+        int stamina = CurrentCharacterStamina;
         if (stamina < 10)
         {
-            _logger.Debug($"{GetCurrentCharacterStamina()}/{GetMaxCharacterStamina()}\t{_currentState}");
+            _logger.Debug($"{CurrentCharacterStamina}/{MaxCharacterStamina}\t{_currentState}");
             if (_currentState != MotionState.SwimIdle)
             {
                 KillAvatar(_cachedEntity, 0); // PLAYER_DIE_TYPE_DRAWN = 0 placeholder

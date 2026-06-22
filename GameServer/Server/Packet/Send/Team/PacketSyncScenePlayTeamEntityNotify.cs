@@ -10,7 +10,7 @@ public class PacketSyncScenePlayTeamEntityNotify : BasePacket
     {
         var proto = new SyncScenePlayTeamEntityNotify
         {
-            
+            SceneId = player.SceneId
         };
 
         SetData(proto);

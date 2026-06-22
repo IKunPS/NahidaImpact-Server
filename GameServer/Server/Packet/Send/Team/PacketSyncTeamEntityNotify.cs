@@ -13,7 +13,7 @@ public class PacketSyncTeamEntityNotify : BasePacket
         // AbilityScalarValueEntry with key "SGV_PlayerTeam_Phlogiston" and player's phlogiston value
         var scalarValue = new AbilityScalarValueEntry
         {
-            FloatValue = player.GetPhlogistonValue()
+            FloatValue = player.PhlogistonValue
         };
         scalarValue.Key = new AbilityString
         {
@@ -29,9 +29,9 @@ public class PacketSyncTeamEntityNotify : BasePacket
             SceneId = player.SceneId
         };
 
-        if (player.World?.IsMultiplayer() == true)
+        if (player.World?.IsMultiplayer == true)
         {
-            foreach (var p in player.World.GetPlayers())
+            foreach (var p in player.World.Players)
             {
                 if (player == p) continue;
 

@@ -1,104 +1,104 @@
-using System.Text.Json.Serialization;
+using Newtonsoft.Json;
 using System.Collections.Generic;
 
 namespace NahidaImpact.Data.Ability;
 
 public class AbilityModifier
 {
-    [JsonPropertyName("state")]
+    [JsonProperty("state")]
     public State State { get; set; }
 
-    [JsonPropertyName("onAdded")]
+    [JsonProperty("onAdded")]
     public AbilityModifierAction[] OnAdded { get; set; } = [];
 
-    [JsonPropertyName("onThinkInterval")]
+    [JsonProperty("onThinkInterval")]
     public AbilityModifierAction[] OnThinkInterval { get; set; } = [];
 
-    [JsonPropertyName("onRemoved")]
+    [JsonProperty("onRemoved")]
     public AbilityModifierAction[] OnRemoved { get; set; } = [];
 
-    [JsonPropertyName("onBeingHit")]
+    [JsonProperty("onBeingHit")]
     public AbilityModifierAction[] OnBeingHit { get; set; } = [];
 
-    [JsonPropertyName("onAttackLanded")]
+    [JsonProperty("onAttackLanded")]
     public AbilityModifierAction[] OnAttackLanded { get; set; } = [];
 
-    [JsonPropertyName("onHittingOther")]
+    [JsonProperty("onHittingOther")]
     public AbilityModifierAction[] OnHittingOther { get; set; } = [];
 
-    [JsonPropertyName("onKill")]
+    [JsonProperty("onKill")]
     public AbilityModifierAction[] OnKill { get; set; } = [];
 
-    [JsonPropertyName("onCrash")]
+    [JsonProperty("onCrash")]
     public AbilityModifierAction[] OnCrash { get; set; } = [];
 
-    [JsonPropertyName("onAvatarIn")]
+    [JsonProperty("onAvatarIn")]
     public AbilityModifierAction[] OnAvatarIn { get; set; } = [];
 
-    [JsonPropertyName("onAvatarOut")]
+    [JsonProperty("onAvatarOut")]
     public AbilityModifierAction[] OnAvatarOut { get; set; } = [];
 
-    [JsonPropertyName("onReconnect")]
+    [JsonProperty("onReconnect")]
     public AbilityModifierAction[] OnReconnect { get; set; } = [];
 
-    [JsonPropertyName("onChangeAuthority")]
+    [JsonProperty("onChangeAuthority")]
     public AbilityModifierAction[] OnChangeAuthority { get; set; } = [];
 
-    [JsonPropertyName("onVehicleIn")]
+    [JsonProperty("onVehicleIn")]
     public AbilityModifierAction[] OnVehicleIn { get; set; } = [];
 
-    [JsonPropertyName("onVehicleOut")]
+    [JsonProperty("onVehicleOut")]
     public AbilityModifierAction[] OnVehicleOut { get; set; } = [];
 
-    [JsonPropertyName("onZoneEnter")]
+    [JsonProperty("onZoneEnter")]
     public AbilityModifierAction[] OnZoneEnter { get; set; } = [];
 
-    [JsonPropertyName("onZoneExit")]
+    [JsonProperty("onZoneExit")]
     public AbilityModifierAction[] OnZoneExit { get; set; } = [];
 
-    [JsonPropertyName("onHeal")]
+    [JsonProperty("onHeal")]
     public AbilityModifierAction[] OnHeal { get; set; } = [];
 
-    [JsonPropertyName("onBeingHealed")]
+    [JsonProperty("onBeingHealed")]
     public AbilityModifierAction[] OnBeingHealed { get; set; } = [];
 
-    [JsonPropertyName("duration")]
+    [JsonProperty("duration")]
     public float Duration { get; set; }
 
-    [JsonPropertyName("thinkInterval")]
+    [JsonProperty("thinkInterval")]
     public float ThinkInterval { get; set; }
 
-    [JsonPropertyName("stacking")]
+    [JsonProperty("stacking")]
     public string Stacking { get; set; } = string.Empty;
 
-    [JsonPropertyName("modifierMixins")]
+    [JsonProperty("modifierMixins")]
     public AbilityMixinData[] ModifierMixins { get; set; } = [];
 
-    [JsonPropertyName("modifierName")]
+    [JsonProperty("modifierName")]
     public string ModifierName { get; set; } = string.Empty;
 
-    [JsonPropertyName("properties")]
+    [JsonProperty("properties")]
     public AbilityModifierProperty Properties { get; set; } = new();
 
-    [JsonPropertyName("elementType")]
+    [JsonProperty("elementType")]
     public ElementType ElementType { get; set; }
 
-    [JsonPropertyName("elementDurability")]
+    [JsonProperty("elementDurability")]
     public float ElementDurability { get; set; }
 }
 
 public class AbilityModifierProperty
 {
-    [JsonPropertyName("Actor_HpThresholdRatio")]
+    [JsonProperty("Actor_HpThresholdRatio")]
     public float ActorHpThresholdRatio { get; set; }
 
-    [JsonPropertyName("Actor_MaxHPRatio")]
+    [JsonProperty("Actor_MaxHPRatio")]
     public float ActorMaxHPRatio { get; set; }
 
-    [JsonPropertyName("Actor_AttackSRatio")]
+    [JsonProperty("Actor_AttackSRatio")]
     public float ActorAttackSRatio { get; set; }
 
-    [JsonPropertyName("Actor_HealedAddDelta")]
+    [JsonProperty("Actor_HealedAddDelta")]
     public float ActorHealedAddDelta { get; set; }
 }
 

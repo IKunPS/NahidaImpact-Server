@@ -1,14 +1,14 @@
-﻿using System.Text.Json.Serialization;
+using Newtonsoft.Json;
 
 namespace NahidaImpact.Data.Excel;
 
 [ResourceEntity("WeaponLevelExcelConfigData.json")]
 public class WeaponLevelDataExcel : ExcelResource
 {
-    [JsonPropertyName("level")]
+    [JsonProperty("level")]
     public int Level { get; set; }
 
-    [JsonPropertyName("requiredExps")]
+    [JsonProperty("requiredExps")]
     public List<int> RequiredExps { get; set; } = [];
 
     public override uint GetId() => (uint)Level;

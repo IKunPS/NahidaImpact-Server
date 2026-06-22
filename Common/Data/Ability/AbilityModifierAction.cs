@@ -1,205 +1,205 @@
-using System.Text.Json.Serialization;
+using Newtonsoft.Json;
 using System.Collections.Generic;
 
 namespace NahidaImpact.Data.Ability;
 
 public class AbilityModifierAction
 {
-    [JsonPropertyName("$type")]
+    [JsonProperty("$type")]
     public string Type { get; set; } = string.Empty;
 
-    [JsonPropertyName("target")]
+    [JsonProperty("target")]
     public string Target { get; set; } = string.Empty;
 
-    [JsonPropertyName("predicates")]
+    [JsonProperty("predicates")]
     public List<object> Predicates { get; set; } = [];
 
-    [JsonPropertyName("amount")]
+    [JsonProperty("amount")]
     public float Amount { get; set; }
 
-    [JsonPropertyName("amountByTargetCurrentHPRatio")]
+    [JsonProperty("amountByTargetCurrentHPRatio")]
     public float AmountByTargetCurrentHPRatio { get; set; }
 
-    [JsonPropertyName("amountByCasterAttackRatio")]
+    [JsonProperty("amountByCasterAttackRatio")]
     public float AmountByCasterAttackRatio { get; set; }
 
-    [JsonPropertyName("amountByCasterCurrentHPRatio")]
+    [JsonProperty("amountByCasterCurrentHPRatio")]
     public float AmountByCasterCurrentHPRatio { get; set; }
 
-    [JsonPropertyName("amountByCasterMaxHPRatio")]
+    [JsonProperty("amountByCasterMaxHPRatio")]
     public float AmountByCasterMaxHPRatio { get; set; }
 
-    [JsonPropertyName("amountByGetDamage")]
+    [JsonProperty("amountByGetDamage")]
     public float AmountByGetDamage { get; set; }
 
-    [JsonPropertyName("amountByTargetMaxHPRatio")]
+    [JsonProperty("amountByTargetMaxHPRatio")]
     public float AmountByTargetMaxHPRatio { get; set; }
 
-    [JsonPropertyName("limboByTargetMaxHPRatio")]
+    [JsonProperty("limboByTargetMaxHPRatio")]
     public float LimboByTargetMaxHPRatio { get; set; }
 
-    [JsonPropertyName("healRatio")]
+    [JsonProperty("healRatio")]
     public float HealRatio { get; set; } = 1.0f;
 
-    [JsonPropertyName("speed")]
+    [JsonProperty("speed")]
     public float Speed { get; set; } = 1.0f;
 
-    [JsonPropertyName("ignoreAbilityProperty")]
+    [JsonProperty("ignoreAbilityProperty")]
     public bool IgnoreAbilityProperty { get; set; }
 
-    [JsonPropertyName("modifierName")]
+    [JsonProperty("modifierName")]
     public string ModifierName { get; set; } = string.Empty;
 
-    [JsonPropertyName("enableLockHP")]
+    [JsonProperty("enableLockHP")]
     public bool EnableLockHP { get; set; }
 
-    [JsonPropertyName("disableWhenLoading")]
+    [JsonProperty("disableWhenLoading")]
     public bool DisableWhenLoading { get; set; }
 
-    [JsonPropertyName("lethal")]
+    [JsonProperty("lethal")]
     public bool Lethal { get; set; } = true;
 
-    [JsonPropertyName("muteHealEffect")]
+    [JsonProperty("muteHealEffect")]
     public bool MuteHealEffect { get; set; }
 
-    [JsonPropertyName("byServer")]
+    [JsonProperty("byServer")]
     public bool ByServer { get; set; }
 
-    [JsonPropertyName("lifeByOwnerIsAlive")]
+    [JsonProperty("lifeByOwnerIsAlive")]
     public bool LifeByOwnerIsAlive { get; set; }
 
-    [JsonPropertyName("campTargetType")]
+    [JsonProperty("campTargetType")]
     public string CampTargetType { get; set; } = string.Empty;
 
-    [JsonPropertyName("campID")]
+    [JsonProperty("campID")]
     public int CampID { get; set; }
 
-    [JsonPropertyName("gadgetID")]
+    [JsonProperty("gadgetID")]
     public int GadgetID { get; set; }
 
-    [JsonPropertyName("stateID")]
+    [JsonProperty("stateID")]
     public int StateID { get; set; }
 
-    [JsonPropertyName("ownerIsTarget")]
+    [JsonProperty("ownerIsTarget")]
     public bool OwnerIsTarget { get; set; }
 
-    [JsonPropertyName("isFromOwner")]
+    [JsonProperty("isFromOwner")]
     public bool IsFromOwner { get; set; }
 
-    [JsonPropertyName("healTag")]
+    [JsonProperty("healTag")]
     public string HealTag { get; set; } = string.Empty;
 
-    [JsonPropertyName("key")]
+    [JsonProperty("key")]
     public string Key { get; set; } = string.Empty;
 
-    [JsonPropertyName("abilityName")]
+    [JsonProperty("abilityName")]
     public string AbilityName { get; set; } = string.Empty;
 
-    [JsonPropertyName("globalValueKey")]
+    [JsonProperty("globalValueKey")]
     public string GlobalValueKey { get; set; } = string.Empty;
 
-    [JsonPropertyName("abilityFormula")]
+    [JsonProperty("abilityFormula")]
     public string AbilityFormula { get; set; } = string.Empty;
 
-    [JsonPropertyName("srcTarget")]
+    [JsonProperty("srcTarget")]
     public string SrcTarget { get; set; } = string.Empty;
 
-    [JsonPropertyName("dstTarget")]
+    [JsonProperty("dstTarget")]
     public string DstTarget { get; set; } = string.Empty;
 
-    [JsonPropertyName("srcKey")]
+    [JsonProperty("srcKey")]
     public string SrcKey { get; set; } = string.Empty;
 
-    [JsonPropertyName("dstKey")]
+    [JsonProperty("dstKey")]
     public string DstKey { get; set; } = string.Empty;
 
-    [JsonPropertyName("targetPredicates")]
+    [JsonProperty("targetPredicates")]
     public List<Dictionary<string, object>> TargetPredicates { get; set; } = [];
 
-    [JsonPropertyName("minValue")]
+    [JsonProperty("minValue")]
     public float MinValue { get; set; }
 
-    [JsonPropertyName("maxValue")]
+    [JsonProperty("maxValue")]
     public float MaxValue { get; set; }
 
-    [JsonPropertyName("targetValue")]
+    [JsonProperty("targetValue")]
     public float TargetValue { get; set; }
 
-    [JsonPropertyName("costStaminaRatio")]
+    [JsonProperty("costStaminaRatio")]
     public float CostStaminaRatio { get; set; }
 
-    [JsonPropertyName("useLimitRange")]
+    [JsonProperty("useLimitRange")]
     public bool UseLimitRange { get; set; }
 
-    [JsonPropertyName("skillID")]
+    [JsonProperty("skillID")]
     public int SkillID { get; set; }
 
-    [JsonPropertyName("resistanceListID")]
+    [JsonProperty("resistanceListID")]
     public int ResistanceListID { get; set; }
 
-    [JsonPropertyName("monsterID")]
+    [JsonProperty("monsterID")]
     public int MonsterID { get; set; }
 
-    [JsonPropertyName("summonTag")]
+    [JsonProperty("summonTag")]
     public int SummonTag { get; set; }
 
-    [JsonPropertyName("otherTargets")]
+    [JsonProperty("otherTargets")]
     public AbilityModifierAction OtherTargets { get; set; }
 
-    [JsonPropertyName("actions")]
+    [JsonProperty("actions")]
     public AbilityModifierAction[] Actions { get; set; } = [];
 
-    [JsonPropertyName("successActions")]
+    [JsonProperty("successActions")]
     public AbilityModifierAction[] SuccessActions { get; set; } = [];
 
-    [JsonPropertyName("failActions")]
+    [JsonProperty("failActions")]
     public AbilityModifierAction[] FailActions { get; set; } = [];
 
-    [JsonPropertyName("dropType")]
+    [JsonProperty("dropType")]
     public string DropType { get; set; } = "LevelControl";
 
-    [JsonPropertyName("baseEnergy")]
+    [JsonProperty("baseEnergy")]
     public float BaseEnergy { get; set; }
 
-    [JsonPropertyName("ratio")]
+    [JsonProperty("ratio")]
     public float Ratio { get; set; } = 1.0f;
 
-    [JsonPropertyName("determineType")]
+    [JsonProperty("determineType")]
     public string DetermineType { get; set; } = string.Empty;
 
-    [JsonPropertyName("configID")]
+    [JsonProperty("configID")]
     public int ConfigID { get; set; }
 
-    [JsonPropertyName("valueRangeMin")]
+    [JsonProperty("valueRangeMin")]
     public float ValueRangeMin { get; set; }
 
-    [JsonPropertyName("valueRangeMax")]
+    [JsonProperty("valueRangeMax")]
     public float ValueRangeMax { get; set; }
 
-    [JsonPropertyName("overrideMapKey")]
+    [JsonProperty("overrideMapKey")]
     public string OverrideMapKey { get; set; } = string.Empty;
 
-    [JsonPropertyName("paramNum")]
+    [JsonProperty("paramNum")]
     public int ParamNum { get; set; }
 
-    [JsonPropertyName("param1")]
+    [JsonProperty("param1")]
     public float Param1 { get; set; }
 
-    [JsonPropertyName("param2")]
+    [JsonProperty("param2")]
     public float Param2 { get; set; }
 
-    [JsonPropertyName("param3")]
+    [JsonProperty("param3")]
     public float Param3 { get; set; }
 
-    [JsonPropertyName("funcName")]
+    [JsonProperty("funcName")]
     public string FuncName { get; set; } = string.Empty;
 
-    [JsonPropertyName("luaCallType")]
+    [JsonProperty("luaCallType")]
     public string LuaCallType { get; set; } = string.Empty;
 
-    [JsonPropertyName("CallParamList")]
+    [JsonProperty("CallParamList")]
     public int[] CallParamList { get; set; } = [];
 
-    [JsonPropertyName("content")]
+    [JsonProperty("content")]
     public string Content { get; set; } = string.Empty;
 }

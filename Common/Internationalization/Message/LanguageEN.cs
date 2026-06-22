@@ -94,6 +94,7 @@ public class ServerInfoTextEN
     public string FailedToInitializeItem => "Failed to initialize {0}.";
     public string FailedToReadItem => "Failed to read {0}, file {1}";
     public string GeneratedItem => "Generated {0}.";
+
     public string LoadedItem => "Loaded {0}.";
     public string LoadedItems => "Loaded {0} {1}(s).";
     public string ServerRunning => "{0} server listening on {1}";
@@ -105,7 +106,7 @@ public class ServerInfoTextEN
     public string DirNotFound => "{0} directory not found: {1}";
     public string FailedToLoadData => "Failed to load {0} data.";
     public string FailedToLoadFile => "Failed to load {0}: {1}";
-    public string LoadedCountInDir => "Loaded {0} {1}(s) from {2}";
+
     public string LoadedScenePoints => "Loaded {0} scene points across {1} scenes";
     public string FileNotFound => "{0} file not found: {1}";
 }
@@ -159,11 +160,17 @@ public class HelpTextEN
 /// </summary>
 public class GiveTextEN
 {
-    public string Desc => "Give items to a player";
-    public string Usage => "Usage: /give <itemId> [amount] [level]";
+    public string Desc => "Give items or avatars to a player";
+    public string Usage => "Usage: /give <itemId|avatarId> [lv<level>] [x<amount>] [r<refinement>] [c<constellation>] [sl<skillLevel>]\n" +
+                           "       /give <artifactId> [lv<level>] [x<amount>] [<mainPropId>] [<appendPropId[,times]>]...\n" +
+                           "       /give <all|weapons|mats|furniture|avatars> [lv<level>] [x<amount>] [r<refinement>]";
     public string InvalidItemId => "Invalid item ID.";
-    public string Success => "Gave {0}x item {1} (level {2}) to player {3}.";
-    public string Failed => "Failed to give item {0}. Item type may not be supported yet.";
+    public string InvalidAmount => "Invalid amount.";
+    public string GivenItem => "Gave {0}x item {1} to player {2}.";
+    public string GivenWeapon => "Gave {0}x weapon {1} (level {2}, refinement {3}) to player {4}.";
+    public string GivenRelic => "Gave {0}x relic {1} (level {2}) to player {3}.";
+    public string GivenAvatar => "Gave avatar {0} (level {1}) to player {2}.";
+    public string Failed => "Failed to give item {0}.";
 }
 
 /// <summary>
@@ -172,14 +179,14 @@ public class GiveTextEN
 public class GiveAllTextEN
 {
     public string Desc => "Give all items of specified type";
-    public string Usage => "Usage: /giveall <avatars|weapons|relics|materials|essentials|all> [amount]";
-    public string AvatarsGiven => "Gave {0} avatars to player {1}.";
-    public string MaterialsGiven => "Gave {0} material types x{1} to player {2}.";
-    public string WeaponsGiven => "Gave {0} weapons to player {1}.";
-    public string RelicsGiven => "Gave {0} relics to player {1}.";
-    public string EssentialsGiven => "Gave {0} essential items x{1} to player {2}.";
-    public string FurnitureGiven => "Gave {0} furniture items x{1} to player {2}.";
-    public string ItemsGiven => "Gave {0} items x{1} to player {2}.";
+    public string Usage => "Usage: /give <all|weapons|relics|mats|furniture|avatars> [lv<level>] [x<amount>] [r<refine>]";
+    public string AvatarsGiven => "Gave {0} avatars (UID {1}).";
+    public string WeaponsGiven => "Gave {0} weapons (UID {3}).";
+    public string RelicsGiven => "Gave {0} relics (UID {3}).";
+    public string MaterialsGiven => "Gave {0} material types x{1} (UID {3}).";
+    public string FurnitureGiven => "Gave {0} furniture x{1} (UID {3}).";
+    public string ItemsGiven => "Gave {0} items (UID {3}).";
+    public string AllGiven => "All items given to UID {0}.";
 }
 
 /// <summary>
@@ -222,8 +229,8 @@ public class KickTextEN
 /// </summary>
 public class SpawnTextEN
 {
-    public string Desc => "Spawn monsters or gadgets";
-    public string Usage => "Usage: /spawn <monster|gadget> <id> [amount] [level]";
+    public string Desc => "Spawn entities";
+    public string Usage => "Usage: /spawn <id> [x<amount>] [lv<level>] [state<state>] [ai<aiId>] [<x> <y> <z>]";
     public string InvalidEntityId => "Invalid entity ID.";
     public string NoScene => "Player is not in a scene.";
     public string Success => "Spawned {0} {1}(s) (ID: {2}, Lv: {3}) near player {4}.";

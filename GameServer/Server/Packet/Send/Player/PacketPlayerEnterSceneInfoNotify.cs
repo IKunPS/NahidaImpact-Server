@@ -13,7 +13,7 @@ public class PacketPlayerEnterSceneInfoNotify : BasePacket
         // AbilityScalarValueEntry with key "SGV_PlayerTeam_Phlogiston"
         var scalarValue = new AbilityScalarValueEntry
         {
-            FloatValue = player.GetPhlogistonValue()
+            FloatValue = player.PhlogistonValue
         };
         scalarValue.Key = new AbilityString
         {
@@ -33,8 +33,8 @@ public class PacketPlayerEnterSceneInfoNotify : BasePacket
             EnterSceneToken = player.EnterToken,
             MpLevelEntityInfo = new MPLevelEntityInfo
             {
-                EntityId = player.World?.getLevelEntityId() ?? 0,
-                AuthorityPeerId = player.World?.GetHostPeerId() ?? 0,
+                EntityId = player.World?.LevelEntityId ?? 0,
+                AuthorityPeerId = player.World?.HostPeerId ?? 0,
                 AbilityInfo = phlogistonState
             },
             TeamEnterInfo = new TeamEnterSceneInfo

@@ -134,7 +134,7 @@ public class ChatSystem
         // Fetch potentially modified target
         if (targetUid != GameConstants.SERVER_CONSOLE_UID)
         {
-            targetUid = chatEvent.GetTargetUid();
+            targetUid = chatEvent.TargetUid;
             if (targetUid == -1) return;
             target = PlayerInstance.GetPlayerInstanceByUid((uint)targetUid);
         }
@@ -174,7 +174,7 @@ public class ChatSystem
         // Fetch potentially modified target
         if (targetUid != GameConstants.SERVER_CONSOLE_UID)
         {
-            targetUid = chatEvent.GetTargetUid();
+            targetUid = chatEvent.TargetUid;
             if (targetUid == -1) return;
             target = PlayerInstance.GetPlayerInstanceByUid((uint)targetUid);
         }
@@ -214,7 +214,7 @@ public class ChatSystem
         if (string.IsNullOrEmpty(message)) return;
 
         // Fetch potentially modified channel
-        channel = chatEvent.GetChannel();
+        channel = chatEvent.Channel;
         if (channel == -1) return;
 
         // Broadcast to world
@@ -233,7 +233,7 @@ public class ChatSystem
         if (icon == -1) return;
 
         // Fetch potentially modified channel
-        channel = chatEvent.GetChannel();
+        channel = chatEvent.Channel;
         if (channel == -1) return;
 
         // Broadcast to world

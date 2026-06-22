@@ -17,12 +17,12 @@ public class EntityMonster : BaseEntity
     public MonsterDataExcel MonsterData { get; }
     public ConfigEntityMonster? ConfigEntityMonster { get; }
 
-    public override uint getEntityTypeId() => MonsterId;
+    public override uint EntityTypeId => MonsterId;
 
     private uint MonsterId => MonsterData.Id;
 
-    public override Position GetPosition() => position;
-    public override Position GetRotation() => rotation;
+    public override Position Position => position;
+    public override Position Rotation => rotation;
     
     public int Level { get; }
     public Position BornPos { get; }
@@ -35,10 +35,10 @@ public class EntityMonster : BaseEntity
     {
         MonsterData = monsterData;
         Level = level;
-        Owner = scene.GetHost()!;
+        Owner = scene.Host!;
         Id = (uint)scene.World.GetNextEntityId(EntityIdTypeEnum.Monster);
         position = new Position(pos);
-        rotation = new Position(rot ?? pos);
+        rotation = rot != null ? new Position(rot) : new Position();
         BornPos = pos.Clone();
 
         FightProperties = new List<FightPropPair>
@@ -81,7 +81,7 @@ public class EntityMonster : BaseEntity
         }
 
         // 2. NonHumanoidMoveAbilities (basic movement - all monsters need this)
-        var defaultAbilities = GameData.GetConfigGlobalCombat()?.DefaultAbilities;
+        var defaultAbilities = GameData.ConfigGlobalCombat?.DefaultAbilities;
         if (defaultAbilities?.NonHumanoidMoveAbilities != null)
         {
             foreach (var abilityName in defaultAbilities.NonHumanoidMoveAbilities)
@@ -103,7 +103,7 @@ public class EntityMonster : BaseEntity
         var levelEntityConfig = Scene?.SceneData?.LevelEntityConfig;
         if (!string.IsNullOrEmpty(levelEntityConfig))
         {
-            var config = GameData.GetConfigLevelEntityDataMap().GetValueOrDefault(levelEntityConfig);
+            var config = GameData.ConfigLevelEntityDataMap.GetValueOrDefault(levelEntityConfig);
             if (config?.MonsterAbilities != null)
             {
                 foreach (var ma in config.MonsterAbilities)
@@ -165,7 +165,7 @@ public class EntityMonster : BaseEntity
             GroupId = (uint)GroupId,
             ConfigId = (uint)ConfigId,
             BornType = MonsterBornType.MonsterBornDefault,
-            AuthorityPeerId = Scene?.World?.GetHostPeerId() ?? 0,
+            AuthorityPeerId = Scene?.World?.HostPeerId ?? 0,
             BlockId = (uint)(Scene?.Id ?? 0),
             PoseId = (uint)PoseId,
             SummonedTag = (uint)SummonedTag,

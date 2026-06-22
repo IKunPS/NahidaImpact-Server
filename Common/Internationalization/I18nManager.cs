@@ -24,10 +24,10 @@ public static class I18NManager
             languageType = Type.GetType("NahidaImpact.Internationalization.Message.LanguageEN")!;
         }
 
-        var language = Activator.CreateInstance(languageType) ?? throw new Exception("Language not found");
+        var language = Activator.CreateInstance(languageType) ?? throw new InvalidOperationException("Language instance could not be created");
         Language = language;
 
-        Logger.Info(Translate("Server.ServerInfo.LoadedItem", Translate("Word.Language")));
+        Logger.Info(Translate("Server.ServerInfo.LoadedItems", "1", Translate("Word.Language")));
     }
 
     public static void LoadPluginLanguage(Dictionary<string, List<Type>> pluginAssemblies)
@@ -73,7 +73,7 @@ public static class I18NManager
                           langStr;
         var languageType = Type.GetType(languageStr) ??
             Type.GetType("NahidaImpact.Internationalization.Message.LanguageEN")!;
-        var language = Activator.CreateInstance(languageType) ?? throw new Exception("Language not found");
+        var language = Activator.CreateInstance(languageType) ?? throw new InvalidOperationException("Language instance could not be created");
 
         List<object> langs = [language];
 

@@ -40,7 +40,7 @@ public class AvatarManager(PlayerInstance player) : BasePlayerManager(player)
     public TeamInfo GetCurrentTeam()
     {
         if (Player.TeamManager != null)
-            return Player.TeamManager.GetCurrentTeamInfo();
+            return Player.TeamManager.CurrentTeamInfo;
         return new TeamInfo { Index = 1 };
     }
 
@@ -301,7 +301,7 @@ public class AvatarManager(PlayerInstance player) : BasePlayerManager(player)
         var weapon = GetEquippedWeapon(avatar);
         if (weapon == null) return;
 
-        var weaponData = weapon.GetItemData();
+        var weaponData = weapon.ItemDataExcel;
         if (weaponData == null) return;
 
         weapon.Level = 90;

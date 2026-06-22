@@ -81,7 +81,7 @@ public static class ItemDataProtoExtensions
             ItemId = (uint)item.ItemId,
             Guid = item.Guid,
             Level = (uint)item.Level,
-            GadgetId = item.GetItemData()?.GadgetId ?? 0,
+            GadgetId = item.ItemDataExcel?.GadgetId ?? 0,
             PromoteLevel = (uint)item.PromoteLevel,
             WeaponSkinId = (uint)item.WeaponSkinId
         };

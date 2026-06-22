@@ -16,7 +16,7 @@ public class MapMarksManager
         _player = player;
     }
 
-    public Dictionary<string, MapMark> GetMapMarks() => _player.MapMarks;
+    public Dictionary<string, MapMark> MapMarks => _player.MapMarks;
 
     public void HandleMapMarkReq(MarkMapReq req)
     {
@@ -59,7 +59,7 @@ public class MapMarksManager
             // TODO: Save to database
         }
 
-        _ = _player.SendPacket(new PacketMarkMapRsp(GetMapMarks()));
+        _ = _player.SendPacket(new PacketMarkMapRsp(MapMarks));
     }
 
     public static string GetMapMarkKey(Position position)
@@ -69,14 +69,14 @@ public class MapMarksManager
 
     public void RemoveMapMark(Position position)
     {
-        GetMapMarks().Remove(GetMapMarkKey(position));
+        MapMarks.Remove(GetMapMarkKey(position));
     }
 
     public void AddMapMark(MapMark mapMark)
     {
-        if (GetMapMarks().Count < MapMarkMaxCount && mapMark.Position != null)
+        if (MapMarks.Count < MapMarkMaxCount && mapMark.Position != null)
         {
-            GetMapMarks()[GetMapMarkKey(mapMark.Position)] = mapMark;
+            MapMarks[GetMapMarkKey(mapMark.Position)] = mapMark;
         }
     }
 
@@ -103,7 +103,6 @@ public class MapMarksManager
             mapMark.SceneId,
             new Position(pos.X, y, pos.Z));
 
-        if (player.EntityAvatar != null)
-            player.Scene?.BroadcastPacket(new PacketSceneEntityAppearNotify(player.EntityAvatar));
+        player.Scene?.BroadcastPacket(new PacketSceneEntityAppearNotify(player));
     }
 }

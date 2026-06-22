@@ -1,30 +1,30 @@
+using Newtonsoft.Json;
 using System.Collections.Generic;
-using System.Text.Json.Serialization;
 
 namespace NahidaImpact.Data.Excel;
 
 [ResourceEntity("MapAreaConfigData.json")]
 public class MapAreaDataExcel : ExcelResource
 {
-    [JsonPropertyName("id")]
+    [JsonProperty("id")]
     public uint Id { get; set; }
 
-    [JsonPropertyName("mapAreaState")]
+    [JsonProperty("mapAreaState")]
     public string MapAreaState { get; set; } = string.Empty;
 
-    [JsonPropertyName("areaID1")]
+    [JsonProperty("areaID1")]
     public List<int> AreaID1 { get; set; } = [];
 
-    [JsonPropertyName("sceneID")]
+    [JsonProperty("sceneID")]
     public int SceneID { get; set; }
 
-    [JsonPropertyName("scenePointID")]
+    [JsonProperty("scenePointID")]
     public int ScenePointID { get; set; }
 
-    [JsonPropertyName("type")]
+    [JsonProperty("type")]
     public string Type { get; set; } = string.Empty;
 
-    [JsonPropertyName("name")]
+    [JsonProperty("name")]
     public string Name { get; set; } = string.Empty;
 
     public override uint GetId() => Id;

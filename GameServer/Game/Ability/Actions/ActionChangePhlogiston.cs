@@ -21,17 +21,17 @@ public class ActionChangePhlogiston : AbilityActionHandler
 
         if (action.DetermineType == "Add")
         {
-            float currentPhlogiston = player.GetPhlogistonValue();
+            float currentPhlogiston = player.PhlogistonValue;
             float newValue = currentPhlogiston + changeValue;
             if (newValue > 100) newValue = 100;
-            player.SetPhlogistonValue(newValue);
+            player.PhlogistonValue = newValue;
         }
         else if (action.DetermineType == "Lose")
         {
-            float currentPhlogiston = player.GetPhlogistonValue();
+            float currentPhlogiston = player.PhlogistonValue;
             float newValue = currentPhlogiston - changeValue;
             if (newValue < 0) newValue = 0;
-            player.SetPhlogistonValue(newValue);
+            player.PhlogistonValue = newValue;
         }
 
         return Task.FromResult(true);

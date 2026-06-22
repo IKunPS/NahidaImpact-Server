@@ -79,7 +79,7 @@ public class ComboGranterController : Controller
                 qr_enabled = false,
                 log_level = "INFO",
                 announce_url =
-                    $"{ConfigManager.Config.HttpServer.GetDisplayAddress()}/hk4e/announcement/index.html",
+                    $"{ConfigManager.Config.HttpServer.DisplayAddress}/hk4e/announcement/index.html",
                 push_alias_type = 2,
                 disable_ysdk_guard = false,
                 enable_announce_popup = false,
