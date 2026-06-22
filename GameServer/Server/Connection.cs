@@ -58,14 +58,6 @@ public class Connection(KcpConversation conversation, IPEndPoint remote) : KcpCo
                 Logger.Debug(I18NManager.Translate("Server.ConnectionInfo.ConnectionClosed"));
                 break;
             }
-            
-            if (result.BytesReceived > KcpListener.MAX_MSG_SIZE)
-            {
-                // The message is too large.
-                Logger.Error(I18NManager.Translate("Server.ConnectionInfo.PacketTooLarge"));
-                Conversation.SetTransportClosed();
-                break;
-            }
     
             var buffer = ArrayPool<byte>.Shared.Rent(result.BytesReceived);
             try

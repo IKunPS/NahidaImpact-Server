@@ -124,13 +124,11 @@ public class KcpConnection
         try
         {
             Crypto.Xor(packet, UseSecretKey ? SecretKey : Crypto.DISPATCH_KEY);
-            var sent = await Conversation.SendAsync(packet, CancelToken.Token);
-            if (!sent)
-                Logger.Debug($"SendPacket: SendAsync returned false for {packet.Length} bytes");
+            _ = await Conversation.SendAsync(packet, CancelToken.Token);
         }
-        catch (Exception ex)
+        catch
         {
-            Logger.Debug($"SendPacket failed ({packet.Length} bytes): {ex.Message}");
+            // ignore
         }
     }
 
@@ -146,7 +144,15 @@ public class KcpConnection
         if (BannedPackets.Contains(packet.CmdId)) return;
         LogPacket("Send", packet.CmdId, packet.Payload);
         var packetBytes = packet.BuildPacket();
-        await SendPacket(packetBytes);
+
+        try
+        {
+            await SendPacket(packetBytes);
+        }
+        catch
+        {
+            // ignore
+        }
     }
 
     public async Task SendPacket(int cmdId)

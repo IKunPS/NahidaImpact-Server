@@ -9,7 +9,6 @@ namespace NahidaImpact.KcpSharp;
 
 public class KcpListener
 {
-    public const int MAX_MSG_SIZE = 65536;
     private static UdpClient? UDPClient;
     private static IPEndPoint? ListenAddress;
     private static IKcpTransport<IKcpMultiplexConnection>? KCPTransport;
