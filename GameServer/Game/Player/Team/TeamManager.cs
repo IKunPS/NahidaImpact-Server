@@ -6,6 +6,7 @@ using NahidaImpact.GameServer.Game.Worlds;
 using NahidaImpact.GameServer.Server.Packet.Send.Team;
 using NahidaImpact.GameServer.Server.Packet.Send.Scene;
 using NahidaImpact.GameServer.Server.Packet.Send.Avatar;
+using NahidaImpact.GameServer.Server.Packet.Send.Player;
 using NahidaImpact.KcpSharp;
 using NahidaImpact.Util;
 
@@ -363,9 +364,10 @@ public class TeamManager : BasePlayerManager
     public void OnAvatarDie(ulong dieGuid)
     {
         var deadEntity = GetCurrentAvatarEntity();
-        if (deadEntity == null || deadEntity.Id != (uint)dieGuid) return;
+        if (deadEntity == null || deadEntity.Id != dieGuid) return;
 
-        // Find replacement
+        _ = Player.SendPacket(new PacketAvatarDieAnimationEndRsp(dieGuid, 0));
+
         int replaceIndex = -1;
         for (int i = 0; i < _activeTeam.Count; i++)
         {
@@ -381,9 +383,61 @@ public class TeamManager : BasePlayerManager
             CurrentCharacterIndex = replaceIndex;
             Player.Scene?.AddEntity(_activeTeam[replaceIndex]);
         }
-        // TODO: Send death notify, handle team wipe
+        else
+        {
+            foreach (var entity in _activeTeam)
+                entity.SetKilled(1, 0);
+            _ = Player.SendPacket(new PacketWorldPlayerDieNotify(1, 0));
+        }
+    }
 
-        // TODO: Send PacketAvatarDieAnimationEndRsp
+    // hk4e TeamResonance — compute element resonance abilities from party composition
+    private static readonly Dictionary<string, string> ResonanceAbilityMap = new()
+    {
+        ["1_1"] = "TeamResonance_Fire_Fire",
+        ["2_2"] = "TeamResonance_Water_Water",
+        ["3_3"] = "TeamResonance_Grass_Grass",
+        ["4_4"] = "TeamResonance_Electric_Electric",
+        ["5_5"] = "TeamResonance_Ice_Ice",
+        ["7_7"] = "TeamResonance_Wind_Wind",
+        ["8_8"] = "TeamResonance_Rock_Rock",
+    };
+
+    public List<uint> GetTeamResonances()
+    {
+        var result = new List<uint>();
+        var team = CurrentTeamInfo;
+        if (team.AvatarGuidList.Count == 0) return result;
+
+        var elementCounts = new Dictionary<int, int>();
+        foreach (var guid in team.AvatarGuidList)
+        {
+            var avatar = Player.AvatarManager.GetAvatarByGuid(guid);
+            if (avatar?.AvatarExcel == null) continue;
+            int elem = avatar.AvatarExcel.ElementType;
+            elementCounts[elem] = elementCounts.GetValueOrDefault(elem) + 1;
+        }
+
+        // Same-element resonance — 2+ of the same element
+        foreach (var (elem, count) in elementCounts)
+        {
+            if (count >= 2 && ResonanceAbilityMap.TryGetValue($"{elem}_{elem}", out var abilityName))
+            {
+                var hash = Utils.AbilityHash(abilityName);
+                if (!result.Contains(hash))
+                    result.Add(hash);
+            }
+        }
+
+        // Multi-element resonance — 4 unique non-None elements
+        var uniqueElements = elementCounts.Keys.Count(k => k != 0);
+        if (uniqueElements >= 4
+            && Data.GameData.AbilityData.TryGetValue("TeamResonance_Multielement", out _))
+        {
+            result.Add(Utils.AbilityHash("TeamResonance_Multielement"));
+        }
+
+        return result;
     }
 
     public AbilityControlBlock GetAbilityControlBlock()

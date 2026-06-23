@@ -6,6 +6,8 @@ namespace NahidaImpact.GameServer.Server.Packet.Send.Avatar;
 
 public class PacketAvatarSkillInfoNotify : BasePacket
 {
+    // Sends skill extra charge counts (hk4e: Avatar::sendSkillExtraChargeMap).
+    // SkillExtraChargeMap stores bonus charges per skill from constellations.
     public PacketAvatarSkillInfoNotify(AvatarDataInfo avatar)
         : base(CmdIds.AvatarSkillInfoNotify)
     {
@@ -14,7 +16,7 @@ public class PacketAvatarSkillInfoNotify : BasePacket
             Guid = avatar.Guid
         };
 
-        foreach (var kv in avatar.SkillLevelMap)
+        foreach (var kv in avatar.SkillExtraChargeMap)
             proto.SkillMap[kv.Key] = new AvatarSkillInfo { MaxChargeCount = kv.Value };
 
         SetData(proto);

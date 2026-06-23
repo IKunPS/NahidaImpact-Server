@@ -42,6 +42,12 @@ public class TeamData : BaseDatabaseDataHelper
     public void RemoveTeam(int teamId)
         => Teams.RemoveAll(t => t.Index == teamId);
 
+    public TeamInfo? FindTeamContaining(ulong avatarGuid)
+        => Teams.Find(t => t.AvatarGuidList.Contains(avatarGuid));
+
+    public int AvatarTeamCount(ulong avatarGuid)
+        => Teams.Count(t => t.AvatarGuidList.Contains(avatarGuid));
+
     #endregion
 
     #region Static Access
@@ -75,6 +81,18 @@ public class TeamInfo
     public int Index { get; set; }
     public string Name { get; set; } = "";
     public List<ulong> AvatarGuidList { get; set; } = [];
+
+    public bool IsFull => AvatarGuidList.Count >= GameConstants.MAX_AVATARS_IN_TEAM;
+    public bool IsEmpty => AvatarGuidList.Count == 0;
+
+    public bool Contains(ulong guid) => AvatarGuidList.Contains(guid);
+
+    public bool RemoveAvatar(ulong guid)
+    {
+        if (!Contains(guid)) return false;
+        AvatarGuidList.Remove(guid);
+        return true;
+    }
 
     public void CopyFrom(TeamInfo team, int maxTeamSize)
     {

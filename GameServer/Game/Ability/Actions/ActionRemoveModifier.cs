@@ -1,7 +1,6 @@
 using Google.Protobuf;
 using NahidaImpact.Data.Ability;
 using NahidaImpact.GameServer.Game.Entity;
-using System.Threading.Tasks;
 
 namespace NahidaImpact.GameServer.Game.Ability.Actions;
 
@@ -12,8 +11,15 @@ public class ActionRemoveModifier : AbilityActionHandler
     {
         if (string.IsNullOrEmpty(action.ModifierName)) return Task.FromResult(false);
 
-        ability.Modifiers.Remove(action.ModifierName);
+        if (!ability.Modifiers.TryGetValue(action.ModifierName, out var modifier))
+            return Task.FromResult(false);
 
+        // hk4e: run onRemoved lifecycle before removal
+        if (modifier.ModifierData.OnRemoved != null)
+            foreach (var a in modifier.ModifierData.OnRemoved)
+                AbilityManager?.ExecuteAction(ability, a, abilityData, target);
+
+        ability.Modifiers.Remove(action.ModifierName);
         return Task.FromResult(true);
     }
 }

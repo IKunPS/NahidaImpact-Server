@@ -1,3 +1,4 @@
+using NahidaImpact.Data.Excel;
 using NahidaImpact.GameServer.Game.Player;
 using NahidaImpact.KcpSharp;
 using NahidaImpact.Prop;
@@ -15,7 +16,7 @@ public class PacketPlayerDataNotify : BasePacket
             NickName = player.Data.Name,
             ServerTime = (ulong)DateTimeOffset.Now.ToUnixTimeMilliseconds(),
             IsFirstLoginToday = true,
-            RegionId = GameConstants.START_REGION_ID
+            RegionId = ConstValue.GetUint("CONST_VALUE_DEFAULT_WORLD_ID")
         };
 
         foreach (var (key, value) in player.Properties)

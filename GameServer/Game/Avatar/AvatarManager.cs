@@ -69,14 +69,24 @@ public class AvatarManager(PlayerInstance player) : BasePlayerManager(player)
             Guid = NextGuid(),
             WeaponId = avatarExcel.InitialWeapon,
             BornTime = now,
-            WearingFlycloakId = GameConstants.DEFAULT_FLYCLOAK_ID
+            WearingFlycloakId = ConstValue.GetUint("CONST_VALUE_DEFAULT_FLYCLOAK_CONFIG"),
+            CostumeId = GetDefaultCostumeId((int)avatarExcel.Id)
         };
 
         avatar.InitDefaultProps(avatarExcel);
         Avatars.Add(avatar);
-        Save();
 
         EquipStartingWeapon(avatar, avatarExcel); // EquipItem already calls RecalcStats
+
+        if (avatar.AvatarType == 2)
+            EquipTrialAvatar(avatar);
+
+        if (Player.SuppressNotifications)
+        {
+            return avatar; // caller flushes a full snapshot after the batch
+        }
+
+        Save();
 
         if (Player.HasSentLoginPackets)
         {
@@ -252,7 +262,7 @@ public class AvatarManager(PlayerInstance player) : BasePlayerManager(player)
         }
     }
 
-    private static int GetAvatarLevelExpRequired(int level)
+    internal static int GetAvatarLevelExpRequired(int level)
     {
         if (GameData.AvatarLevelData.TryGetValue(level, out var data))
             return data.Exp;
@@ -517,13 +527,47 @@ public class AvatarManager(PlayerInstance player) : BasePlayerManager(player)
 
         avatar.CoreProudSkillLevel = (uint)avatar.TalentIdList.Count;
         avatar.RecalcStats(GetEquippedWeapon(avatar));
-        Save();
+        if (!Player.SuppressNotifications) Save();
     }
 
     private ItemData? GetEquippedWeapon(AvatarDataInfo avatar)
         => Player.InventoryManager.Items.Values
             .FirstOrDefault(i => i.EquipCharacter == (int)avatar.AvatarId
                 && i.ItemType == Enums.Item.ItemType.ITEM_WEAPON);
+
+    // Mirrors Java FashionComp::initDefaultWearCostume — finds the default costume for an avatar
+    private static uint GetDefaultCostumeId(int avatarId)
+    {
+        var defaultCostume = GameData.CostumeData.Values
+            .FirstOrDefault(c => c.CharacterId == avatarId && c.IsDefault);
+        return defaultCostume?.SkinId ?? 0;
+    }
+
+    #endregion
+
+    #region Trial Equipment & Skill Charge
+
+    public void EquipTrialAvatar(AvatarDataInfo avatar)
+    {
+        var items = avatar.BuildTrialEquipment();
+        if (items.Count == 0) return;
+
+        var weapon = items.FirstOrDefault(i => i.ItemType == Enums.Item.ItemType.ITEM_WEAPON);
+        if (weapon != null)
+        {
+            Player.InventoryManager.AddItem(weapon);
+            if (weapon.Guid > 0)
+                Player.InventoryManager.EquipItem(avatar.Guid, weapon.Guid);
+        }
+
+        foreach (var relic in items.Where(i => i.ItemType == Enums.Item.ItemType.ITEM_RELIQUARY))
+            Player.InventoryManager.AddItem(relic);
+    }
+
+    public async ValueTask SendSkillExtraChargeMap(AvatarDataInfo avatar)
+    {
+        await Player.SendPacket(new PacketAvatarSkillInfoNotify(avatar));
+    }
 
     #endregion
 }

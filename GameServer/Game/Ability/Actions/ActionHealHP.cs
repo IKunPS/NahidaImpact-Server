@@ -2,7 +2,6 @@ using Google.Protobuf;
 using NahidaImpact.Data.Ability;
 using NahidaImpact.GameServer.Game.Entity;
 using NahidaImpact.Prop;
-using System.Threading.Tasks;
 
 namespace NahidaImpact.GameServer.Game.Ability.Actions;
 
@@ -13,31 +12,25 @@ public class ActionHealHP : AbilityActionHandler
     {
         var owner = ability.Owner;
 
-        // TODO: handle client gadgets when EntityClientGadget is ported
-        // if (owner is EntityClientGadget ownerGadget)
-        //     owner = ownerGadget.Scene?.GetEntityById((int)ownerGadget.OwnerEntityId);
-
+        // TODO: client gadget owner resolution
         if (owner == null) return Task.FromResult(false);
 
-        // Collect all properties (fight props + ability specials)
-        float amountToRegenerate = action.Amount;
+        var amount = action.Amount;
+        amount += action.AmountByCasterMaxHPRatio * owner.GetFightProperty(FightProp.FIGHT_PROP_MAX_HP);
+        amount += action.AmountByCasterAttackRatio * owner.GetFightProperty(FightProp.FIGHT_PROP_CUR_ATTACK);
+        amount += action.AmountByCasterCurrentHPRatio * owner.GetFightProperty(FightProp.FIGHT_PROP_CUR_HP);
 
-        amountToRegenerate += action.AmountByCasterMaxHPRatio * owner.GetFightProperty(FightProp.FIGHT_PROP_MAX_HP);
-        amountToRegenerate += action.AmountByCasterAttackRatio * owner.GetFightProperty(FightProp.FIGHT_PROP_CUR_ATTACK);
-        amountToRegenerate += action.AmountByCasterCurrentHPRatio * owner.GetFightProperty(FightProp.FIGHT_PROP_CUR_HP);
-
-        float abilityRatio = 1.0f;
+        var abilityRatio = 1f;
         if (!action.IgnoreAbilityProperty)
         {
             abilityRatio += target.GetFightProperty(FightProp.FIGHT_PROP_HEAL_ADD)
                 + target.GetFightProperty(FightProp.FIGHT_PROP_HEALED_ADD);
         }
 
-        amountToRegenerate += action.AmountByTargetCurrentHPRatio * target.GetFightProperty(FightProp.FIGHT_PROP_CUR_HP);
-        amountToRegenerate += action.AmountByTargetMaxHPRatio * target.GetFightProperty(FightProp.FIGHT_PROP_MAX_HP);
+        amount += action.AmountByTargetCurrentHPRatio * target.GetFightProperty(FightProp.FIGHT_PROP_CUR_HP);
+        amount += action.AmountByTargetMaxHPRatio * target.GetFightProperty(FightProp.FIGHT_PROP_MAX_HP);
 
-        target.Heal(amountToRegenerate * abilityRatio * action.HealRatio, action.MuteHealEffect);
-
+        target.Heal(amount * abilityRatio * action.HealRatio, action.MuteHealEffect);
         return Task.FromResult(true);
     }
 }

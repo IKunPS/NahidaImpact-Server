@@ -79,7 +79,7 @@ public class CommandSpawn : ICommand
             for (int i = 0; i < amount; i++)
             {
                 var spread = SpreadPos(pos, i, amount);
-                gadgets.Add(new EntityGadget(scene, entityId, spread) { GadgetState = state });
+                gadgets.Add(new EntityGadget(scene, entityId, spread) { GadgetState = (uint)state });
             }
             scene.AddEntities(gadgets);
             spawned = gadgets.Count;

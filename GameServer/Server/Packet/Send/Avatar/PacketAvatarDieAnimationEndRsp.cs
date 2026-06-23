@@ -5,7 +5,7 @@ namespace NahidaImpact.GameServer.Server.Packet.Send.Avatar;
 
 public class PacketAvatarDieAnimationEndRsp : BasePacket
 {
-    public PacketAvatarDieAnimationEndRsp(uint dieGuid, int retcode) : base(CmdIds.AvatarDieAnimationEndRsp)
+    public PacketAvatarDieAnimationEndRsp(ulong dieGuid, int retcode = 0) : base(CmdIds.AvatarDieAnimationEndRsp)
     {
         var proto = new AvatarDieAnimationEndRsp
         {
