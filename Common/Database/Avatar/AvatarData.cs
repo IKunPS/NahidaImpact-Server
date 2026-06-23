@@ -370,10 +370,37 @@ public class AvatarDataInfo
         AvatarType = 2; // TRIAL
     }
 
-    public void EquipTrialItems()
+    /// <summary>Build the list of trial equipment items from TrialAvatarExcelConfigData.</summary>
+    public List<ItemData> BuildTrialEquipment()
     {
-        // TODO: Equip trial weapons and relics.
-        //       Mirrors Java Avatar.equipTrialItems().
+        var items = new List<ItemData>();
+        if (TrialAvatarId == 0) return items;
+
+        if (!GameData.TrialAvatarDataMap.TryGetValue((int)TrialAvatarId, out var trialData))
+            return items;
+
+        var paramList = trialData.TrialAvatarParamList;
+        if (paramList.Count < 2) return items;
+
+        if (paramList[1] > 0)
+        {
+            var weapon = new ItemData
+            {
+                ItemId = paramList[1],
+                Count = 1,
+                Level = 80,
+                PromoteLevel = ItemData.GetMinPromoteLevel(80),
+                Refinement = 4
+            };
+            weapon.InitWeaponAffixes();
+            items.Add(weapon);
+        }
+        for (int i = 2; i < paramList.Count; i++)
+        {
+            if (paramList[i] <= 0) continue;
+            items.Add(new ItemData { ItemId = paramList[i], Count = 1, Level = 16, PromoteLevel = 0 });
+        }
+        return items;
     }
 
     public void SetOwnerUid(uint uid)
@@ -383,20 +410,25 @@ public class AvatarDataInfo
 
     public void Save()
     {
-        // Individual save handled through AvatarData.SaveAvatarData at the player level.
-        // This is a convenience stub for callers that follow the Java pattern.
+        if (OwnerUid == 0) return;
+        var data = AvatarData.GetOrCreateAvatarData((int)OwnerUid);
+        var existing = data.Avatars.Find(a => a.AvatarId == AvatarId);
+        if (existing != null)
+            data.Avatars[data.Avatars.IndexOf(existing)] = this;
+        else
+            data.Avatars.Add(this);
+        AvatarData.SaveAvatarData(data);
     }
 
-    public void SendSkillExtraChargeMap()
-    {
-        // TODO: Send skill extra charge map to client.
-        //       Mirrors Java Avatar.sendSkillExtraChargeMap().
-    }
-
+    /// <summary>Populate Abilities list from AvatarExcel ability data.</summary>
     public void BuildEmbryo()
     {
         if (AvatarExcel == null) return;
-        // TODO: Build ability embryos from avatar data config.
-        //       Mirrors Java AvatarData.buildEmbryo().
+        Abilities.Clear();
+        foreach (var ab in AvatarExcel.Abilities)
+            Abilities.Add(ab);
+        foreach (var name in AvatarExcel.AbilityNames)
+            if (!string.IsNullOrEmpty(name))
+                Abilities.Add(NahidaImpact.Util.Utils.AbilityHash(name));
     }
 }

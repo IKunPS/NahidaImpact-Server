@@ -461,11 +461,11 @@ public class CommandGive : ICommand
         return added.Count;
     }
 
-    /// <summary>Only exclude avatar unlock items from give-all.
-    /// Flycloak/costume/namecard already caught by UseOnGain check above.</summary>
+    /// <summary>Only exclude avatar unlock items from give-all (handled separately through CreateAvatar).
+    /// Flycloak/costume/namecard have UseOnGain=true and are auto-processed by PutItem→UseItemDirect.</summary>
     internal static bool IsExcludedMaterialType(MaterialType type) => type == MaterialType.MATERIAL_AVATAR;
 
-    /// <returns>Number of items actually added to inventory.</returns>
+    /// <returns>Number of items actually given (including instant-use items like flycloaks).</returns>
     private static async ValueTask<int> GiveAllByType(Game.Player.PlayerInstance player, ItemType targetType,
         int amount, int level, int refinement)
     {
@@ -477,13 +477,17 @@ public class CommandGive : ICommand
                 .ToHashSet()
             : null;
 
+        // Also track already-owned flycloaks/costumes to skip duplicates on re-run
+        var ownedFlycloaks = targetType == ItemType.ITEM_MATERIAL
+            ? new HashSet<int>(player.FlyCloakList)
+            : null;
+
         var items = new List<ItemData>();
         int created = 0;
 
         foreach (var (itemId, itemData) in GameData.ItemData)
         {
             if (itemData.ItemType != targetType) continue;
-            if (itemData.UseOnGain) continue;
 
             if (targetType == ItemType.ITEM_WEAPON && !IsValidWeaponId(itemId)) continue;
             if (targetType == ItemType.ITEM_RELIQUARY && !IsValidRelicId(itemId)) continue;
@@ -492,6 +496,15 @@ public class CommandGive : ICommand
 
             // Skip weapons/relics the player already owns to prevent duplicates on re-run.
             if (ownedIds != null && ownedIds.Contains(itemId)) continue;
+
+            // Skip flycloaks the player already owns
+            if (ownedFlycloaks != null && itemData.MaterialType == MaterialType.MATERIAL_FLYCLOAK)
+            {
+                // Extract flycloakId from the use action param
+                var flycloakId = ExtractUseParam(itemData, "ITEM_USE_GAIN_FLYCLOAK");
+                if (flycloakId > 0 && ownedFlycloaks.Contains(flycloakId))
+                    continue;
+            }
 
             try
             {
@@ -511,7 +524,8 @@ public class CommandGive : ICommand
                 }
                 else
                 {
-                    item.Count = Math.Min(amount, (int)itemData.StackLimit);
+                    // UseOnGain items are auto-consumed — give exactly 1
+                    item.Count = itemData.UseOnGain ? 1 : Math.Min(amount, (int)itemData.StackLimit);
                 }
 
                 items.Add(item);
@@ -531,6 +545,19 @@ public class CommandGive : ICommand
 
     internal static bool IsValidWeaponId(int id) => id is >= 10000 and <= 19999;
     internal static bool IsValidRelicId(int id) => id is >= 20002 and <= 99999;
+
+    /// <summary>Extract the first use action param for a given op, or 0 if missing.</summary>
+    internal static int ExtractUseParam(ItemDataExcel itemData, string useOp)
+    {
+        if (itemData.ItemUseActions == null) return 0;
+        foreach (var action in itemData.ItemUseActions)
+        {
+            if (action.UseOp == useOp && action.UseParam.Count > 0
+                && int.TryParse(action.UseParam[0], out var val))
+                return val;
+        }
+        return 0;
+    }
 
     #endregion
 }

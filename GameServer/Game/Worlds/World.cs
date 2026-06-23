@@ -1,242 +1,200 @@
-using NahidaImpact.Util;
 using NahidaImpact.Data;
-using NahidaImpact.GameServer.Game.Entity;
-using NahidaImpact.GameServer.Game.Player;
-using NahidaImpact.Internationalization;
-using System.Collections.Concurrent;
 using NahidaImpact.Enums.Entity;
 using NahidaImpact.Enums.Player;
 using NahidaImpact.Enums.Scene;
-using NahidaImpact.KcpSharp;
+using NahidaImpact.GameServer.Game.Entity;
+using NahidaImpact.GameServer.Game.Player;
 using NahidaImpact.GameServer.Server.Packet.Send.Player;
 using NahidaImpact.GameServer.Server.Packet.Send.Scene;
+using NahidaImpact.KcpSharp;
+using NahidaImpact.Util;
+using System.Collections.Concurrent;
 
 namespace NahidaImpact.GameServer.Game.Worlds;
 
+// hk4e World → PlayerWorld — manages scenes, players, and world-level state
 public class World
 {
-    public static Logger Logger { get; } = new("World");
+    private static readonly Logger Logger = new("World");
+
     public PlayerInstance Host { get; private set; }
     public EntityWorld Entity { get; private set; }
-    
+
     private readonly List<PlayerInstance> _players = [];
-    private readonly ConcurrentDictionary<int, Scene> _scenes = new();
-    private readonly object _playerListLock = new object();
-    private int _nextEntityId = 0;
-    private uint _nextPeerId = 0;
+    private readonly ConcurrentDictionary<int, Scene> _scenes = [];
+    private readonly object _playerLock = new();
+
+    private int _nextEntityId;
+    private uint _nextPeerId;
     private int _worldLevel;
-    private bool _isMultiplayer = false;
-    
+    private bool _isMultiplayer;
+
+    // hk4e PlayerWorld fields
+    public int WorldLevel
+    {
+        get => _worldLevel;
+        set { _worldLevel = value; LastAdjustTime = (uint)DateTimeOffset.UtcNow.ToUnixTimeSeconds(); }
+    }
+    public uint LastAdjustTime { get; private set; }
+    public int AdjustLevel { get; set; }
+
+    public bool IsMultiplayer => _isMultiplayer;
+    public uint HostPeerId => Host?.PeerId ?? 0;
+    public uint LevelEntityId => Entity.Id;
+    public uint NextPeerId => ++_nextPeerId;
+
     public World(PlayerInstance host, bool isMultiplayer = false)
     {
         Host = host;
         _worldLevel = host.Data.WorldLevel;
         _isMultiplayer = isMultiplayer;
-        
         Entity = new EntityWorld(this);
-        // Register world in server? TODO
     }
-    
+
+    #region Scene Management
+
     public Scene? GetSceneById(int sceneId)
     {
         if (_scenes.TryGetValue(sceneId, out var scene))
             return scene;
-        
+
         if (GameData.SceneData.TryGetValue(sceneId, out var sceneData))
         {
             scene = new Scene(this, sceneData);
             RegisterScene(scene);
             return scene;
         }
-        
         return null;
     }
-    
-    public void RegisterScene(Scene scene)
-    {
-        _scenes[scene.Id] = scene;
-    }
-    
-    public void DeregisterScene(Scene scene)
-    {
-        _scenes.TryRemove(scene.Id, out _);
-        // TODO: Cleanup scene resources
-    }
-    
-    private void AddPlayerInternal(PlayerInstance player, int newSceneId)
-    {
-        lock (_playerListLock)
-        {
-            if (_players.Contains(player))
-                return;
-            
-            player.World = this;
-            _players.Add(player);
-        }
-        
-        player.PeerId = NextPeerId;
-        
-        if (_isMultiplayer)
-        {
-            var teamManager = player.TeamManager;
-            if (teamManager != null)
-            {
-                var mpTeam = teamManager.MpTeam;
-                var singlePlayerTeam = teamManager.CurrentSinglePlayerTeamInfo;
-                var maxTeamSize = teamManager.MaxTeamSize;
-                if (mpTeam != null && singlePlayerTeam != null)
-                {
-                    mpTeam.CopyFrom(singlePlayerTeam, maxTeamSize);
-                }
-                teamManager.SetCurrentCharacterIndex(0);
-            }
-            
-            if (player != Host)
-            {
-                BroadcastPacket(new PacketPlayerChatNotify(player, 0, new ChatInfo.Types.SystemHint { Type = 1 })); // SYSTEM_HINT_TYPE_CHAT_ENTER_WORLD
-            }
-        }
-        
-        if (newSceneId != -1)
-        {
-            player.SceneId = (uint)newSceneId;
-        }
-        
-        var scene = GetSceneById((int)player.SceneId);
-        if (scene != null)
-        {
-            scene.AddPlayer(player);
-        }
-        
-        if (player.Scene != null && player.TeamManager != null)
-        {
-            player.TeamManager.Entity = new EntityTeam(player.Scene);
-        }
-        
-        if (_players.Count > 1)
-        {
-            UpdatePlayerInfos(player);
-        }
-    }
-    
-    private void UpdatePlayerInfos(PlayerInstance newPlayer)
-    {
-        foreach (var player in _players)
-        {
-            if (player == newPlayer)
-                continue;
-            
-            // TODO: Implement proper packet sending when packet classes are available
-            // In Java version, the following packets are sent:
-            // player.GetSession().Send(new PacketWorldPlayerInfoNotify(this));
-            // player.GetSession().Send(new PacketScenePlayerInfoNotify(this));
-            // player.GetSession().Send(new PacketWorldPlayerRTTNotify(this));
-            // player.GetSession().Send(new PacketSyncTeamEntityNotify(player));
-            // player.GetSession().Send(new PacketSyncScenePlayTeamEntityNotify(player));
-            
-            // For now, we just log the update
-            Logger.Info(I18NManager.Translate("Game.WorldInfo.NotifyPlayerInfo", player.Uid.ToString(), newPlayer.Uid.ToString()));
-        }
-    }
-    
-    public void AddPlayer(PlayerInstance player)
-    {
-        if (player == null) 
-            throw new ArgumentNullException(nameof(player), "Player cannot be null");
-        if (_players.Contains(player)) return;
-        if (player.World != null && player.World != this) player.World.RemovePlayer(player);
-        AddPlayerInternal(player, -1);
-    }
-    
-    public void AddPlayer(PlayerInstance player, int newSceneId)
-    {
-        if (player == null)
-            throw new ArgumentNullException(nameof(player), "Player cannot be null");
-        if (_players.Contains(player))
-            return;
-        if (player.World != null && player.World != this) player.World.RemovePlayer(player);
-        AddPlayerInternal(player, newSceneId);
-    }
-    
-    public void RemovePlayer(PlayerInstance player)
-    {
-        if (player == null)
-            throw new ArgumentNullException(nameof(player), "Player cannot be null");
-        
-        lock (_playerListLock)
-        {
-            if (!_players.Contains(player))
-                return;
-            
-            _players.Remove(player);
-            player.World = null;
-        }
-        
-        var scene = GetSceneById((int)player.SceneId);
-        scene?.RemovePlayer(player);
 
-        if (player == Host && _players.Count > 0)
-        {
-            // TODO: Transfer host
-        }
-        
-        // Broadcast chat notification for player leaving world
-        if (_players.Count > 0) // Only broadcast if there are other players left
-        {
-            BroadcastPacket(new PacketPlayerChatNotify(player, 0, new ChatInfo.Types.SystemHint { Type = 2 })); // SYSTEM_HINT_TYPE_CHAT_LEAVE_WORLD
-        }
-    }
-    
-    public void BroadcastPacket(BasePacket packet)
-    {
-        lock (_playerListLock)
-        {
-            foreach (var player in _players)
-            {
-                if (player.Connection?.IsOnline == true)
-                {
-                    _ = player.SendPacket(packet);
-                }
-            }
-        }
-    }
+    public void RegisterScene(Scene scene) => _scenes[scene.Id] = scene;
+    public void DeregisterScene(Scene scene) => _scenes.TryRemove(scene.Id, out _);
+
+    #endregion
+
+    #region Player Management
 
     public List<PlayerInstance> Players
     {
-        get
-        {
-            lock (_playerListLock) return _players.ToList();
-        }
+        get { lock (_playerLock) return _players.ToList(); }
     }
 
     public int PlayerCount
     {
-        get
+        get { lock (_playerLock) return _players.Count; }
+    }
+
+    public void AddPlayer(PlayerInstance player)
+    {
+        if (player == null) throw new ArgumentNullException(nameof(player));
+        if (Players.Contains(player)) return;
+        if (player.World != null && player.World != this) player.World.RemovePlayer(player);
+        AddPlayerInternal(player, -1);
+    }
+
+    public void AddPlayer(PlayerInstance player, int newSceneId)
+    {
+        if (player == null) throw new ArgumentNullException(nameof(player));
+        if (Players.Contains(player)) return;
+        if (player.World != null && player.World != this) player.World.RemovePlayer(player);
+        AddPlayerInternal(player, newSceneId);
+    }
+
+    private void AddPlayerInternal(PlayerInstance player, int newSceneId)
+    {
+        lock (_playerLock)
         {
-            lock (_playerListLock) return _players.Count;
+            if (_players.Contains(player)) return;
+            player.World = this;
+            _players.Add(player);
+        }
+
+        player.PeerId = NextPeerId;
+
+        if (_isMultiplayer)
+        {
+            var tm = player.TeamManager;
+            if (tm != null)
+            {
+                tm.MpTeam.CopyFrom(tm.CurrentSinglePlayerTeamInfo, tm.MaxTeamSize);
+                tm.SetCurrentCharacterIndex(0);
+            }
+
+            if (player != Host)
+            {
+                BroadcastPacket(new PacketPlayerChatNotify(player, 0,
+                    new ChatInfo.Types.SystemHint { Type = 1 }));
+            }
+        }
+
+        if (newSceneId != -1)
+            player.SceneId = (uint)newSceneId;
+
+        var scene = GetSceneById((int)player.SceneId);
+        scene?.AddPlayer(player);
+
+        if (player.Scene != null && player.TeamManager != null)
+            player.TeamManager.Entity = new EntityTeam(player.Scene);
+
+        if (_players.Count > 1)
+            UpdatePlayerInfos(player);
+    }
+
+    public void RemovePlayer(PlayerInstance player)
+    {
+        if (player == null) throw new ArgumentNullException(nameof(player));
+
+        lock (_playerLock)
+        {
+            if (!_players.Contains(player)) return;
+            _players.Remove(player);
+            player.World = null;
+        }
+
+        GetSceneById((int)player.SceneId)?.RemovePlayer(player);
+
+        if (player == Host && _players.Count > 0)
+        {
+            // TODO: transfer host to next player
+            Host = _players[0];
+        }
+
+        if (_players.Count > 0)
+        {
+            BroadcastPacket(new PacketPlayerChatNotify(player, 0,
+                new ChatInfo.Types.SystemHint { Type = 2 }));
         }
     }
 
-    public bool IsMultiplayer => _isMultiplayer;
-
-    public uint HostPeerId => Host?.PeerId ?? 0;
-
-    public int GetNextEntityId(EntityIdTypeEnum idType) => ((int)idType << 21) + ++_nextEntityId;
-
-    public uint LevelEntityId => Entity.Id;
-
-    public uint NextPeerId => ++_nextPeerId;
-    
-    // Simple teleport to a scene/position.
-    public bool TransferPlayerToScene(PlayerInstance player, int sceneId, Position pos)
+    private void UpdatePlayerInfos(PlayerInstance newPlayer)
     {
-        return TransferPlayerToScene(player, sceneId, TeleportType.Internal, pos);
+        var notify = new PacketWorldPlayerInfoNotify(newPlayer);
+        foreach (var player in _players)
+        {
+            if (player == newPlayer) continue;
+            _ = player.SendPacket(notify);
+        }
     }
 
-    // Teleport with an explicit type (WAYPOINT, COMMAND, etc.).
-    public bool TransferPlayerToScene(PlayerInstance player, int sceneId, TeleportType teleportType, Position pos)
+    // hk4e PlayerWorld::transferHost — transfers ownership when host leaves
+    public void TransferHost(PlayerInstance nextHost)
     {
-        var enterReason = teleportType switch
+        if (nextHost == Host) return;
+        Host = nextHost;
+        // Per-player worlds don't need full host transfer; in true MP,
+        // PacketWorldPlayerInfoNotify + PacketScenePlayerInfoNotify would broadcast
+    }
+
+    #endregion
+
+    #region Teleport
+
+    public bool TransferPlayerToScene(PlayerInstance player, int sceneId, Position pos)
+        => TransferPlayerToScene(player, sceneId, TeleportType.Internal, pos);
+
+    public bool TransferPlayerToScene(PlayerInstance player, int sceneId, TeleportType type, Position pos)
+    {
+        var enterReason = type switch
         {
             TeleportType.Internal => EnterReason.TransPoint,
             TeleportType.Waypoint => EnterReason.TransPoint,
@@ -247,29 +205,25 @@ public class World
             TeleportType.Dungeon => EnterReason.DungeonEnter,
             _ => EnterReason.None
         };
-        return TransferPlayerToScene(player, sceneId, teleportType, enterReason, pos);
+        return TransferPlayerToScene(player, sceneId, type, enterReason, pos);
     }
 
-    // Teleport with explicit teleport type and enter reason.
-    public bool TransferPlayerToScene(PlayerInstance player, int sceneId, TeleportType teleportType,
-        EnterReason enterReason, Position teleportTo)
+    public bool TransferPlayerToScene(PlayerInstance player, int sceneId, TeleportType type,
+        EnterReason reason, Position pos)
     {
         var props = new TeleportProperties
         {
             SceneId = sceneId,
-            TeleportType = teleportType,
-            EnterReason = enterReason,
-            TeleportTo = teleportTo,
+            TeleportType = type,
+            EnterReason = reason,
+            TeleportTo = pos,
             EnterType = EnterType.Jump
         };
 
-        // Resolve EnterType: GOTO for same scene, DUNGEON handled separately, HOME via scene type.
         if (player.SceneId == sceneId)
-        {
             props.EnterType = EnterType.Goto;
-        }
-        else if (GameData.SceneData.TryGetValue(sceneId, out var sceneData)
-                 && sceneData.SceneType == SceneTypeEnum.SCENE_HOME_WORLD)
+        else if (GameData.SceneData.TryGetValue(sceneId, out var sd)
+                 && sd.SceneType == SceneTypeEnum.SCENE_HOME_WORLD)
         {
             props.EnterType = EnterType.SelfHome;
             props.EnterReason = EnterReason.EnterHome;
@@ -278,67 +232,41 @@ public class World
         return TransferPlayerToScene(player, props);
     }
 
-    // Core teleport engine with full TeleportProperties.
     public bool TransferPlayerToScene(PlayerInstance player, TeleportProperties props)
     {
-        if (player == null)
-            return false;
+        if (player == null) return false;
+        if (!GameData.SceneData.ContainsKey(props.SceneId)) return false;
 
-        // Validate destination scene exists in game data.
-        if (!GameData.SceneData.ContainsKey(props.SceneId))
-        {
-            Logger.Warn($"Teleport to unknown scene {props.SceneId}");
-            return false;
-        }
-
-        // Default target position to current position if not specified.
         props.TeleportTo ??= player.Position.Clone();
 
-        // Save previous scene/position BEFORE the transition for the enter-scene packet.
         var oldScene = player.Scene;
         int prevSceneId = (int)player.SceneId;
         var prevPos = player.Position.Clone();
 
         var newScene = GetSceneById(props.SceneId);
-        if (newScene == null)
-            return false;
+        if (newScene == null) return false;
 
-        // Same-scene fast path: just move the player, no full scene transition.
+        // Same-scene fast path
         if (newScene == oldScene && props.TeleportType == TeleportType.Command)
         {
-            if (props.TeleportTo != null)
-                player.Position.Set(props.TeleportTo);
-            if (props.TeleportRot != null)
-                player.Rotation.Set(props.TeleportRot);
+            if (props.TeleportTo != null) player.Position.Set(props.TeleportTo);
+            if (props.TeleportRot != null) player.Rotation.Set(props.TeleportRot);
             _ = player.SendPacket(new PacketSceneEntityAppearNotify(player));
             return true;
         }
 
-        // Remove from old scene (preserve scene if teleporting back into it).
         if (oldScene != null)
         {
-            if (oldScene == newScene)
-                oldScene.DontDestroyWhenEmpty = true;
+            if (oldScene == newScene) oldScene.DontDestroyWhenEmpty = true;
             oldScene.RemovePlayer(player);
         }
 
-        // Add to new scene.
-        if (newScene != null)
-        {
-            newScene.AddPlayer(player);
+        newScene.AddPlayer(player);
 
-            // Resolve fallback position from scene config if not provided.
-            // TODO: Use scene script config born_pos/born_rot when available.
-        }
+        if (props.TeleportTo != null) player.Position.Set(props.TeleportTo);
+        if (props.TeleportRot != null) player.Rotation.Set(props.TeleportRot);
 
-        // Update player position and rotation.
-        if (props.TeleportTo != null)
-            player.Position.Set(props.TeleportTo);
-        if (props.TeleportRot != null)
-            player.Rotation.Set(props.TeleportRot);
-
-        // Track previous scene for cross-scene transitions.
-        if (oldScene != null && newScene != null && newScene != oldScene)
+        if (oldScene != null && newScene != oldScene)
         {
             newScene.PrevScenePoint = oldScene.PrevScenePoint;
             oldScene.DontDestroyWhenEmpty = false;
@@ -347,9 +275,31 @@ public class World
         player.PrevScene = prevSceneId;
         player.SetPrevPos(prevPos);
 
-        // Send enter-scene notify with saved previous scene/position.
         _ = player.SendPacket(new PacketPlayerEnterSceneNotify(player, props, prevSceneId, prevPos));
-
         return true;
     }
+
+    #endregion
+
+    #region Entity / Broadcast
+
+    // hk4e World::getNextEntityId — entity ID = (type << 21) + counter
+    public int GetNextEntityId(EntityIdTypeEnum type) => ((int)type << 21) + ++_nextEntityId;
+
+    public void BroadcastPacket(BasePacket packet)
+    {
+        List<PlayerInstance> snapshot;
+        lock (_playerLock) snapshot = _players.ToList();
+        foreach (var player in snapshot)
+        {
+            if (player.Connection?.IsOnline == true)
+                _ = player.SendPacket(packet);
+        }
+    }
+
+    // hk4e PlayerWorld::genRewardPointKey
+    public static ulong GenRewardPointKey(uint groupId, uint configId)
+        => ((ulong)groupId << 32) + configId;
+
+    #endregion
 }

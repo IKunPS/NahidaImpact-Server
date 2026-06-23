@@ -12,6 +12,21 @@ namespace NahidaImpact.Database.Inventory;
 public class InventoryData : BaseDatabaseDataHelper
 {
     [SugarColumn(IsJson = true)] public List<ItemData> Items { get; set; } = [];
+
+    public static InventoryData? GetInventoryDataByUid(int uid, bool forceReload = false)
+    {
+        return DatabaseHelper.GetInstance<InventoryData>(uid, forceReload);
+    }
+
+    public static InventoryData GetOrCreateInventoryData(int uid)
+    {
+        return DatabaseHelper.GetInstanceOrCreateNew<InventoryData>(uid);
+    }
+
+    public static void SaveInventoryData(InventoryData data)
+    {
+        DatabaseHelper.UpdateInstance(data);
+    }
 }
 
 public class ItemData
@@ -59,6 +74,12 @@ public class ItemData
         }
     }
 
+    public bool IsStackable => ItemType is not ItemType.ITEM_WEAPON and not ItemType.ITEM_RELIQUARY;
+    public bool IsEnhanceable => ItemType is ItemType.ITEM_WEAPON or ItemType.ITEM_RELIQUARY;
+    public bool IsExpItem => ItemDataExcel?.MaterialType is MaterialType.MATERIAL_WEAPON_EXP_STONE
+        or MaterialType.MATERIAL_AVATAR_MATERIAL
+        or MaterialType.MATERIAL_RELIQUARY_MATERIAL;
+
     public static int GetMinPromoteLevel(int level)
     {
         if (level > 80) return 6;
@@ -70,23 +91,25 @@ public class ItemData
         return 0;
     }
 
-    public int EquipSlot
+    public EquipType EquipType
     {
         get
         {
             var data = ItemDataExcel;
             return data?.EquipTypeStr switch
             {
-                "EQUIP_BRACER" => 1,
-                "EQUIP_NECKLACE" => 2,
-                "EQUIP_SHOES" => 3,
-                "EQUIP_RING" => 4,
-                "EQUIP_DRESS" => 5,
-                "EQUIP_WEAPON" => 6,
-                _ => 0
+                "EQUIP_BRACER" => EquipType.EquipBracer,
+                "EQUIP_NECKLACE" => EquipType.EquipNecklace,
+                "EQUIP_SHOES" => EquipType.EquipShoes,
+                "EQUIP_RING" => EquipType.EquipRing,
+                "EQUIP_DRESS" => EquipType.EquipDress,
+                "EQUIP_WEAPON" => EquipType.EquipWeapon,
+                _ => EquipType.EquipNone
             };
         }
     }
+
+    public int EquipSlot => (int)EquipType;
 
     /// <summary>Generate initial random affixes from item data's skillAffix list.</summary>
     public void InitWeaponAffixes()
@@ -97,4 +120,19 @@ public class ItemData
     }
 
     public ItemParamData ToItemParamData() => new(ItemId, Count);
+}
+
+public static class InventoryDataExtensions
+{
+    public static ItemData? FindByEquipCharacter(this InventoryData data, int avatarId, EquipType slot)
+        => data.Items.FirstOrDefault(i => i.EquipCharacter == avatarId && i.EquipType == slot);
+
+    public static ItemData? FindWeapon(this InventoryData data, int avatarId)
+        => data.Items.FirstOrDefault(i => i.EquipCharacter == avatarId && i.ItemType == ItemType.ITEM_WEAPON);
+
+    public static List<ItemData> FindRelics(this InventoryData data, int avatarId)
+        => data.Items.Where(i => i.EquipCharacter == avatarId && i.ItemType == ItemType.ITEM_RELIQUARY).ToList();
+
+    public static int GetItemCount(this InventoryData data, int itemId)
+        => data.Items.Where(i => i.ItemId == itemId).Sum(i => i.Count);
 }

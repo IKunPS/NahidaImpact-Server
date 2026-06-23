@@ -5,7 +5,6 @@ using NahidaImpact.GameServer.Game.Worlds;
 using NahidaImpact.GameServer.Server.Packet.Send;
 using NahidaImpact.Prop;
 using NahidaImpact.Proto;
-using System.Collections.Generic;
 using NahidaImpact.GameServer.Server.Packet.Send.Entity;
 using ElementType = NahidaImpact.Data.Ability.ElementType;
 
@@ -30,8 +29,7 @@ public abstract class BaseEntity
     public bool LockHP { get; set; }
     public bool IsDead { get; set; }
     public bool RestrictedFromHealing { get; set; }
-    // TODO: DetailAbilityInfo proto not yet generated in C#
-    public object? DetailAbilityInfo { get; set; }
+    public DetailAbilityInfo? DetailAbilityInfo { get; set; }
     public ElementType LastAttackType { get; set; } = ElementType.None;
 
     public int CampId { get; set; }
@@ -154,7 +152,8 @@ public abstract class BaseEntity
         AddFightProperty(FightProp.FIGHT_PROP_CUR_HP, toHeal);
         AddFightProperty(FightProp.FIGHT_PROP_CUR_HP_DEBTS, -toRepay);
 
-        // Broadcast fight prop updates (mirrors Java GameEntity.heal)
+        TriggerModifierEvent(m => m.OnHeal);
+
         if (toHeal > 0)
         {
             Scene?.BroadcastPacket(new PacketEntityFightPropUpdateNotify(this, FightProp.FIGHT_PROP_CUR_HP));
@@ -174,12 +173,24 @@ public abstract class BaseEntity
         return toHeal;
     }
     
+    // hk4e: modify damage ratio set by ModifyDamageMixin, checked in Damage()
+    public float ModifyDamageRatio
+    {
+        get
+        {
+            if (GlobalAbilityValues.TryGetValue("_ModifyDamage_Ratio", out var value))
+                return value;
+            return 1f;
+        }
+    }
+
     public virtual void Damage(float amount, int killerId = 0, ElementType attackType = ElementType.None)
     {
         if (FightProperties == null || !HasFightProperty(FightProp.FIGHT_PROP_CUR_HP))
             return;
 
-        // TODO: Invoke EntityDamageEvent
+        // Apply damage modification from modifier mixins
+        var modifiedAmount = amount * ModifyDamageRatio;
 
         float effectiveDamage = 0;
         float curHp = GetFightProperty(FightProp.FIGHT_PROP_CUR_HP);
@@ -190,23 +201,23 @@ public abstract class BaseEntity
             float curRatio = curHp / maxHp;
             if (curRatio > _limboHpThreshold)
             {
-                effectiveDamage = amount;
+                effectiveDamage = modifiedAmount;
             }
             if (effectiveDamage >= curHp && _limboHpThreshold > 0f)
             {
-                // Don't let entity die while in limbo
                 effectiveDamage = curHp - 1;
             }
         }
         else if (curHp != float.PositiveInfinity && !LockHP
-            || (LockHP && curHp <= amount))
+            || (LockHP && curHp <= modifiedAmount))
         {
-            effectiveDamage = amount;
+            effectiveDamage = modifiedAmount;
         }
 
         AddFightProperty(FightProp.FIGHT_PROP_CUR_HP, -effectiveDamage);
 
         LastAttackType = attackType;
+        TriggerModifierEvent(m => m.OnBeingHit);
         CheckIfDead();
 
         Scene?.BroadcastPacket(new PacketEntityFightPropUpdateNotify(this, FightProp.FIGHT_PROP_CUR_HP));
@@ -216,7 +227,6 @@ public abstract class BaseEntity
 
         if (IsDead)
         {
-            // TODO: Scene.KillEntity(this, killerId) once implemented
             OnDeath(killerId);
         }
     }
@@ -263,16 +273,32 @@ public abstract class BaseEntity
     
     public virtual void OnDeath(int killerId)
     {
-        // TODO: Invoke EntityDeathEvent
+        TriggerModifierEvent(m => m.OnKill);
         IsDead = true;
     }
-    
+
+    // Iterates instanced modifiers and fires matching lifecycle event actions
+    protected void TriggerModifierEvent(Func<AbilityModifier, AbilityModifierAction[]> eventSelector)
+    {
+        foreach (var modCtrl in InstancedModifiers.Values)
+        {
+            var actions = eventSelector(modCtrl.ModifierData);
+            if (actions == null) continue;
+            // Lifecycle actions dispatched via the owning ability's manager
+            foreach (var action in actions)
+            {
+                if (modCtrl.Ability?.Manager != null && modCtrl.Ability != null)
+                    modCtrl.Ability.Manager.ExecuteAction(modCtrl.Ability, action, Google.Protobuf.ByteString.Empty, this);
+            }
+        }
+    }
+
     public virtual void OnInteract(PlayerInstance player, object interactReq) { }
-    
+
     public virtual void OnTick(int sceneTime) { }
-    
+
     public virtual int OnClientExecuteRequest(int param1, int param2, int param3) => 0;
-    
+
     public virtual void RunLuaCallbacks(object damageEvent) { }
     
     public void AddAllFightPropsToEntityInfo(SceneEntityInfo entityInfo)

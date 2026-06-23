@@ -1,27 +1,30 @@
+using System.Reflection;
+using Google.Protobuf;
 using NahidaImpact.Data;
 using NahidaImpact.Data.Ability;
 using NahidaImpact.GameServer.Game.Entity;
 using NahidaImpact.GameServer.Game.Player;
-using Google.Protobuf;
-using System.Reflection;
 using NahidaImpact.GameServer.Server.Packet.Send.Ability;
-
+using NahidaImpact.Proto;
+using NahidaImpact.Util;
 
 namespace NahidaImpact.GameServer.Game.Ability;
 
 public class AbilityManager
 {
-    private static readonly Dictionary<string, AbilityActionHandler> _actionHandlers = new();
-    private static readonly Dictionary<AbilityMixinData.MixinType, AbilityMixinHandler> _mixinHandlers = new();
-    private static readonly Util.Logger _logger = new("AbilityManager");
-    private readonly PlayerInstance _player;
+    private static readonly Dictionary<string, AbilityActionHandler> ActionHandlers = [];
+    private static readonly Dictionary<AbilityMixinData.MixinType, AbilityMixinHandler> MixinHandlers = [];
+    private static readonly Util.Logger Logger = new("AbilityManager");
 
-    public bool AbilityInvulnerable { get; set; }
+    private readonly PlayerInstance _player;
     private int _burstCasterId;
     private int _burstSkillId;
-    
+
+    public bool AbilityInvulnerable { get; set; }
     public InvokeHandler<AbilityInvokeEntry> AbilityInvokeHandler { get; }
     public InvokeHandler<AbilityInvokeEntry> ClientAbilityInitFinishHandler { get; }
+
+    public PlayerInstance Player => _player;
 
     public AbilityManager(PlayerInstance player)
     {
@@ -30,22 +33,16 @@ public class AbilityManager
         ClientAbilityInitFinishHandler = new InvokeHandler<AbilityInvokeEntry>(PacketClientAbilityInitFinishNotify);
         RemovePendingEnergyClear();
 
-        lock (_actionHandlers)
+        lock (ActionHandlers)
         {
-            if (_actionHandlers.Count == 0)
+            if (ActionHandlers.Count == 0)
                 RegisterHandlers();
         }
     }
 
-    public PlayerInstance Player => _player;
+    #region Handler Registration
 
-    public void RemovePendingEnergyClear()
-    {
-        _burstCasterId = 0;
-        _burstSkillId = 0;
-    }
-
-    public static void RegisterHandlers()
+    private static void RegisterHandlers()
     {
         var assembly = Assembly.GetExecutingAssembly();
         foreach (var type in assembly.GetTypes())
@@ -56,7 +53,7 @@ public class AbilityManager
                 if (attr != null)
                 {
                     var handler = (AbilityActionHandler)Activator.CreateInstance(type)!;
-                    _actionHandlers[attr.ActionType] = handler;
+                    ActionHandlers[attr.ActionType] = handler;
                 }
             }
 
@@ -66,15 +63,19 @@ public class AbilityManager
                 if (attr != null)
                 {
                     var handler = (AbilityMixinHandler)Activator.CreateInstance(type)!;
-                    _mixinHandlers[attr.MixinType] = handler;
+                    MixinHandlers[attr.MixinType] = handler;
                 }
             }
         }
     }
 
+    #endregion
+
+    #region Action / Mixin Dispatch
+
     public void ExecuteAction(Ability ability, AbilityModifierAction action, ByteString abilityData, BaseEntity target)
     {
-        if (!_actionHandlers.TryGetValue(action.Type, out var handler) || ability == null)
+        if (!ActionHandlers.TryGetValue(action.Type, out var handler) || ability == null)
             return;
 
         if (handler.AbilityManager == null)
@@ -83,37 +84,35 @@ public class AbilityManager
         _ = Task.Run(async () =>
         {
             if (!await handler.Execute(ability, action, abilityData, target))
-            {
-                _logger.Debug($"Ability execute action failed for {action.Type} at {ability}");
-            }
+                Logger.Debug($"Action failed: {action.Type} ability:{ability.Data.AbilityName}");
         });
     }
 
     public void ExecuteMixin(Ability ability, AbilityMixinData mixinData, ByteString abilityData)
     {
-        if (!_mixinHandlers.TryGetValue(mixinData.Type, out var handler) || ability == null)
+        if (!MixinHandlers.TryGetValue(mixinData.Type, out var handler) || ability == null)
             return;
 
         var target = ability.Owner;
         _ = Task.Run(async () =>
         {
             if (!await handler.Execute(ability, mixinData, abilityData, target))
-            {
-                _logger.Error($"Ability execute mixin failed for {mixinData.Type} at {ability}");
-            }
+                Logger.Error($"Mixin failed: {mixinData.Type} ability:{ability.Data.AbilityName}");
         });
     }
+
+    #endregion
+
+    #region Client Invoke Entry Point
 
     public void OnAbilityInvoke(AbilityInvokeEntry invoke)
     {
         var head = invoke.Head;
         var entity = _player.Scene?.GetEntityById((int)invoke.EntityId);
         if (entity == null) return;
-        
+
         if (head != null && head.LocalId != 0)
-        {
             HandleServerInvoke(invoke, entity);
-        }
 
         switch (invoke.ArgumentType)
         {
@@ -141,246 +140,12 @@ public class AbilityManager
             case AbilityInvokeArgument.MetaAddSpecialEnergyValue:
                 HandleAddSpecialEnergy(invoke, entity);
                 break;
+            case AbilityInvokeArgument.MetaModifierDurabilityChange:
+                HandleModifierDurabilityChange(invoke, entity);
+                break;
             case AbilityInvokeArgument.MixinChangePhlogiston:
                 break;
         }
-    }
-
-    private static void SetAbilityOverrideValue(Ability ability, AbilityScalarValueEntry valueChange)
-    {
-        if (valueChange?.Key == null) return;
-
-        string? key;
-        if (valueChange.Key.HasStr)
-            key = valueChange.Key.Str;
-        else if (valueChange.Key.HasHash)
-            key = GameData.GetAbilityNameByHash(valueChange.Key.Hash);
-        else
-            return;
-
-        if (key == null) return;
-
-        ability.AbilitySpecials[key] = valueChange.FloatValue;
-    }
-
-    private static void HandleOverrideParam(AbilityInvokeEntry invoke, BaseEntity entity)
-    {
-        var head = invoke.Head;
-        if (head == null) return;
-
-        var instancedAbilityIndex = (int)head.InstancedAbilityId - 1;
-        if (instancedAbilityIndex >= entity.InstancedAbilities.Count) return;
-
-        var ability = entity.InstancedAbilities[instancedAbilityIndex];
-
-        try
-        {
-            var valueChange = AbilityScalarValueEntry.Parser.ParseFrom(invoke.AbilityData);
-            SetAbilityOverrideValue(ability, valueChange);
-        }
-        catch (Exception ex) { _logger.Debug($"HandleOverrideParam failed: {ex.Message}"); }
-    }
-
-    private static void HandleReinitOverrideMap(AbilityInvokeEntry invoke, BaseEntity entity)
-    {
-        var head = invoke.Head;
-        if (head == null) return;
-
-        var instancedAbilityIndex = (int)head.InstancedAbilityId - 1;
-        if (instancedAbilityIndex >= entity.InstancedAbilities.Count) return;
-
-        var ability = entity.InstancedAbilities[instancedAbilityIndex];
-
-        try
-        {
-            var valueChanges = AbilityMetaReInitOverrideMap.Parser.ParseFrom(invoke.AbilityData);
-            foreach (var varChange in valueChanges.OverrideMap)
-            {
-                SetAbilityOverrideValue(ability, varChange);
-            }
-        }
-        catch (Exception ex) { _logger.Debug($"HandleOverrideParam failed: {ex.Message}"); }
-    }
-
-    private void OnPossibleElementalBurst(Ability ability, AbilityModifier modifier, int entityId)
-    {
-        if (_burstCasterId == 0) return;
-
-        bool skillInvincibility = modifier.State == State.Invincible;
-        if (modifier.OnAdded != null)
-        {
-            skillInvincibility |= modifier.OnAdded.Any(action =>
-                action.Type == "AttachAbilityStateResistance" && action.ResistanceListID == 11002);
-        }
-
-        if (_burstCasterId == entityId
-            && (ability.AvatarSkillStartIds.Contains(_burstSkillId) || skillInvincibility))
-        {
-            _logger.Debug($"Caster ID {entityId} burst successful, clearing energy and setting invulnerability");
-            AbilityInvulnerable = true;
-            // TODO: _player.EnergyManager?.HandleEvtDoSkillSuccNotify(_player.Session, _burstSkillId, _burstCasterId);
-            RemovePendingEnergyClear();
-        }
-    }
-
-    private void HandleModifierChange(AbilityInvokeEntry invoke, BaseEntity entity)
-    {
-        AbilityMetaModifierChange modChange;
-        try
-        {
-            modChange = AbilityMetaModifierChange.Parser.ParseFrom(invoke.AbilityData);
-        }
-        catch (Exception ex) { _logger.Debug($"HandleModifierChange parse failed: {ex.Message}"); return; }
-
-        var head = invoke.Head;
-        if (head == null) return;
-
-        // _Transfer_Vehicle special case
-        var parentName = modChange?.ParentAbilityName;
-        if (parentName != null && parentName.Str != null && parentName.Str.Contains("_Transfer_Vehicle"))
-        {
-            // TODO: Implement vehicle transfer when EntityVehicle and Scene entity management are ready
-            return;
-        }
-
-        if (head.InstancedAbilityId == 0 || head.InstancedModifierId > 2000)
-            return;
-
-        if (modChange.Action == ModifierAction.Added)
-        {
-            AbilityData? instancedAbilityData = null;
-            Ability? instancedAbility = null;
-
-            // Try target entity first
-            if (head.TargetId != 0)
-            {
-                var targetEntity = _player.Scene?.GetEntityById((int)head.TargetId);
-                if (targetEntity != null)
-                {
-                    if (head.InstancedAbilityId - 1 < targetEntity.InstancedAbilities.Count)
-                    {
-                        instancedAbility = targetEntity.InstancedAbilities[(int)(head.InstancedAbilityId - 1)];
-                        if (instancedAbility != null) instancedAbilityData = instancedAbility.Data;
-                    }
-                }
-            }
-
-            // Fallback to source entity
-            if (instancedAbilityData == null)
-            {
-                if (head.InstancedAbilityId - 1 < entity.InstancedAbilities.Count)
-                {
-                    instancedAbility = entity.InstancedAbilities[(int)(head.InstancedAbilityId - 1)];
-                    if (instancedAbility != null) instancedAbilityData = instancedAbility.Data;
-                }
-            }
-
-            // Fallback to parent ability name lookup
-            if (instancedAbilityData == null)
-            {
-                var pn = modChange?.ParentAbilityName;
-                if (pn != null && !string.IsNullOrEmpty(pn.Str))
-                    instancedAbilityData = GameData.GetAbilityData(pn.Str);
-            }
-
-            if (instancedAbilityData == null) return;
-
-            var modifierArray = instancedAbilityData.Modifiers.Values.ToArray();
-            if (modChange.ModifierLocalId >= modifierArray.Length) return;
-
-            var modifierData = modifierArray[modChange.ModifierLocalId];
-
-            if (instancedAbility != null)
-            {
-                OnPossibleElementalBurst(instancedAbility, modifierData, (int)invoke.EntityId);
-            }
-
-            var modifier = new AbilityModifierController(instancedAbility!, instancedAbilityData, modifierData);
-            entity.InstancedModifiers[(int)head.InstancedModifierId] = modifier;
-        }
-        else if (modChange.Action == ModifierAction.Removed)
-        {
-            _logger.Debug($"Removed on entity {(int)invoke.EntityId} modifier id {head.InstancedModifierId}");
-            entity.InstancedModifiers.Remove((int)head.InstancedModifierId);
-        }
-    }
-
-    private static void HandleGlobalFloatValue(AbilityInvokeEntry invoke, BaseEntity entity)
-    {
-        try
-        {
-            var entry = AbilityScalarValueEntry.Parser.ParseFrom(invoke.AbilityData);
-            if (entry?.Key == null) return;
-
-            string? key = null;
-            if (entry.Key.HasStr) key = entry.Key.Str;
-            else if (entry.Key.HasHash) key = GameData.GetAbilityNameByHash(entry.Key.Hash);
-
-            if (key == null) return;
-
-            if (!float.IsNaN(entry.FloatValue))
-                entity.GlobalAbilityValues[key] = entry.FloatValue;
-
-            entity.OnAbilityValueUpdate();
-        }
-        catch (Exception ex) { _logger.Debug($"HandleGlobalFloatValue failed: {ex.Message}"); }
-    }
-
-    private static void HandleClearGlobalFloatValue(AbilityInvokeEntry invoke, BaseEntity entity)
-    {
-        try
-        {
-            var entry = AbilityScalarValueEntry.Parser.ParseFrom(invoke.AbilityData);
-            if (entry?.Key == null) return;
-
-            string? key = null;
-            if (entry.Key.HasStr) key = entry.Key.Str;
-            else if (entry.Key.HasHash) key = GameData.GetAbilityNameByHash(entry.Key.Hash);
-
-            if (key == null) return;
-
-            entity.GlobalAbilityValues.Remove(key);
-            entity.OnAbilityValueUpdate();
-        }
-        catch (Exception ex) { _logger.Debug($"HandleClearGlobalFloatValue failed: {ex.Message}"); }
-    }
-
-    // ===== Add New Ability =====
-
-    private void HandleAddNewAbility(AbilityInvokeEntry invoke, BaseEntity entity)
-    {
-        try
-        {
-            var addAbility = AbilityMetaAddAbility.Parser.ParseFrom(invoke.AbilityData);
-            var abilityName = Ability.GetAbilityName(addAbility?.Ability?.AbilityName);
-            var abilityData = GameData.GetAbilityData(abilityName);
-            if (abilityData == null)
-            {
-                _logger.Debug($"Ability not found in AddNewAbility: {abilityName}");
-                return;
-            }
-
-            entity.InstancedAbilities.Add(new Ability(abilityData, entity, _player));
-        }
-        catch (Exception ex) { _logger.Debug($"HandleAddNewAbility failed: {ex.Message}"); }
-    }
-
-    private static void HandleKillState(AbilityInvokeEntry invoke, BaseEntity entity)
-    {
-        // TODO: Parse AbilityMetaSetKilledState when proto is available
-    }
-
-    private void HandleAddSpecialEnergy(AbilityInvokeEntry invoke, BaseEntity entity)
-    {
-        // TODO: Parse AbilityMetaSpecialEnergy when proto is available
-        var head = invoke.Head;
-        if (head == null) return;
-
-        var target = head.TargetId != 0 ? _player.Scene?.GetEntityById((int)head.TargetId) : null;
-        target ??= entity;
-        if (target == null) return;
-
-        // Placeholder: need AbilityMetaSpecialEnergy proto
     }
 
     public void HandleServerInvoke(AbilityInvokeEntry invoke, BaseEntity entity)
@@ -393,14 +158,12 @@ public class AbilityManager
 
         Ability? ability = null;
 
-        // Find ability from instanced modifier ID
         if (head.InstancedModifierId != 0
             && entity.InstancedModifiers.TryGetValue((int)head.InstancedModifierId, out var modCtrl))
         {
             ability = modCtrl.Ability;
         }
 
-        // Find ability from instanced ability ID
         if (ability == null
             && head.InstancedAbilityId != 0
             && head.InstancedAbilityId - 1 < entity.InstancedAbilities.Count)
@@ -408,37 +171,315 @@ public class AbilityManager
             ability = entity.InstancedAbilities[(int)(head.InstancedAbilityId - 1)];
         }
 
-        if (ability == null)
-        {
-            _logger.Debug($"Ability not found: ability {head.InstancedAbilityId} modifier {head.InstancedModifierId}");
-            return;
-        }
+        if (ability == null) return;
 
-        // Build DetailAbilityInfo placeholder (proto not yet available)
-        // entity.DetailAbilityInfo = ...;
+        ability.Caster = entity;
 
-        // Dispatch by local ID to action or mixin
-        var action = ability.Data.LocalIdToAction.GetValueOrDefault((int)head.LocalId);
-        if (action != null)
+        if (ability.Data.LocalIdToAction.TryGetValue((int)head.LocalId, out var action))
         {
             ExecuteAction(ability, action, invoke.AbilityData, target);
             return;
         }
 
-        var mixin = ability.Data.LocalIdToMixin.GetValueOrDefault((int)head.LocalId);
-        if (mixin != null)
+        if (ability.Data.LocalIdToMixin.TryGetValue((int)head.LocalId, out var mixin))
         {
             ExecuteMixin(ability, mixin, invoke.AbilityData);
+        }
+    }
+
+    #endregion
+
+    #region Override Param / Override Map
+
+    private static void SetAbilityOverrideValue(Ability ability, AbilityScalarValueEntry entry)
+    {
+        if (entry?.Key == null) return;
+
+        string? key;
+        if (entry.Key.HasStr)
+            key = entry.Key.Str;
+        else if (entry.Key.HasHash)
+            key = GameData.GetAbilityNameByHash(entry.Key.Hash);
+        else
             return;
-        }
 
-        // Phlogiston revive gadget handling
-        if (ability.Data.AbilityName == "SceneObj_Area_Nt_Property_Prop_PhlogistonRevive")
+        if (key == null) return;
+
+        ability.AbilitySpecials[key] = entry.FloatValue;
+        ability.OverrideMap[(int)Utils.AbilityHash(key)] = entry.FloatValue;
+    }
+
+    private static void HandleOverrideParam(AbilityInvokeEntry invoke, BaseEntity entity)
+    {
+        var head = invoke.Head;
+        if (head == null) return;
+
+        var idx = (int)head.InstancedAbilityId - 1;
+        if (idx >= entity.InstancedAbilities.Count) return;
+
+        var ability = entity.InstancedAbilities[idx];
+
+        try
         {
-            // TODO: Handle gadget state update when EntityGadget is available
+            var entry = AbilityScalarValueEntry.Parser.ParseFrom(invoke.AbilityData);
+            SetAbilityOverrideValue(ability, entry);
+        }
+        catch (Exception) { /* proto parse failure is non-critical */ }
+    }
+
+    private static void HandleReinitOverrideMap(AbilityInvokeEntry invoke, BaseEntity entity)
+    {
+        var head = invoke.Head;
+        if (head == null) return;
+
+        var idx = (int)head.InstancedAbilityId - 1;
+        if (idx >= entity.InstancedAbilities.Count) return;
+
+        var ability = entity.InstancedAbilities[idx];
+
+        try
+        {
+            var reinit = AbilityMetaReInitOverrideMap.Parser.ParseFrom(invoke.AbilityData);
+            foreach (var entry in reinit.OverrideMap)
+                SetAbilityOverrideValue(ability, entry);
+        }
+        catch (Exception) { }
+    }
+
+    #endregion
+
+    #region Modifier Change (Add / Remove)
+
+    private void OnPossibleElementalBurst(Ability ability, AbilityModifier modifier, int entityId)
+    {
+        if (_burstCasterId == 0) return;
+
+        var invincible = modifier.State == State.Invincible;
+        if (modifier.OnAdded != null)
+        {
+            invincible |= modifier.OnAdded.Any(a =>
+                a.Type == "AttachAbilityStateResistance" && a.ResistanceListID == 11002);
         }
 
-        _logger.Debug($"Action or mixin not found: local_id {head.LocalId} ability {ability.Data.AbilityName}");
+        if (_burstCasterId == entityId
+            && (ability.AvatarSkillStartIds.Contains(_burstSkillId) || invincible))
+        {
+            AbilityInvulnerable = true;
+            RemovePendingEnergyClear();
+        }
+    }
+
+    private void HandleModifierChange(AbilityInvokeEntry invoke, BaseEntity entity)
+    {
+        AbilityMetaModifierChange modChange;
+        try { modChange = AbilityMetaModifierChange.Parser.ParseFrom(invoke.AbilityData); }
+        catch (Exception) { return; }
+
+        var head = invoke.Head;
+        if (head == null) return;
+
+        // Vehicle transfer check
+        if (modChange?.ParentAbilityName?.Str?.Contains("_Transfer_Vehicle") == true)
+            return;
+
+        if (head.InstancedAbilityId == 0 || head.InstancedModifierId > 2000)
+            return;
+
+        if (modChange.Action == ModifierAction.Added)
+        {
+            AbilityData? abilityData = null;
+            Ability? ability = null;
+
+            if (head.TargetId != 0)
+            {
+                var target = _player.Scene?.GetEntityById((int)head.TargetId);
+                if (target != null && head.InstancedAbilityId - 1 < target.InstancedAbilities.Count)
+                {
+                    ability = target.InstancedAbilities[(int)(head.InstancedAbilityId - 1)];
+                    abilityData = ability?.Data;
+                }
+            }
+
+            if (abilityData == null && head.InstancedAbilityId - 1 < entity.InstancedAbilities.Count)
+            {
+                ability = entity.InstancedAbilities[(int)(head.InstancedAbilityId - 1)];
+                abilityData = ability?.Data;
+            }
+
+            if (abilityData == null)
+            {
+                var pn = modChange?.ParentAbilityName;
+                if (pn != null && !string.IsNullOrEmpty(pn.Str))
+                    abilityData = GameData.GetAbilityData(pn.Str);
+            }
+
+            if (abilityData == null) return;
+
+            var modifiers = abilityData.Modifiers.Values.ToArray();
+            if (modChange.ModifierLocalId >= modifiers.Length) return;
+
+            var modifierData = modifiers[modChange.ModifierLocalId];
+
+            if (ability != null)
+                OnPossibleElementalBurst(ability, modifierData, (int)invoke.EntityId);
+
+            var attached = modChange.AttachedInstancedModifier;
+            var modifier = new AbilityModifierController(ability!, abilityData, modifierData)
+            {
+                ModifierId = head.InstancedModifierId,
+                ApplyEntityId = invoke.EntityId,
+                IsAttachedParentAbility = modChange.IsAttachedParentAbility,
+                AttachedModifierId = attached?.InstancedModifierId ?? 0,
+                AttachedModifierOwnerEntityId = attached?.OwnerEntityId ?? 0,
+                StartTimeMs = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds(),
+                IsMuteRemote = modChange.IsMuteRemote,
+                IsServerBuffModifier = modChange.ServerBuffUid != 0,
+                ServerBuffUid = modChange.ServerBuffUid,
+                ElementRemainingDurability = modChange.IsDurabilityZero ? 0f : modifierData.ElementDurability,
+                ElementReduceRatio = 1f
+            };
+
+            entity.InstancedModifiers[(int)head.InstancedModifierId] = modifier;
+        }
+        else if (modChange.Action == ModifierAction.Removed)
+        {
+            entity.InstancedModifiers.Remove((int)head.InstancedModifierId);
+        }
+    }
+
+    #endregion
+
+    #region Global Float Value
+
+    private static void HandleGlobalFloatValue(AbilityInvokeEntry invoke, BaseEntity entity)
+    {
+        try
+        {
+            var entry = AbilityScalarValueEntry.Parser.ParseFrom(invoke.AbilityData);
+            if (entry?.Key == null) return;
+
+            string? key;
+            if (entry.Key.HasStr)
+                key = entry.Key.Str;
+            else if (entry.Key.HasHash)
+                key = GameData.GetAbilityNameByHash(entry.Key.Hash);
+            else
+                return;
+
+            if (key == null) return;
+
+            if (!float.IsNaN(entry.FloatValue))
+                entity.GlobalAbilityValues[key] = entry.FloatValue;
+
+            entity.OnAbilityValueUpdate();
+        }
+        catch (Exception) { }
+    }
+
+    private static void HandleClearGlobalFloatValue(AbilityInvokeEntry invoke, BaseEntity entity)
+    {
+        try
+        {
+            var entry = AbilityScalarValueEntry.Parser.ParseFrom(invoke.AbilityData);
+            if (entry?.Key == null) return;
+
+            string? key;
+            if (entry.Key.HasStr)
+                key = entry.Key.Str;
+            else if (entry.Key.HasHash)
+                key = GameData.GetAbilityNameByHash(entry.Key.Hash);
+            else
+                return;
+
+            if (key == null) return;
+
+            entity.GlobalAbilityValues.Remove(key);
+            entity.OnAbilityValueUpdate();
+        }
+        catch (Exception) { }
+    }
+
+    #endregion
+
+    #region Add New Ability
+
+    private void HandleAddNewAbility(AbilityInvokeEntry invoke, BaseEntity entity)
+    {
+        try
+        {
+            var addAbility = AbilityMetaAddAbility.Parser.ParseFrom(invoke.AbilityData);
+            var abilityName = Ability.GetAbilityName(addAbility?.Ability?.AbilityName);
+            var abilityData = GameData.GetAbilityData(abilityName);
+            if (abilityData == null) return;
+
+            entity.InstancedAbilities.Add(new Ability(abilityData, entity, _player));
+        }
+        catch (Exception) { }
+    }
+
+    #endregion
+
+    #region Kill State / Special Energy / Durability Change
+
+    private static void HandleKillState(AbilityInvokeEntry invoke, BaseEntity entity)
+    {
+        try
+        {
+            var killedState = AbilityMetaSetKilledState.Parser.ParseFrom(invoke.AbilityData);
+            if (killedState.Killed)
+            {
+                entity.IsDead = true;
+                entity.OnDeath(0);
+            }
+        }
+        catch (Exception) { }
+    }
+
+    private void HandleAddSpecialEnergy(AbilityInvokeEntry invoke, BaseEntity entity)
+    {
+        var head = invoke.Head;
+        if (head == null) return;
+
+        if (_player.Scene == null) return;
+
+        var target = entity;
+        if (head.TargetId != 0)
+            target = _player.Scene.GetEntityById((int)head.TargetId) ?? entity;
+
+        try
+        {
+            var specialEnergy = AbilityMetaSpecialEnergy.Parser.ParseFrom(invoke.AbilityData);
+            target.AddSpecialEnergy(specialEnergy.Value);
+        }
+        catch (Exception) { }
+    }
+
+    private static void HandleModifierDurabilityChange(AbilityInvokeEntry invoke, BaseEntity entity)
+    {
+        var head = invoke.Head;
+        if (head == null || head.InstancedModifierId == 0) return;
+
+        if (!entity.InstancedModifiers.TryGetValue((int)head.InstancedModifierId, out var modCtrl))
+            return;
+
+        try
+        {
+            var durability = ModifierDurability.Parser.ParseFrom(invoke.AbilityData);
+            modCtrl.ElementReduceRatio = durability.ReduceRatio;
+            modCtrl.ElementRemainingDurability = durability.RemainingDurability;
+            modCtrl.ElementLastTickTimeMs = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+        }
+        catch (Exception) { }
+    }
+
+    #endregion
+
+    #region Element Skill Burst
+
+    public void RemovePendingEnergyClear()
+    {
+        _burstCasterId = 0;
+        _burstSkillId = 0;
     }
 
     public void OnSkillStart(PlayerInstance player, int skillId, int casterId)
@@ -449,11 +490,6 @@ public class AbilityManager
         if (currentAvatar == null || currentAvatar.Id != casterId)
             return;
 
-        // TODO: Look up AvatarSkillData when available
-        // var skillData = GameData.GetAvatarSkillData(skillId);
-        // if (skillData == null) return;
-        // if (skillData.CostElemVal <= 0) return;
-
         _burstSkillId = skillId;
         _burstCasterId = casterId;
     }
@@ -461,18 +497,18 @@ public class AbilityManager
     public void OnSkillEnd(PlayerInstance player)
     {
         if (player.Uid != _player.Uid) return;
-
         if (!AbilityInvulnerable) return;
-
         AbilityInvulnerable = false;
     }
+
+    #endregion
+
+    #region Entity Ability Management
 
     public void AddAbilityToEntity(BaseEntity entity, string abilityName)
     {
         if (GameData.AbilityData.TryGetValue(abilityName, out var abilityData))
-        {
             AddAbilityToEntity(entity, abilityData);
-        }
     }
 
     public void AddAbilityToEntity(BaseEntity entity, AbilityData abilityData)
@@ -481,39 +517,34 @@ public class AbilityManager
         entity.InstancedAbilities.Add(ability);
     }
 
+    #endregion
+
+    #region Network
+
     private void PacketAbilityInvocationsNotify(List<AbilityInvokeEntry> entries)
     {
-        var packet = new PacketAbilityInvocationsNotify(entries);
-        _ = _player.SendPacket(packet);
+        _ = _player.SendPacket(new PacketAbilityInvocationsNotify(entries));
     }
 
     private void PacketClientAbilityInitFinishNotify(List<AbilityInvokeEntry> entries)
     {
-        var packet = new PacketClientAbilityInitFinishNotify(entries);
-        _ = _player.SendPacket(packet);
+        _ = _player.SendPacket(new PacketClientAbilityInitFinishNotify(entries));
     }
+
+    #endregion
 }
 
 public class InvokeHandler<T>
 {
     private readonly Action<List<T>> _sendAction;
-    private readonly List<T> _entryList = new();
+    private readonly List<T> _entryList = [];
     private readonly object _lock = new();
 
-    public InvokeHandler(Action<List<T>> sendAction)
-    {
-        _sendAction = sendAction;
-    }
+    public InvokeHandler(Action<List<T>> sendAction) => _sendAction = sendAction;
 
-    public void AddEntry(T entry)
-    {
-        lock (_lock) { _entryList.Add(entry); }
-    }
+    public void AddEntry(T entry) { lock (_lock) _entryList.Add(entry); }
 
-    public void Clear()
-    {
-        lock (_lock) { _entryList.Clear(); }
-    }
+    public void Clear() { lock (_lock) _entryList.Clear(); }
 
     public void Send()
     {
@@ -527,8 +558,5 @@ public class InvokeHandler<T>
         }
     }
 
-    public int Count
-    {
-        get { lock (_lock) { return _entryList.Count; } }
-    }
+    public int Count { get { lock (_lock) return _entryList.Count; } }
 }

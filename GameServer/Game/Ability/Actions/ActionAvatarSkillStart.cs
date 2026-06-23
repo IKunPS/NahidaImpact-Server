@@ -1,17 +1,18 @@
-﻿using Google.Protobuf;
+using Google.Protobuf;
 using NahidaImpact.Data.Ability;
 using NahidaImpact.GameServer.Game.Entity;
-using System.Threading.Tasks;
+using NahidaImpact.GameServer.Game.Player;
 
 namespace NahidaImpact.GameServer.Game.Ability.Actions;
 
 [AbilityAction("AvatarSkillStart")]
 public class ActionAvatarSkillStart : AbilityActionHandler
 {
+    // hk4e AvatarSkillStartImpl — marks skill start for burst invulnerability tracking and quest triggers
     public override Task<bool> Execute(Ability ability, AbilityModifierAction action, ByteString abilityData, BaseEntity target)
     {
-        // TODO: Trigger quest content for allowed skill IDs when quest system is ready
-        // TODO: Handle stamina cost via costStaminaRatio
+        if (ability.PlayerOwner != null)
+            ability.Manager.OnSkillStart(ability.PlayerOwner, action.SkillID, (int)target.Id);
 
         return Task.FromResult(true);
     }

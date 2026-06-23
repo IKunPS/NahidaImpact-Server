@@ -1,6 +1,6 @@
-﻿using System;
 using NahidaImpact.Data;
 using NahidaImpact.Data.Binout;
+using NahidaImpact.Data.Excel;
 using NahidaImpact.Database.Avatar;
 using NahidaImpact.Database.Inventory;
 using NahidaImpact.Enums.Entity;
@@ -18,8 +18,8 @@ public class EntityAvatar : BaseEntity
     public override ProtEntityType EntityType => ProtEntityType.Avatar;
 
     public AvatarDataInfo AvatarInfo { get; }
+    public uint LifeState { get; set; } = 1;
 
-    public uint LifeState { get; set; }
     public uint WeaponEntityId
     {
         get
@@ -30,66 +30,154 @@ public class EntityAvatar : BaseEntity
             return 0;
         }
     }
-    
-    public override bool IsAlive()
-    {
-        return !IsDead && LifeState == 1 && GetFightProperty(FightProp.FIGHT_PROP_CUR_HP) > 0f;
-    }
-    
-    public override Dictionary<int, float> GetFightProperties()
-    {
-        var dict = new Dictionary<int, float>();
-        foreach (var fp in FightProperties)
-            dict[(int)fp.PropType] = fp.PropValue;
-        return dict;
-    }
 
-    /// <summary>Invoked when a global ability value is updated. Checks quest triggers.</summary>
-    public override void OnAbilityValueUpdate()
-    {
-        base.OnAbilityValueUpdate();
-        // TODO: Check for _ABILITY_UziExplode_Count quest trigger
-    }
-
-    public void SetMotionState(MotionState state)
-    {
-        MotionState = state;
-    }
-
-    private uint _killedType = 0;
-    private int _killedBy = 0;
-
+    private uint _killedType;
+    private int _killedBy;
     public uint KilledType => _killedType;
-
     public int KilledBy => _killedBy;
 
-    public void SetKilled(uint dieType, int killerId)
-    {
-        _killedType = dieType;
-        _killedBy = killerId;
-        LifeState = 0;
-    }
-    
+    // Fly state tracking
+    private bool _isInFly;
+    private long _lastStartFlySceneTimeMs;
+    private Position _lastStartFlyPos = new();
+    private long _lastStaminaDrainTimeMs;
+
+    // Fall damage tracking
+    private Position _lastDropPos = new();
+    private long _lastDropTimeMs;
+    private float _lastFallSpeed;
+
+    public bool IsInFly => _isInFly;
+
+    public override bool IsAlive()
+        => !IsDead && LifeState == 1 && GetFightProperty(FightProp.FIGHT_PROP_CUR_HP) > 0f;
+
+    public override Position Position => Owner?.Position ?? new Position();
+    public override Position Rotation => Owner?.Rotation ?? new Position();
+    public override uint EntityTypeId => (uint)EntityIdTypeEnum.Avatar;
+
     public EntityAvatar(Scene scene, AvatarDataInfo avatarInfo) : base(scene)
     {
         Owner = scene.Host!;
         AvatarInfo = avatarInfo;
         Properties = avatarInfo.Properties;
         FightProperties = avatarInfo.FightProperties;
-        LastMoveSceneTimeMs = 0;
-        LastMoveReliableSeq = 0;
         LifeState = 1;
+        _lastDropPos = scene.Host?.Position?.Clone() ?? new Position();
 
         if (Scene?.World != null)
-        {
             Id = (uint)Scene.World.GetNextEntityId(EntityIdTypeEnum.Avatar);
-        }
 
         InitAbilities();
         CreateWeaponEntity();
     }
 
-    /// <summary>Create weapon entity in scene if the avatar has an equipped weapon with no valid entity.</summary>
+    public void SetMotionState(MotionState state)
+    {
+        var oldState = MotionState;
+        MotionState = state;
+        SetIsInFly(state, oldState);
+
+        // Track drop start position for fall damage calculation
+        if (state is MotionState.Jump or MotionState.Drop or MotionState.Fly
+            or MotionState.FlyIdle or MotionState.FlySlow or MotionState.FlyFast)
+        {
+            _lastDropPos = Position.Clone();
+            _lastDropTimeMs = Scene?.SceneTime ?? 0;
+            _lastFallSpeed = 0;
+        }
+
+        if (state == MotionState.FallOnGround && _lastDropTimeMs > 0)
+            HandleFallDamage();
+    }
+
+    private void SetIsInFly(MotionState newState, MotionState oldState)
+    {
+        var wasFlying = _isInFly;
+        _isInFly = newState is MotionState.Fly or MotionState.FlyIdle
+            or MotionState.FlySlow or MotionState.FlyFast;
+
+        if (_isInFly && !wasFlying)
+        {
+            _lastStartFlySceneTimeMs = Scene?.SceneTime ?? 0;
+            _lastStartFlyPos = Position.Clone();
+            new PlayerFlyEvent(Owner!, this, true).Call();
+        }
+        else if (wasFlying && !_isInFly)
+        {
+            var flyTimeMs = (Scene?.SceneTime ?? 0) - _lastStartFlySceneTimeMs;
+            var flyTime = flyTimeMs / 1000f;
+            var distance = Position.ComputeDistance(_lastStartFlyPos);
+            new PlayerFlyEvent(Owner!, this, false, flyTime, distance, _lastStartFlyPos).Call();
+        }
+    }
+
+    private void HandleFallDamage()
+    {
+        var sceneTime = Scene?.SceneTime ?? 0;
+        if (sceneTime <= _lastDropTimeMs) return;
+
+        var dropDistance = _lastDropPos.Y - Position.Y;
+        var dropDuration = (sceneTime - _lastDropTimeMs) / 1000f;
+        if (dropDuration <= 0) return;
+
+        _lastFallSpeed = Math.Abs(dropDistance) / dropDuration;
+
+        float minSpeed = 24f;
+        float addSpeed = 1f;
+        if (GameData.ConstValueMap.TryGetValue("CONST_VALUE_FALL_HURT", out var fallHurt) && fallHurt.Value.Count >= 4)
+        {
+            minSpeed = Math.Abs(float.Parse(fallHurt.Value[0]));
+            addSpeed = Math.Abs(float.Parse(fallHurt.Value[2]));
+        }
+
+        var maxHp = GetFightProperty(FightProp.FIGHT_PROP_CUR_HP);
+        if (_lastFallSpeed > minSpeed)
+        {
+            var damage = (_lastFallSpeed - minSpeed) * addSpeed * maxHp * GameConstants.FALL_DAMAGE_RATIO;
+            Damage(damage, 0, Data.Ability.ElementType.None);
+        }
+        _lastDropTimeMs = 0;
+    }
+
+    public void SetKilled(uint dieType, int killerId)
+    {
+        _killedType = dieType;
+        _killedBy = killerId;
+        LifeState = 0;
+        IsDead = true;
+    }
+
+    public override void OnAbilityValueUpdate()
+    {
+        base.OnAbilityValueUpdate();
+        // TODO: Quest trigger check for _ABILITY_UziExplode_Count
+    }
+
+    public override void OnTick(int sceneTime)
+    {
+        base.OnTick(sceneTime);
+        ProcStaminaDrain();
+    }
+
+    private void ProcStaminaDrain()
+    {
+        if (!_isInFly || Owner == null) return;
+
+        var sceneTime = Scene?.SceneTime ?? 0;
+        if (sceneTime - _lastStaminaDrainTimeMs < GameConstants.STAMINA_TICK_INTERVAL_MS) return;
+        _lastStaminaDrainTimeMs = sceneTime;
+
+        var flyCostPerSec = ConstValue.GetUint("CONST_VALUE_FLY_COST_STAMINA");
+        var tickCost = flyCostPerSec * GameConstants.STAMINA_TICK_RATIO;
+
+        if (!Owner.ConsumeStamina(tickCost))
+        {
+            // Stamina exhausted — client will auto-transition out of fly
+            _isInFly = false;
+        }
+    }
+
     private void CreateWeaponEntity()
     {
         var weapon = GetEquippedWeaponItem();
@@ -110,19 +198,15 @@ public class EntityAvatar : BaseEntity
         scene.WeaponEntities[(int)weaponEntity.Id] = weaponEntity;
     }
 
-    /// <summary>Look up the equipped weapon ItemData from inventory.</summary>
     private ItemData? GetEquippedWeaponItem()
     {
-        if (Owner == null) return null;
-        var inventory = Owner.InventoryManager;
-        return inventory.Items.Values.FirstOrDefault(i =>
+        return Owner?.InventoryManager.Items.Values.FirstOrDefault(i =>
             i.EquipCharacter == (int)AvatarInfo.AvatarId &&
-            i.ItemType == Enums.Item.ItemType.ITEM_WEAPON);
+            i.ItemType == ItemType.ITEM_WEAPON);
     }
-    
-    public void InitAbilities()
+
+    private void InitAbilities()
     {
-        // Get avatar short name from AvatarData (built via BuildEmbryo from IconName)
         var avatarData = GameData.AvatarData.GetValueOrDefault((int)AvatarInfo.AvatarId);
         var avatarName = avatarData?.Name;
         if (string.IsNullOrEmpty(avatarName)) return;
@@ -130,7 +214,6 @@ public class EntityAvatar : BaseEntity
         if (!GameData.AvatarConfigData.TryGetValue(avatarName, out var baseConfig)) return;
         if (baseConfig.Abilities == null) return;
 
-        // Collect base ability names
         var allAbilities = new HashSet<string>();
         foreach (var ab in baseConfig.Abilities)
         {
@@ -138,11 +221,8 @@ public class EntityAvatar : BaseEntity
                 allAbilities.Add(ab.AbilityName);
         }
 
-        // TODO: Merge extra ability embryos from equipment, talents, constellations
-        // var extraEmbryos = Player.AvatarManager?.GetAvatarByGuid(AvatarInfo.Guid)?.ExtraAbilityEmbryos;
-        // if (extraEmbryos != null) { foreach (var skill in extraEmbryos) allAbilities.Add(skill); }
+        // TODO: merge extra ability embryos from equipment, talents, constellations
 
-        // If extra abilities were added, update cached config and rebuild avatar data
         var currentAbilities = new HashSet<string>();
         foreach (var ab in baseConfig.Abilities)
         {
@@ -164,156 +244,143 @@ public class EntityAvatar : BaseEntity
                 Abilities = mergedAbilities
             };
 
-            // Rebuild avatar data abilities from merged list
             if (avatarData != null)
             {
                 avatarData.Abilities.Clear();
                 avatarData.AbilityNames.Clear();
-                foreach (var abilityName in allAbilities)
+                foreach (var name in allAbilities)
                 {
-                    avatarData.Abilities.Add(Utils.AbilityHash(abilityName));
-                    avatarData.AbilityNames.Add(abilityName);
+                    avatarData.Abilities.Add(Utils.AbilityHash(name));
+                    avatarData.AbilityNames.Add(name);
                 }
             }
         }
-
-        // TODO: Recalculate stats
-        // Player.AvatarManager?.GetAvatarById(AvatarInfo.AvatarId)?.RecalcStats(true);
     }
-    
-    public override Position Position => Owner?.Position ?? new Position();
 
-    public override Position Rotation => Owner?.Rotation ?? new Position();
+    public override Dictionary<int, float> GetFightProperties()
+    {
+        var dict = new Dictionary<int, float>();
+        foreach (var fp in FightProperties)
+            dict[(int)fp.PropType] = fp.PropValue;
+        return dict;
+    }
 
     public override void Move(Position newPosition, Position rotation)
     {
-        // Invoke player move event.
-        var evt = new PlayerMoveEvent(
-            Owner, PlayerMoveEvent.MoveType.PLAYER, Position, newPosition);
+        var evt = new PlayerMoveEvent(Owner, PlayerMoveEvent.MoveType.PLAYER, Position, newPosition);
         evt.Call();
-
-        // Set position and rotation.
         base.Move(evt.To, rotation);
     }
 
-    public override uint EntityTypeId => (uint)EntityIdTypeEnum.Avatar;
-    
+    #region Proto
+
     public override SceneEntityInfo ToProto()
     {
-        var authority = new EntityAuthorityInfo
-        {
-            AbilityInfo = new AbilitySyncStateInfo(),
-            RendererChangedInfo = new EntityRendererChangedInfo(),
-            AiInfo = new SceneEntityAiInfo(),
-            BornPos = new Vector()
-        };
-
-        var entityInfo = new SceneEntityInfo
+        var info = new SceneEntityInfo
         {
             EntityId = Id,
             EntityType = ProtEntityType.Avatar,
-            EntityAuthorityInfo = authority,
+            EntityAuthorityInfo = new EntityAuthorityInfo
+            {
+                AbilityInfo = new AbilitySyncStateInfo(),
+                RendererChangedInfo = new EntityRendererChangedInfo(),
+                AiInfo = new SceneEntityAiInfo(),
+                BornPos = new Vector()
+            },
             LastMoveSceneTimeMs = (uint)LastMoveSceneTimeMs,
             LastMoveReliableSeq = (uint)LastMoveReliableSeq,
             LifeState = LifeState,
             EntityClientData = new EntityClientData()
         };
 
-        entityInfo.AnimatorParaList.Add(new AnimatorParameterValueInfoPair());
+        info.AnimatorParaList.Add(new AnimatorParameterValueInfoPair());
 
         if (Scene != null)
-        {
-            entityInfo.MotionInfo = GetMotionInfo();
-        }
+            info.MotionInfo = GetMotionInfo();
 
-        foreach (var fightProp in FightProperties)
-        {
-            entityInfo.FightPropList.Add(new FightPropPair
-            {
-                PropType = fightProp.PropType,
-                PropValue = fightProp.PropValue
-            });
-        }
+        foreach (var fp in FightProperties)
+            info.FightPropList.Add(new FightPropPair { PropType = fp.PropType, PropValue = fp.PropValue });
 
-        entityInfo.PropList.Add(new PropPair
+        info.PropList.Add(new PropPair
         {
             Type = PlayerProp.PROP_LEVEL,
             PropValue = new PropValue { Type = PlayerProp.PROP_LEVEL, Ival = AvatarInfo.Level }
         });
 
-        entityInfo.Avatar = GetSceneAvatarInfo();
-
-        return entityInfo;
+        info.Avatar = GetSceneAvatarInfo();
+        return info;
     }
 
     public SceneAvatarInfo GetSceneAvatarInfo()
     {
-        var avatarInfo = AvatarInfo;
         var player = Owner;
-
-        var sceneAvatarInfo = new SceneAvatarInfo
+        var sceneInfo = new SceneAvatarInfo
         {
             Uid = (uint)player.Uid,
-            AvatarId = avatarInfo.AvatarId,
-            Guid = avatarInfo.Guid,
+            AvatarId = AvatarInfo.AvatarId,
+            Guid = AvatarInfo.Guid,
             PeerId = (uint)player.PeerId,
-            SkillDepotId = avatarInfo.SkillDepotId,
-            CoreProudSkillLevel = 0, // TODO: Implement core proud skill level
-            WearingFlycloakId = avatarInfo.WearingFlycloakId,
-            BornTime = avatarInfo.BornTime,
-            CostumeId = 0, // TODO: Implement costume system
-            WeaponSkinId = 0, // TODO: Implement weapon skin system
-            TraceEffectId = 0 // TODO: Implement trace effect system
+            SkillDepotId = AvatarInfo.SkillDepotId,
+            CoreProudSkillLevel = AvatarInfo.CoreProudSkillLevel,
+            WearingFlycloakId = AvatarInfo.WearingFlycloakId,
+            BornTime = AvatarInfo.BornTime,
+            CostumeId = AvatarInfo.CostumeId,
+            WeaponSkinId = AvatarInfo.WeaponSkinId,
+            TraceEffectId = AvatarInfo.TraceEffectId,
         };
 
-        // Add talent ID list (empty for now)
-        // sceneAvatarInfo.TalentIdList.AddRange(avatarInfo.TalentIdList);
+        foreach (var talentId in AvatarInfo.TalentIdList)
+            sceneInfo.TalentIdList.Add(talentId);
 
-        // Add skill level map (hardcoded for now - should come from avatar data)
-        // TODO: Implement skill level map from avatar data
+        foreach (var kv in AvatarInfo.SkillLevelMap)
+            sceneInfo.SkillLevelMap[kv.Key] = kv.Value;
 
-        // Add inherent proud skill list (hardcoded for now)
-        // TODO: Implement proud skill list
+        foreach (var id in AvatarInfo.ProudSkillList)
+            sceneInfo.InherentProudSkillList.Add(id);
 
-        // Add proud skill extra level map (hardcoded for now)
-        // TODO: Implement proud skill extra level map
+        foreach (var kv in AvatarInfo.ProudSkillExtraLevelMap)
+            sceneInfo.ProudSkillExtraLevelMap[kv.Key] = kv.Value;
 
-        // Add team resonances from team manager
-        if (player.TeamManager != null)
-        {
-            // TODO: Get actual team resonances
-            // For now, keep empty
-        }
-        
+        // TODO: team resonances via TeamManager.GetTeamResonances()
+
+        // Weapon
         var weaponItem = GetEquippedWeaponItem();
         if (weaponItem != null)
         {
-            sceneAvatarInfo.Weapon = weaponItem.CreateSceneWeaponInfo(WeaponEntityId);
-            sceneAvatarInfo.Weapon.AbilityInfo = new AbilitySyncStateInfo
-            {
-                IsInited = weaponItem.Affixes.Count > 0
-            };
+            sceneInfo.Weapon = weaponItem.CreateSceneWeaponInfo(WeaponEntityId);
+            sceneInfo.Weapon.AbilityInfo = new AbilitySyncStateInfo { IsInited = weaponItem.Affixes.Count > 0 };
         }
         else
         {
-            sceneAvatarInfo.Weapon = new SceneWeaponInfo
+            sceneInfo.Weapon = new SceneWeaponInfo
             {
                 EntityId = player.WeaponEntityId,
-                GadgetId = 50000000 + avatarInfo.WeaponId,
-                ItemId = avatarInfo.WeaponId,
-                Guid = avatarInfo.WeaponGuid,
+                GadgetId = 50000000 + AvatarInfo.WeaponId,
+                ItemId = AvatarInfo.WeaponId,
+                Guid = AvatarInfo.WeaponGuid,
                 Level = 1,
                 PromoteLevel = 0,
                 AbilityInfo = new AbilitySyncStateInfo()
             };
         }
 
-        sceneAvatarInfo.EquipIdList.Add(avatarInfo.WeaponId);
+        sceneInfo.EquipIdList.Add(AvatarInfo.WeaponId);
 
-        // TODO: Add reliquary list when equipment system is implemented
-        // foreach (var item in avatarInfo.Equips.Values) ...
+        var resonances = player.TeamManager.GetTeamResonances();
+        sceneInfo.TeamResonanceList.AddRange(resonances);
 
-        return sceneAvatarInfo;
+        // Reliquary equips
+        var inventory = player.InventoryManager;
+        foreach (var item in inventory.Items.Values)
+        {
+            if (item.EquipCharacter == (int)AvatarInfo.AvatarId && item.ItemType == ItemType.ITEM_RELIQUARY)
+            {
+                sceneInfo.EquipIdList.Add((uint)item.ItemId);
+                sceneInfo.ReliquaryList.Add(item.CreateSceneReliquaryInfo());
+            }
+        }
+
+        return sceneInfo;
     }
 
     public AbilityControlBlock GetAbilityControlBlock()
@@ -321,7 +388,7 @@ public class EntityAvatar : BaseEntity
         var block = new AbilityControlBlock();
         int embryoId = 0;
 
-        // 1. Avatar abilities from AvatarData (built via BuildEmbryo from BinOutput/Avatar/*.json)
+        // Avatar abilities from AvatarData
         if (GameData.AvatarData.TryGetValue((int)AvatarInfo.AvatarId, out var avatarData))
         {
             foreach (var hash in avatarData.Abilities)
@@ -335,7 +402,7 @@ public class EntityAvatar : BaseEntity
             }
         }
 
-        // 2. Default abilities
+        // Default abilities
         foreach (var hash in GameConstants.DEFAULT_ABILITY_HASHES)
         {
             block.AbilityEmbryoList.Add(new AbilityEmbryo
@@ -346,26 +413,21 @@ public class EntityAvatar : BaseEntity
             });
         }
 
-        // 3. Team resonances
-        // TODO: Implement GetTeamResonancesConfig() in TeamManager
-        // var resonances = Player.TeamManager?.GetTeamResonancesConfig();
-        // if (resonances != null)
-        // {
-        //     foreach (var id in resonances)
-        //     {
-        //         block.AbilityEmbryoList.Add(new AbilityEmbryo
-        //         {
-        //             AbilityId = (uint)(++embryoId),
-        //             AbilityNameHash = (uint)id,
-        //             AbilityOverrideNameHash = GameConstants.DEFAULT_ABILITY_NAME
-        //         });
-        //     }
-        // }
-
-        // 4. Skill depot abilities
-        if (GameData.AvatarSkillDepotData.TryGetValue((int)AvatarInfo.SkillDepotId, out var skillDepot))
+        // Team resonances
+        foreach (var id in Owner.TeamManager.GetTeamResonances())
         {
-            foreach (var hash in skillDepot.AbilityHashes)
+            block.AbilityEmbryoList.Add(new AbilityEmbryo
+            {
+                AbilityId = (uint)(++embryoId),
+                AbilityNameHash = (uint)id,
+                AbilityOverrideNameHash = GameConstants.DEFAULT_ABILITY_NAME
+            });
+        }
+
+        // Skill depot abilities
+        if (GameData.AvatarSkillDepotData.TryGetValue((int)AvatarInfo.SkillDepotId, out var depot))
+        {
+            foreach (var hash in depot.AbilityHashes)
             {
                 block.AbilityEmbryoList.Add(new AbilityEmbryo
                 {
@@ -376,40 +438,24 @@ public class EntityAvatar : BaseEntity
             }
         }
 
-        // 5. Extra ability embryos (equipment, talents, constellations)
-        // TODO: Implement ExtraAbilityEmbryos on Avatar/AvatarDataInfo
-        // var extraEmbryos = Player.AvatarManager?.GetAvatarByGuid(AvatarInfo.Guid)?.ExtraAbilityEmbryos;
-        // if (extraEmbryos != null)
-        // {
-        //     foreach (var skill in extraEmbryos)
-        //     {
-        //         block.AbilityEmbryoList.Add(new AbilityEmbryo
-        //         {
-        //             AbilityId = (uint)(++embryoId),
-        //             AbilityNameHash = Utils.AbilityHash(skill),
-        //             AbilityOverrideNameHash = GameConstants.DEFAULT_ABILITY_NAME
-        //         });
-        //     }
-        // }
-
-        // 6. Scene LevelEntity config abilities
+        // Level entity config abilities
         var scene = Scene;
         if (scene != null)
         {
-            var levelEntityConfig = scene.SceneData?.LevelEntityConfig;
-            if (!string.IsNullOrEmpty(levelEntityConfig)
-                && GameData.ConfigLevelEntityDataMap.TryGetValue(levelEntityConfig, out var config))
+            var levelConfig = scene.SceneData?.LevelEntityConfig;
+            if (!string.IsNullOrEmpty(levelConfig)
+                && GameData.ConfigLevelEntityDataMap.TryGetValue(levelConfig, out var config))
             {
                 if (config.AvatarAbilities != null)
                 {
-                    foreach (var abilityData in config.AvatarAbilities)
+                    foreach (var a in config.AvatarAbilities)
                     {
-                        if (!string.IsNullOrEmpty(abilityData.AbilityName))
+                        if (!string.IsNullOrEmpty(a.AbilityName))
                         {
                             block.AbilityEmbryoList.Add(new AbilityEmbryo
                             {
                                 AbilityId = (uint)(++embryoId),
-                                AbilityNameHash = Utils.AbilityHash(abilityData.AbilityName),
+                                AbilityNameHash = Utils.AbilityHash(a.AbilityName),
                                 AbilityOverrideNameHash = GameConstants.DEFAULT_ABILITY_NAME
                             });
                         }
@@ -420,22 +466,6 @@ public class EntityAvatar : BaseEntity
 
         return block;
     }
-    
-    public AvatarInfo GetAvatarInfo()
-    {
 
-        var avatarInfo = AvatarInfo;
-        var proto = new AvatarInfo
-        {
-            AvatarId = avatarInfo.AvatarId,
-            Guid = avatarInfo.Guid,
-            BornTime = avatarInfo.BornTime,
-            SkillDepotId = avatarInfo.SkillDepotId
-        };
-        
-        // Add weapon information (basic)
-        // Note: This is a simplified version to avoid compilation errors
-        // TODO: Add proper weapon info and other fields
-        return proto;
-    }
+    #endregion
 }

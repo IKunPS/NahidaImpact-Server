@@ -69,13 +69,17 @@ public class AvatarManager(PlayerInstance player) : BasePlayerManager(player)
             Guid = NextGuid(),
             WeaponId = avatarExcel.InitialWeapon,
             BornTime = now,
-            WearingFlycloakId = GameConstants.DEFAULT_FLYCLOAK_ID
+            WearingFlycloakId = ConstValue.GetUint("CONST_VALUE_DEFAULT_FLYCLOAK_CONFIG"),
+            CostumeId = GetDefaultCostumeId((int)avatarExcel.Id)
         };
 
         avatar.InitDefaultProps(avatarExcel);
         Avatars.Add(avatar);
 
         EquipStartingWeapon(avatar, avatarExcel); // EquipItem already calls RecalcStats
+
+        if (avatar.AvatarType == 2)
+            EquipTrialAvatar(avatar);
 
         if (Player.SuppressNotifications)
         {
@@ -530,6 +534,40 @@ public class AvatarManager(PlayerInstance player) : BasePlayerManager(player)
         => Player.InventoryManager.Items.Values
             .FirstOrDefault(i => i.EquipCharacter == (int)avatar.AvatarId
                 && i.ItemType == Enums.Item.ItemType.ITEM_WEAPON);
+
+    // Mirrors Java FashionComp::initDefaultWearCostume — finds the default costume for an avatar
+    private static uint GetDefaultCostumeId(int avatarId)
+    {
+        var defaultCostume = GameData.CostumeData.Values
+            .FirstOrDefault(c => c.CharacterId == avatarId && c.IsDefault);
+        return defaultCostume?.SkinId ?? 0;
+    }
+
+    #endregion
+
+    #region Trial Equipment & Skill Charge
+
+    public void EquipTrialAvatar(AvatarDataInfo avatar)
+    {
+        var items = avatar.BuildTrialEquipment();
+        if (items.Count == 0) return;
+
+        var weapon = items.FirstOrDefault(i => i.ItemType == Enums.Item.ItemType.ITEM_WEAPON);
+        if (weapon != null)
+        {
+            Player.InventoryManager.AddItem(weapon);
+            if (weapon.Guid > 0)
+                Player.InventoryManager.EquipItem(avatar.Guid, weapon.Guid);
+        }
+
+        foreach (var relic in items.Where(i => i.ItemType == Enums.Item.ItemType.ITEM_RELIQUARY))
+            Player.InventoryManager.AddItem(relic);
+    }
+
+    public async ValueTask SendSkillExtraChargeMap(AvatarDataInfo avatar)
+    {
+        await Player.SendPacket(new PacketAvatarSkillInfoNotify(avatar));
+    }
 
     #endregion
 }

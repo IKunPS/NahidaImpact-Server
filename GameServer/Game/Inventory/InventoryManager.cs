@@ -7,10 +7,12 @@ using NahidaImpact.Data.Common;
 using NahidaImpact.Database;
 using NahidaImpact.Database.Avatar;
 using NahidaImpact.Database.Inventory;
+using NahidaImpact.Database.Player;
 using NahidaImpact.Enums.Entity;
 using NahidaImpact.Enums.Item;
 using NahidaImpact.GameServer.Game.Entity;
 using NahidaImpact.GameServer.Game.Player;
+using NahidaImpact.GameServer.Server.Packet.Send.Avatar;
 using NahidaImpact.GameServer.Server.Packet.Send.Inventory;
 using NahidaImpact.Proto;
 using NahidaImpact.Util;
@@ -426,23 +428,36 @@ public class InventoryManager : BasePlayerManager
                 case "ITEM_USE_GAIN_FLYCLOAK":
                     if (action.UseParam.Count > 0 && int.TryParse(action.UseParam[0], out var flycloakId))
                     {
+                        if (!GameData.IsFlycloakValid(flycloakId)) break;
                         if (!Player.FlyCloakList.Contains(flycloakId))
+                        {
                             Player.FlyCloakList.Add(flycloakId);
+                            PlayerData.SavePlayerData(Player.Data);
+                            _ = Player.SendPacket(new PacketAvatarGainFlycloakNotify((uint)flycloakId));
+                        }
                     }
                     break;
                 case "ITEM_USE_GAIN_COSTUME":
                     if (action.UseParam.Count > 0 && int.TryParse(action.UseParam[0], out var costumeId))
                     {
+                        if (!GameData.IsCostumeValid(costumeId)) break;
                         var costumes = Player.CostumeList;
                         if (!costumes.Contains(costumeId))
+                        {
                             costumes.Add(costumeId);
+                            PlayerData.SavePlayerData(Player.Data);
+                            _ = Player.SendPacket(new PacketAvatarGainCostumeNotify((uint)costumeId));
+                        }
                     }
                     break;
                 case "ITEM_USE_GAIN_NAME_CARD":
                     if (action.UseParam.Count > 0 && int.TryParse(action.UseParam[0], out var nameCardId))
                     {
                         if (!Player.NameCardList.Contains(nameCardId))
+                        {
                             Player.NameCardList.Add(nameCardId);
+                            PlayerData.SavePlayerData(Player.Data);
+                        }
                     }
                     break;
                 case "ITEM_USE_ADD_ITEM":
@@ -1025,7 +1040,7 @@ public class InventoryManager : BasePlayerManager
 
     public void Save()
     {
-        DatabaseHelper.UpdateInstance(Data);
+        InventoryData.SaveInventoryData(Data);
     }
 
     #endregion
@@ -1034,12 +1049,57 @@ public class InventoryManager : BasePlayerManager
 
     private void UpgradeAvatarExp(AvatarDataInfo avatar, int expGain)
     {
-        // TODO: implement when AvatarSystem is available
+        if (expGain <= 0) return;
+
+        var oldLevel = (int)avatar.Level;
+        int maxLevel = GetMaxLevelByPromote(WeaponManager.GetMinPromoteLevel(oldLevel));
+        var exp = (int)avatar.Exp + expGain;
+        var level = oldLevel;
+        while (level < maxLevel)
+        {
+            if (!GameData.AvatarLevelData.TryGetValue(level + 1, out var levelData))
+                break;
+            int requiredExp = levelData.Exp;
+            if (exp < requiredExp) break;
+            exp -= requiredExp;
+            level++;
+        }
+        avatar.Level = (uint)level;
+        avatar.Exp = (uint)exp;
+        Save();
+
+        if (level > oldLevel)
+        {
+            var weapon = _store.Values.FirstOrDefault(i =>
+                i.EquipCharacter == (int)avatar.AvatarId && i.ItemType == ItemType.ITEM_WEAPON);
+            avatar.RecalcStats(weapon);
+        }
     }
 
     private void UpgradeAvatarFetterExp(AvatarDataInfo avatar, int expGain)
     {
-        // TODO: implement when companionship system is available
+        if (expGain <= 0) return;
+
+        var fetterExp = (int)avatar.FetterExp + expGain;
+        var fetterLevel = (int)avatar.FetterLevel;
+        while (fetterLevel < 10)
+        {
+            int required = fetterLevel * 10;
+            if (fetterExp < required) break;
+            fetterExp -= required;
+            fetterLevel++;
+        }
+        avatar.FetterLevel = (uint)fetterLevel;
+        avatar.FetterExp = (uint)fetterExp;
+        Save();
+    }
+
+    private static int GetMaxLevelByPromote(int promoteLevel)
+    {
+        return promoteLevel switch
+        {
+            0 => 20, 1 => 40, 2 => 50, 3 => 60, 4 => 70, 5 => 80, 6 => 90, _ => 90
+        };
     }
 
     #endregion

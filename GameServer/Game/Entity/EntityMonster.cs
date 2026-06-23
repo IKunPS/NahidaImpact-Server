@@ -10,50 +10,106 @@ namespace NahidaImpact.GameServer.Game.Entity;
 public class EntityMonster : BaseEntity
 {
     public override ProtEntityType EntityType => ProtEntityType.Monster;
-    
-    private readonly Position position;
-    private readonly Position rotation;
+
+    private readonly Position _position;
+    private readonly Position _rotation;
 
     public MonsterDataExcel MonsterData { get; }
-    public ConfigEntityMonster? ConfigEntityMonster { get; }
 
-    public override uint EntityTypeId => MonsterId;
-
-    private uint MonsterId => MonsterData.Id;
-
-    public override Position Position => position;
-    public override Position Rotation => rotation;
-    
-    public int Level { get; }
-    public Position BornPos { get; }
-    public int PoseId { get; set; }
+    // hk4e Monster core fields
+    public uint MonsterId => MonsterData.Id;
+    public uint DropId { get; set; }
+    public bool IsBanTextDrop { get; set; }
+    public bool IsBanAllDrop { get; set; }
+    public bool IsElite { get; set; }
+    public uint SummonedTag { get; set; }
+    public MonsterBornType BornType { get; set; } = MonsterBornType.MonsterBornDefault;
+    public uint TitleId { get; set; }
+    public uint SpecialNameId { get; set; }
+    public uint PoseId { get; set; }
+    public uint MonsterPoolId { get; set; }
+    public uint KillScore { get; set; }
     public int AiId { get; set; } = -1;
-    public int SummonedTag { get; set; }
+    public uint AiConfigId { get; set; }
+    public uint LevelRouteId { get; set; }
+    public uint InitPoseId { get; set; }
+    public bool IsLightConfig { get; set; }
+    public uint MonsterMainTypeId { get; set; }
+    public float InitialHpPercentage { get; set; }
+    public float DroppedHpPercent { get; set; } = 100f;
+    public uint GuestBanDrop { get; set; }
+    public uint AttackTargetId { get; set; }
+    public uint JsonClimateType { get; set; }
+    public uint JsonClimateAreaId { get; set; }
+    public uint LuaClimateAreaId { get; set; }
+    public uint LastDragBackTime { get; set; }
     public int OwnerEntityId { get; set; }
 
-    public EntityMonster(Scene scene, MonsterDataExcel monsterData, Position pos, Position? rot, int level = 1) : base(scene)
+    public Position BornPos { get; }
+    public int Level { get; }
+
+    // hk4e Monster containers
+    public HashSet<uint> AffixSet { get; } = [];
+    public Dictionary<uint, SummonInfo> SummonMap { get; } = [];
+    public HashSet<uint> AlertPlayers { get; } = [];
+    public HashSet<uint> AlertPartners { get; } = [];
+    public string DropTag { get; set; } = "";
+
+    public ConfigEntityMonster? ConfigEntityMonster { get; }
+
+    public override Position Position => _position;
+    public override Position Rotation => _rotation;
+    public override uint EntityTypeId => MonsterId;
+
+    public EntityMonster(Scene scene, MonsterDataExcel monsterData, Position pos, Position? rot = null, int level = 1)
+        : base(scene)
     {
         MonsterData = monsterData;
         Level = level;
         Owner = scene.Host!;
         Id = (uint)scene.World.GetNextEntityId(EntityIdTypeEnum.Monster);
-        position = new Position(pos);
-        rotation = rot != null ? new Position(rot) : new Position();
+        _position = new Position(pos);
+        _rotation = rot != null ? new Position(rot) : new Position();
         BornPos = pos.Clone();
+
+        MonsterMainTypeId = GetMonsterMainTypeId();
+        IsElite = MonsterData.IsElite;
+
+        var hp = MonsterData.GetScaledProp(level, MonsterGrowCurveType.Hp);
+        var atk = MonsterData.GetScaledProp(level, MonsterGrowCurveType.Attack);
+        var def = MonsterData.GetScaledProp(level, MonsterGrowCurveType.Defense);
+        var hpRatio = MonsterData.GetScaledProp(level, MonsterGrowCurveType.HpRatio);
+        var atkRatio = MonsterData.GetScaledProp(level, MonsterGrowCurveType.AttackRatio);
+        var defRatio = MonsterData.GetScaledProp(level, MonsterGrowCurveType.DefenseRatio);
+        var speed = MonsterData.GetScaledProp(level, MonsterGrowCurveType.Speed);
+
+        hp += hp * hpRatio;
+        atk += atk * atkRatio;
+        def += def * defRatio;
 
         FightProperties = new List<FightPropPair>
         {
-            new() { PropType = FightProp.FIGHT_PROP_CUR_HP, PropValue = 1000f * level },
-            new() { PropType = FightProp.FIGHT_PROP_MAX_HP, PropValue = 1000f * level },
-            new() { PropType = FightProp.FIGHT_PROP_BASE_HP, PropValue = 1000f * level },
-            new() { PropType = FightProp.FIGHT_PROP_CUR_ATTACK, PropValue = 100f * level },
-            new() { PropType = FightProp.FIGHT_PROP_BASE_ATTACK, PropValue = 100f * level },
-            new() { PropType = FightProp.FIGHT_PROP_CUR_DEFENSE, PropValue = 100f * level },
-            new() { PropType = FightProp.FIGHT_PROP_BASE_DEFENSE, PropValue = 100f * level },
-            new() { PropType = FightProp.FIGHT_PROP_CUR_SPEED, PropValue = 2f },
-            new() { PropType = FightProp.FIGHT_PROP_BASE_SPEED, PropValue = 2f },
-            new() { PropType = FightProp.FIGHT_PROP_CRITICAL, PropValue = 0.05f },
-            new() { PropType = FightProp.FIGHT_PROP_CRITICAL_HURT, PropValue = 0.5f },
+            new() { PropType = FightProp.FIGHT_PROP_CUR_HP, PropValue = hp },
+            new() { PropType = FightProp.FIGHT_PROP_MAX_HP, PropValue = hp },
+            new() { PropType = FightProp.FIGHT_PROP_BASE_HP, PropValue = MonsterData.HpBase },
+            new() { PropType = FightProp.FIGHT_PROP_CUR_ATTACK, PropValue = atk },
+            new() { PropType = FightProp.FIGHT_PROP_BASE_ATTACK, PropValue = MonsterData.AttackBase },
+            new() { PropType = FightProp.FIGHT_PROP_CUR_DEFENSE, PropValue = def },
+            new() { PropType = FightProp.FIGHT_PROP_BASE_DEFENSE, PropValue = MonsterData.DefenseBase },
+            new() { PropType = FightProp.FIGHT_PROP_CUR_SPEED, PropValue = speed > 0 ? speed : 2f },
+            new() { PropType = FightProp.FIGHT_PROP_BASE_SPEED, PropValue = speed > 0 ? speed : 2f },
+            new() { PropType = FightProp.FIGHT_PROP_CRITICAL, PropValue = MonsterData.Critical },
+            new() { PropType = FightProp.FIGHT_PROP_CRITICAL_HURT, PropValue = MonsterData.CriticalHurt },
+            new() { PropType = FightProp.FIGHT_PROP_ELEMENT_MASTERY, PropValue = MonsterData.ElementMastery },
+            // Elemental resistances
+            new() { PropType = FightProp.FIGHT_PROP_FIRE_SUB_HURT, PropValue = MonsterData.FireSubHurt },
+            new() { PropType = FightProp.FIGHT_PROP_WATER_SUB_HURT, PropValue = MonsterData.WaterSubHurt },
+            new() { PropType = FightProp.FIGHT_PROP_GRASS_SUB_HURT, PropValue = MonsterData.GrassSubHurt },
+            new() { PropType = FightProp.FIGHT_PROP_ELEC_SUB_HURT, PropValue = MonsterData.ElecSubHurt },
+            new() { PropType = FightProp.FIGHT_PROP_ICE_SUB_HURT, PropValue = MonsterData.IceSubHurt },
+            new() { PropType = FightProp.FIGHT_PROP_WIND_SUB_HURT, PropValue = MonsterData.WindSubHurt },
+            new() { PropType = FightProp.FIGHT_PROP_ROCK_SUB_HURT, PropValue = MonsterData.RockSubHurt },
+            new() { PropType = FightProp.FIGHT_PROP_PHYSICAL_SUB_HURT, PropValue = MonsterData.PhysicalSubHurt },
         };
 
         Properties = new List<PropValue>
@@ -61,7 +117,20 @@ public class EntityMonster : BaseEntity
             new() { Type = PlayerProp.PROP_LEVEL, Ival = level }
         };
 
+        // Populate affix set from monster data
+        foreach (var affix in MonsterData.Affix)
+            if (affix > 0) AffixSet.Add((uint)affix);
+
         InitAbilities();
+    }
+
+    // hk4e Monster::getMonsterMainTypeId — extract main type from id prefix
+    private uint GetMonsterMainTypeId()
+    {
+        var id = MonsterId;
+        if (id >= 30000000) return (id / 1000) % 10;
+        if (id >= 20000000) return (id / 100) % 10;
+        return (id / 100000) % 10;
     }
 
     private void AddConfigAbility(string name)
@@ -71,35 +140,40 @@ public class EntityMonster : BaseEntity
             Owner?.AbilityManager?.AddAbilityToEntity(this, data);
     }
 
-    public void InitAbilities()
+    private void InitAbilities()
     {
-        // 1. Affix abilities (from MonsterData affix list)
+        var defaultAbilities = GameData.ConfigGlobalCombat?.DefaultAbilities;
+
+        // Affix abilities — MonsterAffixExcelConfigData maps affix IDs to ability names
         if (MonsterData.Affix is { Count: > 0 })
         {
-            // TODO: Load MonsterAffixData and add affix abilities
-            // Requires MonsterAffixData loading infrastructure
+            foreach (var affixId in MonsterData.Affix)
+            {
+                // affix abilities are often named by convention: "MonsterAffix_<id>"
+                var abilityName = $"MonsterAffix_{affixId}";
+                AddConfigAbility(abilityName);
+            }
         }
 
-        // 2. NonHumanoidMoveAbilities (basic movement - all monsters need this)
-        var defaultAbilities = GameData.ConfigGlobalCombat?.DefaultAbilities;
+        // Non-humanoid move abilities
         if (defaultAbilities?.NonHumanoidMoveAbilities != null)
         {
-            foreach (var abilityName in defaultAbilities.NonHumanoidMoveAbilities)
-                AddConfigAbility(abilityName);
+            foreach (var name in defaultAbilities.NonHumanoidMoveAbilities)
+                AddConfigAbility(name);
         }
 
-        // 3. Monster-specific abilities from its own config (not ALL configs!)
+        // Monster-specific abilities
         if (ConfigEntityMonster?.Abilities != null)
         {
-            foreach (var configAbilityData in ConfigEntityMonster.Abilities)
-                AddConfigAbility(configAbilityData.AbilityName);
+            foreach (var a in ConfigEntityMonster.Abilities)
+                AddConfigAbility(a.AbilityName);
         }
 
-        // 4. Elite monster ability
-        // TODO: Check group monster isElite and add MonterEliteAbilityName
-        // Requires scene group loading infrastructure
+        // Elite monster ability
+        if (IsElite && !string.IsNullOrEmpty(defaultAbilities?.MonterEliteAbilityName))
+            AddConfigAbility(defaultAbilities.MonterEliteAbilityName);
 
-        // 5. Scene-level monster abilities
+        // Level entity config abilities
         var levelEntityConfig = Scene?.SceneData?.LevelEntityConfig;
         if (!string.IsNullOrEmpty(levelEntityConfig))
         {
@@ -122,14 +196,9 @@ public class EntityMonster : BaseEntity
 
     public override SceneEntityInfo ToProto()
     {
-        var aiInfo = new SceneEntityAiInfo
-        {
-        };
-
+        var aiInfo = new SceneEntityAiInfo { };
         if (OwnerEntityId != 0)
-        {
             aiInfo.ServantInfo = new ServantInfo { MasterEntityId = (uint)OwnerEntityId };
-        }
 
         var authority = new EntityAuthorityInfo
         {
@@ -139,7 +208,7 @@ public class EntityMonster : BaseEntity
             BornPos = BornPos.ToProto()
         };
 
-        var entityInfo = new SceneEntityInfo
+        var info = new SceneEntityInfo
         {
             EntityId = Id,
             EntityType = ProtEntityType.Monster,
@@ -149,40 +218,45 @@ public class EntityMonster : BaseEntity
             EntityAuthorityInfo = authority
         };
 
-        entityInfo.AnimatorParaList.Add(new AnimatorParameterValueInfoPair());
-        entityInfo.PropList.Add(new PropPair
+        info.AnimatorParaList.Add(new AnimatorParameterValueInfoPair());
+        info.PropList.Add(new PropPair
         {
             Type = PlayerProp.PROP_LEVEL,
             PropValue = new PropValue { Type = PlayerProp.PROP_LEVEL, Ival = Level }
         });
 
         foreach (var fp in FightProperties)
-            entityInfo.FightPropList.Add(fp);
+            info.FightPropList.Add(fp);
 
         var monsterInfo = new SceneMonsterInfo
         {
             MonsterId = MonsterId,
             GroupId = (uint)GroupId,
             ConfigId = (uint)ConfigId,
-            BornType = MonsterBornType.MonsterBornDefault,
+            BornType = BornType,
             AuthorityPeerId = Scene?.World?.HostPeerId ?? 0,
             BlockId = (uint)(Scene?.Id ?? 0),
             PoseId = (uint)PoseId,
-            SummonedTag = (uint)SummonedTag,
+            SummonedTag = SummonedTag,
             OwnerEntityId = (uint)OwnerEntityId,
+            TitleId = TitleId,
+            SpecialNameId = SpecialNameId,
         };
 
         if (AiId != -1)
-        {
             monsterInfo.AiConfigId = (uint)AiId;
-        }
 
-        // Affix list
-        foreach (uint affix in MonsterData.Affix)
+        foreach (var affix in AffixSet)
             monsterInfo.AffixList.Add(affix);
 
-        entityInfo.Monster = monsterInfo;
-
-        return entityInfo;
+        info.Monster = monsterInfo;
+        return info;
     }
+}
+
+// hk4e SummonInfo — tracks summoned monsters per tag
+public class SummonInfo
+{
+    public uint MaxCount { get; set; }
+    public HashSet<EntityMonster> Monsters { get; } = [];
 }

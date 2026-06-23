@@ -1,4 +1,5 @@
 ﻿using NahidaImpact.Data;
+using NahidaImpact.Data.Excel;
 using NahidaImpact.Proto;
 using NahidaImpact.Util;
 using NahidaImpact.Util.Extensions;
@@ -17,10 +18,25 @@ public class PlayerData : BaseDatabaseDataHelper
     [SugarColumn(IsNullable = true)] public long LastActiveTime { get; set; }
     public long RegisterTime { get; set; } = Extensions.UnixSec;
 
+    [SugarColumn(IsJson = true)] public List<int> FlyCloakList { get; set; } = [];
+    [SugarColumn(IsJson = true)] public List<int> NameCardList { get; set; } = [];
+    [SugarColumn(IsJson = true)] public List<int> CostumeList { get; set; } = [];
+    [SugarColumn(IsJson = true)] public List<int> TraceEffectList { get; set; } = [];
+    [SugarColumn(IsJson = true)] public List<uint> ChatEmojiIdList { get; set; } = [];
+
     public static PlayerData? GetPlayerByUid(long uid)
     {
         var result = DatabaseHelper.GetInstance<PlayerData>((int)uid);
         return result;
     }
-    
+
+    public static PlayerData GetOrCreatePlayerData(int uid)
+    {
+        return DatabaseHelper.GetInstanceOrCreateNew<PlayerData>(uid);
+    }
+
+    public static void SavePlayerData(PlayerData data)
+    {
+        DatabaseHelper.UpdateInstance(data);
+    }
 }

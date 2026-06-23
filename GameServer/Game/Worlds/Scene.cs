@@ -3,12 +3,15 @@ using NahidaImpact.Data;
 using NahidaImpact.Data.Excel;
 using NahidaImpact.Database.Avatar;
 using NahidaImpact.GameServer.Game.Entity;
+using NahidaImpact.GameServer.Game.Entity.Gadget;
 using NahidaImpact.GameServer.Game.Player;
 using NahidaImpact.Enums.Scene;
 using NahidaImpact.Internationalization;
 using NahidaImpact.KcpSharp;
 using System.Collections.Concurrent;
 using NahidaImpact.GameServer.Server.Packet.Send.Scene;
+using NahidaImpact.GameServer.Server.Packet.Send.Time;
+using NahidaImpact.Prop;
 using NahidaImpact.Util;
 
 namespace NahidaImpact.GameServer.Game.Worlds;
@@ -110,11 +113,8 @@ public class Scene
             player.Scene = this;
         }
         
-        // Setup avatars and gadgets outside lock to minimize lock time
         SetupPlayerAvatars(player);
-        
-        // TODO: Create all gadgets from scene build
-        // this.sceneBuild.createAllGadget(player);
+        SpawnSceneGadgets(player);
     }
 
     public void RemovePlayer(PlayerInstance player)
@@ -147,21 +147,21 @@ public class Scene
     public void SpawnPlayer(PlayerInstance player)
     {
         var teamManager = player.TeamManager;
-        if (teamManager == null)
-        {
-            Logger.Warn(I18NManager.Translate("Game.SceneInfo.NoTeamManagerSpawn", player.Uid.ToString()));
-            return;
-        }
-        
+        if (teamManager == null) return;
+
         var currentAvatarEntity = teamManager.GetCurrentAvatarEntity();
-        if (currentAvatarEntity == null)
+        if (currentAvatarEntity == null) return;
+
+        // hk4e: revive dead avatars and heal to full on scene enter
+        foreach (var entity in teamManager.GetActiveTeam())
         {
-            Logger.Warn(I18NManager.Translate("Game.SceneInfo.NoAvatarEntity", player.Uid.ToString()));
-            return;
+            if (!entity.IsAlive())
+            {
+                entity.Heal(entity.GetFightProperty(FightProp.FIGHT_PROP_MAX_HP));
+                entity.IsDead = false;
+                entity.LifeState = 1;
+            }
         }
-            
-        // TODO: Check HP and heal if necessary (like Java version does)
-        // For now, just add the entity to scene
 
         AddEntity(currentAvatarEntity);
     }
@@ -221,11 +221,19 @@ public class Scene
     
     private void RemovePlayerAvatars(PlayerInstance player)
     {
-        // TODO: Implement avatar removal
-        // Remove all entities belonging to this player
-        var toRemove = _entities.Values.Where(e => e.Owner == player).ToList();
+        var toRemove = _entities.Values
+            .Where(e => e.Owner == player && e is EntityAvatar)
+            .ToList();
         foreach (var entity in toRemove)
             RemoveEntity(entity, VisionType.Die);
+
+        // Cleanup weapon entities
+        var weaponIds = WeaponEntities.Values
+            .Where(w => w.Owner == player)
+            .Select(w => (int)w.Id)
+            .ToList();
+        foreach (var id in weaponIds)
+            WeaponEntities.TryRemove(id, out _);
     }
     
     #endregion
@@ -239,6 +247,15 @@ public class Scene
         if (WeaponEntities.TryGetValue(id, out entity))
             return entity;
         return null;
+    }
+
+    public List<BaseEntity> GetEntitiesByConfigId(int configId)
+    {
+        var result = new List<BaseEntity>();
+        foreach (var kv in _entities)
+            if (kv.Value.ConfigId == configId)
+                result.Add(kv.Value);
+        return result;
     }
 
     public void AddEntity(BaseEntity entity)
@@ -308,7 +325,7 @@ public class Scene
     
     public void UpdateEntity(BaseEntity entity)
     {
-        // TODO: Broadcast entity update packet
+        BroadcastPacket(new PacketSceneEntityAppearNotify([entity], VisionType.Refresh));
     }
 
     // Show all scene entities (except the player's current avatar) to a player on scene enter.
@@ -323,7 +340,63 @@ public class Scene
         if (entities.Count == 0) return;
         _ = player.SendPacket(new PacketSceneEntityAppearNotify(entities, VisionType.Meet));
     }
-    
+
+    // hk4e Scene::killEntity — kills an entity and removes it from scene
+    public void KillEntity(BaseEntity entity, int killerId = 0)
+    {
+        if (entity.IsDead) return;
+
+        entity.Damage(float.MaxValue, killerId);
+        if (entity is EntityMonster || entity is EntityBaseGadget)
+        {
+            RemoveEntity(entity, VisionType.Die);
+            // Drop rewards deferred to DropManager implementation
+        }
+    }
+
+    // Spawn a single gadget at position
+    public EntityGadget SpawnGadget(int gadgetId, Position pos, Position? rot = null,
+        GadgetContent? content = null)
+    {
+        var gadget = new EntityGadget(this, gadgetId, pos, rot, content);
+        AddEntity(gadget);
+        return gadget;
+    }
+
+    // hk4e SceneBuild::createAllGadget — spawns scene objects from .scn block/group config
+    public void SpawnSceneGadgets(PlayerInstance player)
+    {
+        if (SceneData == null) return;
+
+        var sceneId = (int)SceneData.Id;
+        // Full implementation requires a .scn binary parser for block/group data,
+        // which defines monster spawns, gadget placements, and zone triggers.
+        // For now, scene points (waypoints, statues, domains) are handled by
+        // client-side map UI; this is a placeholder for server-side gadget spawning.
+        foreach (var pointId in GameData.ScenePointsPerScene.GetValueOrDefault(sceneId, []))
+        {
+            var entry = GameData.GetScenePointEntryById(sceneId, pointId);
+            if (entry?.PointData?.Pos != null)
+            {
+                _loadedGroups.Add(pointId);
+            }
+        }
+    }
+
+    // hk4e Scene block/group tracking
+    public bool IsBlockLoaded(int blockId) => _loadedBlocks.Contains(blockId);
+    public void MarkBlockLoaded(int blockId) => _loadedBlocks.Add(blockId);
+    public bool IsGroupLoaded(int groupId) => _loadedGroups.Contains(groupId);
+    public void MarkGroupLoaded(int groupId) => _loadedGroups.Add(groupId);
+
+    public void UnloadBlock(int blockId)
+    {
+        _loadedBlocks.Remove(blockId);
+        var toRemove = _entities.Values.Where(e => e.BlockId == blockId).ToList();
+        foreach (var entity in toRemove)
+            RemoveEntity(entity, VisionType.Remove);
+    }
+
     #endregion
     
     #region Broadcasting
@@ -360,21 +433,22 @@ public class Scene
     
     public void OnTick()
     {
-        if (_isPaused)
-            return;
-
+        if (_isPaused) return;
         _tickCount++;
 
-        // Snapshot to avoid collection-modified-during-enumeration
+        // Flush combat invoke entries for all players
         List<PlayerInstance> snapshot;
-        lock (_playerListLock)
-        {
-            snapshot = _players.ToList();
-        }
+        lock (_playerListLock) snapshot = _players.ToList();
         foreach (var player in snapshot)
         {
             player.CombatInvokeHandler?.Send();
+            player.AbilityManager?.AbilityInvokeHandler.Send();
+            player.AbilityManager?.ClientAbilityInitFinishHandler.Send();
         }
+
+        // Tick all entities (monsters, gadgets, etc.)
+        foreach (var entity in _entities.Values)
+            entity.OnTick(_tickCount);
     }
     
     public void SetPaused(bool paused)
@@ -382,7 +456,10 @@ public class Scene
         if (_isPaused != paused)
         {
             _isPaused = paused;
-            // TODO: Broadcast scene time notify
+            List<PlayerInstance> snapshot;
+            lock (_playerListLock) snapshot = _players.ToList();
+            foreach (var player in snapshot)
+                _ = player.SendPacket(new PacketSceneTimeNotify(player));
         }
     }
     
@@ -391,7 +468,6 @@ public class Scene
         if (_finishedLoading)
             return;
         _finishedLoading = true;
-        // TODO: Invoke callbacks
     }
     
     #endregion

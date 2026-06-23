@@ -1,13 +1,14 @@
+using NahidaImpact.Data.Excel;
 using NahidaImpact.Util;
 
 namespace NahidaImpact.GameServer.Game.Player;
 
 public class PlayerProfile
 {
-    public uint NameCardId { get; set; } = (uint)GameConstants.DEFAULT_NAME_CARD_ID;
+    public uint NameCardId { get; set; } = ConstValue.GetUint("CONST_VALUE_DEFAULT_NAME_CARD_ID");
     public string? Nickname { get; set; }
-    public uint Level { get; set; } = GameConstants.DEFAULT_PLAYER_LEVEL;
-    public uint WorldLevel { get; set; } = GameConstants.DEFAULT_WORLD_LEVEL;
+    public uint Level { get; set; } = 1;
+    public uint WorldLevel { get; set; } = 0;
     public Birthday Birthday { get; set; } = new() { Day = 0, Month = 0 };
     public ProfilePicture HeadImage { get; set; } = new() { AvatarId = GameConstants.MAIN_CHARACTER_FEMALE };
     public string? Signature { get; set; } = "";

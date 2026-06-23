@@ -47,7 +47,6 @@ public class HandlerPlayerLoginReq : Handler
     {
         bool isMale = Rng.Next(2) == 0;
         int avatarId = isMale ? GameConstants.MAIN_CHARACTER_MALE : GameConstants.MAIN_CHARACTER_FEMALE;
-        int skillDepot = isMale ? GameConstants.MALE_SKILL_DEPOT : GameConstants.FEMALE_SKILL_DEPOT;
 
         if (!GameData.AvatarData.ContainsKey(avatarId))
         {
@@ -55,6 +54,6 @@ public class HandlerPlayerLoginReq : Handler
             return;
         }
 
-        await player.CompleteFirstLogin(avatarId, skillDepot);
+        await player.CompleteFirstLogin(avatarId);
     }
 }

@@ -1,24 +1,42 @@
-﻿using Google.Protobuf;
+using Google.Protobuf;
 using NahidaImpact.Data.Ability;
 using NahidaImpact.GameServer.Game.Entity;
+using NahidaImpact.GameServer.Game.Worlds;
+using NahidaImpact.Proto;
 
 namespace NahidaImpact.GameServer.Game.Ability.Actions;
 
 [AbilityAction("CreateGadget")]
 public class ActionCreateGadget : AbilityActionHandler
 {
+    // hk4e CreateGadgetImpl — creates a gadget entity at the specified position from the client proto
     public override Task<bool> Execute(Ability ability, AbilityModifierAction action, ByteString abilityData, BaseEntity target)
     {
-        // TODO: Parse AbilityActionCreateGadget proto when available
-        // For now, create gadget at owner position
         var owner = ability.Owner;
         if (owner?.Scene == null) return Task.FromResult(false);
 
-        var pos = owner.Position.Clone();
-        var rot = owner.Rotation.Clone();
+        var gadgetId = action.GadgetID > 0 ? action.GadgetID : action.ConfigID;
+        if (gadgetId <= 0) return Task.FromResult(false);
 
-        // TODO: Create EntityGadget with proper constructor and config
-        // owner.Scene.AddEntity(entityCreated);
+        Position pos;
+        Position rot;
+        try
+        {
+            var proto = AbilityActionCreateGadget.Parser.ParseFrom(abilityData);
+            pos = proto.Pos != null ? new Position(proto.Pos) : owner.Position.Clone();
+            rot = proto.Rot != null ? new Position(proto.Rot) : owner.Rotation.Clone();
+        }
+        catch
+        {
+            pos = owner.Position.Clone();
+            rot = owner.Rotation.Clone();
+        }
+
+        var gadget = new EntityGadget(owner.Scene, gadgetId, pos, rot)
+        {
+            BornType = GadgetBornType.Gadget
+        };
+        owner.Scene.AddEntity(gadget);
 
         return Task.FromResult(true);
     }

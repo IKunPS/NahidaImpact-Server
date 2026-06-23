@@ -17,6 +17,9 @@ public static class GameData
     public static Dictionary<int, SceneDataExcel> SceneData { get; private set; } = [];
 
     public static Dictionary<int, MonsterDataExcel> MonsterData { get; private set; } = [];
+    public static Dictionary<int, GadgetDataExcel> GadgetData { get; private set; } = [];
+    public static Dictionary<int, FlycloakDataExcel> FlycloakData { get; private set; } = [];
+    public static Dictionary<int, CostumeDataExcel> CostumeData { get; private set; } = [];
 
     // Scene Points
     public static Dictionary<int, ConfigScenePointEntry> ScenePointEntry { get; private set; } = [];
@@ -38,6 +41,7 @@ public static class GameData
 
     // Level entity config
     public static Dictionary<string, ConfigLevelEntity> ConfigLevelEntityDataMap { get; private set; } = [];
+    public static Dictionary<string, ConstValueDataExcel> ConstValueMap { get; private set; } = [];
 
     // Global combat
     public static ConfigGlobalCombat? ConfigGlobalCombat { get; set; }
@@ -87,4 +91,7 @@ public static class GameData
         ScenePointEntry.TryGetValue((sceneId << 16) + pointId, out var entry);
         return entry;
     }
+
+    public static bool IsFlycloakValid(int flycloakId) => FlycloakData.ContainsKey(flycloakId);
+    public static bool IsCostumeValid(int costumeId) => CostumeData.ContainsKey(costumeId);
 }

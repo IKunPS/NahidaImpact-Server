@@ -134,8 +134,8 @@ public class ResourceManager
             catch (Exception ex)
             {
                 Logger.Error(
-                    I18NManager.Translate("Server.ServerInfo.FailedToReadItem", fileName,
-                        I18NManager.Translate("Word.Error")), ex);
+                    I18NManager.Translate("Server.ServerInfo.FailedToReadItem",
+                        $"{fileName} ({cls.Name})", I18NManager.Translate("Word.Error")), ex);
             }
 
         Logger.Info(I18NManager.Translate("Server.ServerInfo.LoadedItems", count.ToString(), cls.Name));

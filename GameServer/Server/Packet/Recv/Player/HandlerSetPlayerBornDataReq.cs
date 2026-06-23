@@ -1,4 +1,5 @@
 using NahidaImpact.Data;
+using NahidaImpact.GameServer.Game.Player;
 using NahidaImpact.Internationalization;
 using NahidaImpact.KcpSharp;
 using NahidaImpact.Proto;
@@ -22,10 +23,6 @@ public class HandlerSetPlayerBornDataReq : Handler
         if (avatarId != GameConstants.MAIN_CHARACTER_MALE && avatarId != GameConstants.MAIN_CHARACTER_FEMALE)
             return;
 
-        int skillDepot = avatarId == GameConstants.MAIN_CHARACTER_MALE
-            ? GameConstants.MALE_SKILL_DEPOT
-            : GameConstants.FEMALE_SKILL_DEPOT;
-
         if (!GameData.AvatarData.ContainsKey(avatarId))
         {
             Logger.Error(I18NManager.Translate("Game.SceneInfo.NoAvatarData"));
@@ -33,7 +30,7 @@ public class HandlerSetPlayerBornDataReq : Handler
             return;
         }
 
-        await player.CompleteFirstLogin(avatarId, skillDepot, req.NickName);
+        await player.CompleteFirstLogin(avatarId, req.NickName);
         player.OnPlayerBorn();
 
         await player.SendPacket(new BasePacket(CmdIds.SetPlayerBornDataRsp));
