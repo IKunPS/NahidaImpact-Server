@@ -6,6 +6,7 @@ using NahidaImpact.Enums.Item;
 using NahidaImpact.Enums.Player;
 using NahidaImpact.GameServer.Game.Inventory;
 using NahidaImpact.GameServer.Server.Packet.Send.Avatar;
+using NahidaImpact.GameServer.Server.Packet.Send.Inventory;
 using NahidaImpact.GameServer.Server.Packet.Send.Team;
 using NahidaImpact.Internationalization;
 using NahidaImpact.Prop;
@@ -16,7 +17,7 @@ namespace NahidaImpact.GameServer.Command.Commands;
     ["g", "item", "giveitem"], [PermEnum.Admin])]
 public class CommandGive : ICommand
 {
-    private sealed record GiveParams
+    internal sealed record GiveParams
     {
         public GiveAllType Type { get; set; } = GiveAllType.None;
         public int ItemId { get; set; }
@@ -29,10 +30,10 @@ public class CommandGive : ICommand
         public List<int>? AppendPropIdList { get; set; }
     }
 
-    private enum GiveAllType { None, All, Weapons, Relics, Materials, Furniture, Avatars }
+    internal enum GiveAllType { None, All, Weapons, Relics, Materials, Furniture, Avatars }
 
     // Exclude test avatars — range-based, mirrors Java GiveCommand.giveAllAvatars.
-    private static bool IsExcludedAvatar(int id) =>
+    internal static bool IsExcludedAvatar(int id) =>
         id < 10000002 || id >= 11000000 || (id is >= 10000900 and <= 10000910);
 
     [CommandDefault]
@@ -109,7 +110,7 @@ public class CommandGive : ICommand
         await GiveItem(arg, itemData, param);
     }
 
-    private static List<string> ParseTaggedArgs(List<string> args, GiveParams param)
+    internal static List<string> ParseTaggedArgs(List<string> args, GiveParams param)
     {
         var positional = new List<string>();
         foreach (var a in args)
@@ -131,7 +132,7 @@ public class CommandGive : ICommand
         return positional;
     }
 
-    private static void ParseRelicArgs(GiveParams param, List<string> args)
+    internal static void ParseRelicArgs(GiveParams param, List<string> args)
     {
         if (args.Count < 1) return;
 
@@ -319,38 +320,96 @@ public class CommandGive : ICommand
         switch (sub)
         {
             case "all":
-                await GiveAllAvatars(player, arg, param);
-                await GiveAllByType(player, ItemType.ITEM_WEAPON, param.Amount, param.Level, param.Refinement, arg);
-                await GiveAllByType(player, ItemType.ITEM_RELIQUARY, 1, 1, 1, arg);
-                await GiveAllByType(player, ItemType.ITEM_MATERIAL, param.Amount, 1, 1, arg);
-                await GiveAllByType(player, ItemType.ITEM_FURNITURE, param.Amount, 1, 1, arg);
-                await arg.SendMsg(I18NManager.Translate("Game.Command.GiveAll.AllGiven", player.Uid.ToString()));
+                // Batch everything under one suppress + one snapshot so the client sees a
+                // consistent state instead of partial updates mid-batch.
+                player.SuppressNotifications = true;
+                player.InventoryManager.BypassCapacity = true;
+                try
+                {
+                    var avatarCount = await GiveAllAvatars(player, param);
+                    var weaponCount = await GiveAllByType(player, ItemType.ITEM_WEAPON, param.Amount, param.Level, param.Refinement);
+                    var relicCount = await GiveAllByType(player, ItemType.ITEM_RELIQUARY, 1, 1, 1);
+                    var matCount = await GiveAllByType(player, ItemType.ITEM_MATERIAL, param.Amount, 1, 1);
+                    var furnCount = await GiveAllByType(player, ItemType.ITEM_FURNITURE, param.Amount, 1, 1);
+
+                    player.AvatarManager.Save();
+                    player.InventoryManager.Save();
+                    await player.SendPacket(new PacketPlayerStoreNotify(player.InventoryManager.Data.Items));
+                    await player.SendPacket(new PacketAvatarDataNotify(player));
+
+                    await arg.SendMsg(I18NManager.Translate("Game.Command.GiveAll.AllGiven", player.Uid.ToString()));
+                    await arg.SendMsg(I18NManager.Translate("Game.Command.GiveAll.AvatarsGiven",
+                        avatarCount.ToString(), player.Uid.ToString()));
+                    await arg.SendMsg(I18NManager.Translate("Game.Command.GiveAll.WeaponsGiven",
+                        weaponCount.ToString(), param.Level.ToString(), param.Refinement.ToString(), player.Uid.ToString()));
+                    await arg.SendMsg(I18NManager.Translate("Game.Command.GiveAll.RelicsGiven",
+                        relicCount.ToString(), "1", "1", player.Uid.ToString()));
+                    await arg.SendMsg(I18NManager.Translate("Game.Command.GiveAll.MaterialsGiven",
+                        matCount.ToString(), "1", "1", player.Uid.ToString()));
+                    await arg.SendMsg(I18NManager.Translate("Game.Command.GiveAll.FurnitureGiven",
+                        furnCount.ToString(), "1", "1", player.Uid.ToString()));
+                }
+                finally
+                {
+                    player.SuppressNotifications = false;
+                    player.InventoryManager.BypassCapacity = false;
+                }
                 return true;
 
             case "weapons":
             case "w":
-                await GiveAllByType(player, ItemType.ITEM_WEAPON, param.Amount, param.Level, param.Refinement, arg);
+                {
+                    var count = await GiveAllByType(player, ItemType.ITEM_WEAPON, param.Amount, param.Level, param.Refinement);
+                    await arg.SendMsg(I18NManager.Translate("Game.Command.GiveAll.WeaponsGiven",
+                        count.ToString(), param.Level.ToString(), param.Refinement.ToString(), player.Uid.ToString()));
+                }
                 return true;
 
             case "relics":
             case "reliquary":
             case "r":
-                await GiveAllByType(player, ItemType.ITEM_RELIQUARY, 1, 1, 1, arg);
+                {
+                    var count = await GiveAllByType(player, ItemType.ITEM_RELIQUARY, 1, 1, 1);
+                    await arg.SendMsg(I18NManager.Translate("Game.Command.GiveAll.RelicsGiven",
+                        count.ToString(), "1", "1", player.Uid.ToString()));
+                }
                 return true;
 
             case "mats":
             case "m":
-                await GiveAllByType(player, ItemType.ITEM_MATERIAL, param.Amount, 1, 1, arg);
+                {
+                    var count = await GiveAllByType(player, ItemType.ITEM_MATERIAL, param.Amount, 1, 1);
+                    await arg.SendMsg(I18NManager.Translate("Game.Command.GiveAll.MaterialsGiven",
+                        count.ToString(), "1", "1", player.Uid.ToString()));
+                }
                 return true;
 
             case "furniture":
             case "f":
-                await GiveAllByType(player, ItemType.ITEM_FURNITURE, param.Amount, 1, 1, arg);
+                {
+                    var count = await GiveAllByType(player, ItemType.ITEM_FURNITURE, param.Amount, 1, 1);
+                    await arg.SendMsg(I18NManager.Translate("Game.Command.GiveAll.FurnitureGiven",
+                        count.ToString(), "1", "1", player.Uid.ToString()));
+                }
                 return true;
 
             case "avatars":
             case "a":
-                await GiveAllAvatars(player, arg, param);
+                player.SuppressNotifications = true;
+                try
+                {
+                    var count = await GiveAllAvatars(player, param);
+                    player.AvatarManager.Save();
+                    player.InventoryManager.Save();
+                    await player.SendPacket(new PacketPlayerStoreNotify(player.InventoryManager.Data.Items));
+                    await player.SendPacket(new PacketAvatarDataNotify(player));
+                    await arg.SendMsg(I18NManager.Translate("Game.Command.GiveAll.AvatarsGiven",
+                        count.ToString(), player.Uid.ToString()));
+                }
+                finally
+                {
+                    player.SuppressNotifications = false;
+                }
                 return true;
 
             default:
@@ -358,7 +417,8 @@ public class CommandGive : ICommand
         }
     }
 
-    private static async ValueTask GiveAllAvatars(Game.Player.PlayerInstance player, CommandArg arg, GiveParams param)
+    /// <returns>Number of avatars added.</returns>
+    private static async ValueTask<int> GiveAllAvatars(Game.Player.PlayerInstance player, GiveParams param)
     {
         var added = new List<AvatarDataInfo>();
         int promoteLevel = ItemData.GetMinPromoteLevel(param.Level);
@@ -393,21 +453,30 @@ public class CommandGive : ICommand
                     .FirstOrDefault(i => i.EquipCharacter == (int)avatar.AvatarId
                         && i.ItemType == ItemType.ITEM_WEAPON);
                 avatar.RecalcStats(weapon);
-                player.AvatarManager.Save();
-
-                await player.SendPacket(new PacketAvatarAddNotify(avatar, false));
                 added.Add(avatar);
             }
             catch { /* skip problematic avatars */ }
         }
 
-        await arg.SendMsg(I18NManager.Translate("Game.Command.GiveAll.AvatarsGiven",
-            added.Count.ToString(), player.Uid.ToString()));
+        return added.Count;
     }
 
-    private static async ValueTask GiveAllByType(Game.Player.PlayerInstance player, ItemType targetType,
-        int amount, int level, int refinement, CommandArg arg)
+    /// <summary>Only exclude avatar unlock items from give-all.
+    /// Flycloak/costume/namecard already caught by UseOnGain check above.</summary>
+    internal static bool IsExcludedMaterialType(MaterialType type) => type == MaterialType.MATERIAL_AVATAR;
+
+    /// <returns>Number of items actually added to inventory.</returns>
+    private static async ValueTask<int> GiveAllByType(Game.Player.PlayerInstance player, ItemType targetType,
+        int amount, int level, int refinement)
     {
+        // Build a quick set of owned item IDs so repeated give-all doesn't duplicate weapons/relics.
+        var ownedIds = targetType is ItemType.ITEM_WEAPON or ItemType.ITEM_RELIQUARY
+            ? player.InventoryManager.Items.Values
+                .Where(i => i.ItemType == targetType)
+                .Select(i => i.ItemId)
+                .ToHashSet()
+            : null;
+
         var items = new List<ItemData>();
         int created = 0;
 
@@ -418,7 +487,11 @@ public class CommandGive : ICommand
 
             if (targetType == ItemType.ITEM_WEAPON && !IsValidWeaponId(itemId)) continue;
             if (targetType == ItemType.ITEM_RELIQUARY && !IsValidRelicId(itemId)) continue;
-            if ((targetType is ItemType.ITEM_MATERIAL or ItemType.ITEM_FURNITURE) && itemId < 100_000) continue;
+            if ((targetType is ItemType.ITEM_MATERIAL or ItemType.ITEM_FURNITURE)
+                && IsExcludedMaterialType(itemData.MaterialType)) continue;
+
+            // Skip weapons/relics the player already owns to prevent duplicates on re-run.
+            if (ownedIds != null && ownedIds.Contains(itemId)) continue;
 
             try
             {
@@ -448,23 +521,16 @@ public class CommandGive : ICommand
         }
 
         if (items.Count > 0)
-            await player.InventoryManager.AddItemsChunked(items, ActionReason.Gm);
-
-        var key = targetType switch
         {
-            ItemType.ITEM_WEAPON => "Game.Command.GiveAll.WeaponsGiven",
-            ItemType.ITEM_RELIQUARY => "Game.Command.GiveAll.RelicsGiven",
-            ItemType.ITEM_MATERIAL => "Game.Command.GiveAll.MaterialsGiven",
-            ItemType.ITEM_FURNITURE => "Game.Command.GiveAll.FurnitureGiven",
-            _ => "Game.Command.GiveAll.ItemsGiven"
-        };
+            var actuallyAdded = await player.InventoryManager.AddItemsChunked(items, ActionReason.Gm);
+            return actuallyAdded;
+        }
 
-        await arg.SendMsg(I18NManager.Translate(key,
-            created.ToString(), level.ToString(), refinement.ToString(), player.Uid.ToString()));
+        return 0;
     }
 
-    private static bool IsValidWeaponId(int id) => id is >= 11100 and <= 16000;
-    private static bool IsValidRelicId(int id) => id is >= 20002 and <= 99999;
+    internal static bool IsValidWeaponId(int id) => id is >= 10000 and <= 19999;
+    internal static bool IsValidRelicId(int id) => id is >= 20002 and <= 99999;
 
     #endregion
 }

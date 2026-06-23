@@ -10,7 +10,6 @@ using NahidaImpact.GameServer.Game.Entity;
 using NahidaImpact.GameServer.Game.Friends;
 using NahidaImpact.GameServer.Game.Inventory;
 using NahidaImpact.GameServer.Game.Ability;
-using NahidaImpact.GameServer.Game.Managers;
 using NahidaImpact.GameServer.Game.MapMarks;
 using NahidaImpact.GameServer.Game.Player.Team;
 using NahidaImpact.GameServer.Game.Worlds;
@@ -41,11 +40,9 @@ public class PlayerInstance
     public PlayerProfile Profile { get; private set; }
     public ProgressManager ProgressManager { get; private set; }
     public AbilityManager AbilityManager { get; private set; }
-    public Managers.Stamina.StaminaManager StaminaManager { get; private set; }
     public CombatInvokeHandler CombatInvokeHandler { get; private set; }
     public TeamManager TeamManager { get; private set; }
     public MapMarksManager MapMarksManager { get; private set; }
-    public StatueOfTheSevenManager? StatueOfTheSevenManager { get; private set; }
     public Scene Scene { get; internal set; }
     public World World { get; internal set; }
     
@@ -63,6 +60,14 @@ public class PlayerInstance
     public int HomeCoin { get; set; }
     public uint EnterToken { get; set; }
     public SceneLoadState SceneLoadState { get; set; } = SceneLoadState.None;
+
+    /// <summary>
+    /// When true, inventory/avatar mutations skip their per-item notify packets and
+    /// per-call database saves. Callers must flush a full snapshot (PlayerStoreNotify +
+    /// AvatarDataNotify) and Save() once after the batch completes. Used by give-all
+    /// so the client rebuilds everything from one notify instead of streaming 600+.
+    /// </summary>
+    public bool SuppressNotifications { get; set; }
 
     /// <summary>True only for the very first enter-scene after account creation.</summary>
     public bool IsFirstLoginEnterScene => SceneLoadState == SceneLoadState.None;
@@ -151,12 +156,10 @@ public class PlayerInstance
         SocialManager = new SocialManager(this);
         ProgressManager = new ProgressManager(this);
         AbilityManager = new AbilityManager(this);
-        StaminaManager = new Managers.Stamina.StaminaManager(this);
         CombatInvokeHandler = new CombatInvokeHandler(this);
         MapMarksManager = new MapMarksManager(this);
 
         ApplyProperties();
-        StatueOfTheSevenManager = new StatueOfTheSevenManager(this);
     }
 
     private void ApplyProperties()
@@ -304,12 +307,6 @@ public class PlayerInstance
     {
         get => _phlogistonValue;
         set => _phlogistonValue = System.Math.Max(0, System.Math.Min(100, value));
-    }
-
-    public SatiationManager? GetSatiationManager()
-    {
-        // TODO: Implement satiation system
-        return null;
     }
 
     /// <summary>Player property map (MAX_STAMINA, CUR_PERSIST_STAMINA, etc.)</summary>

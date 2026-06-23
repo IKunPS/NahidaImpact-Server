@@ -30,6 +30,10 @@ public class InventoryManager : BasePlayerManager
     public InventoryData Data { get; }
     public IReadOnlyDictionary<ulong, ItemData> Items => _store;
 
+    /// <summary>When true, PutItem skips capacity checks and material-type rejections.
+    /// Used by give-all so bulk items aren't silently dropped.</summary>
+    public bool BypassCapacity { get; set; }
+
     public InventoryManager(PlayerInstance player) : base(player)
     {
         Data = DatabaseHelper.GetInstanceOrCreateNew<InventoryData>(player.Uid);
@@ -89,7 +93,7 @@ public class InventoryManager : BasePlayerManager
 
     private static readonly HashSet<int> VirtualItemIds = [101, 102, 105, 106, 107, 121, 201, 202, 203, 204];
 
-    private static bool IsVirtualItem(int itemId) => VirtualItemIds.Contains(itemId);
+    internal static bool IsVirtualItem(int itemId) => VirtualItemIds.Contains(itemId);
 
     private int GetVirtualItemCount(int itemId)
     {
@@ -188,21 +192,22 @@ public class InventoryManager : BasePlayerManager
     public bool AddItem(ItemData item, ActionReason? reason)
     {
         EnsureTabsInitialized();
-        var result = PutItem(item, deferSave: false);
+        var result = PutItem(item, deferSave: Player.SuppressNotifications);
 
-        if (result != null)
+        if (result == null)
         {
-            Logger.GetByClassName().Info(
-                $"AddItem: stored itemId={result.ItemId}, guid={result.Guid}, type={result.ItemType}, sending CmdID={CmdIds.StoreItemChangeNotify}");
-            TriggerAddItemEvents(result);
-            _ = Player.SendPacket(new PacketStoreItemChangeNotify(result));
-            if (reason != null)
-                _ = Player.SendPacket(new PacketItemAddHintNotify(result, (uint)reason.Value));
-            return true;
+            Logger.GetByClassName().Warn($"AddItem: FAILED to store itemId={item.ItemId}, type={item.ItemDataExcel?.ItemType}");
+            return false;
         }
 
-        Logger.GetByClassName().Warn($"AddItem: FAILED to store itemId={item.ItemId}, type={item.ItemDataExcel?.ItemType}");
-        return false;
+        if (Player.SuppressNotifications)
+            return true; // caller flushes a full snapshot after the batch
+
+        TriggerAddItemEvents(result);
+        _ = Player.SendPacket(new PacketStoreItemChangeNotify(result));
+        if (reason != null)
+            _ = Player.SendPacket(new PacketItemAddHintNotify(result, (uint)reason.Value));
+        return true;
     }
 
     public bool AddItem(ItemParamData itemParam) => AddItem(itemParam, null);
@@ -233,8 +238,6 @@ public class InventoryManager : BasePlayerManager
         for (int i = 0; i < allChanged.Count; i += batchSize)
         {
             var batch = allChanged.Skip(i).Take(batchSize).ToList();
-            Logger.GetByClassName().Info(
-                $"AddItemsChunked: batch {i / batchSize + 1} with {batch.Count} items, CmdID={CmdIds.StoreItemChangeNotify}");
             await Player.SendPacket(new PacketStoreItemChangeNotify(batch));
             if (reason != null)
                 await Player.SendPacket(new PacketItemAddHintNotify(batch, (uint)reason.Value));
@@ -262,8 +265,6 @@ public class InventoryManager : BasePlayerManager
         if (changed.Count > 0)
         {
             Save();
-            Logger.GetByClassName().Info(
-                $"AddItems: sending StoreItemChangeNotify with {changed.Count} items, CmdID={CmdIds.StoreItemChangeNotify}");
             _ = Player.SendPacket(new PacketStoreItemChangeNotify(changed));
 
             if (reason != null)
@@ -298,10 +299,7 @@ public class InventoryManager : BasePlayerManager
     {
         var data = item.ItemDataExcel;
         if (data == null)
-        {
-            Logger.GetByClassName().Warn($"PutItem: no ItemData for itemId={item.ItemId}");
             return null;
-        }
 
         // Track item obtain history
         try { Player.ProgressManager?.AddItemObtainedHistory(item.ItemId, item.Count); }
@@ -320,7 +318,7 @@ public class InventoryManager : BasePlayerManager
         {
             case ItemType.ITEM_WEAPON:
             case ItemType.ITEM_RELIQUARY:
-                if (tab != null && tab.Size >= tab.MaxCapacity)
+                if (!BypassCapacity && tab != null && tab.Size >= tab.MaxCapacity)
                     return null;
                 item.Count = 1;
                 item.Level = item.Level > 0 ? item.Level : 1;
@@ -334,15 +332,16 @@ public class InventoryManager : BasePlayerManager
                 return item;
 
             default:
-                switch (data.MaterialType)
+                if (!BypassCapacity)
                 {
-                    case MaterialType.MATERIAL_AVATAR:
-                    case MaterialType.MATERIAL_FLYCLOAK:
-                    case MaterialType.MATERIAL_COSTUME:
-                    case MaterialType.MATERIAL_NAMECARD:
-                        Logger.GetByClassName().Warn(
-                            $"Material type {data.MaterialType} for item {item.ItemId} lacking useOnGain");
-                        return null;
+                    switch (data.MaterialType)
+                    {
+                        case MaterialType.MATERIAL_AVATAR:
+                        case MaterialType.MATERIAL_FLYCLOAK:
+                        case MaterialType.MATERIAL_COSTUME:
+                        case MaterialType.MATERIAL_NAMECARD:
+                            return null;
+                    }
                 }
 
                 if (tab == null) return null;
@@ -350,14 +349,14 @@ public class InventoryManager : BasePlayerManager
                 var existing = tab.GetItemById(item.ItemId);
                 if (existing == null)
                 {
-                    if (tab.Size >= tab.MaxCapacity)
+                    if (!BypassCapacity && tab.Size >= tab.MaxCapacity)
                         return null;
                     PutNewItem(item, tab, deferSave);
                     return item;
                 }
                 else
                 {
-                    if (existing.Count >= data.StackLimit)
+                    if (!BypassCapacity && existing.Count >= data.StackLimit)
                         return null;
                     existing.Count = Math.Min(existing.Count + item.Count, (int)data.StackLimit);
                     if (!deferSave) Save();
@@ -645,6 +644,12 @@ public class InventoryManager : BasePlayerManager
             }
         }
 
+        if (Player.SuppressNotifications)
+        {
+            avatar.RecalcStats(item);
+            return true; // caller flushes a full snapshot after the batch
+        }
+
         Save();
 
         _ = Player.SendPacket(new PacketWearEquipRsp(avatarGuid, equipGuid));
@@ -728,9 +733,6 @@ public class InventoryManager : BasePlayerManager
     public void LoadFromDatabase()
     {
         EnsureTabsInitialized();
-
-        Logger.GetByClassName().Info(
-            $"LoadFromDatabase: Data.Items has {Data.Items.Count} items");
 
         foreach (var item in Data.Items)
         {
@@ -973,7 +975,7 @@ public class InventoryManager : BasePlayerManager
     }
 
     /// <summary>Calculate required exp for relic level-up. Falls back to simple formula.</summary>
-    private static int GetRelicExpRequired(int rankLevel, int level)
+    internal static int GetRelicExpRequired(int rankLevel, int level)
     {
         // Approximate formula matching official data
         return level * 100 + rankLevel * 50;

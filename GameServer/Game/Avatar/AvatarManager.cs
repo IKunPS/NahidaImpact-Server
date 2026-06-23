@@ -74,9 +74,15 @@ public class AvatarManager(PlayerInstance player) : BasePlayerManager(player)
 
         avatar.InitDefaultProps(avatarExcel);
         Avatars.Add(avatar);
-        Save();
 
         EquipStartingWeapon(avatar, avatarExcel); // EquipItem already calls RecalcStats
+
+        if (Player.SuppressNotifications)
+        {
+            return avatar; // caller flushes a full snapshot after the batch
+        }
+
+        Save();
 
         if (Player.HasSentLoginPackets)
         {
@@ -252,7 +258,7 @@ public class AvatarManager(PlayerInstance player) : BasePlayerManager(player)
         }
     }
 
-    private static int GetAvatarLevelExpRequired(int level)
+    internal static int GetAvatarLevelExpRequired(int level)
     {
         if (GameData.AvatarLevelData.TryGetValue(level, out var data))
             return data.Exp;
@@ -517,7 +523,7 @@ public class AvatarManager(PlayerInstance player) : BasePlayerManager(player)
 
         avatar.CoreProudSkillLevel = (uint)avatar.TalentIdList.Count;
         avatar.RecalcStats(GetEquippedWeapon(avatar));
-        Save();
+        if (!Player.SuppressNotifications) Save();
     }
 
     private ItemData? GetEquippedWeapon(AvatarDataInfo avatar)

@@ -86,10 +86,6 @@ public class CmdIds
     public const int EnterWorldAreaRsp = 24791;
     public const int SceneAreaWeatherNotify = 29909;
 
-    // TransPoint Region
-    public const int EnterTransPointRegionNotify = 1;
-    public const int ExitTransPointRegionNotify = 1;
-
     // World Scene Info
     public const int PlayerWorldSceneInfoListNotify = 25510;
 
