@@ -5,6 +5,6 @@ syntax = "proto3";
 
 // CmdID: 24599
 message GetAllUnlockNameCardRsp {
-	repeated uint32 name_card_list = 15;
-	int32 retcode = 14;
+  repeated uint32 name_card_list = 15;
+  int32 retcode = 14;
 }

@@ -1,10 +1,9 @@
 ﻿using NahidaImpact.Data;
 using NahidaImpact.Database.Inventory;
+using NahidaImpact.GameServer.Game.Inventory;
 using NahidaImpact.GameServer.Game.Player;
-using NahidaImpact.GameServer.Server.Packet.Send.Inventory;
-using NahidaImpact.Proto;
 
-namespace NahidaImpact.GameServer.Game.Inventory;
+namespace NahidaImpact.GameServer.Game.Avatar;
 
 public class WeaponManager(PlayerInstance player) : BasePlayerManager(player)
 {

@@ -82,7 +82,9 @@ public class TeamManager : BasePlayerManager
             team.AvatarGuidList.Add(avatarGuid);
     }
 
-    public List<EntityAvatar> GetActiveTeam(bool fix = false)
+    public List<EntityAvatar> GetActiveTeam() => _activeTeam;
+
+    public List<EntityAvatar> GetActiveTeam(bool fix)
     {
         if (!fix) return _activeTeam;
 

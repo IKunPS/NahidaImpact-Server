@@ -1,28 +1,56 @@
-﻿using Spectre.Console;
+using System.Collections.Concurrent;
 using System.Diagnostics;
+using Spectre.Console;
 
 namespace NahidaImpact.Util;
 
-public class Logger(string moduleName)
+public class Logger
 {
     private static FileInfo? LogFile;
-    private static readonly object _lock = new();
-    private readonly string ModuleName = moduleName;
+    private static readonly object _consoleLock = new();
+    private static readonly BlockingCollection<string> _fileQueue = [];
+    private static readonly Thread _fileWriterThread;
+    private readonly string ModuleName;
+
+    static Logger()
+    {
+        _fileWriterThread = new Thread(FileWriterLoop)
+        {
+            IsBackground = true,
+            Name = "LogFileWriter"
+        };
+        _fileWriterThread.Start();
+    }
+
+    public Logger(string moduleName)
+    {
+        ModuleName = moduleName;
+    }
+
+    private static void FileWriterLoop()
+    {
+        foreach (var message in _fileQueue.GetConsumingEnumerable())
+        {
+            WriteToFile(message);
+        }
+    }
 
     public void Log(string message, LoggerLevel level)
     {
-        lock (_lock)
-        {
-            var savedInput = ConsoleManager.Input.ToList(); // Copy
-            ConsoleManager.RedrawInput("", false);
-            AnsiConsole.MarkupLine($"[[[bold deepskyblue3_1]{DateTime.Now:HH:mm:ss}[/]]] " +
-                               $"[[[gray]{ModuleName}[/]]] [[[{(ConsoleColor)level}]{level}[/]]] " +
-                               $"{message.Replace("[", "[[").Replace("]", "]]")}");
-            ConsoleManager.RedrawInput(savedInput);
+        var markup = $"[[[bold deepskyblue3_1]{DateTime.Now:HH:mm:ss}[/]]] " +
+                     $"[[[gray]{ModuleName}[/]]] [[[{(ConsoleColor)level}]{level}[/]]] " +
+                     $"{message.Replace("[", "[[").Replace("]", "]]")}";
+        var plainText = $"[{DateTime.Now:HH:mm:ss}] [{ModuleName}] [{level}] {message}";
 
-            var logMessage = $"[{DateTime.Now:HH:mm:ss}] [{ModuleName}] [{level}] {message}";
-            WriteToFile(logMessage);
+        lock (_consoleLock)
+        {
+            var savedInput = ConsoleManager.Input.ToList();
+            ConsoleManager.RedrawInput("", false);
+            AnsiConsole.MarkupLine(markup);
+            ConsoleManager.RedrawInput(savedInput);
         }
+
+        _fileQueue.Add(plainText);
     }
 
     public void Info(string message, Exception? e = null)
@@ -97,6 +125,14 @@ public class Logger(string moduleName)
     public static Logger GetByClassName()
     {
         return new Logger(new StackTrace().GetFrame(1)?.GetMethod()?.ReflectedType?.Name ?? "");
+    }
+
+    /// <summary>Drains pending file writes and stops the writer thread. Call once at shutdown.</summary>
+    public static void Shutdown()
+    {
+        _fileQueue.CompleteAdding();
+        if (!_fileWriterThread.Join(TimeSpan.FromSeconds(5)))
+            Console.Error.WriteLine("Logger: file writer thread did not exit in time.");
     }
 }
 

@@ -1,9 +1,8 @@
-using NahidaImpact.Data;
+﻿using NahidaImpact.Data;
 using NahidaImpact.Data.Excel;
 using NahidaImpact.Database;
 using NahidaImpact.Database.Account;
 using NahidaImpact.Database.Avatar;
-using NahidaImpact.Database.Inventory;
 using NahidaImpact.Database.Player;
 using NahidaImpact.Enums.Player;
 using NahidaImpact.GameServer.Game.Ability;
@@ -22,7 +21,6 @@ using NahidaImpact.GameServer.Server.Packet.Send.Player;
 using NahidaImpact.GameServer.Server.Packet.Send.State;
 using NahidaImpact.KcpSharp;
 using NahidaImpact.Prop;
-using NahidaImpact.Proto;
 using NahidaImpact.Util;
 using System.Collections.Concurrent;
 using NahidaImpact.Util.Extensions;
@@ -87,12 +85,12 @@ public class PlayerInstance
     public EntityAvatar? EntityAvatar { get; set; }
     public int MainCharacterId { get; set; }
 
-    // Cosmetic collections — persisted via PlayerData
     public List<uint> ChatEmojiIdList { get => Data.ChatEmojiIdList; set => Data.ChatEmojiIdList = value; }
     public List<int> FlyCloakList { get => Data.FlyCloakList; set => Data.FlyCloakList = value; }
     public List<int> NameCardList { get => Data.NameCardList; set => Data.NameCardList = value; }
     public List<int> CostumeList { get => Data.CostumeList; set => Data.CostumeList = value; }
     public List<int> TraceEffectList { get => Data.TraceEffectList; set => Data.TraceEffectList = value; }
+    
     private float _phlogistonValue = 100f;
 
     public uint WeaponEntityId
@@ -139,6 +137,7 @@ public class PlayerInstance
         Data = data;
         Uid = data.Uid;
         Profile = new PlayerProfile(data.Name ?? "Traveler");
+        Profile.LoadFromData(data);
 
         TeamManager = new TeamManager(this);
         AvatarManager = new AvatarManager(this);
@@ -195,6 +194,13 @@ public class PlayerInstance
             FlyCloakList.Add(defaultFlycloak);
         if (defaultNameCard > 0 && !NameCardList.Contains(defaultNameCard))
             NameCardList.Add(defaultNameCard);
+
+        // Grant default costumes (hk4e PlayerAvatarComp::tryAddDefaultUnlockCostume)
+        foreach (var costume in GameData.CostumeData.Values)
+        {
+            if (costume.IsDefault && !CostumeList.Contains((int)costume.SkinId))
+                CostumeList.Add((int)costume.SkinId);
+        }
     }
 
     #endregion
@@ -397,6 +403,7 @@ public class PlayerInstance
         HasSentLoginPackets = true;
 
         InventoryManager.LoadFromDatabase();
+        SocialManager.LoadFromData();
         await SendPacket(new PacketPlayerStoreNotify(InventoryManager.Data.Items));
         await SendPacket(new PacketAvatarDataNotify(this));
         await SendPacket(new PacketOpenStateUpdateNotify(this));
@@ -436,7 +443,7 @@ public class PlayerInstance
 
     public async ValueTask OnHeartBeat()
     {
-        DatabaseHelper.ToSaveUidList.SafeAdd(Uid);
+        DatabaseHelper.NeedSave(Uid);
         await Task.CompletedTask;
     }
 

@@ -5,8 +5,8 @@ syntax = "proto3";
 
 import "ProfilePicture.proto";
 
-// CmdID: 4822
+// CmdID: 781
 message SetPlayerHeadImageRsp {
-	ProfilePicture profile_picture = 15;
-	int32 retcode = 11;
+	ProfilePicture profile_picture = 1;
+	int32 retcode = 5;
 }

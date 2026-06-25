@@ -4,10 +4,9 @@ using NahidaImpact.Database.Avatar;
 using NahidaImpact.Database.Inventory;
 using NahidaImpact.Enums.Item;
 using NahidaImpact.Enums.Player;
-using NahidaImpact.GameServer.Game.Inventory;
+using NahidaImpact.GameServer.Game.Avatar;
 using NahidaImpact.GameServer.Server.Packet.Send.Avatar;
 using NahidaImpact.GameServer.Server.Packet.Send.Inventory;
-using NahidaImpact.GameServer.Server.Packet.Send.Team;
 using NahidaImpact.Internationalization;
 using NahidaImpact.Prop;
 
@@ -477,9 +476,12 @@ public class CommandGive : ICommand
                 .ToHashSet()
             : null;
 
-        // Also track already-owned flycloaks/costumes to skip duplicates on re-run
+        // Track already-owned flycloaks/costumes to skip duplicates on re-run
         var ownedFlycloaks = targetType == ItemType.ITEM_MATERIAL
             ? new HashSet<int>(player.FlyCloakList)
+            : null;
+        var ownedCostumes = targetType == ItemType.ITEM_MATERIAL
+            ? new HashSet<int>(player.CostumeList)
             : null;
 
         var items = new List<ItemData>();
@@ -500,9 +502,16 @@ public class CommandGive : ICommand
             // Skip flycloaks the player already owns
             if (ownedFlycloaks != null && itemData.MaterialType == MaterialType.MATERIAL_FLYCLOAK)
             {
-                // Extract flycloakId from the use action param
                 var flycloakId = ExtractUseParam(itemData, "ITEM_USE_GAIN_FLYCLOAK");
                 if (flycloakId > 0 && ownedFlycloaks.Contains(flycloakId))
+                    continue;
+            }
+
+            // Skip costumes the player already owns
+            if (ownedCostumes != null && itemData.MaterialType == MaterialType.MATERIAL_COSTUME)
+            {
+                var costumeId = ExtractUseParam(itemData, "ITEM_USE_GAIN_COSTUME");
+                if (costumeId > 0 && ownedCostumes.Contains(costumeId))
                     continue;
             }
 

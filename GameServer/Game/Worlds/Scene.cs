@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using NahidaImpact.Data;
 using NahidaImpact.Data.Excel;
 using NahidaImpact.Database.Avatar;
@@ -341,7 +341,6 @@ public class Scene
         _ = player.SendPacket(new PacketSceneEntityAppearNotify(entities, VisionType.Meet));
     }
 
-    // hk4e Scene::killEntity — kills an entity and removes it from scene
     public void KillEntity(BaseEntity entity, int killerId = 0)
     {
         if (entity.IsDead) return;
@@ -363,7 +362,6 @@ public class Scene
         return gadget;
     }
 
-    // hk4e SceneBuild::createAllGadget — spawns scene objects from .scn block/group config
     public void SpawnSceneGadgets(PlayerInstance player)
     {
         if (SceneData == null) return;
@@ -475,6 +473,8 @@ public class Scene
     #region Helper Methods
     
     public bool IsInScene(BaseEntity entity) => _entities.ContainsKey((int)entity.Id);
+
+    public IEnumerable<BaseEntity> GetEntities() => _entities.Values;
     
     #endregion
 }

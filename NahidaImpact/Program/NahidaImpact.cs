@@ -80,6 +80,7 @@ public class NahidaImpact
         DatabaseHelper.SaveCts.Cancel();
         DatabaseHelper.SaveThread?.Join(TimeSpan.FromSeconds(5));
         DatabaseHelper.SaveDatabase();
+        Logger.Shutdown();
     }
 
     # endregion
