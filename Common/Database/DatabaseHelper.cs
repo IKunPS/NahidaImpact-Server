@@ -12,7 +12,8 @@ public class DatabaseHelper
     public static Logger logger = new("Database");
     public static SqlSugarScope? sqlSugarScope;
     public static readonly ConcurrentDictionary<int, List<BaseDatabaseDataHelper>> UidInstanceMap = [];
-    public static readonly List<int> ToSaveUidList = [];
+    private static readonly object _saveLock = new();
+    private static readonly List<int> _toSaveUidList = [];
     public static long LastSaveTick = DateTime.UtcNow.Ticks;
     public static Thread? SaveThread;
     public static readonly CancellationTokenSource SaveCts = new();
@@ -152,7 +153,8 @@ public class DatabaseHelper
         {
             if (!forceReload && UidInstanceMap.TryGetValue(uid, out var value))
             {
-                var instance = value.OfType<T>().FirstOrDefault();
+                T? instance;
+                lock (value) { instance = value.OfType<T>().FirstOrDefault(); }
                 if (instance != null) return instance;
             }
             var t = sqlSugarScope?.Queryable<T>()
@@ -217,8 +219,11 @@ public class DatabaseHelper
 
     public static void NeedSave(int uid)
     {
-        if (!ToSaveUidList.Contains(uid))
-            ToSaveUidList.Add(uid);
+        lock (_saveLock)
+        {
+            if (!_toSaveUidList.Contains(uid))
+                _toSaveUidList.Add(uid);
+        }
     }
 
     public static void CreateInstance<T>(T instance) where T : BaseDatabaseDataHelper, new()
@@ -246,19 +251,20 @@ public class DatabaseHelper
     public static void DeleteAllInstance(int key)
     {
         if (!UidInstanceMap.TryGetValue(key, out var value)) return;
-        var baseType = typeof(BaseDatabaseDataHelper);
-        var assembly = typeof(BaseDatabaseDataHelper).Assembly;
-        var types = assembly.GetTypes().Where(t => t.IsSubclassOf(baseType));
-        foreach (var type in types)
+        lock (value)
         {
-            var instance = value.Find(x => x.GetType() == type);
-            if (instance != null)
+            foreach (var instance in value)
+            {
+                var type = instance.GetType();
                 typeof(DatabaseHelper).GetMethod("DeleteInstance")?.MakeGenericMethod(type)
                     .Invoke(null, [key]);
+            }
         }
 
-        if (UidInstanceMap.TryRemove(key, out var instances))
-            ToSaveUidList.RemoveAll(x => x == key);
+        if (UidInstanceMap.TryRemove(key, out _))
+        {
+            lock (_saveLock) { _toSaveUidList.RemoveAll(x => x == key); }
+        }
     }
 
     // Auto save per 5 min
@@ -273,27 +279,31 @@ public class DatabaseHelper
         try
         {
             var prev = DateTime.Now;
-            var list = ToSaveUidList.ToList(); // copy the list to avoid the exception
+
+            List<int> list;
+            lock (_saveLock)
+            {
+                list = _toSaveUidList.ToList();
+                _toSaveUidList.Clear();
+            }
+
             foreach (var uid in list)
             {
                 if (!UidInstanceMap.TryGetValue(uid, out var value)) continue;
-                var baseType = typeof(BaseDatabaseDataHelper);
-                var assembly = typeof(BaseDatabaseDataHelper).Assembly;
-                var types = assembly.GetTypes().Where(t => t.IsSubclassOf(baseType));
-                foreach (var type in types)
+                lock (value)
                 {
-                    var instance = value.Find(x => x.GetType() == type);
-                    if (instance != null)
+                    foreach (var instance in value)
+                    {
+                        var type = instance.GetType();
                         typeof(DatabaseHelper).GetMethod("SaveDatabaseType")?.MakeGenericMethod(type)
                             .Invoke(null, [instance]);
+                    }
                 }
             }
 
             var t = (DateTime.Now - prev).TotalSeconds;
             logger.Info(I18NManager.Translate("Server.ServerInfo.SaveDatabase",
                 Math.Round(t, 2).ToString(CultureInfo.InvariantCulture)));
-
-            ToSaveUidList.Clear();
         }
         catch (Exception e)
         {

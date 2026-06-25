@@ -3,7 +3,7 @@ syntax = "proto3";
 // Nahida
 // Proto
 
-// CmdID: 7439
+// CmdID: 9039
 message SetPlayerSignatureReq {
-	string signature = 14;
+	string signature = 13;
 }

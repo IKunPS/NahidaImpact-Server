@@ -3,7 +3,7 @@ syntax = "proto3";
 // Nahida
 // Proto
 
-// CmdID: 7684
+// CmdID: 27689
 message SetPlayerHeadImageReq {
-	uint32 profile_picture_id = 12;
+	uint32 profile_picture_id = 1;
 }

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using NahidaImpact.KcpSharp;
@@ -10,6 +10,7 @@ using NahidaImpact.Database.Inventory;
 using NahidaImpact.Database.Player;
 using NahidaImpact.Enums.Entity;
 using NahidaImpact.Enums.Item;
+using NahidaImpact.GameServer.Game.Avatar;
 using NahidaImpact.GameServer.Game.Entity;
 using NahidaImpact.GameServer.Game.Player;
 using NahidaImpact.GameServer.Server.Packet.Send.Avatar;
@@ -426,39 +427,28 @@ public class InventoryManager : BasePlayerManager
                         _ = Player.AvatarManager.CreateAvatar(avatarId);
                     break;
                 case "ITEM_USE_GAIN_FLYCLOAK":
-                    if (action.UseParam.Count > 0 && int.TryParse(action.UseParam[0], out var flycloakId))
+                    if (action.UseParam.Count > 0 && int.TryParse(action.UseParam[0], out var flycloakId)
+                        && GameData.IsFlycloakValid(flycloakId)
+                        && !Player.FlyCloakList.Contains(flycloakId))
                     {
-                        if (!GameData.IsFlycloakValid(flycloakId)) break;
-                        if (!Player.FlyCloakList.Contains(flycloakId))
-                        {
-                            Player.FlyCloakList.Add(flycloakId);
-                            PlayerData.SavePlayerData(Player.Data);
-                            _ = Player.SendPacket(new PacketAvatarGainFlycloakNotify((uint)flycloakId));
-                        }
+                        Player.FlyCloakList.Add(flycloakId);
+                        PlayerData.SavePlayerData(Player.Data);
+                        _ = Player.SendPacket(new PacketAvatarGainFlycloakNotify((uint)flycloakId));
                     }
                     break;
                 case "ITEM_USE_GAIN_COSTUME":
-                    if (action.UseParam.Count > 0 && int.TryParse(action.UseParam[0], out var costumeId))
+                    if (action.UseParam.Count > 0 && int.TryParse(action.UseParam[0], out var costumeId)
+                        && GameData.IsCostumeValid(costumeId)
+                        && !Player.CostumeList.Contains(costumeId))
                     {
-                        if (!GameData.IsCostumeValid(costumeId)) break;
-                        var costumes = Player.CostumeList;
-                        if (!costumes.Contains(costumeId))
-                        {
-                            costumes.Add(costumeId);
-                            PlayerData.SavePlayerData(Player.Data);
-                            _ = Player.SendPacket(new PacketAvatarGainCostumeNotify((uint)costumeId));
-                        }
+                        Player.CostumeList.Add(costumeId);
+                        PlayerData.SavePlayerData(Player.Data);
+                        _ = Player.SendPacket(new PacketAvatarGainCostumeNotify((uint)costumeId));
                     }
                     break;
                 case "ITEM_USE_GAIN_NAME_CARD":
                     if (action.UseParam.Count > 0 && int.TryParse(action.UseParam[0], out var nameCardId))
-                    {
-                        if (!Player.NameCardList.Contains(nameCardId))
-                        {
-                            Player.NameCardList.Add(nameCardId);
-                            PlayerData.SavePlayerData(Player.Data);
-                        }
-                    }
+                        Player.SocialManager.UnlockNameCard((uint)nameCardId);
                     break;
                 case "ITEM_USE_ADD_ITEM":
                     if (action.UseParam.Count >= 2
@@ -617,61 +607,73 @@ public class InventoryManager : BasePlayerManager
 
     #region Equip / Unequip
 
+    // hk4e EquipComp::wearEquip — full equip flow with swap logic
     public bool EquipItem(ulong avatarGuid, ulong equipGuid)
     {
         var avatar = Player.AvatarManager.GetAvatarByGuid(avatarGuid);
         var item = GetItemByGuid(equipGuid);
         if (avatar == null || item == null) return false;
 
+        // Already equipped on this avatar — no-op (hk4e: old == new → return -1)
+        if (item.EquipCharacter == (int)avatar.AvatarId)
+            return true;
+
         var itemType = item.ItemType;
         var equipSlot = item.EquipSlot;
 
-        if (equipSlot > 0)
-            UnequipSlotFromAvatar(avatar, equipSlot);
-
+        // Snapshot before mutation: old equip in target slot and previous owner (hk4e step 3-5)
+        var oldEquip = equipSlot > 0 ? FindEquippedInSlot(avatar, equipSlot) : null;
+        AvatarDataInfo? prevOwner = null;
         if (item.EquipCharacter > 0 && item.EquipCharacter != (int)avatar.AvatarId)
-        {
-            var prevAvatar = Player.AvatarManager.GetAvatarById((uint)item.EquipCharacter);
-            if (prevAvatar != null)
-                UnequipSlotFromAvatar(prevAvatar, equipSlot);
-        }
+            prevOwner = Player.AvatarManager.GetAvatarById((uint)item.EquipCharacter);
 
+        // Unequip from previous owner first, then from target slot (hk4e step 8-9)
+        if (prevOwner != null)
+            SilentUnequipSlot(prevOwner, equipSlot);
+
+        if (equipSlot > 0 && oldEquip != null && oldEquip != item)
+            SilentUnequipSlot(avatar, equipSlot);
+
+        // Equip new item on target avatar (hk4e step 10: internalWearEquip)
         item.EquipCharacter = (int)avatar.AvatarId;
         avatar.WeaponGuid = item.Guid;
         avatar.WeaponId = (uint)item.ItemId;
+        CreateWeaponEntity(item, itemType);
 
-        if (itemType == ItemType.ITEM_WEAPON)
+        // Swap: displace old equip onto previous owner (hk4e step 11)
+        if (prevOwner != null && oldEquip != null && oldEquip != item)
         {
-            var scene = Player.Scene;
-            if (scene != null)
-            {
-                var gadgetId = (int)(item.ItemDataExcel?.GadgetId ?? 0);
-                if (gadgetId > 0)
-                {
-                    var weaponEntity = new EntityWeapon(scene, gadgetId)
-                    {
-                        ItemId = item.ItemId,
-                        ItemGuid = item.Guid
-                    };
-                    item.WeaponEntityId = (int)weaponEntity.Id;
-                    scene.WeaponEntities[(int)weaponEntity.Id] = weaponEntity;
-                }
-            }
+            oldEquip.EquipCharacter = (int)prevOwner.AvatarId;
+            prevOwner.WeaponGuid = oldEquip.Guid;
+            prevOwner.WeaponId = (uint)oldEquip.ItemId;
+            CreateWeaponEntity(oldEquip, oldEquip.ItemType);
         }
 
         if (Player.SuppressNotifications)
         {
             avatar.RecalcStats(item);
-            return true; // caller flushes a full snapshot after the batch
+            if (prevOwner != null && oldEquip != null && oldEquip != item)
+                prevOwner.RecalcStats(oldEquip);
+            return true;
         }
 
         Save();
 
+        // hk4e: WearEquipRsp sent to player, EquipChangeNotify + StoreItemChangeNotify per changed item
         _ = Player.SendPacket(new PacketWearEquipRsp(avatarGuid, equipGuid));
         _ = Player.SendPacket(new PacketStoreItemChangeNotify(item));
         _ = Player.SendPacket(new PacketAvatarEquipChangeNotify(avatarGuid, item));
 
+        if (prevOwner != null && oldEquip != null && oldEquip != item)
+        {
+            _ = Player.SendPacket(new PacketStoreItemChangeNotify(oldEquip));
+            _ = Player.SendPacket(new PacketAvatarEquipChangeNotify(prevOwner.Guid, oldEquip));
+        }
+
         avatar.RecalcStats(item);
+        if (prevOwner != null && oldEquip != null && oldEquip != item)
+            prevOwner.RecalcStats(oldEquip);
+
         return true;
     }
 
@@ -697,15 +699,26 @@ public class InventoryManager : BasePlayerManager
 
     private bool UnequipSlotFromAvatar(AvatarDataInfo avatar, int equipSlot)
     {
-        ItemData? item;
-        if (equipSlot == 6)
-            item = _store.Values.FirstOrDefault(i =>
-                i.EquipCharacter == (int)avatar.AvatarId && i.ItemType == ItemType.ITEM_WEAPON);
-        else
-            item = _store.Values.FirstOrDefault(i =>
-                i.EquipCharacter == (int)avatar.AvatarId && i.EquipSlot == equipSlot);
-
+        var item = FindEquippedInSlot(avatar, equipSlot);
         if (item == null) return false;
+
+        SilentUnequipSlot(avatar, equipSlot, item);
+
+        Save();
+
+        _ = Player.SendPacket(new PacketTakeoffEquipRsp(avatar.Guid, (uint)equipSlot));
+        _ = Player.SendPacket(new PacketStoreItemChangeNotify(item));
+        _ = Player.SendPacket(new PacketAvatarEquipChangeNotify(avatar.Guid, (uint)equipSlot));
+
+        avatar.RecalcStats(null);
+        return true;
+    }
+
+    // hk4e EquipComp::internalTakeOffEquip — clears equip state without notifying
+    private void SilentUnequipSlot(AvatarDataInfo avatar, int equipSlot, ItemData? item = null)
+    {
+        item ??= FindEquippedInSlot(avatar, equipSlot);
+        if (item == null) return;
 
         if (item.ItemType == ItemType.ITEM_WEAPON && item.WeaponEntityId > 0)
         {
@@ -715,14 +728,44 @@ public class InventoryManager : BasePlayerManager
 
         item.EquipCharacter = 0;
         item.WeaponEntityId = 0;
-        Save();
 
-        _ = Player.SendPacket(new PacketTakeoffEquipRsp(avatar.Guid, (uint)equipSlot));
-        _ = Player.SendPacket(new PacketStoreItemChangeNotify(item));
-        _ = Player.SendPacket(new PacketAvatarEquipChangeNotify(avatar.Guid, (uint)equipSlot));
+        if (equipSlot == 6)
+        {
+            avatar.WeaponGuid = 0;
+            avatar.WeaponId = 0;
+        }
+    }
 
-        avatar.RecalcStats(null);
-        return true;
+    private ItemData? FindEquippedInSlot(AvatarDataInfo avatar, int equipSlot)
+    {
+        if (equipSlot == 6)
+            return _store.Values.FirstOrDefault(i =>
+                i.EquipCharacter == (int)avatar.AvatarId && i.ItemType == ItemType.ITEM_WEAPON);
+        return _store.Values.FirstOrDefault(i =>
+            i.EquipCharacter == (int)avatar.AvatarId && i.EquipSlot == equipSlot);
+    }
+
+    private void CreateWeaponEntity(ItemData item, ItemType itemType)
+    {
+        if (itemType != ItemType.ITEM_WEAPON) return;
+
+        // Remove old entity if re-creating
+        if (item.WeaponEntityId > 0)
+            Player.Scene?.WeaponEntities.TryRemove(item.WeaponEntityId, out _);
+
+        var scene = Player.Scene;
+        if (scene == null) return;
+
+        var gadgetId = (int)(item.ItemDataExcel?.GadgetId ?? 0);
+        if (gadgetId <= 0) return;
+
+        var weaponEntity = new EntityWeapon(scene, gadgetId)
+        {
+            ItemId = item.ItemId,
+            ItemGuid = item.Guid
+        };
+        item.WeaponEntityId = (int)weaponEntity.Id;
+        scene.WeaponEntities[(int)weaponEntity.Id] = weaponEntity;
     }
 
     public bool SetEquipLockState(ulong equipGuid, bool isLocked)
@@ -777,6 +820,10 @@ public class InventoryManager : BasePlayerManager
     private void RelinkEquipToAvatar(AvatarDataInfo avatar, ItemData item)
     {
         if (item.ItemType != ItemType.ITEM_WEAPON) return;
+
+        // Restore bidirectional link — item already knows EquipCharacter from DB
+        avatar.WeaponGuid = item.Guid;
+        avatar.WeaponId = (uint)item.ItemId;
 
         var scene = Player.Scene;
         if (scene == null) return;

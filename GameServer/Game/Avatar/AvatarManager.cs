@@ -5,10 +5,8 @@ using NahidaImpact.Database;
 using NahidaImpact.Database.Avatar;
 using NahidaImpact.Database.Inventory;
 using NahidaImpact.Database.Team;
-using NahidaImpact.Enums.Item;
 using NahidaImpact.GameServer.Game.Player;
 using NahidaImpact.GameServer.Server.Packet.Send.Avatar;
-using NahidaImpact.Proto;
 using NahidaImpact.Prop;
 using NahidaImpact.Util;
 
@@ -69,8 +67,6 @@ public class AvatarManager(PlayerInstance player) : BasePlayerManager(player)
             Guid = NextGuid(),
             WeaponId = avatarExcel.InitialWeapon,
             BornTime = now,
-            WearingFlycloakId = ConstValue.GetUint("CONST_VALUE_DEFAULT_FLYCLOAK_CONFIG"),
-            CostumeId = GetDefaultCostumeId((int)avatarExcel.Id)
         };
 
         avatar.InitDefaultProps(avatarExcel);
@@ -534,14 +530,6 @@ public class AvatarManager(PlayerInstance player) : BasePlayerManager(player)
         => Player.InventoryManager.Items.Values
             .FirstOrDefault(i => i.EquipCharacter == (int)avatar.AvatarId
                 && i.ItemType == Enums.Item.ItemType.ITEM_WEAPON);
-
-    // Mirrors Java FashionComp::initDefaultWearCostume — finds the default costume for an avatar
-    private static uint GetDefaultCostumeId(int avatarId)
-    {
-        var defaultCostume = GameData.CostumeData.Values
-            .FirstOrDefault(c => c.CharacterId == avatarId && c.IsDefault);
-        return defaultCostume?.SkinId ?? 0;
-    }
 
     #endregion
 

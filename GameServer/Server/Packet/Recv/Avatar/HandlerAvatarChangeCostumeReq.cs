@@ -1,5 +1,4 @@
 using NahidaImpact.Data;
-using NahidaImpact.Data.Excel;
 using NahidaImpact.GameServer.Game.Entity;
 using NahidaImpact.GameServer.Game.Player;
 using NahidaImpact.GameServer.Server.Packet.Send.Avatar;
@@ -22,14 +21,14 @@ public class HandlerAvatarChangeCostumeReq : Handler
         var avatar = player.AvatarManager.GetAvatarByGuid(avatarGuid);
         if (avatar == null) return;
 
-        // Only formal avatars (not trial) can change costume — mirrors Java FashionComp::wearCostume
+        // Only formal avatars (not trial) can change costume (hk4e FashionComp::wearCostume)
         if (avatar.AvatarType != 1)
         {
             await connection.SendPacket(new PacketAvatarChangeCostumeRsp());
             return;
         }
 
-        // Costume 0 = revert to default; non-zero must be owned and match the avatar's characterId
+        // Costume 0 = revert to default; non-zero must be owned and belong to the avatar
         if (costumeId != 0)
         {
             if (!player.CostumeList.Contains((int)costumeId))
@@ -49,23 +48,61 @@ public class HandlerAvatarChangeCostumeReq : Handler
         avatar.CostumeId = costumeId;
         player.AvatarManager.Save();
 
-        // Find the entity for this specific avatar (not just the current one) and broadcast
-        var entity = FindAvatarEntity(player, avatarGuid);
+        // Send Notify first, then Rsp — client expects both (hk4e FashionComp::notifyCostumeChange)
+        var entity = FindAvatarEntityInScene(player, avatarGuid);
         if (entity != null)
+        {
             player.Scene?.BroadcastPacket(new PacketAvatarChangeCostumeNotify(entity.ToProto()));
+        }
+        else
+        {
+            // Avatar not in scene — send minimal notify to the player so client stays in sync
+            await player.SendPacket(new PacketAvatarChangeCostumeNotify(BuildOffFieldAvatarInfo(player, avatar)));
+        }
 
         await connection.SendPacket(new PacketAvatarChangeCostumeRsp(avatarGuid, costumeId));
     }
 
-    private static EntityAvatar? FindAvatarEntity(PlayerInstance player, ulong avatarGuid)
+    private static EntityAvatar? FindAvatarEntityInScene(PlayerInstance player, ulong avatarGuid)
     {
-        var activeTeam = player.TeamManager?.GetActiveTeam();
-        if (activeTeam == null) return null;
-        foreach (var e in activeTeam)
+        if (player.Scene == null) return null;
+        foreach (var entity in player.Scene.GetEntities())
         {
-            if (e.AvatarInfo.Guid == avatarGuid)
-                return e;
+            if (entity is EntityAvatar avatarEntity && avatarEntity.AvatarInfo.Guid == avatarGuid)
+                return avatarEntity;
         }
         return null;
+    }
+
+    private static SceneAvatarInfo BuildOffFieldAvatarInfo(PlayerInstance player, Database.Avatar.AvatarDataInfo avatar)
+    {
+        var info = new SceneAvatarInfo
+        {
+            Uid = (uint)player.Uid,
+            AvatarId = avatar.AvatarId,
+            Guid = avatar.Guid,
+            PeerId = (uint)player.PeerId,
+            SkillDepotId = avatar.SkillDepotId,
+            CoreProudSkillLevel = avatar.CoreProudSkillLevel,
+            WearingFlycloakId = avatar.WearingFlycloakId,
+            BornTime = avatar.BornTime,
+            CostumeId = avatar.CostumeId,
+            WeaponSkinId = avatar.WeaponSkinId,
+            TraceEffectId = avatar.TraceEffectId,
+        };
+
+        foreach (var talentId in avatar.TalentIdList)
+            info.TalentIdList.Add(talentId);
+
+        foreach (var kv in avatar.SkillLevelMap)
+            info.SkillLevelMap[kv.Key] = kv.Value;
+
+        foreach (var id in avatar.ProudSkillList)
+            info.InherentProudSkillList.Add(id);
+
+        foreach (var kv in avatar.ProudSkillExtraLevelMap)
+            info.ProudSkillExtraLevelMap[kv.Key] = kv.Value;
+
+        return info;
     }
 }

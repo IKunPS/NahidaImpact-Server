@@ -1,6 +1,5 @@
 namespace NahidaImpact.Proto;
 
-// All values from OSRELWin6.6.0-deobfuscated.proto
 public class CmdIds
 {
     public const int None = 0;
@@ -38,7 +37,7 @@ public class CmdIds
     // Avatar
     public const int AvatarDataNotify = 21044;
     public const int AvatarAddNotify = 29741;
-    public const int AvatarDelNotify = 1;                // not deobfuscated
+    public const int AvatarDelNotify = 1;
     public const int AvatarEquipChangeNotify = 23985;
     public const int AvatarFightPropNotify = 29409;
     public const int AvatarLifeStateChangeNotify = 1076;
@@ -81,6 +80,11 @@ public class CmdIds
     public const int AvatarChangeCostumeNotify = 222;
     public const int AvatarGainCostumeNotify = 1505;
     
+    // NameCard
+    public const int UnlockNameCardNotify = 21597;
+    public const int GetAllUnlockNameCardReq = 29849;
+    public const int GetAllUnlockNameCardRsp = 24599;
+    
     public const int ServerGlobalValueChangeNotify = 24564;
 
     // Team
@@ -98,7 +102,7 @@ public class CmdIds
     public const int AddBackupAvatarTeamRsp = 5817;
     public const int DelBackupAvatarTeamReq = 3832;
     public const int DelBackupAvatarTeamRsp = 22160;
-    public const int DelTeamEntityNotify = 1;            // not deobfuscated
+    public const int DelTeamEntityNotify = 1;
     public const int SyncTeamEntityNotify = 24216;
     public const int SyncScenePlayTeamEntityNotify = 22166;
 
@@ -119,8 +123,6 @@ public class CmdIds
     public const int StoreItemDelNotify = 3814;
     public const int PlayerStoreNotify = 24051;
     public const int ItemAddHintNotify = 24603;
-    public const int WearEquipReq = 25796;
-    public const int WearEquipRsp = 29365;
     public const int TakeoffEquipReq = 26585;
     public const int TakeoffEquipRsp = 24019;
     public const int SetEquipLockStateReq = 38;
@@ -128,16 +130,18 @@ public class CmdIds
     public const int UseItemReq = 4733;
     public const int UseItemRsp = 22767;
     public const int DestroyMaterialReq = 2800;
-    public const int CalcWeaponUpgradeReturnItemsReq = 3748; // not deobfuscated
+    public const int CalcWeaponUpgradeReturnItemsReq = 3748;
     public const int CalcWeaponUpgradeReturnItemsRsp = 542;
 
     // Weapon
-    public const int WeaponUpgradeReq = 8208;            // not deobfuscated
+    public const int WeaponUpgradeReq = 8208;
     public const int WeaponUpgradeRsp = 26318;
     public const int WeaponPromoteReq = 28926;
     public const int WeaponPromoteRsp = 29984;
     public const int WeaponAwakenReq = 6051;
     public const int WeaponAwakenRsp = 1084;
+    public const int WearEquipReq = 25796;
+    public const int WearEquipRsp = 29365;
 
     // Reliquary
     public const int ReliquaryUpgradeReq = 22964;
@@ -170,8 +174,8 @@ public class CmdIds
     public const int EnterWorldAreaRsp = 24791;
     public const int PersonalSceneJumpReq = 22921;
     public const int PersonalSceneJumpRsp = 22414;
-    public const int PlayerEnterMapLayerNotify = 22921;  // not deobfuscated
-    public const int PlayerEnterChildMapLayerNotify = 1; // not deobfuscated
+    public const int PlayerEnterMapLayerNotify = 22921;
+    public const int PlayerEnterChildMapLayerNotify = 1;
     public const int PlayerWorldSceneInfoListNotify = 25510;
 
     // Friend / Chat
@@ -186,6 +190,22 @@ public class CmdIds
     public const int PullPrivateChatRsp = 25944;
     public const int PullRecentChatReq = 2145;
     public const int PullRecentChatRsp = 1943;
+
+    // Profile
+    public const int SetNameCardReq = 22222;
+    public const int SetNameCardRsp = 26152;
+    public const int SetPlayerSignatureReq = 9039;
+    public const int SetPlayerSignatureRsp = 1359;
+    public const int SetPlayerHeadImageReq = 27689;
+    public const int SetPlayerHeadImageRsp = 781;
+    public const int UpdatePlayerShowAvatarListReq = 4302;
+    public const int UpdatePlayerShowAvatarListRsp = 8319;
+    public const int UpdatePlayerShowNameCardListReq = 2551;
+    public const int UpdatePlayerShowNameCardListRsp = 24421;
+    public const int GetProfilePictureDataReq = 8977;
+    public const int GetProfilePictureDataRsp = 24009;
+    public const int GetPlayerSocialDetailReq = 25951;
+    public const int GetPlayerSocialDetailRsp = 20887;
 
     // System
     public const int PingReq = 2151;
