@@ -59,7 +59,7 @@ public static class ConfigManager
         {
             Hotfix = new HotfixContainer();
             SaveData(Hotfix, HotfixFilePath);
-            return; // Fresh hotfix written, no need to re-read
+            return;
         }
 
         using var stream = file.Open(FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
@@ -68,10 +68,11 @@ public static class ConfigManager
         Hotfix = JsonConvert.DeserializeObject<HotfixContainer>(json)
                  ?? new HotfixContainer();
 
-        foreach (var version in verList)
-            if (!Hotfix.Hotfixes.TryGetValue(version, out var _))
-                Hotfix.Hotfixes[version] = new();
+        SaveData(Hotfix, HotfixFilePath);
+    }
 
+    public static void SaveHotfix()
+    {
         SaveData(Hotfix, HotfixFilePath);
     }
 

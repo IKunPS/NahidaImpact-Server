@@ -76,6 +76,8 @@ public class WebTextEN
     public string OK => "OK";
     public string CacheError => "Account cache error";
     public string ConnectionFailed => "Connection Failed!";
+    public string ClientOutdated => "Server: {0} / Client: {1}\nPlease update.";
+    public string ServerOutdated => "Server: {0} / Client: {1}\nPlease downgrade.";
 }
 
 /// <summary>
@@ -109,6 +111,8 @@ public class ServerInfoTextEN
 
     public string LoadedScenePoints => "Loaded {0} scene points across {1} scenes";
     public string FileNotFound => "{0} file not found: {1}";
+    public string HotfixNotAvailable => "Hotfix not available for {0}";
+    public string HotfixCached => "Hotfix cached for {0}";
 }
 
 /// <summary>

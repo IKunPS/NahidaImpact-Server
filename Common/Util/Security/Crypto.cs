@@ -19,6 +19,7 @@ public class Crypto
     public static RSA? SDK_PATCH_KEY { get; private set; }
     
     public static Dictionary<int, RSA> EncryptionKeys { get; } = new();
+    public static Dictionary<int, RSA> DecryptionKeys { get; } = new();
     
     public static void LoadKeys()
     {
@@ -60,6 +61,19 @@ public class Crypto
                         var rsa = RSA.Create();
                         rsa.ImportSubjectPublicKeyInfo(keyBytes, out _);
                         EncryptionKeys[keyId] = rsa;
+                    }
+                }
+
+                // Load decryption private keys (PEM-encoded PKCS#1 or PKCS#8)
+                foreach (var file in Directory.GetFiles(gameKeysDir, "*.pem"))
+                {
+                    var fileName = Path.GetFileNameWithoutExtension(file);
+                    if (int.TryParse(fileName, out int keyId))
+                    {
+                        var pem = File.ReadAllText(file);
+                        var rsa = RSA.Create();
+                        rsa.ImportFromPem(pem);
+                        DecryptionKeys[keyId] = rsa;
                     }
                 }
             }
@@ -144,5 +158,23 @@ public class Crypto
     public static RSA GetDispatchEncryptionKey(int key)
     {
         return EncryptionKeys[key];
+    }
+
+    // Decrypt region data fetched from official dispatch (RSA/ECB/PKCS1Padding, 256B chunks)
+    public static byte[] DecryptRegionData(byte[] encrypted, int keyId)
+    {
+        if (!DecryptionKeys.TryGetValue(keyId, out var privateKey))
+            throw new KeyNotFoundException($"No decryption key found for ID: {keyId}");
+
+        const int chunkSize = 256;
+        using var decryptedStream = new MemoryStream();
+        for (int i = 0; i < encrypted.Length; i += chunkSize)
+        {
+            int length = Math.Min(chunkSize, encrypted.Length - i);
+            var chunk = encrypted[i..(i + length)];
+            var decryptedChunk = privateKey.Decrypt(chunk, RSAEncryptionPadding.Pkcs1);
+            decryptedStream.Write(decryptedChunk);
+        }
+        return decryptedStream.ToArray();
     }
 }

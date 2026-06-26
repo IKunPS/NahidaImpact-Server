@@ -76,6 +76,8 @@ public class WebTextCHS
     public string OK => "OK";
     public string CacheError => "账号缓存错误";
     public string ConnectionFailed => "连接失败！";
+    public string ClientOutdated => "服务端: {0} / 客户端: {1}\n请更新客户端。";
+    public string ServerOutdated => "服务端: {0} / 客户端: {1}\n请降级客户端。";
 }
 
 /// <summary>
@@ -109,6 +111,8 @@ public class ServerInfoTextCHS
 
     public string LoadedScenePoints => "已加载 {0} 个场景传送点，覆盖 {1} 个场景";
     public string FileNotFound => "{0} 文件未找到: {1}";
+    public string HotfixNotAvailable => "热更数据不可用: {0}";
+    public string HotfixCached => "热更数据已缓存: {0}";
 }
 
 /// <summary>

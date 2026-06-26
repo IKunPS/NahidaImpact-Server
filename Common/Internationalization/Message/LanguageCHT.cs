@@ -76,6 +76,8 @@ public class WebTextCHT
     public string OK => "OK";
     public string CacheError => "賬號緩存錯誤";
     public string ConnectionFailed => "連接失敗！";
+    public string ClientOutdated => "伺服器: {0} / 客戶端: {1}\n請更新客戶端。";
+    public string ServerOutdated => "伺服器: {0} / 客戶端: {1}\n請降級客戶端。";
 }
 
 /// <summary>
@@ -109,6 +111,8 @@ public class ServerInfoTextCHT
 
     public string LoadedScenePoints => "已加載 {0} 個場景傳送點，覆蓋 {1} 個場景";
     public string FileNotFound => "{0} 文件未找到: {1}";
+    public string HotfixNotAvailable => "熱更數據不可用: {0}";
+    public string HotfixCached => "熱更數據已緩存: {0}";
 }
 
 /// <summary>
