@@ -11,12 +11,13 @@ jobs:
   build:
     strategy:
       matrix:
-        os: [windows-latest, ubuntu-latest]
         include:
           - os: windows-latest
             runtime: win-x64
           - os: ubuntu-latest
             runtime: linux-x64
+          - os: ubuntu-24.04-arm
+            runtime: linux-arm64
 
     runs-on: ${{ matrix.os }}
 
@@ -38,7 +39,7 @@ jobs:
       run: dotnet build --configuration Release --no-restore
 
     - name: Publish
-      run: dotnet publish NahidaImpact/NahidaImpact.csproj -c Release -r ${{ matrix.runtime }} --self-contained true -o publish/${{ matrix.runtime }}
+      run: dotnet publish NahidaImpact/NahidaImpact.csproj -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true -p:DebugType=none --self-contained -c Release -r ${{ matrix.runtime }} -o publish/${{ matrix.runtime }}
 
     - name: Upload Artifact
       uses: actions/upload-artifact@v4

@@ -15,13 +15,9 @@ public class ConfigContainer
 
 public class HttpServerConfig
 {
-    public string BindAddress { get; set; } = "0.0.0.0";
-    public string PublicAddress { get; set; } = "127.0.0.1";
-    public int Port { get; set; } = 1145;
+    public string DisplayAddress { get; set; } = "http://127.0.0.1:1145";
 
-    public string DisplayAddress => $"http://{PublicAddress}:{Port}";
-
-    public string BindDisplayAddress => $"http://{BindAddress}:{Port}";
+    public string BindDisplayAddress { get; set; } = "http://0.0.0.0:1145";
 }
 
 public class GameServerConfig
@@ -71,7 +67,7 @@ public class ServerOption
     public bool DebugNoHandlerPacket { get; set; } = true;
     public bool IsServerStop { get; set; } = false;
     public bool UseXorEncryption { get; set; } = true;
-    
+    public bool EnableHotUpdate { get; set; } = false;
 }
 
 public class ServerProfile

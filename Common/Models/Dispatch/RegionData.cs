@@ -11,4 +11,7 @@ public class RegionData
     {
         _regionQuery = regionQuery;
     }
+
+    // Matches Java: RegionData.getRegionQuery()
+    public QueryCurrRegionHttpRsp GetRegionQuery() => _regionQuery;
 }
